@@ -5,8 +5,8 @@ description: >-
 type: Index
 image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
 tags:
-  - Testing
   - Monitoring
+  - Testing
 url: >-
   https://raw.githubusercontent.com/api-evangelist/checkly/refs/heads/main/apis.yml
 created: '2026-03-25'
@@ -19,8 +19,8 @@ apis:
       Checkly is a monitoring-as-code platform for API and synthetic monitoring with Playwright-based browser checks and programmable API checks.
     humanURL: https://www.checklyhq.com
     tags:
-      - Testing
       - Monitoring
+      - Testing
     properties:
       - type: Documentation
         url: https://www.checklyhq.com/docs/
