@@ -24,14 +24,14 @@ apis:
     properties:
       - type: Documentation
         url: https://www.checklyhq.com/docs/
-      - type: GitHub Repository
+      - type: GitHubRepository
         url: https://github.com/checkly
 common:
   - type: Website
     url: https://www.checklyhq.com
   - type: Documentation
     url: https://www.checklyhq.com/docs/
-  - type: GitHub Organization
+  - type: GitHubOrganization
     url: https://github.com/checkly
 maintainers:
   - FN: Kin Lane
