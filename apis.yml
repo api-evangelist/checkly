@@ -27,6 +27,8 @@ apis:
       - type: GitHubRepository
         url: https://github.com/checkly
 common:
+  - type: LinkedIn
+    url: https://www.linkedin.com/company/checkly
   - type: Website
     url: https://www.checklyhq.com
   - type: Documentation
