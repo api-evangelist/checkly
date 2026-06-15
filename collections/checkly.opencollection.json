@@ -1,0 +1,599 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Checkly Public API",
+    "version": "v1"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Default",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Accounts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.checklyhq.com/v1/accounts",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limit the number of results"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page number"
+              }
+            ]
+          },
+          "docs": "Fetch user accounts based on supplied API key"
+        },
+        {
+          "info": {
+            "name": "Get Account",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.checklyhq.com/v1/accounts/:accountId",
+            "params": [
+              {
+                "name": "accountId",
+                "value": "",
+                "type": "path",
+                "description": "The account ID"
+              }
+            ]
+          },
+          "docs": "Get details from a specific account"
+        },
+        {
+          "info": {
+            "name": "Get API Check Analytics",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.checklyhq.com/v1/analytics/api-checks/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The check ID"
+              }
+            ]
+          },
+          "docs": "Get analytics data for API checks"
+        },
+        {
+          "info": {
+            "name": "Get Browser Check Analytics",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.checklyhq.com/v1/analytics/browser-checks/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The check ID"
+              }
+            ]
+          },
+          "docs": "Get analytics data for browser checks"
+        },
+        {
+          "info": {
+            "name": "List Check Alerts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.checklyhq.com/v1/check-alerts",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limit the number of results"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page number"
+              }
+            ]
+          },
+          "docs": "Retrieve all alerts triggered by checks"
+        },
+        {
+          "info": {
+            "name": "Get Check Alerts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.checklyhq.com/v1/check-alerts/:checkId",
+            "params": [
+              {
+                "name": "checkId",
+                "value": "",
+                "type": "path",
+                "description": "The check ID"
+              }
+            ]
+          },
+          "docs": "List all alerts for a specific check"
+        },
+        {
+          "info": {
+            "name": "List Check Groups",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.checklyhq.com/v1/check-groups",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limit the number of results"
+              }
+            ]
+          },
+          "docs": "Retrieve all check groups"
+        },
+        {
+          "info": {
+            "name": "Create Check Group",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.checklyhq.com/v1/check-groups",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new check group"
+        },
+        {
+          "info": {
+            "name": "List Check Results",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.checklyhq.com/v1/check-results/:checkId",
+            "params": [
+              {
+                "name": "checkId",
+                "value": "",
+                "type": "path",
+                "description": "The check ID"
+              }
+            ]
+          },
+          "docs": "Retrieve all execution results for a specific check"
+        },
+        {
+          "info": {
+            "name": "Get Check Result",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.checklyhq.com/v1/check-results/:checkId/:checkResultId",
+            "params": [
+              {
+                "name": "checkId",
+                "value": "",
+                "type": "path",
+                "description": "The check ID"
+              },
+              {
+                "name": "checkResultId",
+                "value": "",
+                "type": "path",
+                "description": "The check result ID"
+              }
+            ]
+          },
+          "docs": "Retrieve detailed information about a specific check execution result"
+        },
+        {
+          "info": {
+            "name": "List Check Statuses",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.checklyhq.com/v1/check-statuses",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limit the number of results"
+              }
+            ]
+          },
+          "docs": "Retrieve current health status for all checks"
+        },
+        {
+          "info": {
+            "name": "List Dashboards",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.checklyhq.com/v1/dashboards",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limit the number of results"
+              }
+            ]
+          },
+          "docs": "Retrieve all public dashboards"
+        },
+        {
+          "info": {
+            "name": "List Heartbeats",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.checklyhq.com/v1/heartbeats",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limit the number of results"
+              }
+            ]
+          },
+          "docs": "Retrieve all heartbeat monitors"
+        },
+        {
+          "info": {
+            "name": "Create Heartbeat",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.checklyhq.com/v1/heartbeats",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new heartbeat monitor"
+        },
+        {
+          "info": {
+            "name": "List Incidents",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.checklyhq.com/v1/incidents",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limit the number of results"
+              }
+            ]
+          },
+          "docs": "Retrieve all incidents"
+        },
+        {
+          "info": {
+            "name": "List Locations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.checklyhq.com/v1/locations"
+          },
+          "docs": "Retrieve all available monitoring locations"
+        },
+        {
+          "info": {
+            "name": "List Maintenance Windows",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.checklyhq.com/v1/maintenance-windows",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limit the number of results"
+              }
+            ]
+          },
+          "docs": "Retrieve all maintenance windows"
+        },
+        {
+          "info": {
+            "name": "Create Maintenance Window",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.checklyhq.com/v1/maintenance-windows",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new maintenance window"
+        },
+        {
+          "info": {
+            "name": "List Private Locations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.checklyhq.com/v1/private-locations",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limit the number of results"
+              }
+            ]
+          },
+          "docs": "Retrieve all private locations"
+        },
+        {
+          "info": {
+            "name": "Create Private Location",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.checklyhq.com/v1/private-locations",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new private location"
+        },
+        {
+          "info": {
+            "name": "List Reports",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.checklyhq.com/v1/reports",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limit the number of results"
+              }
+            ]
+          },
+          "docs": "Retrieve all reports"
+        },
+        {
+          "info": {
+            "name": "List Environment Variables",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.checklyhq.com/v1/variables",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limit the number of results"
+              }
+            ]
+          },
+          "docs": "Retrieve all environment variables"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Analytics",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Analytics Metrics",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.checklyhq.com/v1/analytics/metrics/:checkType",
+            "params": [
+              {
+                "name": "checkType",
+                "value": "",
+                "type": "path",
+                "description": "The check type to retrieve metrics for"
+              },
+              {
+                "name": "category",
+                "value": "",
+                "type": "query",
+                "description": "Filter by metric category"
+              },
+              {
+                "name": "includeThresholds",
+                "value": "",
+                "type": "query",
+                "description": "Include performance thresholds and benchmarks"
+              },
+              {
+                "name": "format",
+                "value": "",
+                "type": "query",
+                "description": "Response format"
+              },
+              {
+                "name": "includeExamples",
+                "value": "",
+                "type": "query",
+                "description": "Include example values and use cases"
+              },
+              {
+                "name": "includeCalculations",
+                "value": "",
+                "type": "query",
+                "description": "Include calculation method details"
+              }
+            ]
+          },
+          "docs": "Returns all the available metrics for a specific check-type (API, URL, TCP or BROWSER)"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Checks",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all checks",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.checklyhq.com/v1/checks",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limit the number of results"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page number"
+              },
+              {
+                "name": "apiCheckUrlFilterPattern",
+                "value": "",
+                "type": "query",
+                "description": "Filters the results by a string contained in the URL of an API check, for instance a domain like \"www.myapp.com\". Only returns API checks."
+              }
+            ]
+          },
+          "docs": "Lists all current checks in your account."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Alert Channels",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all alert channels",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.checklyhq.com/v1/alert-channels",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limit the number of results"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page number"
+              }
+            ]
+          },
+          "docs": "Lists all alert channels in your account."
+        },
+        {
+          "info": {
+            "name": "Create an alert channel",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.checklyhq.com/v1/alert-channels",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new alert channel in your account."
+        },
+        {
+          "info": {
+            "name": "Retrieve an alert channel",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.checklyhq.com/v1/alert-channels/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The alert channel ID"
+              }
+            ]
+          },
+          "docs": "Gets a specific alert channel by ID."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

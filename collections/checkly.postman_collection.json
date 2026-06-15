@@ -1,0 +1,3854 @@
+{
+  "item": [
+    {
+      "id": "6f68347f-01e4-4bc1-b116-895b0a779a96",
+      "name": "Analytics",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "87f2ba11-5dd1-4afc-aa8d-403fcab2231c",
+          "name": "List Analytics Metrics",
+          "request": {
+            "name": "List Analytics Metrics",
+            "description": {
+              "content": "Returns all the available metrics for a specific check-type (API, URL, TCP or BROWSER)",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "analytics",
+                "metrics",
+                ":checkType"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "category",
+                  "value": "<string>",
+                  "description": "Filter by metric category"
+                },
+                {
+                  "disabled": false,
+                  "key": "includeThresholds",
+                  "value": "false",
+                  "description": "Include performance thresholds and benchmarks"
+                },
+                {
+                  "disabled": false,
+                  "key": "format",
+                  "value": "detailed",
+                  "description": "Response format"
+                },
+                {
+                  "disabled": false,
+                  "key": "includeExamples",
+                  "value": "false",
+                  "description": "Include example values and use cases"
+                },
+                {
+                  "disabled": false,
+                  "key": "includeCalculations",
+                  "value": "false",
+                  "description": "Include calculation method details"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "checkType",
+                  "description": "(Required) The check type to retrieve metrics for"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "6b037b52-cd64-4ab5-8c6a-d6c212cc8388",
+              "name": "List of available metrics for the specified check type",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "analytics",
+                    "metrics",
+                    ":checkType"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "category",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "includeThresholds",
+                      "value": "false"
+                    },
+                    {
+                      "key": "format",
+                      "value": "detailed"
+                    },
+                    {
+                      "key": "includeExamples",
+                      "value": "false"
+                    },
+                    {
+                      "key": "includeCalculations",
+                      "value": "false"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "checkType",
+                      "description": "(Required) The check type to retrieve metrics for"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"responseTimeMetrics\": [\n      {\n        \"name\": \"string\",\n        \"displayName\": \"string\",\n        \"description\": \"string\",\n        \"unit\": \"string\",\n        \"dataType\": \"number\",\n        \"availableFor\": [\n          \"string\",\n          \"string\"\n        ],\n        \"calculationMethod\": \"string\",\n        \"precision\": 6676,\n        \"category\": \"string\",\n        \"goodThreshold\": 2880.213153905231,\n        \"needsImprovementThreshold\": 2732.510571170272,\n        \"range\": {\n          \"min\": 1349.0424172429493,\n          \"max\": 1656.1427355495862\n        }\n      },\n      {\n        \"name\": \"string\",\n        \"displayName\": \"string\",\n        \"description\": \"string\",\n        \"unit\": \"string\",\n        \"dataType\": \"integer\",\n        \"availableFor\": [\n          \"string\",\n          \"string\"\n        ],\n        \"calculationMethod\": \"string\",\n        \"precision\": 2662,\n        \"category\": \"string\",\n        \"goodThreshold\": 5303.945866371447,\n        \"needsImprovementThreshold\": 7926.259096510154,\n        \"range\": {\n          \"min\": 4943.368680699988,\n          \"max\": 8304.903209585422\n        }\n      }\n    ],\n    \"successMetrics\": [\n      {\n        \"name\": \"string\",\n        \"displayName\": \"string\",\n        \"description\": \"string\",\n        \"unit\": \"string\",\n        \"dataType\": \"integer\",\n        \"availableFor\": [\n          \"string\",\n          \"string\"\n        ],\n        \"calculationMethod\": \"string\",\n        \"precision\": 2136,\n        \"category\": \"string\",\n        \"goodThreshold\": 7152.009764304341,\n        \"needsImprovementThreshold\": 1494.310426879276,\n        \"range\": {\n          \"min\": 4713.458412101291,\n          \"max\": 1151.8140514098363\n        }\n      },\n      {\n        \"name\": \"string\",\n        \"displayName\": \"string\",\n        \"description\": \"string\",\n        \"unit\": \"string\",\n        \"dataType\": \"integer\",\n        \"availableFor\": [\n          \"string\",\n          \"string\"\n        ],\n        \"calculationMethod\": \"string\",\n        \"precision\": 2986,\n        \"category\": \"string\",\n        \"goodThreshold\": 7414.886102240988,\n        \"needsImprovementThreshold\": 9622.039708382352,\n        \"range\": {\n          \"min\": 8410.974120089657,\n          \"max\": 8857.687253141074\n        }\n      }\n    ],\n    \"volumeMetrics\": [\n      {\n        \"name\": \"string\",\n        \"displayName\": \"string\",\n        \"description\": \"string\",\n        \"unit\": \"string\",\n        \"dataType\": \"integer\",\n        \"availableFor\": [\n          \"string\",\n          \"string\"\n        ],\n        \"calculationMethod\": \"string\",\n        \"precision\": 6537,\n        \"category\": \"string\",\n        \"goodThreshold\": 2297.4123345479347,\n        \"needsImprovementThreshold\": 8147.340259548626,\n        \"range\": {\n          \"min\": 2086.1314248984186,\n          \"max\": 9555.405657380139\n        }\n      },\n      {\n        \"name\": \"string\",\n        \"displayName\": \"string\",\n        \"description\": \"string\",\n        \"unit\": \"string\",\n        \"dataType\": \"integer\",\n        \"availableFor\": [\n          \"string\",\n          \"string\"\n        ],\n        \"calculationMethod\": \"string\",\n        \"precision\": 832,\n        \"category\": \"string\",\n        \"goodThreshold\": 5576.056189226638,\n        \"needsImprovementThreshold\": 6760.076110323627,\n        \"range\": {\n          \"min\": 482.42870523367174,\n          \"max\": 7900.6312244994415\n        }\n      }\n    ],\n    \"browserSpecificMetrics\": [\n      {\n        \"name\": \"string\",\n        \"displayName\": \"string\",\n        \"description\": \"string\",\n        \"unit\": \"string\",\n        \"dataType\": \"number\",\n        \"availableFor\": [\n          \"string\",\n          \"string\"\n        ],\n        \"calculationMethod\": \"string\",\n        \"precision\": 527,\n        \"category\": \"string\",\n        \"goodThreshold\": 6200.653376785394,\n        \"needsImprovementThreshold\": 532.8111768270671,\n        \"range\": {\n          \"min\": 4062.411030106372,\n          \"max\": 6440.322720632093\n        }\n      },\n      {\n        \"name\": \"string\",\n        \"displayName\": \"string\",\n        \"description\": \"string\",\n        \"unit\": \"string\",\n        \"dataType\": \"integer\",\n        \"availableFor\": [\n          \"string\",\n          \"string\"\n        ],\n        \"calculationMethod\": \"string\",\n        \"precision\": 5659,\n        \"category\": \"string\",\n        \"goodThreshold\": 8785.267215211965,\n        \"needsImprovementThreshold\": 327.33335833486257,\n        \"range\": {\n          \"min\": 6346.057370013806,\n          \"max\": 7505.747388151135\n        }\n      }\n    ],\n    \"heartbeatSpecificMetrics\": [\n      {\n        \"name\": \"string\",\n        \"displayName\": \"string\",\n        \"description\": \"string\",\n        \"unit\": \"string\",\n        \"dataType\": \"number\",\n        \"availableFor\": [\n          \"string\",\n          \"string\"\n        ],\n        \"calculationMethod\": \"string\",\n        \"precision\": 6552,\n        \"category\": \"string\",\n        \"goodThreshold\": 2898.2148237099227,\n        \"needsImprovementThreshold\": 6978.580536767695,\n        \"range\": {\n          \"min\": 5207.031145894824,\n          \"max\": 7818.706962247284\n        }\n      },\n      {\n        \"name\": \"string\",\n        \"displayName\": \"string\",\n        \"description\": \"string\",\n        \"unit\": \"string\",\n        \"dataType\": \"number\",\n        \"availableFor\": [\n          \"string\",\n          \"string\"\n        ],\n        \"calculationMethod\": \"string\",\n        \"precision\": 1551,\n        \"category\": \"string\",\n        \"goodThreshold\": 4918.036833286818,\n        \"needsImprovementThreshold\": 1714.4263664549387,\n        \"range\": {\n          \"min\": 924.451608992094,\n          \"max\": 8855.59985313551\n        }\n      }\n    ]\n  },\n  \"meta\": {\n    \"totalMetrics\": 1837,\n    \"categories\": [\n      \"string\",\n      \"string\"\n    ],\n    \"checkTypes\": [\n      \"string\",\n      \"string\"\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "395f4057-77c0-4b79-b1a7-94feeb6ae98d",
+              "name": "Bad Request - Invalid check type",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "analytics",
+                    "metrics",
+                    ":checkType"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "category",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "includeThresholds",
+                      "value": "false"
+                    },
+                    {
+                      "key": "format",
+                      "value": "detailed"
+                    },
+                    {
+                      "key": "includeExamples",
+                      "value": "false"
+                    },
+                    {
+                      "key": "includeCalculations",
+                      "value": "false"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "checkType",
+                      "description": "(Required) The check type to retrieve metrics for"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\",\n  \"statusCode\": 3610\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ce8828fa-1fe7-4613-b6b9-d5ef21902ec8",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "analytics",
+                    "metrics",
+                    ":checkType"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "category",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "includeThresholds",
+                      "value": "false"
+                    },
+                    {
+                      "key": "format",
+                      "value": "detailed"
+                    },
+                    {
+                      "key": "includeExamples",
+                      "value": "false"
+                    },
+                    {
+                      "key": "includeCalculations",
+                      "value": "false"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "checkType",
+                      "description": "(Required) The check type to retrieve metrics for"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\",\n  \"statusCode\": 3610\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "dcc8110b-cb00-49eb-bf10-7e14b15912ef",
+              "name": "Forbidden",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "analytics",
+                    "metrics",
+                    ":checkType"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "category",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "includeThresholds",
+                      "value": "false"
+                    },
+                    {
+                      "key": "format",
+                      "value": "detailed"
+                    },
+                    {
+                      "key": "includeExamples",
+                      "value": "false"
+                    },
+                    {
+                      "key": "includeCalculations",
+                      "value": "false"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "checkType",
+                      "description": "(Required) The check type to retrieve metrics for"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\",\n  \"statusCode\": 3610\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "233ccb62-8b3b-4589-af6c-9e6e28ea2998",
+              "name": "Too Many Requests",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "analytics",
+                    "metrics",
+                    ":checkType"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "category",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "includeThresholds",
+                      "value": "false"
+                    },
+                    {
+                      "key": "format",
+                      "value": "detailed"
+                    },
+                    {
+                      "key": "includeExamples",
+                      "value": "false"
+                    },
+                    {
+                      "key": "includeCalculations",
+                      "value": "false"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "checkType",
+                      "description": "(Required) The check type to retrieve metrics for"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\",\n  \"statusCode\": 3610\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "7ac41923-37f1-402d-94c2-94b322ab5882",
+      "name": "Checks",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "deee7a7c-3699-4fbc-8a79-96c2d8a8fa45",
+          "name": "List all checks",
+          "request": {
+            "name": "List all checks",
+            "description": {
+              "content": "Lists all current checks in your account.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "checks"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Limit the number of results"
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number"
+                },
+                {
+                  "disabled": false,
+                  "key": "apiCheckUrlFilterPattern",
+                  "value": "<string>",
+                  "description": "Filters the results by a string contained in the URL of an API check, for instance a domain like \"www.myapp.com\". Only returns API checks."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "a1773823-63ba-4fe0-95ac-790cfb28e6ef",
+              "name": "List of checks",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "checks"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "apiCheckUrlFilterPattern",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"73208bf5-2b42-4ab3-b18c-7ac505b7d7b4\",\n      \"name\": \"Homepage Load Test\",\n      \"checkType\": \"URL\",\n      \"frequency\": 5,\n      \"activated\": false,\n      \"muted\": false,\n      \"shouldFail\": true,\n      \"locations\": [\n        \"us-east-1\",\n        \"eu-west-1\",\n        \"ap-southeast-1\"\n      ],\n      \"tags\": [\n        \"production\",\n        \"critical\",\n        \"homepage\"\n      ],\n      \"createdAt\": \"2024-01-07T17:00:42.119Z\",\n      \"updatedAt\": \"2007-11-19T23:57:23.410Z\",\n      \"script\": \"string\",\n      \"environmentVariables\": [\n        {\n          \"key\": \"string\",\n          \"value\": \"string\",\n          \"locked\": true\n        },\n        {\n          \"key\": \"string\",\n          \"value\": \"string\",\n          \"locked\": true\n        }\n      ]\n    },\n    {\n      \"id\": \"73208bf5-2b42-4ab3-b18c-7ac505b7d7b4\",\n      \"name\": \"Homepage Load Test\",\n      \"checkType\": \"URL\",\n      \"frequency\": 5,\n      \"activated\": true,\n      \"muted\": true,\n      \"shouldFail\": false,\n      \"locations\": [\n        \"us-east-1\",\n        \"eu-west-1\",\n        \"ap-southeast-1\"\n      ],\n      \"tags\": [\n        \"production\",\n        \"critical\",\n        \"homepage\"\n      ],\n      \"createdAt\": \"1958-01-28T02:39:14.423Z\",\n      \"updatedAt\": \"1986-03-10T22:36:03.195Z\",\n      \"script\": \"string\",\n      \"environmentVariables\": [\n        {\n          \"key\": \"string\",\n          \"value\": \"string\",\n          \"locked\": false\n        },\n        {\n          \"key\": \"string\",\n          \"value\": \"string\",\n          \"locked\": true\n        }\n      ]\n    }\n  ],\n  \"meta\": {\n    \"currentPage\": 3739,\n    \"totalPages\": 4961,\n    \"totalItems\": 4250,\n    \"limit\": 7133\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a88c07c9-d25e-4fca-8d71-b0730364e89e",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "checks"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "apiCheckUrlFilterPattern",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\",\n  \"statusCode\": 3610\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "04ec4635-dcb4-4fbb-b0e2-a89ce49a2bbc",
+              "name": "Forbidden",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "checks"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "apiCheckUrlFilterPattern",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\",\n  \"statusCode\": 3610\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "76d58b5e-4870-4b77-bbb3-7688eacd83b2",
+              "name": "Too Many Requests",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "checks"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "apiCheckUrlFilterPattern",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\",\n  \"statusCode\": 3610\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "180d9793-18fa-4504-a05a-ca0fefd5538c",
+      "name": "Alert Channels",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "efa1e476-d3ab-444e-a3c9-8e4720f881b4",
+          "name": "List all alert channels",
+          "request": {
+            "name": "List all alert channels",
+            "description": {
+              "content": "Lists all alert channels in your account.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "alert-channels"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Limit the number of results"
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "2fce0e2c-60ad-4f7e-8c5f-72f8d1473087",
+              "name": "List of alert channels",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "alert-channels"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": 3562,\n      \"type\": \"SLACK\",\n      \"name\": \"string\",\n      \"createdAt\": \"2016-09-03T13:23:12.472Z\",\n      \"updatedAt\": \"1950-07-16T07:23:24.877Z\"\n    },\n    {\n      \"id\": 7570,\n      \"type\": \"PHONE\",\n      \"name\": \"string\",\n      \"createdAt\": \"2010-09-10T10:47:22.373Z\",\n      \"updatedAt\": \"1961-09-12T21:24:37.240Z\"\n    }\n  ],\n  \"meta\": {\n    \"currentPage\": 4836,\n    \"totalPages\": 3501,\n    \"totalItems\": 8016,\n    \"limit\": 2589\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f2303e35-6d13-4b0b-a946-4381f205377f",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "alert-channels"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\",\n  \"statusCode\": 3610\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ba8f820b-524a-4947-a993-79daf9b5a695",
+              "name": "Forbidden",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "alert-channels"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\",\n  \"statusCode\": 3610\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5e958b98-e846-4d9f-8a55-b0fb03dbe78d",
+              "name": "Too Many Requests",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "alert-channels"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\",\n  \"statusCode\": 3610\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "97dbde56-aa3a-41a0-a030-f3cd8c6736b5",
+          "name": "Create an alert channel",
+          "request": {
+            "name": "Create an alert channel",
+            "description": {
+              "content": "Creates a new alert channel in your account.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "alert-channels"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"<string>\",\n  \"name\": \"<string>\",\n  \"config\": \"<object>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "4efe0f4c-4120-4996-b433-16c138f71ae1",
+              "name": "Alert channel created",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "alert-channels"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"type\": \"<string>\",\n  \"name\": \"<string>\",\n  \"config\": \"<object>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 2133,\n  \"type\": \"WEBHOOK\",\n  \"name\": \"string\",\n  \"createdAt\": \"2011-05-28T02:55:29.370Z\",\n  \"updatedAt\": \"1953-06-23T15:12:01.455Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c3dadf0e-3faa-4574-a62d-3ab48b8658ae",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "alert-channels"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"type\": \"<string>\",\n  \"name\": \"<string>\",\n  \"config\": \"<object>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\",\n  \"statusCode\": 3610\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "53f76bbb-b156-4640-b26d-d87f92a09da7",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "alert-channels"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"type\": \"<string>\",\n  \"name\": \"<string>\",\n  \"config\": \"<object>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\",\n  \"statusCode\": 3610\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b08bd549-6ac6-4029-9bb6-49f24a746f1c",
+              "name": "Payment Required",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "alert-channels"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"type\": \"<string>\",\n  \"name\": \"<string>\",\n  \"config\": \"<object>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Payment Required",
+              "code": 402,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\",\n  \"statusCode\": 3610\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ab65c3af-a917-4846-929d-4a0325013fc8",
+              "name": "Forbidden",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "alert-channels"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"type\": \"<string>\",\n  \"name\": \"<string>\",\n  \"config\": \"<object>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\",\n  \"statusCode\": 3610\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "081c4a83-e5a6-40ed-918a-2caa785370e8",
+              "name": "Too Many Requests",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "alert-channels"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"type\": \"<string>\",\n  \"name\": \"<string>\",\n  \"config\": \"<object>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\",\n  \"statusCode\": 3610\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "c3326d49-e398-42b1-b911-973855cce471",
+          "name": "Retrieve an alert channel",
+          "request": {
+            "name": "Retrieve an alert channel",
+            "description": {
+              "content": "Gets a specific alert channel by ID.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "alert-channels",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "id",
+                  "description": "(Required) The alert channel ID"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "be5a4471-6217-4fae-83c3-fb31e7ea736e",
+              "name": "Alert channel details",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "alert-channels",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) The alert channel ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 2133,\n  \"type\": \"WEBHOOK\",\n  \"name\": \"string\",\n  \"createdAt\": \"2011-05-28T02:55:29.370Z\",\n  \"updatedAt\": \"1953-06-23T15:12:01.455Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e4890567-2a53-4e71-8510-7bc1cba3de59",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "alert-channels",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) The alert channel ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\",\n  \"statusCode\": 3610\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0d2b8f78-c5e1-4062-a828-6e8bc499d42e",
+              "name": "Forbidden",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "alert-channels",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) The alert channel ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\",\n  \"statusCode\": 3610\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f69cedb2-af9c-465c-85f0-11f8c0ef42c8",
+              "name": "Not Found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "alert-channels",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) The alert channel ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\",\n  \"statusCode\": 3610\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "933940a2-fa0d-458b-acd2-299792f81abb",
+              "name": "Too Many Requests",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "alert-channels",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) The alert channel ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\",\n  \"statusCode\": 3610\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "c852aad4-3c34-4097-86c7-d8685fd6d7f4",
+      "name": "List Accounts",
+      "request": {
+        "name": "List Accounts",
+        "description": {
+          "content": "Fetch user accounts based on supplied API key",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "v1",
+            "accounts"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [
+            {
+              "disabled": false,
+              "key": "limit",
+              "value": "10",
+              "description": "Limit the number of results"
+            },
+            {
+              "disabled": false,
+              "key": "page",
+              "value": "1",
+              "description": "Page number"
+            }
+          ],
+          "variable": []
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "GET",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "6e2b5964-7da2-49cd-a469-c29375925e7d",
+          "name": "List of accounts",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "v1",
+                "accounts"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: bearer",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "Bearer <token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"data\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"name\": \"Acme Corp Production\",\n      \"plan\": {\n        \"name\": \"Team\",\n        \"type\": \"subscription\",\n        \"features\": {\n          \"maxChecks\": 100,\n          \"maxAlertChannels\": 50,\n          \"maxPrivateLocations\": 10,\n          \"supportLevel\": \"standard\"\n        }\n      },\n      \"settings\": {\n        \"timezone\": \"America/New_York\",\n        \"dateFormat\": \"MM/DD/YYYY\",\n        \"defaultCheckFrequency\": 10\n      },\n      \"usage\": {\n        \"checksUsed\": 45,\n        \"alertChannelsUsed\": 12,\n        \"privateLocationsUsed\": 2\n      },\n      \"createdAt\": \"2024-01-15T10:30:00.000Z\",\n      \"updatedAt\": \"2024-01-20T14:45:00.000Z\"\n    },\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"name\": \"Acme Corp Production\",\n      \"plan\": {\n        \"name\": \"Team\",\n        \"type\": \"subscription\",\n        \"features\": {\n          \"maxChecks\": 100,\n          \"maxAlertChannels\": 50,\n          \"maxPrivateLocations\": 10,\n          \"supportLevel\": \"standard\"\n        }\n      },\n      \"settings\": {\n        \"timezone\": \"America/New_York\",\n        \"dateFormat\": \"MM/DD/YYYY\",\n        \"defaultCheckFrequency\": 10\n      },\n      \"usage\": {\n        \"checksUsed\": 45,\n        \"alertChannelsUsed\": 12,\n        \"privateLocationsUsed\": 2\n      },\n      \"createdAt\": \"2024-01-15T10:30:00.000Z\",\n      \"updatedAt\": \"2024-01-20T14:45:00.000Z\"\n    }\n  ],\n  \"meta\": {\n    \"currentPage\": 362,\n    \"totalPages\": 6980,\n    \"totalItems\": 3384,\n    \"limit\": 2372\n  }\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "b215c1c8-51f1-4e73-a5c8-0d88ebfc71c4",
+      "name": "Get Account",
+      "request": {
+        "name": "Get Account",
+        "description": {
+          "content": "Get details from a specific account",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "v1",
+            "accounts",
+            ":accountId"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": [
+            {
+              "disabled": false,
+              "type": "any",
+              "value": "<uuid>",
+              "key": "accountId",
+              "description": "(Required) The account ID"
+            }
+          ]
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "GET",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "853f3333-c5bf-4026-b6a3-579bddbdf787",
+          "name": "Account details",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "v1",
+                "accounts",
+                ":accountId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "accountId",
+                  "description": "(Required) The account ID"
+                }
+              ]
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: bearer",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "Bearer <token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"name\": \"Acme Corp Production\",\n  \"plan\": {\n    \"name\": \"Team\",\n    \"type\": \"subscription\",\n    \"features\": {\n      \"maxChecks\": 100,\n      \"maxAlertChannels\": 50,\n      \"maxPrivateLocations\": 10,\n      \"supportLevel\": \"standard\"\n    }\n  },\n  \"settings\": {\n    \"timezone\": \"America/New_York\",\n    \"dateFormat\": \"MM/DD/YYYY\",\n    \"defaultCheckFrequency\": 10\n  },\n  \"usage\": {\n    \"checksUsed\": 45,\n    \"alertChannelsUsed\": 12,\n    \"privateLocationsUsed\": 2\n  },\n  \"createdAt\": \"2024-01-15T10:30:00.000Z\",\n  \"updatedAt\": \"2024-01-20T14:45:00.000Z\"\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "55972f35-4059-4ff8-b065-946cad76b68f",
+      "name": "Get API Check Analytics",
+      "request": {
+        "name": "Get API Check Analytics",
+        "description": {
+          "content": "Get analytics data for API checks",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "v1",
+            "analytics",
+            "api-checks",
+            ":id"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": [
+            {
+              "disabled": false,
+              "type": "any",
+              "value": "<string>",
+              "key": "id",
+              "description": "(Required) The check ID"
+            }
+          ]
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "GET",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "321f6bf7-a248-4102-bfb6-9fa42d4658fa",
+          "name": "API check analytics data",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "v1",
+                "analytics",
+                "api-checks",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The check ID"
+                }
+              ]
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: bearer",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "Bearer <token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"id\": \"string\",\n  \"averageResponseTime\": 3994.2399436678757,\n  \"successRate\": 5495.217657221735,\n  \"totalRequests\": 4395\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "46a281fa-3262-49b9-8434-f265facdd0e2",
+      "name": "Get Browser Check Analytics",
+      "request": {
+        "name": "Get Browser Check Analytics",
+        "description": {
+          "content": "Get analytics data for browser checks",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "v1",
+            "analytics",
+            "browser-checks",
+            ":id"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": [
+            {
+              "disabled": false,
+              "type": "any",
+              "value": "<string>",
+              "key": "id",
+              "description": "(Required) The check ID"
+            }
+          ]
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "GET",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "5cac9585-5f10-4e16-b6fe-f7dfd221b61d",
+          "name": "Browser check analytics data",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "v1",
+                "analytics",
+                "browser-checks",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The check ID"
+                }
+              ]
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: bearer",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "Bearer <token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"id\": \"string\",\n  \"averageLoadTime\": 4256.245079498203,\n  \"successRate\": 771.22951822845,\n  \"totalRuns\": 2845\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "2059b68f-bcb5-413a-9a75-0786a8b2fa04",
+      "name": "List Check Alerts",
+      "request": {
+        "name": "List Check Alerts",
+        "description": {
+          "content": "Retrieve all alerts triggered by checks",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "v1",
+            "check-alerts"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [
+            {
+              "disabled": false,
+              "key": "limit",
+              "value": "10",
+              "description": "Limit the number of results"
+            },
+            {
+              "disabled": false,
+              "key": "page",
+              "value": "1",
+              "description": "Page number"
+            }
+          ],
+          "variable": []
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "GET",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "e4485b44-123c-46b2-8b93-5f5228f27060",
+          "name": "List of check alerts",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "v1",
+                "check-alerts"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: bearer",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "Bearer <token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"checkId\": \"string\",\n      \"status\": \"resolved\",\n      \"createdAt\": \"1974-10-01T06:30:04.166Z\"\n    },\n    {\n      \"id\": \"string\",\n      \"checkId\": \"string\",\n      \"status\": \"triggered\",\n      \"createdAt\": \"1970-07-16T01:24:46.685Z\"\n    }\n  ],\n  \"meta\": {\n    \"currentPage\": 7525,\n    \"totalPages\": 3196,\n    \"totalItems\": 9022,\n    \"limit\": 1844\n  }\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "3098e9b7-8a2e-4316-9fae-756d264e3394",
+      "name": "Get Check Alerts",
+      "request": {
+        "name": "Get Check Alerts",
+        "description": {
+          "content": "List all alerts for a specific check",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "v1",
+            "check-alerts",
+            ":checkId"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": [
+            {
+              "disabled": false,
+              "type": "any",
+              "value": "<string>",
+              "key": "checkId",
+              "description": "(Required) The check ID"
+            }
+          ]
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "GET",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "d8a3020b-ceea-489b-9b86-cebef62ce767",
+          "name": "Check alerts",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "v1",
+                "check-alerts",
+                ":checkId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "checkId",
+                  "description": "(Required) The check ID"
+                }
+              ]
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: bearer",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "Bearer <token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"checkId\": \"string\",\n      \"status\": \"resolved\",\n      \"createdAt\": \"1974-10-01T06:30:04.166Z\"\n    },\n    {\n      \"id\": \"string\",\n      \"checkId\": \"string\",\n      \"status\": \"triggered\",\n      \"createdAt\": \"1970-07-16T01:24:46.685Z\"\n    }\n  ],\n  \"meta\": {\n    \"currentPage\": 7525,\n    \"totalPages\": 3196,\n    \"totalItems\": 9022,\n    \"limit\": 1844\n  }\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "dbfb50bf-2fba-4b97-979e-78cca20c2497",
+      "name": "List Check Groups",
+      "request": {
+        "name": "List Check Groups",
+        "description": {
+          "content": "Retrieve all check groups",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "v1",
+            "check-groups"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [
+            {
+              "disabled": false,
+              "key": "limit",
+              "value": "10",
+              "description": "Limit the number of results"
+            }
+          ],
+          "variable": []
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "GET",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "51b2d548-ee6b-4632-8485-26b2faf6b4a7",
+          "name": "List of check groups",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "v1",
+                "check-groups"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: bearer",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "Bearer <token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"activated\": true,\n      \"createdAt\": \"1960-10-01T11:44:09.052Z\"\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"activated\": true,\n      \"createdAt\": \"2000-03-11T00:26:25.251Z\"\n    }\n  ],\n  \"meta\": {\n    \"currentPage\": 8558,\n    \"totalPages\": 7387,\n    \"totalItems\": 5439,\n    \"limit\": 5411\n  }\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "3633e3c7-bfb5-4c4a-8a2f-83ca0c1de993",
+      "name": "Create Check Group",
+      "request": {
+        "name": "Create Check Group",
+        "description": {
+          "content": "Create a new check group",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "v1",
+            "check-groups"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "POST",
+        "auth": null,
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"<string>\",\n  \"activated\": \"<boolean>\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "id": "4f3bfae8-bcc2-4ea4-81fe-5f485e94501a",
+          "name": "Check group created",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "v1",
+                "check-groups"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: bearer",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "Bearer <token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"activated\": \"<boolean>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"id\": \"string\",\n  \"name\": \"string\",\n  \"activated\": false,\n  \"createdAt\": \"2017-12-23T21:14:10.773Z\"\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "07ca54bc-872b-4df4-8a1f-e0a7f165c50f",
+      "name": "List Check Results",
+      "request": {
+        "name": "List Check Results",
+        "description": {
+          "content": "Retrieve all execution results for a specific check",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "v1",
+            "check-results",
+            ":checkId"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": [
+            {
+              "disabled": false,
+              "type": "any",
+              "value": "<string>",
+              "key": "checkId",
+              "description": "(Required) The check ID"
+            }
+          ]
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "GET",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "c35c37bf-57d7-49bd-b319-df8c43a1d59c",
+          "name": "List of check results",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "v1",
+                "check-results",
+                ":checkId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "checkId",
+                  "description": "(Required) The check ID"
+                }
+              ]
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: bearer",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "Bearer <token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"checkId\": \"string\",\n      \"hasFailures\": false,\n      \"responseTime\": 7560.164008423079,\n      \"runLocation\": \"string\",\n      \"startedAt\": \"1981-02-03T06:49:10.729Z\",\n      \"stoppedAt\": \"1978-01-19T20:45:34.240Z\"\n    },\n    {\n      \"id\": \"string\",\n      \"checkId\": \"string\",\n      \"hasFailures\": true,\n      \"responseTime\": 8314.092555433854,\n      \"runLocation\": \"string\",\n      \"startedAt\": \"2008-01-21T11:55:14.938Z\",\n      \"stoppedAt\": \"1955-08-01T11:43:31.624Z\"\n    }\n  ],\n  \"meta\": {\n    \"currentPage\": 2518,\n    \"totalPages\": 8873,\n    \"totalItems\": 9613,\n    \"limit\": 2365\n  }\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "0060bf84-89b0-4a33-bee2-e470932812c2",
+      "name": "Get Check Result",
+      "request": {
+        "name": "Get Check Result",
+        "description": {
+          "content": "Retrieve detailed information about a specific check execution result",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "v1",
+            "check-results",
+            ":checkId",
+            ":checkResultId"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": [
+            {
+              "disabled": false,
+              "type": "any",
+              "value": "<string>",
+              "key": "checkId",
+              "description": "(Required) The check ID"
+            },
+            {
+              "disabled": false,
+              "type": "any",
+              "value": "<string>",
+              "key": "checkResultId",
+              "description": "(Required) The check result ID"
+            }
+          ]
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "GET",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "06751e4f-3c84-4b0b-8305-82bdef622809",
+          "name": "Check result details",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "v1",
+                "check-results",
+                ":checkId",
+                ":checkResultId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "checkId",
+                  "description": "(Required) The check ID"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "checkResultId",
+                  "description": "(Required) The check result ID"
+                }
+              ]
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: bearer",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "Bearer <token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"id\": \"string\",\n  \"checkId\": \"string\",\n  \"hasFailures\": true,\n  \"responseTime\": 8572.914854008053,\n  \"runLocation\": \"string\",\n  \"startedAt\": \"2016-11-17T10:13:15.620Z\",\n  \"stoppedAt\": \"1999-07-11T23:08:07.480Z\"\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "59e76c7e-71f3-479c-a6ee-84db5258a767",
+      "name": "List Check Statuses",
+      "request": {
+        "name": "List Check Statuses",
+        "description": {
+          "content": "Retrieve current health status for all checks",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "v1",
+            "check-statuses"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [
+            {
+              "disabled": false,
+              "key": "limit",
+              "value": "10",
+              "description": "Limit the number of results"
+            }
+          ],
+          "variable": []
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "GET",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "59d5e04a-e2e9-4708-b7e5-1f5841302426",
+          "name": "List of check statuses",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "v1",
+                "check-statuses"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: bearer",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "Bearer <token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"data\": [\n    {\n      \"checkId\": \"string\",\n      \"name\": \"string\",\n      \"status\": \"passing\",\n      \"lastRunAt\": \"1957-08-19T12:13:05.973Z\"\n    },\n    {\n      \"checkId\": \"string\",\n      \"name\": \"string\",\n      \"status\": \"degraded\",\n      \"lastRunAt\": \"1964-08-27T01:15:45.262Z\"\n    }\n  ],\n  \"meta\": {\n    \"currentPage\": 1873,\n    \"totalPages\": 3857,\n    \"totalItems\": 1558,\n    \"limit\": 9610\n  }\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "0d3f0e1f-bd72-44c5-83aa-1b298474eeab",
+      "name": "List Dashboards",
+      "request": {
+        "name": "List Dashboards",
+        "description": {
+          "content": "Retrieve all public dashboards",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "v1",
+            "dashboards"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [
+            {
+              "disabled": false,
+              "key": "limit",
+              "value": "10",
+              "description": "Limit the number of results"
+            }
+          ],
+          "variable": []
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "GET",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "c436a462-4c23-4f25-a44e-b95f62b50120",
+          "name": "List of dashboards",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "v1",
+                "dashboards"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: bearer",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "Bearer <token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"url\": \"string\",\n      \"createdAt\": \"1978-10-27T15:23:28.857Z\"\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"url\": \"string\",\n      \"createdAt\": \"1952-07-19T06:30:13.626Z\"\n    }\n  ],\n  \"meta\": {\n    \"currentPage\": 3979,\n    \"totalPages\": 6992,\n    \"totalItems\": 7424,\n    \"limit\": 794\n  }\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "990cab6b-5ffc-4969-b9ec-c63d7e30974b",
+      "name": "List Heartbeats",
+      "request": {
+        "name": "List Heartbeats",
+        "description": {
+          "content": "Retrieve all heartbeat monitors",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "v1",
+            "heartbeats"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [
+            {
+              "disabled": false,
+              "key": "limit",
+              "value": "10",
+              "description": "Limit the number of results"
+            }
+          ],
+          "variable": []
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "GET",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "25378ffa-4356-445a-9d4e-c4ba371915c9",
+          "name": "List of heartbeats",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "v1",
+                "heartbeats"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: bearer",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "Bearer <token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"period\": 7300,\n      \"grace\": 4842,\n      \"lastPingAt\": \"1990-01-29T17:14:57.238Z\"\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"period\": 9541,\n      \"grace\": 8833,\n      \"lastPingAt\": \"2020-01-21T01:20:29.941Z\"\n    }\n  ],\n  \"meta\": {\n    \"currentPage\": 5830,\n    \"totalPages\": 6180,\n    \"totalItems\": 8443,\n    \"limit\": 3189\n  }\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "3aa11a64-a600-4cee-9617-a843fb6a2b97",
+      "name": "Create Heartbeat",
+      "request": {
+        "name": "Create Heartbeat",
+        "description": {
+          "content": "Create a new heartbeat monitor",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "v1",
+            "heartbeats"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "POST",
+        "auth": null,
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"<string>\",\n  \"period\": \"<integer>\",\n  \"grace\": \"<integer>\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "id": "aeb5fe6a-9678-487a-b157-30578bb8174e",
+          "name": "Heartbeat created",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "v1",
+                "heartbeats"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: bearer",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "Bearer <token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"period\": \"<integer>\",\n  \"grace\": \"<integer>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"id\": \"string\",\n  \"name\": \"string\",\n  \"period\": 5627,\n  \"grace\": 3091,\n  \"lastPingAt\": \"1971-12-30T21:48:08.874Z\"\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "d0af3e02-9a2f-4c5f-8d1a-c61c87370d27",
+      "name": "List Incidents",
+      "request": {
+        "name": "List Incidents",
+        "description": {
+          "content": "Retrieve all incidents",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "v1",
+            "incidents"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [
+            {
+              "disabled": false,
+              "key": "limit",
+              "value": "10",
+              "description": "Limit the number of results"
+            }
+          ],
+          "variable": []
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "GET",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "0134ef1e-46c0-4f59-8ca3-5d080f11602a",
+          "name": "List of incidents",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "v1",
+                "incidents"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: bearer",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "Bearer <token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"status\": \"open\",\n      \"startedAt\": \"2006-10-15T08:56:53.281Z\",\n      \"resolvedAt\": \"2009-07-26T21:30:46.595Z\"\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"status\": \"resolved\",\n      \"startedAt\": \"1971-03-08T07:19:38.826Z\",\n      \"resolvedAt\": \"2009-05-14T01:02:51.144Z\"\n    }\n  ],\n  \"meta\": {\n    \"currentPage\": 8326,\n    \"totalPages\": 6971,\n    \"totalItems\": 328,\n    \"limit\": 1101\n  }\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "ed0c82b7-28d3-4b4b-89c3-f79e3996e295",
+      "name": "List Locations",
+      "request": {
+        "name": "List Locations",
+        "description": {
+          "content": "Retrieve all available monitoring locations",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "v1",
+            "locations"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "GET",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "4a6250e0-7595-4c32-978a-cdf731dfa97c",
+          "name": "List of locations",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "v1",
+                "locations"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: bearer",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "Bearer <token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"data\": [\n    {\n      \"name\": \"string\",\n      \"region\": \"string\",\n      \"available\": false\n    },\n    {\n      \"name\": \"string\",\n      \"region\": \"string\",\n      \"available\": false\n    }\n  ]\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "48fd101f-fbb0-4624-b8d9-b6550d08e29d",
+      "name": "List Maintenance Windows",
+      "request": {
+        "name": "List Maintenance Windows",
+        "description": {
+          "content": "Retrieve all maintenance windows",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "v1",
+            "maintenance-windows"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [
+            {
+              "disabled": false,
+              "key": "limit",
+              "value": "10",
+              "description": "Limit the number of results"
+            }
+          ],
+          "variable": []
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "GET",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "be908c26-5497-48db-88a1-9dcf2f919ff9",
+          "name": "List of maintenance windows",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "v1",
+                "maintenance-windows"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: bearer",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "Bearer <token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"startsAt\": \"1962-12-18T06:41:10.503Z\",\n      \"endsAt\": \"2000-11-01T14:37:58.374Z\"\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"startsAt\": \"1992-04-02T19:13:11.170Z\",\n      \"endsAt\": \"2013-11-22T11:07:59.690Z\"\n    }\n  ],\n  \"meta\": {\n    \"currentPage\": 1406,\n    \"totalPages\": 3751,\n    \"totalItems\": 360,\n    \"limit\": 1100\n  }\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "6ac13f7f-c12a-4a8b-9fd2-87d3c3ebeedb",
+      "name": "Create Maintenance Window",
+      "request": {
+        "name": "Create Maintenance Window",
+        "description": {
+          "content": "Create a new maintenance window",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "v1",
+            "maintenance-windows"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "POST",
+        "auth": null,
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"<string>\",\n  \"startsAt\": \"<dateTime>\",\n  \"endsAt\": \"<dateTime>\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "id": "6a9e0b5f-45ad-4498-8b73-61fb60aeb455",
+          "name": "Maintenance window created",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "v1",
+                "maintenance-windows"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: bearer",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "Bearer <token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"startsAt\": \"<dateTime>\",\n  \"endsAt\": \"<dateTime>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"id\": \"string\",\n  \"name\": \"string\",\n  \"startsAt\": \"1981-12-30T14:20:50.193Z\",\n  \"endsAt\": \"2023-08-28T12:00:15.442Z\"\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "b1cffd89-41cd-429a-929d-0008b1dc3bf7",
+      "name": "List Private Locations",
+      "request": {
+        "name": "List Private Locations",
+        "description": {
+          "content": "Retrieve all private locations",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "v1",
+            "private-locations"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [
+            {
+              "disabled": false,
+              "key": "limit",
+              "value": "10",
+              "description": "Limit the number of results"
+            }
+          ],
+          "variable": []
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "GET",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "a61d95ac-fc1d-421d-ab22-8ba51bd717a7",
+          "name": "List of private locations",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "v1",
+                "private-locations"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: bearer",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "Bearer <token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"slugName\": \"string\",\n      \"icon\": \"string\"\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"slugName\": \"string\",\n      \"icon\": \"string\"\n    }\n  ],\n  \"meta\": {\n    \"currentPage\": 7881,\n    \"totalPages\": 2132,\n    \"totalItems\": 229,\n    \"limit\": 8229\n  }\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "c1bad9a0-e1ce-4d0f-93a4-b4cff1a6a260",
+      "name": "Create Private Location",
+      "request": {
+        "name": "Create Private Location",
+        "description": {
+          "content": "Create a new private location",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "v1",
+            "private-locations"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "POST",
+        "auth": null,
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"<string>\",\n  \"slugName\": \"<string>\",\n  \"icon\": \"<string>\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "id": "1d76585e-7197-46cd-ac48-2f763ca15217",
+          "name": "Private location created",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "v1",
+                "private-locations"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: bearer",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "Bearer <token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"slugName\": \"<string>\",\n  \"icon\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"id\": \"string\",\n  \"name\": \"string\",\n  \"slugName\": \"string\",\n  \"icon\": \"string\"\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "b4781efe-e823-440e-b535-c4cda6bd6a25",
+      "name": "List Reports",
+      "request": {
+        "name": "List Reports",
+        "description": {
+          "content": "Retrieve all reports",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "v1",
+            "reports"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [
+            {
+              "disabled": false,
+              "key": "limit",
+              "value": "10",
+              "description": "Limit the number of results"
+            }
+          ],
+          "variable": []
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "GET",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "9f077f8e-478d-4e38-b33c-256bac6ac6b1",
+          "name": "List of reports",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "v1",
+                "reports"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: bearer",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "Bearer <token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"type\": \"string\",\n      \"createdAt\": \"1971-08-11T20:51:25.708Z\"\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"type\": \"string\",\n      \"createdAt\": \"1991-05-20T04:51:05.930Z\"\n    }\n  ],\n  \"meta\": {\n    \"currentPage\": 3328,\n    \"totalPages\": 8920,\n    \"totalItems\": 3293,\n    \"limit\": 92\n  }\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "ea2e57e5-cab3-42f5-a13a-959bc1b1d25b",
+      "name": "List Environment Variables",
+      "request": {
+        "name": "List Environment Variables",
+        "description": {
+          "content": "Retrieve all environment variables",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "v1",
+            "variables"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [
+            {
+              "disabled": false,
+              "key": "limit",
+              "value": "10",
+              "description": "Limit the number of results"
+            }
+          ],
+          "variable": []
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "GET",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "e38240b9-a67f-463a-b744-03ccb7223b42",
+          "name": "List of environment variables",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "v1",
+                "variables"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: bearer",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "Bearer <token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"data\": [\n    {\n      \"key\": \"string\",\n      \"value\": \"string\",\n      \"locked\": true\n    },\n    {\n      \"key\": \"string\",\n      \"value\": \"string\",\n      \"locked\": true\n    }\n  ],\n  \"meta\": {\n    \"currentPage\": 7643,\n    \"totalPages\": 3301,\n    \"totalItems\": 7825,\n    \"limit\": 9196\n  }\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.checklyhq.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "b5116a2e-524c-44da-bd65-78c6a6e99c56",
+    "name": "Checkly Public API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Checkly Public API allows you to programmatically manage your monitoring checks, alerts, and more. If you have any questions, please do not hesitate to get in touch with us.\n\nContact Support:\n Name: Checkly Support",
+      "type": "text/plain"
+    }
+  }
+}
