@@ -3,7 +3,7 @@ name: Checkly
 description: >-
   Checkly is a monitoring-as-code platform for API and synthetic monitoring with Playwright-based browser checks and programmable API checks.
 type: Index
-image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 tags:
   - Monitoring
   - Testing
