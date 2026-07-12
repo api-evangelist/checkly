@@ -1,0 +1,23 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/checkly-openapi.json
+summary:
+  types:
+  - apiKey
+  - http
+  api_key_in:
+  - header
+schemes:
+- name: bearerAuth
+  type: http
+  scheme: bearer
+  description: API Key authentication for Checkly API. You can get your API key at https://app.checklyhq.com/settings/user/api-keys
+  sources:
+  - openapi/checkly-openapi.json
+- name: accountId
+  type: apiKey
+  in: header
+  parameter: X-Checkly-Account
+  description: Your Checkly account ID. You can find it at https://app.checklyhq.com/settings/account/general
+  sources:
+  - openapi/checkly-openapi.json

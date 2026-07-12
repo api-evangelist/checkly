@@ -27,6 +27,15 @@ apis:
       - type: GitHubRepository
         url: https://github.com/checkly
 common:
+  - type: TrustCenter
+    url: security/checkly-trust-center.yml
+  - type: DomainSecurity
+    url: security/checkly-domain-security.yml
+  - type: Authentication
+    url: authentication/checkly-authentication.yml
+  - name: Agent Skills
+    url: https://github.com/checkly/checkly-cli
+    type: AgentSkills
   - type: LinkedIn
     url: https://www.linkedin.com/company/checkly
   - type: Website
@@ -35,6 +44,8 @@ common:
     url: https://www.checklyhq.com/docs/
   - type: GitHubOrganization
     url: https://github.com/checkly
+  - type: Blog
+    url: https://www.checklyhq.com/blog/feed
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
