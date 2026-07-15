@@ -27,6 +27,8 @@ apis:
       - type: GitHubRepository
         url: https://github.com/checkly
 common:
+  - type: AgenticAccess
+    url: agentic-access/checkly-agentic-access.yml
   - type: TrustCenter
     url: security/checkly-trust-center.yml
   - type: DomainSecurity
