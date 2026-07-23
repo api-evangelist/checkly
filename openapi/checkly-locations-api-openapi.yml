@@ -1,0 +1,64 @@
+openapi: 3.1.0
+info:
+  title: Checkly Public Accounts Locations API
+  version: v1
+  description: The Checkly Public API allows you to programmatically manage your monitoring checks, alerts, and more. If you have any questions, please do not hesitate to get in touch with us.
+  contact:
+    name: Checkly Support
+    url: https://checklyhq.com/support
+  license:
+    name: MIT
+servers:
+- url: https://api.checklyhq.com
+  description: Production server
+security:
+- bearerAuth: []
+  accountId: []
+tags:
+- name: Locations
+paths:
+  /v1/locations:
+    get:
+      summary: List Locations
+      description: Retrieve all available monitoring locations
+      operationId: listLocations
+      responses:
+        '200':
+          description: List of locations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LocationList'
+      tags:
+      - Locations
+components:
+  schemas:
+    Location:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Location name
+        region:
+          type: string
+          description: Geographic region
+        available:
+          type: boolean
+          description: Whether the location is available
+    LocationList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Location'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: API Key authentication for Checkly API. You can get your API key at https://app.checklyhq.com/settings/user/api-keys
+    accountId:
+      type: apiKey
+      in: header
+      name: X-Checkly-Account
+      description: Your Checkly account ID. You can find it at https://app.checklyhq.com/settings/account/general

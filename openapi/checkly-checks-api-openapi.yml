@@ -1,0 +1,203 @@
+openapi: 3.1.0
+info:
+  title: Checkly Public Accounts Checks API
+  version: v1
+  description: The Checkly Public API allows you to programmatically manage your monitoring checks, alerts, and more. If you have any questions, please do not hesitate to get in touch with us.
+  contact:
+    name: Checkly Support
+    url: https://checklyhq.com/support
+  license:
+    name: MIT
+servers:
+- url: https://api.checklyhq.com
+  description: Production server
+security:
+- bearerAuth: []
+  accountId: []
+tags:
+- name: Checks
+paths:
+  /v1/checks:
+    get:
+      summary: List all checks
+      description: Lists all current checks in your account.
+      operationId: listChecks
+      parameters:
+      - name: limit
+        in: query
+        description: Limit the number of results
+        schema:
+          type: integer
+          default: 10
+          minimum: 1
+          maximum: 100
+      - name: page
+        in: query
+        description: Page number
+        schema:
+          type: integer
+          default: 1
+          minimum: 1
+      - name: apiCheckUrlFilterPattern
+        in: query
+        description: Filters the results by a string contained in the URL of an API check, for instance a domain like "www.myapp.com". Only returns API checks.
+        schema:
+          type: string
+          minLength: 1
+      responses:
+        '200':
+          description: List of checks
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckList'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+      - Checks
+components:
+  schemas:
+    EnvironmentVariable:
+      type: object
+      properties:
+        key:
+          type: string
+          description: Variable name
+        value:
+          type: string
+          description: Variable value (may be masked for security)
+        locked:
+          type: boolean
+          description: Whether the variable is locked/encrypted
+    Error:
+      type: object
+      required:
+      - error
+      - message
+      properties:
+        error:
+          type: string
+          description: Error type
+        message:
+          type: string
+          description: Error message
+        statusCode:
+          type: integer
+          description: HTTP status code
+    PaginationMeta:
+      type: object
+      properties:
+        currentPage:
+          type: integer
+          description: Current page number
+        totalPages:
+          type: integer
+          description: Total number of pages
+        totalItems:
+          type: integer
+          description: Total number of items
+        limit:
+          type: integer
+          description: Items per page
+    Check:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the check
+          example: 73208bf5-2b42-4ab3-b18c-7ac505b7d7b4
+        name:
+          type: string
+          description: Display name of the check
+          example: Homepage Load Test
+        checkType:
+          type: string
+          enum:
+          - BROWSER
+          - API
+          - HEARTBEAT
+          - TCP
+          - URL
+          description: Type of monitoring check
+        frequency:
+          type: integer
+          description: How often the check runs (in minutes)
+          example: 5
+        activated:
+          type: boolean
+          description: Whether the check is currently active
+        muted:
+          type: boolean
+          description: Whether alerts are muted for this check
+        shouldFail:
+          type: boolean
+          description: Whether the check should fail (for testing purposes)
+        locations:
+          type: array
+          items:
+            type: string
+          description: Array of monitoring locations
+          example:
+          - us-east-1
+          - eu-west-1
+          - ap-southeast-1
+        tags:
+          type: array
+          items:
+            type: string
+          description: Array of tags assigned to the check
+          example:
+          - production
+          - critical
+          - homepage
+        createdAt:
+          type: string
+          format: date-time
+          description: ISO 8601 timestamp when the check was created
+        updatedAt:
+          type: string
+          format: date-time
+          description: ISO 8601 timestamp when the check was last updated
+        script:
+          type: string
+          description: The check script content (for browser and API checks)
+        environmentVariables:
+          type: array
+          items:
+            $ref: '#/components/schemas/EnvironmentVariable'
+          description: Environment variables available to the check
+    CheckList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Check'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: API Key authentication for Checkly API. You can get your API key at https://app.checklyhq.com/settings/user/api-keys
+    accountId:
+      type: apiKey
+      in: header
+      name: X-Checkly-Account
+      description: Your Checkly account ID. You can find it at https://app.checklyhq.com/settings/account/general

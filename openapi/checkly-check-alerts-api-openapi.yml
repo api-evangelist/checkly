@@ -1,0 +1,125 @@
+openapi: 3.1.0
+info:
+  title: Checkly Public Accounts Check Alerts API
+  version: v1
+  description: The Checkly Public API allows you to programmatically manage your monitoring checks, alerts, and more. If you have any questions, please do not hesitate to get in touch with us.
+  contact:
+    name: Checkly Support
+    url: https://checklyhq.com/support
+  license:
+    name: MIT
+servers:
+- url: https://api.checklyhq.com
+  description: Production server
+security:
+- bearerAuth: []
+  accountId: []
+tags:
+- name: Check Alerts
+paths:
+  /v1/check-alerts:
+    get:
+      summary: List Check Alerts
+      description: Retrieve all alerts triggered by checks
+      operationId: listCheckAlerts
+      parameters:
+      - name: limit
+        in: query
+        description: Limit the number of results
+        schema:
+          type: integer
+          default: 10
+          minimum: 1
+          maximum: 100
+      - name: page
+        in: query
+        description: Page number
+        schema:
+          type: integer
+          default: 1
+          minimum: 1
+      responses:
+        '200':
+          description: List of check alerts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckAlertList'
+      tags:
+      - Check Alerts
+  /v1/check-alerts/{checkId}:
+    get:
+      summary: Get Check Alerts
+      description: List all alerts for a specific check
+      operationId: getCheckAlerts
+      parameters:
+      - name: checkId
+        in: path
+        required: true
+        description: The check ID
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Check alerts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckAlertList'
+      tags:
+      - Check Alerts
+components:
+  schemas:
+    CheckAlertList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckAlert'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+    CheckAlert:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Alert ID
+        checkId:
+          type: string
+          description: Check ID
+        status:
+          type: string
+          enum:
+          - triggered
+          - resolved
+          description: Alert status
+        createdAt:
+          type: string
+          format: date-time
+          description: Alert creation timestamp
+    PaginationMeta:
+      type: object
+      properties:
+        currentPage:
+          type: integer
+          description: Current page number
+        totalPages:
+          type: integer
+          description: Total number of pages
+        totalItems:
+          type: integer
+          description: Total number of items
+        limit:
+          type: integer
+          description: Items per page
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: API Key authentication for Checkly API. You can get your API key at https://app.checklyhq.com/settings/user/api-keys
+    accountId:
+      type: apiKey
+      in: header
+      name: X-Checkly-Account
+      description: Your Checkly account ID. You can find it at https://app.checklyhq.com/settings/account/general

@@ -1,0 +1,189 @@
+openapi: 3.1.0
+info:
+  title: Checkly Public Accounts API
+  version: v1
+  description: The Checkly Public API allows you to programmatically manage your monitoring checks, alerts, and more. If you have any questions, please do not hesitate to get in touch with us.
+  contact:
+    name: Checkly Support
+    url: https://checklyhq.com/support
+  license:
+    name: MIT
+servers:
+- url: https://api.checklyhq.com
+  description: Production server
+security:
+- bearerAuth: []
+  accountId: []
+tags:
+- name: Accounts
+paths:
+  /v1/accounts:
+    get:
+      summary: List Accounts
+      description: Fetch user accounts based on supplied API key
+      operationId: listAccounts
+      parameters:
+      - name: limit
+        in: query
+        description: Limit the number of results
+        schema:
+          type: integer
+          default: 10
+          minimum: 1
+          maximum: 100
+      - name: page
+        in: query
+        description: Page number
+        schema:
+          type: integer
+          default: 1
+          minimum: 1
+      responses:
+        '200':
+          description: List of accounts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountList'
+      tags:
+      - Accounts
+  /v1/accounts/{accountId}:
+    get:
+      summary: Get Account
+      description: Get details from a specific account
+      operationId: getAccount
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        description: The account ID
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Account details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+      tags:
+      - Accounts
+components:
+  schemas:
+    Account:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the account
+          example: 550e8400-e29b-41d4-a716-446655440000
+        name:
+          type: string
+          description: Display name of the account
+          example: Acme Corp Production
+        plan:
+          type: object
+          properties:
+            name:
+              type: string
+              description: Plan name
+              example: Team
+            type:
+              type: string
+              description: Plan type
+              example: subscription
+            features:
+              type: object
+              properties:
+                maxChecks:
+                  type: integer
+                  description: Maximum number of checks allowed
+                  example: 100
+                maxAlertChannels:
+                  type: integer
+                  description: Maximum number of alert channels allowed
+                  example: 50
+                maxPrivateLocations:
+                  type: integer
+                  description: Maximum number of private locations allowed
+                  example: 10
+                supportLevel:
+                  type: string
+                  description: Support level
+                  example: standard
+        settings:
+          type: object
+          properties:
+            timezone:
+              type: string
+              description: Account timezone
+              example: America/New_York
+            dateFormat:
+              type: string
+              description: Preferred date format
+              example: MM/DD/YYYY
+            defaultCheckFrequency:
+              type: integer
+              description: Default frequency for new checks in minutes
+              example: 10
+        usage:
+          type: object
+          properties:
+            checksUsed:
+              type: integer
+              description: Number of checks currently in use
+              example: 45
+            alertChannelsUsed:
+              type: integer
+              description: Number of alert channels currently in use
+              example: 12
+            privateLocationsUsed:
+              type: integer
+              description: Number of private locations currently in use
+              example: 2
+        createdAt:
+          type: string
+          format: date-time
+          description: Account creation timestamp
+          example: '2024-01-15T10:30:00.000Z'
+        updatedAt:
+          type: string
+          format: date-time
+          description: Account last update timestamp
+          example: '2024-01-20T14:45:00.000Z'
+    PaginationMeta:
+      type: object
+      properties:
+        currentPage:
+          type: integer
+          description: Current page number
+        totalPages:
+          type: integer
+          description: Total number of pages
+        totalItems:
+          type: integer
+          description: Total number of items
+        limit:
+          type: integer
+          description: Items per page
+    AccountList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Account'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: API Key authentication for Checkly API. You can get your API key at https://app.checklyhq.com/settings/user/api-keys
+    accountId:
+      type: apiKey
+      in: header
+      name: X-Checkly-Account
+      description: Your Checkly account ID. You can find it at https://app.checklyhq.com/settings/account/general

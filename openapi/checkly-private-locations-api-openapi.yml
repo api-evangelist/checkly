@@ -1,0 +1,126 @@
+openapi: 3.1.0
+info:
+  title: Checkly Public Accounts Private Locations API
+  version: v1
+  description: The Checkly Public API allows you to programmatically manage your monitoring checks, alerts, and more. If you have any questions, please do not hesitate to get in touch with us.
+  contact:
+    name: Checkly Support
+    url: https://checklyhq.com/support
+  license:
+    name: MIT
+servers:
+- url: https://api.checklyhq.com
+  description: Production server
+security:
+- bearerAuth: []
+  accountId: []
+tags:
+- name: Private Locations
+paths:
+  /v1/private-locations:
+    get:
+      summary: List Private Locations
+      description: Retrieve all private locations
+      operationId: listPrivateLocations
+      parameters:
+      - name: limit
+        in: query
+        description: Limit the number of results
+        schema:
+          type: integer
+          default: 10
+          minimum: 1
+          maximum: 100
+      responses:
+        '200':
+          description: List of private locations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrivateLocationList'
+      tags:
+      - Private Locations
+    post:
+      summary: Create Private Location
+      description: Create a new private location
+      operationId: createPrivateLocation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PrivateLocationCreate'
+      responses:
+        '201':
+          description: Private location created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrivateLocation'
+      tags:
+      - Private Locations
+components:
+  schemas:
+    PrivateLocationCreate:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          description: Private location name
+        slugName:
+          type: string
+          description: URL-friendly name
+        icon:
+          type: string
+          description: Location icon
+    PrivateLocationList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrivateLocation'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+    PrivateLocation:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Private location ID
+        name:
+          type: string
+          description: Private location name
+        slugName:
+          type: string
+          description: URL-friendly name
+        icon:
+          type: string
+          description: Location icon
+    PaginationMeta:
+      type: object
+      properties:
+        currentPage:
+          type: integer
+          description: Current page number
+        totalPages:
+          type: integer
+          description: Total number of pages
+        totalItems:
+          type: integer
+          description: Total number of items
+        limit:
+          type: integer
+          description: Items per page
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: API Key authentication for Checkly API. You can get your API key at https://app.checklyhq.com/settings/user/api-keys
+    accountId:
+      type: apiKey
+      in: header
+      name: X-Checkly-Account
+      description: Your Checkly account ID. You can find it at https://app.checklyhq.com/settings/account/general

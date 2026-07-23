@@ -1,0 +1,259 @@
+openapi: 3.1.0
+info:
+  title: Checkly Public Accounts Alert Channels API
+  version: v1
+  description: The Checkly Public API allows you to programmatically manage your monitoring checks, alerts, and more. If you have any questions, please do not hesitate to get in touch with us.
+  contact:
+    name: Checkly Support
+    url: https://checklyhq.com/support
+  license:
+    name: MIT
+servers:
+- url: https://api.checklyhq.com
+  description: Production server
+security:
+- bearerAuth: []
+  accountId: []
+tags:
+- name: Alert Channels
+paths:
+  /v1/alert-channels:
+    get:
+      summary: List all alert channels
+      description: Lists all alert channels in your account.
+      operationId: listAlertChannels
+      parameters:
+      - name: limit
+        in: query
+        description: Limit the number of results
+        schema:
+          type: integer
+          default: 10
+          minimum: 1
+          maximum: 100
+      - name: page
+        in: query
+        description: Page number
+        schema:
+          type: integer
+          default: 1
+          minimum: 1
+      responses:
+        '200':
+          description: List of alert channels
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlertChannelList'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+      - Alert Channels
+    post:
+      summary: Create an alert channel
+      description: Creates a new alert channel in your account.
+      operationId: createAlertChannel
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlertChannelCreate'
+      responses:
+        '201':
+          description: Alert channel created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlertChannel'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '402':
+          description: Payment Required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+      - Alert Channels
+  /v1/alert-channels/{id}:
+    get:
+      summary: Retrieve an alert channel
+      description: Gets a specific alert channel by ID.
+      operationId: getAlertChannel
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: The alert channel ID
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Alert channel details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlertChannel'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+      - Alert Channels
+components:
+  schemas:
+    AlertChannelCreate:
+      type: object
+      required:
+      - type
+      - name
+      properties:
+        type:
+          type: string
+          enum:
+          - EMAIL
+          - WEBHOOK
+          - SLACK
+          - SMS
+          - PHONE
+          description: Type of alert channel
+        name:
+          type: string
+          description: Display name of the alert channel
+        config:
+          type: object
+          description: Configuration specific to the alert channel type
+    AlertChannel:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the alert channel
+        type:
+          type: string
+          enum:
+          - EMAIL
+          - WEBHOOK
+          - SLACK
+          - SMS
+          - PHONE
+          description: Type of alert channel
+        name:
+          type: string
+          description: Display name of the alert channel
+        createdAt:
+          type: string
+          format: date-time
+          description: ISO 8601 timestamp when the alert channel was created
+        updatedAt:
+          type: string
+          format: date-time
+          description: ISO 8601 timestamp when the alert channel was last updated
+    Error:
+      type: object
+      required:
+      - error
+      - message
+      properties:
+        error:
+          type: string
+          description: Error type
+        message:
+          type: string
+          description: Error message
+        statusCode:
+          type: integer
+          description: HTTP status code
+    PaginationMeta:
+      type: object
+      properties:
+        currentPage:
+          type: integer
+          description: Current page number
+        totalPages:
+          type: integer
+          description: Total number of pages
+        totalItems:
+          type: integer
+          description: Total number of items
+        limit:
+          type: integer
+          description: Items per page
+    AlertChannelList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertChannel'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: API Key authentication for Checkly API. You can get your API key at https://app.checklyhq.com/settings/user/api-keys
+    accountId:
+      type: apiKey
+      in: header
+      name: X-Checkly-Account
+      description: Your Checkly account ID. You can find it at https://app.checklyhq.com/settings/account/general

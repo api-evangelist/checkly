@@ -1,0 +1,129 @@
+openapi: 3.1.0
+info:
+  title: Checkly Public Accounts Check Results API
+  version: v1
+  description: The Checkly Public API allows you to programmatically manage your monitoring checks, alerts, and more. If you have any questions, please do not hesitate to get in touch with us.
+  contact:
+    name: Checkly Support
+    url: https://checklyhq.com/support
+  license:
+    name: MIT
+servers:
+- url: https://api.checklyhq.com
+  description: Production server
+security:
+- bearerAuth: []
+  accountId: []
+tags:
+- name: Check Results
+paths:
+  /v1/check-results/{checkId}:
+    get:
+      summary: List Check Results
+      description: Retrieve all execution results for a specific check
+      operationId: listCheckResults
+      parameters:
+      - name: checkId
+        in: path
+        required: true
+        description: The check ID
+        schema:
+          type: string
+      responses:
+        '200':
+          description: List of check results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckResultList'
+      tags:
+      - Check Results
+  /v1/check-results/{checkId}/{checkResultId}:
+    get:
+      summary: Get Check Result
+      description: Retrieve detailed information about a specific check execution result
+      operationId: getCheckResult
+      parameters:
+      - name: checkId
+        in: path
+        required: true
+        description: The check ID
+        schema:
+          type: string
+      - name: checkResultId
+        in: path
+        required: true
+        description: The check result ID
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Check result details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckResult'
+      tags:
+      - Check Results
+components:
+  schemas:
+    CheckResult:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Check result ID
+        checkId:
+          type: string
+          description: Check ID
+        hasFailures:
+          type: boolean
+          description: Whether the check had failures
+        responseTime:
+          type: number
+          description: Response time in milliseconds
+        runLocation:
+          type: string
+          description: Location where the check was run
+        startedAt:
+          type: string
+          format: date-time
+          description: Check start timestamp
+        stoppedAt:
+          type: string
+          format: date-time
+          description: Check stop timestamp
+    CheckResultList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckResult'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+    PaginationMeta:
+      type: object
+      properties:
+        currentPage:
+          type: integer
+          description: Current page number
+        totalPages:
+          type: integer
+          description: Total number of pages
+        totalItems:
+          type: integer
+          description: Total number of items
+        limit:
+          type: integer
+          description: Items per page
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: API Key authentication for Checkly API. You can get your API key at https://app.checklyhq.com/settings/user/api-keys
+    accountId:
+      type: apiKey
+      in: header
+      name: X-Checkly-Account
+      description: Your Checkly account ID. You can find it at https://app.checklyhq.com/settings/account/general
