@@ -3,7 +3,20 @@ name: Checkly
 description: >-
   Checkly is a monitoring-as-code platform for API and synthetic monitoring with Playwright-based browser checks and programmable API checks.
 type: Index
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+accessModel:
+  pricing: freemium
+  onboarding: self-serve
+  trial: false
+  try_now: true
+  public: false
+  label: Freemium · Self-serve signup
+  confidence: high
+  source:
+  - plans
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/checkly.png
 tags:
   - Monitoring
   - Testing
@@ -13,19 +26,164 @@ created: '2026-03-25'
 modified: '2026-03-25'
 specificationVersion: '0.19'
 apis:
-  - aid: checkly:checkly
-    name: Checkly
-    description: >-
-      Checkly is a monitoring-as-code platform for API and synthetic monitoring with Playwright-based browser checks and programmable API checks.
-    humanURL: https://www.checklyhq.com
-    tags:
-      - Monitoring
-      - Testing
-    properties:
-      - type: Documentation
-        url: https://www.checklyhq.com/docs/
-      - type: GitHubRepository
-        url: https://github.com/checkly
+- aid: checkly:checkly
+  name: Checkly
+  description: >-
+    Checkly is a monitoring-as-code platform for API and synthetic monitoring with Playwright-based browser
+    checks and programmable API checks.
+  humanURL: https://www.checklyhq.com
+  tags:
+  - Monitoring
+  - Testing
+  properties:
+  - type: Documentation
+    url: https://www.checklyhq.com/docs/
+  - type: GitHubRepository
+    url: https://github.com/checkly
+- aid: checkly:checkly-accounts-api
+  name: Checkly Accounts API
+  description: The Accounts API from Checkly — 2 operation(s) for accounts.
+  humanURL: https://www.checklyhq.com
+  tags:
+  - Accounts
+  properties:
+  - type: OpenAPI
+    url: openapi/checkly-accounts-api-openapi.yml
+- aid: checkly:checkly-alert-channels-api
+  name: Checkly Alert Channels API
+  description: The Alert Channels API from Checkly — 2 operation(s) for alert channels.
+  humanURL: https://www.checklyhq.com
+  tags:
+  - Alert Channels
+  properties:
+  - type: OpenAPI
+    url: openapi/checkly-alert-channels-api-openapi.yml
+- aid: checkly:checkly-analytics-api
+  name: Checkly Analytics API
+  description: The Analytics API from Checkly — 3 operation(s) for analytics.
+  humanURL: https://www.checklyhq.com
+  tags:
+  - Analytics
+  properties:
+  - type: OpenAPI
+    url: openapi/checkly-analytics-api-openapi.yml
+- aid: checkly:checkly-check-alerts-api
+  name: Checkly Check Alerts API
+  description: The Check Alerts API from Checkly — 2 operation(s) for check alerts.
+  humanURL: https://www.checklyhq.com
+  tags:
+  - Check Alerts
+  properties:
+  - type: OpenAPI
+    url: openapi/checkly-check-alerts-api-openapi.yml
+- aid: checkly:checkly-check-groups-api
+  name: Checkly Check Groups API
+  description: The Check Groups API from Checkly — 1 operation(s) for check groups.
+  humanURL: https://www.checklyhq.com
+  tags:
+  - Check Groups
+  properties:
+  - type: OpenAPI
+    url: openapi/checkly-check-groups-api-openapi.yml
+- aid: checkly:checkly-check-results-api
+  name: Checkly Check Results API
+  description: The Check Results API from Checkly — 2 operation(s) for check results.
+  humanURL: https://www.checklyhq.com
+  tags:
+  - Check Results
+  properties:
+  - type: OpenAPI
+    url: openapi/checkly-check-results-api-openapi.yml
+- aid: checkly:checkly-check-statuses-api
+  name: Checkly Check Statuses API
+  description: The Check Statuses API from Checkly — 1 operation(s) for check statuses.
+  humanURL: https://www.checklyhq.com
+  tags:
+  - Check Statuses
+  properties:
+  - type: OpenAPI
+    url: openapi/checkly-check-statuses-api-openapi.yml
+- aid: checkly:checkly-checks-api
+  name: Checkly Checks API
+  description: The Checks API from Checkly — 1 operation(s) for checks.
+  humanURL: https://www.checklyhq.com
+  tags:
+  - Checks
+  properties:
+  - type: OpenAPI
+    url: openapi/checkly-checks-api-openapi.yml
+- aid: checkly:checkly-dashboards-api
+  name: Checkly Dashboards API
+  description: The Dashboards API from Checkly — 1 operation(s) for dashboards.
+  humanURL: https://www.checklyhq.com
+  tags:
+  - Dashboards
+  properties:
+  - type: OpenAPI
+    url: openapi/checkly-dashboards-api-openapi.yml
+- aid: checkly:checkly-heartbeats-api
+  name: Checkly Heartbeats API
+  description: The Heartbeats API from Checkly — 1 operation(s) for heartbeats.
+  humanURL: https://www.checklyhq.com
+  tags:
+  - Heartbeats
+  properties:
+  - type: OpenAPI
+    url: openapi/checkly-heartbeats-api-openapi.yml
+- aid: checkly:checkly-incidents-api
+  name: Checkly Incidents API
+  description: The Incidents API from Checkly — 1 operation(s) for incidents.
+  humanURL: https://www.checklyhq.com
+  tags:
+  - Incidents
+  properties:
+  - type: OpenAPI
+    url: openapi/checkly-incidents-api-openapi.yml
+- aid: checkly:checkly-locations-api
+  name: Checkly Locations API
+  description: The Locations API from Checkly — 1 operation(s) for locations.
+  humanURL: https://www.checklyhq.com
+  tags:
+  - Locations
+  properties:
+  - type: OpenAPI
+    url: openapi/checkly-locations-api-openapi.yml
+- aid: checkly:checkly-maintenance-windows-api
+  name: Checkly Maintenance Windows API
+  description: The Maintenance Windows API from Checkly — 1 operation(s) for maintenance windows.
+  humanURL: https://www.checklyhq.com
+  tags:
+  - Maintenance Windows
+  properties:
+  - type: OpenAPI
+    url: openapi/checkly-maintenance-windows-api-openapi.yml
+- aid: checkly:checkly-private-locations-api
+  name: Checkly Private Locations API
+  description: The Private Locations API from Checkly — 1 operation(s) for private locations.
+  humanURL: https://www.checklyhq.com
+  tags:
+  - Private Locations
+  properties:
+  - type: OpenAPI
+    url: openapi/checkly-private-locations-api-openapi.yml
+- aid: checkly:checkly-reports-api
+  name: Checkly Reports API
+  description: The Reports API from Checkly — 1 operation(s) for reports.
+  humanURL: https://www.checklyhq.com
+  tags:
+  - Reports
+  properties:
+  - type: OpenAPI
+    url: openapi/checkly-reports-api-openapi.yml
+- aid: checkly:checkly-variables-api
+  name: Checkly Variables API
+  description: The Variables API from Checkly — 1 operation(s) for variables.
+  humanURL: https://www.checklyhq.com
+  tags:
+  - Variables
+  properties:
+  - type: OpenAPI
+    url: openapi/checkly-variables-api-openapi.yml
 common:
   - type: AgenticAccess
     url: agentic-access/checkly-agentic-access.yml
