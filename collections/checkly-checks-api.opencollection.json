@@ -1,0 +1,55 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Checkly Public Accounts Checks API",
+    "version": "v1"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Checks",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all checks",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.checklyhq.com/v1/checks",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limit the number of results"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page number"
+              },
+              {
+                "name": "apiCheckUrlFilterPattern",
+                "value": "",
+                "type": "query",
+                "description": "Filters the results by a string contained in the URL of an API check, for instance a domain like \"www.myapp.com\". Only returns API checks."
+              }
+            ]
+          },
+          "docs": "Lists all current checks in your account."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

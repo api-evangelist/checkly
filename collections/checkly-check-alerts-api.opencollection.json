@@ -1,0 +1,68 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Checkly Public Accounts Check Alerts API",
+    "version": "v1"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Check Alerts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Check Alerts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.checklyhq.com/v1/check-alerts",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limit the number of results"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page number"
+              }
+            ]
+          },
+          "docs": "Retrieve all alerts triggered by checks"
+        },
+        {
+          "info": {
+            "name": "Get Check Alerts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.checklyhq.com/v1/check-alerts/:checkId",
+            "params": [
+              {
+                "name": "checkId",
+                "value": "",
+                "type": "path",
+                "description": "The check ID"
+              }
+            ]
+          },
+          "docs": "List all alerts for a specific check"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

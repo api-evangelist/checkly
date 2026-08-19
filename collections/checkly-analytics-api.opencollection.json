@@ -1,0 +1,111 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Checkly Public Accounts Analytics API",
+    "version": "v1"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Analytics",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get API Check Analytics",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.checklyhq.com/v1/analytics/api-checks/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The check ID"
+              }
+            ]
+          },
+          "docs": "Get analytics data for API checks"
+        },
+        {
+          "info": {
+            "name": "Get Browser Check Analytics",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.checklyhq.com/v1/analytics/browser-checks/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The check ID"
+              }
+            ]
+          },
+          "docs": "Get analytics data for browser checks"
+        },
+        {
+          "info": {
+            "name": "List Analytics Metrics",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.checklyhq.com/v1/analytics/metrics/:checkType",
+            "params": [
+              {
+                "name": "checkType",
+                "value": "",
+                "type": "path",
+                "description": "The check type to retrieve metrics for"
+              },
+              {
+                "name": "category",
+                "value": "",
+                "type": "query",
+                "description": "Filter by metric category"
+              },
+              {
+                "name": "includeThresholds",
+                "value": "",
+                "type": "query",
+                "description": "Include performance thresholds and benchmarks"
+              },
+              {
+                "name": "format",
+                "value": "",
+                "type": "query",
+                "description": "Response format"
+              },
+              {
+                "name": "includeExamples",
+                "value": "",
+                "type": "query",
+                "description": "Include example values and use cases"
+              },
+              {
+                "name": "includeCalculations",
+                "value": "",
+                "type": "query",
+                "description": "Include calculation method details"
+              }
+            ]
+          },
+          "docs": "Returns all the available metrics for a specific check-type (API, URL, TCP or BROWSER)"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

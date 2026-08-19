@@ -1,0 +1,58 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Checkly Public Accounts Maintenance Windows API",
+    "version": "v1"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Maintenance Windows",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Maintenance Windows",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.checklyhq.com/v1/maintenance-windows",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limit the number of results"
+              }
+            ]
+          },
+          "docs": "Retrieve all maintenance windows"
+        },
+        {
+          "info": {
+            "name": "Create Maintenance Window",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.checklyhq.com/v1/maintenance-windows",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new maintenance window"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

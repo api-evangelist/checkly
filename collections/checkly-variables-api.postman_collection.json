@@ -1,0 +1,133 @@
+{
+  "item": [
+    {
+      "id": "6fbbc12c-a1b9-47ff-8a29-df5b1836f0da",
+      "name": "Variables",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "6faaefda-979d-4f51-b12b-f6c99005be93",
+          "name": "List Environment Variables",
+          "request": {
+            "name": "List Environment Variables",
+            "description": {
+              "content": "Retrieve all environment variables",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "variables"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Limit the number of results"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "7a00772b-d717-4e11-aab6-4401c4ac1286",
+              "name": "List of environment variables",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "variables"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"key\": \"string\",\n      \"value\": \"string\",\n      \"locked\": false\n    },\n    {\n      \"key\": \"string\",\n      \"value\": \"string\",\n      \"locked\": false\n    }\n  ],\n  \"meta\": {\n    \"currentPage\": 2381,\n    \"totalPages\": 5659,\n    \"totalItems\": 6125,\n    \"limit\": 8632\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.checklyhq.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "f5137aad-05b5-489c-ad93-f2b724dce7d1",
+    "name": "Checkly Public Accounts Variables API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Checkly Public API allows you to programmatically manage your monitoring checks, alerts, and more. If you have any questions, please do not hesitate to get in touch with us.\n\nContact Support:\n Name: Checkly Support",
+      "type": "text/plain"
+    }
+  }
+}

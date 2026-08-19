@@ -1,0 +1,58 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Checkly Public Accounts Heartbeats API",
+    "version": "v1"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Heartbeats",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Heartbeats",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.checklyhq.com/v1/heartbeats",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limit the number of results"
+              }
+            ]
+          },
+          "docs": "Retrieve all heartbeat monitors"
+        },
+        {
+          "info": {
+            "name": "Create Heartbeat",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.checklyhq.com/v1/heartbeats",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new heartbeat monitor"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,234 @@
+{
+  "item": [
+    {
+      "id": "7431afdd-5d19-4421-b842-21f6bdb85d1e",
+      "name": "Heartbeats",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "4b5effea-9eaa-4e44-815a-5246c281584c",
+          "name": "List Heartbeats",
+          "request": {
+            "name": "List Heartbeats",
+            "description": {
+              "content": "Retrieve all heartbeat monitors",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "heartbeats"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Limit the number of results"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "e6274006-a357-4ea4-80d6-46781675d4d8",
+              "name": "List of heartbeats",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "heartbeats"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"period\": 4567,\n      \"grace\": 9964,\n      \"lastPingAt\": \"1986-04-23T19:43:27.243Z\"\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"period\": 885,\n      \"grace\": 1383,\n      \"lastPingAt\": \"2019-07-08T14:14:13.643Z\"\n    }\n  ],\n  \"meta\": {\n    \"currentPage\": 9714,\n    \"totalPages\": 3637,\n    \"totalItems\": 9834,\n    \"limit\": 3132\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "66408df3-d129-4bbe-b8eb-269cdf73f9df",
+          "name": "Create Heartbeat",
+          "request": {
+            "name": "Create Heartbeat",
+            "description": {
+              "content": "Create a new heartbeat monitor",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "heartbeats"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"period\": \"<integer>\",\n  \"grace\": \"<integer>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "62b14fbd-5b16-4e7d-91cc-4c49714099e9",
+              "name": "Heartbeat created",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "heartbeats"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"period\": \"<integer>\",\n  \"grace\": \"<integer>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"name\": \"string\",\n  \"period\": 8362,\n  \"grace\": 2988,\n  \"lastPingAt\": \"1962-11-10T05:23:42.291Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.checklyhq.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "c359c0bf-264e-4855-891b-13e400d853b4",
+    "name": "Checkly Public Accounts Heartbeats API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Checkly Public API allows you to programmatically manage your monitoring checks, alerts, and more. If you have any questions, please do not hesitate to get in touch with us.\n\nContact Support:\n Name: Checkly Support",
+      "type": "text/plain"
+    }
+  }
+}

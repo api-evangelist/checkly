@@ -1,0 +1,68 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Checkly Public Accounts Check Results API",
+    "version": "v1"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Check Results",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Check Results",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.checklyhq.com/v1/check-results/:checkId",
+            "params": [
+              {
+                "name": "checkId",
+                "value": "",
+                "type": "path",
+                "description": "The check ID"
+              }
+            ]
+          },
+          "docs": "Retrieve all execution results for a specific check"
+        },
+        {
+          "info": {
+            "name": "Get Check Result",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.checklyhq.com/v1/check-results/:checkId/:checkResultId",
+            "params": [
+              {
+                "name": "checkId",
+                "value": "",
+                "type": "path",
+                "description": "The check ID"
+              },
+              {
+                "name": "checkResultId",
+                "value": "",
+                "type": "path",
+                "description": "The check result ID"
+              }
+            ]
+          },
+          "docs": "Retrieve detailed information about a specific check execution result"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

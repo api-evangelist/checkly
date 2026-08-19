@@ -1,0 +1,133 @@
+{
+  "item": [
+    {
+      "id": "2d317060-b24d-449a-9207-de1f6fe48342",
+      "name": "Dashboards",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "624771c5-f2f8-470d-a7ec-8f67a4827c67",
+          "name": "List Dashboards",
+          "request": {
+            "name": "List Dashboards",
+            "description": {
+              "content": "Retrieve all public dashboards",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "dashboards"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Limit the number of results"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "67996c5f-1694-4c8d-ac4b-ee00fcf75d1d",
+              "name": "List of dashboards",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "dashboards"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"url\": \"string\",\n      \"createdAt\": \"1954-06-03T23:53:44.830Z\"\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"url\": \"string\",\n      \"createdAt\": \"1999-05-31T16:30:04.047Z\"\n    }\n  ],\n  \"meta\": {\n    \"currentPage\": 7129,\n    \"totalPages\": 3105,\n    \"totalItems\": 8348,\n    \"limit\": 4082\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.checklyhq.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "2b9e9b31-4fab-4432-9d32-199e5067fcfd",
+    "name": "Checkly Public Accounts Dashboards API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Checkly Public API allows you to programmatically manage your monitoring checks, alerts, and more. If you have any questions, please do not hesitate to get in touch with us.\n\nContact Support:\n Name: Checkly Support",
+      "type": "text/plain"
+    }
+  }
+}

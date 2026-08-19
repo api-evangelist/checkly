@@ -1,0 +1,693 @@
+{
+  "item": [
+    {
+      "id": "7d04fbe5-eec4-43c9-8090-531ee1883cf9",
+      "name": "Analytics",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "fc8152e0-398a-42ed-a375-760a9c3e8eaa",
+          "name": "Get API Check Analytics",
+          "request": {
+            "name": "Get API Check Analytics",
+            "description": {
+              "content": "Get analytics data for API checks",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "analytics",
+                "api-checks",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The check ID"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "494553aa-a71b-4e51-9e7c-058bca482c69",
+              "name": "API check analytics data",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "analytics",
+                    "api-checks",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The check ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"averageResponseTime\": 5737.01330900648,\n  \"successRate\": 2870.7531550063404,\n  \"totalRequests\": 525\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d570b6f6-8bdc-4d59-810b-4be4b16a63c4",
+          "name": "Get Browser Check Analytics",
+          "request": {
+            "name": "Get Browser Check Analytics",
+            "description": {
+              "content": "Get analytics data for browser checks",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "analytics",
+                "browser-checks",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The check ID"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "3cc82aa2-3e73-4f41-b35f-b697e71328ac",
+              "name": "Browser check analytics data",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "analytics",
+                    "browser-checks",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The check ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"averageLoadTime\": 3853.9999546667314,\n  \"successRate\": 6771.947248722881,\n  \"totalRuns\": 5554\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "06a63563-c861-47a6-966e-687fed0139cf",
+          "name": "List Analytics Metrics",
+          "request": {
+            "name": "List Analytics Metrics",
+            "description": {
+              "content": "Returns all the available metrics for a specific check-type (API, URL, TCP or BROWSER)",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "analytics",
+                "metrics",
+                ":checkType"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "category",
+                  "value": "<string>",
+                  "description": "Filter by metric category"
+                },
+                {
+                  "disabled": false,
+                  "key": "includeThresholds",
+                  "value": "false",
+                  "description": "Include performance thresholds and benchmarks"
+                },
+                {
+                  "disabled": false,
+                  "key": "format",
+                  "value": "detailed",
+                  "description": "Response format"
+                },
+                {
+                  "disabled": false,
+                  "key": "includeExamples",
+                  "value": "false",
+                  "description": "Include example values and use cases"
+                },
+                {
+                  "disabled": false,
+                  "key": "includeCalculations",
+                  "value": "false",
+                  "description": "Include calculation method details"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "checkType",
+                  "description": "(Required) The check type to retrieve metrics for"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "dd2d451e-ff78-405a-b326-e95602533a46",
+              "name": "List of available metrics for the specified check type",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "analytics",
+                    "metrics",
+                    ":checkType"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "category",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "includeThresholds",
+                      "value": "false"
+                    },
+                    {
+                      "key": "format",
+                      "value": "detailed"
+                    },
+                    {
+                      "key": "includeExamples",
+                      "value": "false"
+                    },
+                    {
+                      "key": "includeCalculations",
+                      "value": "false"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "checkType",
+                      "description": "(Required) The check type to retrieve metrics for"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"responseTimeMetrics\": [\n      {\n        \"name\": \"string\",\n        \"displayName\": \"string\",\n        \"description\": \"string\",\n        \"unit\": \"string\",\n        \"dataType\": \"integer\",\n        \"availableFor\": [\n          \"string\",\n          \"string\"\n        ],\n        \"calculationMethod\": \"string\",\n        \"precision\": 7654,\n        \"category\": \"string\",\n        \"goodThreshold\": 5521.026551919691,\n        \"needsImprovementThreshold\": 9812.794072028651,\n        \"range\": {\n          \"min\": 6540.659079481177,\n          \"max\": 1440.3564867512796\n        }\n      },\n      {\n        \"name\": \"string\",\n        \"displayName\": \"string\",\n        \"description\": \"string\",\n        \"unit\": \"string\",\n        \"dataType\": \"number\",\n        \"availableFor\": [\n          \"string\",\n          \"string\"\n        ],\n        \"calculationMethod\": \"string\",\n        \"precision\": 8155,\n        \"category\": \"string\",\n        \"goodThreshold\": 2397.4195913552153,\n        \"needsImprovementThreshold\": 9683.082860427654,\n        \"range\": {\n          \"min\": 9430.80371158557,\n          \"max\": 6146.025745531314\n        }\n      }\n    ],\n    \"successMetrics\": [\n      {\n        \"name\": \"string\",\n        \"displayName\": \"string\",\n        \"description\": \"string\",\n        \"unit\": \"string\",\n        \"dataType\": \"integer\",\n        \"availableFor\": [\n          \"string\",\n          \"string\"\n        ],\n        \"calculationMethod\": \"string\",\n        \"precision\": 4399,\n        \"category\": \"string\",\n        \"goodThreshold\": 2931.856433951016,\n        \"needsImprovementThreshold\": 1277.5713675350687,\n        \"range\": {\n          \"min\": 1013.0187355193077,\n          \"max\": 1705.1795186180495\n        }\n      },\n      {\n        \"name\": \"string\",\n        \"displayName\": \"string\",\n        \"description\": \"string\",\n        \"unit\": \"string\",\n        \"dataType\": \"integer\",\n        \"availableFor\": [\n          \"string\",\n          \"string\"\n        ],\n        \"calculationMethod\": \"string\",\n        \"precision\": 2022,\n        \"category\": \"string\",\n        \"goodThreshold\": 5089.905717690341,\n        \"needsImprovementThreshold\": 4852.5574891583055,\n        \"range\": {\n          \"min\": 191.8199952753552,\n          \"max\": 8120.747674584961\n        }\n      }\n    ],\n    \"volumeMetrics\": [\n      {\n        \"name\": \"string\",\n        \"displayName\": \"string\",\n        \"description\": \"string\",\n        \"unit\": \"string\",\n        \"dataType\": \"integer\",\n        \"availableFor\": [\n          \"string\",\n          \"string\"\n        ],\n        \"calculationMethod\": \"string\",\n        \"precision\": 8874,\n        \"category\": \"string\",\n        \"goodThreshold\": 527.8254372533742,\n        \"needsImprovementThreshold\": 9199.035455282577,\n        \"range\": {\n          \"min\": 3977.3333356599337,\n          \"max\": 5120.274115859939\n        }\n      },\n      {\n        \"name\": \"string\",\n        \"displayName\": \"string\",\n        \"description\": \"string\",\n        \"unit\": \"string\",\n        \"dataType\": \"number\",\n        \"availableFor\": [\n          \"string\",\n          \"string\"\n        ],\n        \"calculationMethod\": \"string\",\n        \"precision\": 7225,\n        \"category\": \"string\",\n        \"goodThreshold\": 3580.7366357378214,\n        \"needsImprovementThreshold\": 2906.453021184846,\n        \"range\": {\n          \"min\": 5671.846336507467,\n          \"max\": 5085.813334059098\n        }\n      }\n    ],\n    \"browserSpecificMetrics\": [\n      {\n        \"name\": \"string\",\n        \"displayName\": \"string\",\n        \"description\": \"string\",\n        \"unit\": \"string\",\n        \"dataType\": \"number\",\n        \"availableFor\": [\n          \"string\",\n          \"string\"\n        ],\n        \"calculationMethod\": \"string\",\n        \"precision\": 9325,\n        \"category\": \"string\",\n        \"goodThreshold\": 7174.268422113323,\n        \"needsImprovementThreshold\": 2928.2164396832886,\n        \"range\": {\n          \"min\": 4521.8253451690525,\n          \"max\": 3074.7356836687436\n        }\n      },\n      {\n        \"name\": \"string\",\n        \"displayName\": \"string\",\n        \"description\": \"string\",\n        \"unit\": \"string\",\n        \"dataType\": \"integer\",\n        \"availableFor\": [\n          \"string\",\n          \"string\"\n        ],\n        \"calculationMethod\": \"string\",\n        \"precision\": 5737,\n        \"category\": \"string\",\n        \"goodThreshold\": 7752.275571392471,\n        \"needsImprovementThreshold\": 7570.987180314811,\n        \"range\": {\n          \"min\": 7741.963528006334,\n          \"max\": 3744.9598247702056\n        }\n      }\n    ],\n    \"heartbeatSpecificMetrics\": [\n      {\n        \"name\": \"string\",\n        \"displayName\": \"string\",\n        \"description\": \"string\",\n        \"unit\": \"string\",\n        \"dataType\": \"number\",\n        \"availableFor\": [\n          \"string\",\n          \"string\"\n        ],\n        \"calculationMethod\": \"string\",\n        \"precision\": 2229,\n        \"category\": \"string\",\n        \"goodThreshold\": 9881.097602500038,\n        \"needsImprovementThreshold\": 8385.970956364758,\n        \"range\": {\n          \"min\": 1793.6649640248781,\n          \"max\": 5409.935861013233\n        }\n      },\n      {\n        \"name\": \"string\",\n        \"displayName\": \"string\",\n        \"description\": \"string\",\n        \"unit\": \"string\",\n        \"dataType\": \"number\",\n        \"availableFor\": [\n          \"string\",\n          \"string\"\n        ],\n        \"calculationMethod\": \"string\",\n        \"precision\": 2847,\n        \"category\": \"string\",\n        \"goodThreshold\": 7805.190147685303,\n        \"needsImprovementThreshold\": 9546.479369636201,\n        \"range\": {\n          \"min\": 862.84296198061,\n          \"max\": 6318.897892012835\n        }\n      }\n    ]\n  },\n  \"meta\": {\n    \"totalMetrics\": 7518,\n    \"categories\": [\n      \"string\",\n      \"string\"\n    ],\n    \"checkTypes\": [\n      \"string\",\n      \"string\"\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8eb6a3af-1053-4b01-bf47-9e4c5383194e",
+              "name": "Bad Request - Invalid check type",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "analytics",
+                    "metrics",
+                    ":checkType"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "category",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "includeThresholds",
+                      "value": "false"
+                    },
+                    {
+                      "key": "format",
+                      "value": "detailed"
+                    },
+                    {
+                      "key": "includeExamples",
+                      "value": "false"
+                    },
+                    {
+                      "key": "includeCalculations",
+                      "value": "false"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "checkType",
+                      "description": "(Required) The check type to retrieve metrics for"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\",\n  \"statusCode\": 8663\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "58dfa34d-68d2-4d1a-9722-73c71eb962a0",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "analytics",
+                    "metrics",
+                    ":checkType"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "category",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "includeThresholds",
+                      "value": "false"
+                    },
+                    {
+                      "key": "format",
+                      "value": "detailed"
+                    },
+                    {
+                      "key": "includeExamples",
+                      "value": "false"
+                    },
+                    {
+                      "key": "includeCalculations",
+                      "value": "false"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "checkType",
+                      "description": "(Required) The check type to retrieve metrics for"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\",\n  \"statusCode\": 8663\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "71d1d511-ca0e-4a45-9cb4-b7bfb9228751",
+              "name": "Forbidden",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "analytics",
+                    "metrics",
+                    ":checkType"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "category",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "includeThresholds",
+                      "value": "false"
+                    },
+                    {
+                      "key": "format",
+                      "value": "detailed"
+                    },
+                    {
+                      "key": "includeExamples",
+                      "value": "false"
+                    },
+                    {
+                      "key": "includeCalculations",
+                      "value": "false"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "checkType",
+                      "description": "(Required) The check type to retrieve metrics for"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\",\n  \"statusCode\": 8663\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3ccfa375-e976-48e8-8b2d-266f1794d027",
+              "name": "Too Many Requests",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "analytics",
+                    "metrics",
+                    ":checkType"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "category",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "includeThresholds",
+                      "value": "false"
+                    },
+                    {
+                      "key": "format",
+                      "value": "detailed"
+                    },
+                    {
+                      "key": "includeExamples",
+                      "value": "false"
+                    },
+                    {
+                      "key": "includeCalculations",
+                      "value": "false"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "checkType",
+                      "description": "(Required) The check type to retrieve metrics for"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\",\n  \"statusCode\": 8663\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.checklyhq.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "9419d8ab-37ab-4c9c-a26d-ed15f9035ac5",
+    "name": "Checkly Public Accounts Analytics API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Checkly Public API allows you to programmatically manage your monitoring checks, alerts, and more. If you have any questions, please do not hesitate to get in touch with us.\n\nContact Support:\n Name: Checkly Support",
+      "type": "text/plain"
+    }
+  }
+}

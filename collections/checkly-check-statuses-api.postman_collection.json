@@ -1,0 +1,133 @@
+{
+  "item": [
+    {
+      "id": "2389d358-7982-4eb6-a267-2d92dfd24a02",
+      "name": "Check Statuses",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "848a63ca-5e43-47f7-aba9-a4414ae20649",
+          "name": "List Check Statuses",
+          "request": {
+            "name": "List Check Statuses",
+            "description": {
+              "content": "Retrieve current health status for all checks",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "check-statuses"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Limit the number of results"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "8056d177-d40e-4859-a5c7-f3941ed2ee0b",
+              "name": "List of check statuses",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "check-statuses"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"checkId\": \"string\",\n      \"name\": \"string\",\n      \"status\": \"degraded\",\n      \"lastRunAt\": \"2014-12-11T00:42:09.034Z\"\n    },\n    {\n      \"checkId\": \"string\",\n      \"name\": \"string\",\n      \"status\": \"degraded\",\n      \"lastRunAt\": \"1949-01-22T04:29:43.288Z\"\n    }\n  ],\n  \"meta\": {\n    \"currentPage\": 8072,\n    \"totalPages\": 5687,\n    \"totalItems\": 332,\n    \"limit\": 269\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.checklyhq.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "5fd03cc0-f326-4795-966e-ff138a945e26",
+    "name": "Checkly Public Accounts Check Statuses API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Checkly Public API allows you to programmatically manage your monitoring checks, alerts, and more. If you have any questions, please do not hesitate to get in touch with us.\n\nContact Support:\n Name: Checkly Support",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Checkly Public Accounts Check Groups API",
+    "version": "v1"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Check Groups",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Check Groups",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.checklyhq.com/v1/check-groups",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limit the number of results"
+              }
+            ]
+          },
+          "docs": "Retrieve all check groups"
+        },
+        {
+          "info": {
+            "name": "Create Check Group",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.checklyhq.com/v1/check-groups",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new check group"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

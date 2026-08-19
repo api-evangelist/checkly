@@ -1,0 +1,83 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Checkly Public Accounts Alert Channels API",
+    "version": "v1"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Alert Channels",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all alert channels",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.checklyhq.com/v1/alert-channels",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limit the number of results"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page number"
+              }
+            ]
+          },
+          "docs": "Lists all alert channels in your account."
+        },
+        {
+          "info": {
+            "name": "Create an alert channel",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.checklyhq.com/v1/alert-channels",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new alert channel in your account."
+        },
+        {
+          "info": {
+            "name": "Retrieve an alert channel",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.checklyhq.com/v1/alert-channels/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The alert channel ID"
+              }
+            ]
+          },
+          "docs": "Gets a specific alert channel by ID."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

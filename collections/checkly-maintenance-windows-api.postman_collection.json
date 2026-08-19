@@ -1,0 +1,234 @@
+{
+  "item": [
+    {
+      "id": "859fcca9-bd28-4bf3-baa5-7abe2cc91690",
+      "name": "Maintenance Windows",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "2fb2f5d9-44c6-4144-b936-bd4f8edfe8ac",
+          "name": "List Maintenance Windows",
+          "request": {
+            "name": "List Maintenance Windows",
+            "description": {
+              "content": "Retrieve all maintenance windows",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "maintenance-windows"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Limit the number of results"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "dc41a84c-e3c2-4f3d-a43b-744f348e3efb",
+              "name": "List of maintenance windows",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "maintenance-windows"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"startsAt\": \"2019-12-14T15:36:20.392Z\",\n      \"endsAt\": \"1998-11-28T14:25:16.227Z\"\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"startsAt\": \"1959-02-03T14:55:18.114Z\",\n      \"endsAt\": \"1950-12-16T06:16:36.267Z\"\n    }\n  ],\n  \"meta\": {\n    \"currentPage\": 4277,\n    \"totalPages\": 1156,\n    \"totalItems\": 4484,\n    \"limit\": 6536\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "1c1b800b-7373-49e2-8357-1a938f4b9d7c",
+          "name": "Create Maintenance Window",
+          "request": {
+            "name": "Create Maintenance Window",
+            "description": {
+              "content": "Create a new maintenance window",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "maintenance-windows"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"startsAt\": \"<dateTime>\",\n  \"endsAt\": \"<dateTime>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "e93734c8-11e2-4ee6-9f90-574402d0ad5a",
+              "name": "Maintenance window created",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "maintenance-windows"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"startsAt\": \"<dateTime>\",\n  \"endsAt\": \"<dateTime>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"name\": \"string\",\n  \"startsAt\": \"2005-12-22T03:32:03.945Z\",\n  \"endsAt\": \"2006-09-28T19:24:50.010Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.checklyhq.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "5f7708da-aa5b-45b9-b059-784ca2859c0e",
+    "name": "Checkly Public Accounts Maintenance Windows API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Checkly Public API allows you to programmatically manage your monitoring checks, alerts, and more. If you have any questions, please do not hesitate to get in touch with us.\n\nContact Support:\n Name: Checkly Support",
+      "type": "text/plain"
+    }
+  }
+}

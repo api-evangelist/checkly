@@ -1,0 +1,253 @@
+{
+  "item": [
+    {
+      "id": "3fddb7e5-e44a-49f2-8345-6869fda56323",
+      "name": "Check Results",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "21496bf9-915c-4cb0-a93f-1ca1d16a6e1c",
+          "name": "List Check Results",
+          "request": {
+            "name": "List Check Results",
+            "description": {
+              "content": "Retrieve all execution results for a specific check",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "check-results",
+                ":checkId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "checkId",
+                  "description": "(Required) The check ID"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "bbc31943-a205-45b8-acf6-5672a128d502",
+              "name": "List of check results",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "check-results",
+                    ":checkId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "checkId",
+                      "description": "(Required) The check ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"checkId\": \"string\",\n      \"hasFailures\": false,\n      \"responseTime\": 5751.0035692003585,\n      \"runLocation\": \"string\",\n      \"startedAt\": \"2013-07-04T16:26:42.669Z\",\n      \"stoppedAt\": \"1984-12-16T21:49:09.216Z\"\n    },\n    {\n      \"id\": \"string\",\n      \"checkId\": \"string\",\n      \"hasFailures\": true,\n      \"responseTime\": 3482.4014776529334,\n      \"runLocation\": \"string\",\n      \"startedAt\": \"1997-08-20T14:21:35.092Z\",\n      \"stoppedAt\": \"1947-09-17T18:47:44.581Z\"\n    }\n  ],\n  \"meta\": {\n    \"currentPage\": 5493,\n    \"totalPages\": 8070,\n    \"totalItems\": 5562,\n    \"limit\": 8741\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "3b66032e-9484-4cdc-bb27-bf34e4410da9",
+          "name": "Get Check Result",
+          "request": {
+            "name": "Get Check Result",
+            "description": {
+              "content": "Retrieve detailed information about a specific check execution result",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "check-results",
+                ":checkId",
+                ":checkResultId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "checkId",
+                  "description": "(Required) The check ID"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "checkResultId",
+                  "description": "(Required) The check result ID"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "ce585c41-9c27-48da-bdc1-0c8b6ee39bd0",
+              "name": "Check result details",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "check-results",
+                    ":checkId",
+                    ":checkResultId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "checkId",
+                      "description": "(Required) The check ID"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "checkResultId",
+                      "description": "(Required) The check result ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"checkId\": \"string\",\n  \"hasFailures\": true,\n  \"responseTime\": 6862.168833891915,\n  \"runLocation\": \"string\",\n  \"startedAt\": \"2023-09-14T06:24:44.066Z\",\n  \"stoppedAt\": \"1981-03-30T07:25:20.664Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.checklyhq.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "e3d9d0a7-6cfc-45f7-82a4-b998ac761854",
+    "name": "Checkly Public Accounts Check Results API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Checkly Public API allows you to programmatically manage your monitoring checks, alerts, and more. If you have any questions, please do not hesitate to get in touch with us.\n\nContact Support:\n Name: Checkly Support",
+      "type": "text/plain"
+    }
+  }
+}

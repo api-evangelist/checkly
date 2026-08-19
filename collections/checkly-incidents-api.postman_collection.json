@@ -1,0 +1,133 @@
+{
+  "item": [
+    {
+      "id": "6c1c8da2-facd-4d45-8140-9a946ec56bfa",
+      "name": "Incidents",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "728cd69e-20ed-4fe4-b62d-7be58622d6f8",
+          "name": "List Incidents",
+          "request": {
+            "name": "List Incidents",
+            "description": {
+              "content": "Retrieve all incidents",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "incidents"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Limit the number of results"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "5a37f73f-155b-448e-b3b0-15cafc9d4b97",
+              "name": "List of incidents",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "incidents"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"status\": \"resolved\",\n      \"startedAt\": \"1998-12-17T00:04:42.790Z\",\n      \"resolvedAt\": \"1971-04-15T14:14:43.502Z\"\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"status\": \"open\",\n      \"startedAt\": \"2000-12-14T10:48:32.933Z\",\n      \"resolvedAt\": \"1977-08-08T22:31:24.013Z\"\n    }\n  ],\n  \"meta\": {\n    \"currentPage\": 3061,\n    \"totalPages\": 8378,\n    \"totalItems\": 5265,\n    \"limit\": 1301\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.checklyhq.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "48dda898-e279-4f1e-b90d-a53f46380cf2",
+    "name": "Checkly Public Accounts Incidents API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Checkly Public API allows you to programmatically manage your monitoring checks, alerts, and more. If you have any questions, please do not hesitate to get in touch with us.\n\nContact Support:\n Name: Checkly Support",
+      "type": "text/plain"
+    }
+  }
+}

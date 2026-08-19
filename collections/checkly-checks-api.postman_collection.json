@@ -1,0 +1,324 @@
+{
+  "item": [
+    {
+      "id": "f4bd939c-7d54-4160-8d49-627c5dafabcc",
+      "name": "Checks",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "1f2b3854-d501-47de-b0a7-fba38fc661e2",
+          "name": "List all checks",
+          "request": {
+            "name": "List all checks",
+            "description": {
+              "content": "Lists all current checks in your account.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "checks"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Limit the number of results"
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number"
+                },
+                {
+                  "disabled": false,
+                  "key": "apiCheckUrlFilterPattern",
+                  "value": "<string>",
+                  "description": "Filters the results by a string contained in the URL of an API check, for instance a domain like \"www.myapp.com\". Only returns API checks."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "925df0f4-58e4-45a2-bd9f-dde9a8ad7af8",
+              "name": "List of checks",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "checks"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "apiCheckUrlFilterPattern",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"73208bf5-2b42-4ab3-b18c-7ac505b7d7b4\",\n      \"name\": \"Homepage Load Test\",\n      \"checkType\": \"HEARTBEAT\",\n      \"frequency\": 5,\n      \"activated\": false,\n      \"muted\": true,\n      \"shouldFail\": false,\n      \"locations\": [\n        \"us-east-1\",\n        \"eu-west-1\",\n        \"ap-southeast-1\"\n      ],\n      \"tags\": [\n        \"production\",\n        \"critical\",\n        \"homepage\"\n      ],\n      \"createdAt\": \"2013-03-04T09:56:46.305Z\",\n      \"updatedAt\": \"1997-03-26T03:46:24.229Z\",\n      \"script\": \"string\",\n      \"environmentVariables\": [\n        {\n          \"key\": \"string\",\n          \"value\": \"string\",\n          \"locked\": true\n        },\n        {\n          \"key\": \"string\",\n          \"value\": \"string\",\n          \"locked\": true\n        }\n      ]\n    },\n    {\n      \"id\": \"73208bf5-2b42-4ab3-b18c-7ac505b7d7b4\",\n      \"name\": \"Homepage Load Test\",\n      \"checkType\": \"API\",\n      \"frequency\": 5,\n      \"activated\": true,\n      \"muted\": true,\n      \"shouldFail\": true,\n      \"locations\": [\n        \"us-east-1\",\n        \"eu-west-1\",\n        \"ap-southeast-1\"\n      ],\n      \"tags\": [\n        \"production\",\n        \"critical\",\n        \"homepage\"\n      ],\n      \"createdAt\": \"1978-10-03T09:58:53.574Z\",\n      \"updatedAt\": \"1970-06-07T19:48:48.466Z\",\n      \"script\": \"string\",\n      \"environmentVariables\": [\n        {\n          \"key\": \"string\",\n          \"value\": \"string\",\n          \"locked\": false\n        },\n        {\n          \"key\": \"string\",\n          \"value\": \"string\",\n          \"locked\": true\n        }\n      ]\n    }\n  ],\n  \"meta\": {\n    \"currentPage\": 2776,\n    \"totalPages\": 3776,\n    \"totalItems\": 4175,\n    \"limit\": 7401\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "53e4a083-174a-44ec-9def-e89783d98d34",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "checks"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "apiCheckUrlFilterPattern",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\",\n  \"statusCode\": 2522\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "29b3b41d-1222-4919-8c77-5c0d46817e43",
+              "name": "Forbidden",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "checks"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "apiCheckUrlFilterPattern",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\",\n  \"statusCode\": 2522\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "710b1c78-a20f-41b2-ab0c-f51aa255c98b",
+              "name": "Too Many Requests",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "checks"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "apiCheckUrlFilterPattern",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\",\n  \"statusCode\": 2522\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.checklyhq.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "ae80ac32-88dc-4076-9bff-8db2ecdb70fe",
+    "name": "Checkly Public Accounts Checks API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Checkly Public API allows you to programmatically manage your monitoring checks, alerts, and more. If you have any questions, please do not hesitate to get in touch with us.\n\nContact Support:\n Name: Checkly Support",
+      "type": "text/plain"
+    }
+  }
+}
