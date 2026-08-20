@@ -45,6 +45,8 @@ apis:
   description: The Accounts API from Checkly — 2 operation(s) for accounts.
   humanURL: https://www.checklyhq.com
   tags:
+  - Account
+  tags_raw:
   - Accounts
   properties:
   - type: OpenAPI
