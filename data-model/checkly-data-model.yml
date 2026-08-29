@@ -1,0 +1,227 @@
+generated: '2026-08-29'
+method: derived
+source: >-
+  openapi/_original/checkly-public-api-openapi.json (harvested 2026-08-29 from
+  https://api.checklyhq.com/openapi.json) - 157 paths, 225 operations, 629 component schemas -
+  cross-read against the Checkly CLI construct reference at https://www.checklyhq.com/docs/constructs/overview.
+description: >-
+  The Checkly entity graph, derived from the OpenAPI path hierarchy and the id-reference fields on
+  its component schemas. The graph has one spine - an Account owns Checks, a Check produces Results,
+  a Result belongs to a Session and rolls up into an Error Group, and an Error Group is what Rocky AI
+  analyses - plus two satellite domains, alerting and status pages, that hang off the same account.
+identity:
+  primary_key: UUID on every top-level resource
+  account_scoping: >-
+    Every request is scoped to one account by the X-Checkly-Account header, so ids are only unique
+    within an account context. A correct id against the wrong account returns 404, not 403.
+  logical_id: >-
+    Resources created through the CLI carry a logicalId (17 schemas) - the stable, human-authored key
+    that lets monitoring-as-code reconcile a local construct with a remote resource across deploys.
+    It is the closest thing Checkly has to an external identifier.
+  id_prefixes: none - Checkly uses bare UUIDs, with no typed prefix scheme
+entities:
+- name: Account
+  root: /v1/accounts
+  description: The billing and ownership boundary. Everything else belongs to exactly one account.
+  children:
+  - Member
+  - Entitlement
+- name: Member
+  root: /v1/accounts/{accountId}/members
+  belongs_to: Account
+- name: Entitlement
+  root: /v1/accounts/{accountId}/entitlements
+  belongs_to: Account
+  description: The resolved plan and feature limits. Read-only.
+- name: Check
+  root: /v1/checks, /v2/checks, /v3/checks
+  description: >-
+    The central entity. Polymorphic by type - api, browser, multistep, url, tcp, dns, icmp, ssl,
+    heartbeat, playwright suite - each with its own create/update path under /v1/checks/{type}.
+  belongs_to: Account
+  optional_parents:
+  - CheckGroup
+  references:
+  - {field: groupId, to: CheckGroup, occurrences: 69}
+  - {field: runtimeId, to: Runtime, occurrences: 59}
+  - {field: setupSnippetId, to: Snippet, occurrences: 23}
+  - {field: tearDownSnippetId, to: Snippet, occurrences: 23}
+  - {field: alertChannelId, to: AlertChannel, occurrences: 4}
+  - {field: sslClientCertificateId, to: ClientCertificate, occurrences: 3}
+  - {field: privateLocationId, to: PrivateLocation, occurrences: 2}
+- name: CheckGroup
+  root: /v1/check-groups, /v2/check-groups
+  description: >-
+    A settings container. Group-level configuration (locations, runtime, alert channels, environment
+    variables) cascades to member checks, which is why applyGroupSettings appears as a query
+    parameter on six operations.
+  has_many: Check
+- name: CheckResult
+  root: /v1/check-results/{checkId}, /v2/check-results/{checkId}
+  belongs_to: Check
+  has_many: Asset
+  description: One execution of a check. The v1 list endpoint is deprecated in favour of v2.
+- name: CheckStatus
+  root: /v1/check-statuses
+  belongs_to: Check
+  description: Current pass/fail/degraded state, separate from the result history.
+- name: CheckSession
+  root: /v1/check-sessions, /v2/check-sessions
+  description: A triggered run across matching checks. Cancellable while in flight.
+- name: TestSession
+  root: /v1/test-sessions
+  description: >-
+    The CI-facing sibling of a check session - a recorded run with its own results, error groups and
+    assets, created by `checkly test` or by POST /v1/test-sessions/trigger. Cancellable.
+  has_many: TestSessionResult
+- name: TestSessionResult
+  root: /v1/test-sessions/{testSessionId}/results/{testSessionResultId}
+  belongs_to: TestSession
+  has_many: Asset
+- name: ErrorGroup
+  root: /v1/error-groups
+  belongs_to: Check
+  description: Failures clustered by signature. The unit Rocky AI analyses.
+- name: TestSessionErrorGroup
+  root: /v1/test-session-error-groups
+  belongs_to: TestSession
+  description: The test-session counterpart of ErrorGroup, scoped by projectId.
+- name: RootCauseAnalysis
+  root: /v1/root-cause-analyses
+  belongs_to: ErrorGroup or TestSessionErrorGroup
+  description: A Rocky AI analysis. Created asynchronously; a pending analysis returns polling status.
+- name: Asset
+  root: /v1/check-results/{checkId}/{checkResultId}/assets
+  belongs_to: CheckResult or TestSessionResult
+  description: Logs, traces, screenshots and videos attached to a result. Fetched via a manifest.
+- name: AlertChannel
+  root: /v1/alert-channels
+  belongs_to: Account
+  description: >-
+    Email, SMS, phone, Slack, webhook, Opsgenie, PagerDuty, Incident.io, MS Teams or Telegram
+    destination. Checks and groups subscribe to channels.
+  has_many: AlertChannelSubscription
+- name: AlertNotification
+  root: /v1/alert-notifications
+  belongs_to: AlertChannel
+  description: The delivery log for alerts sent.
+- name: CheckAlert
+  root: /v1/check-alerts
+  belongs_to: Check
+- name: Dashboard
+  root: /v1/dashboards
+  belongs_to: Account
+- name: StatusPage
+  root: /v3/status-pages (v1 deprecated)
+  belongs_to: Account
+  has_many:
+  - StatusPageComponent
+  - StatusPageIncident
+  - StatusPageSubscriber
+  - StatusPageAutomationRule
+- name: StatusPageComponent
+  root: /v3/status-pages/{statusPageId}/components
+  belongs_to: StatusPage
+  description: The v3 model that replaced v1 "services".
+- name: StatusPageIncident
+  root: /v3/status-pages/{statusPageId}/incidents
+  belongs_to: StatusPage
+  has_many: IncidentUpdate
+  references:
+  - {field: componentId, to: StatusPageComponent, via: component-impacts}
+- name: IncidentUpdate
+  root: /v3/status-pages/{statusPageId}/incidents/{incidentId}/incident-updates
+  belongs_to: StatusPageIncident
+  description: Append-only progress record. Resolving an incident posts a final update.
+- name: StatusPageSubscriber
+  root: /v3/status-pages/{statusPageId}/subscribers
+  belongs_to: StatusPage
+- name: StatusPageAutomationRule
+  root: /v3/status-pages/{statusPageId}/automation-rules
+  belongs_to: StatusPage
+  description: Binds check state transitions to automatic incident creation.
+- name: Incident
+  root: /v1/incidents
+  belongs_to: Account
+  description: The non-status-page incident record, with its own updates collection.
+- name: MaintenanceWindow
+  root: /v1/maintenance-windows
+  belongs_to: Account
+  has_many: Maintenance
+  description: Suppresses alerting on selected checks and groups for a scheduled period.
+- name: PrivateLocation
+  root: /v1/private-locations
+  belongs_to: Account
+  has_many: PrivateLocationKey
+  description: Customer-hosted agent location; exposes its own metrics endpoint.
+- name: Location
+  root: /v1/locations
+  description: Checkly-operated public run locations. Account-independent reference data.
+- name: Runtime
+  root: /v1/runtimes
+  description: Versioned execution environment and its dependency set. Reference data.
+- name: Snippet
+  root: /v1/snippets
+  belongs_to: Account
+  description: Reusable setup and teardown script, referenced by checks.
+- name: EnvironmentVariable
+  root: /v1/variables/{key}
+  belongs_to: Account
+  description: >-
+    Key-addressed rather than id-addressed, which makes PUT naturally idempotent. Secret values are
+    write-only - never returned.
+- name: ClientCertificate
+  root: /v1/client-certificates
+  belongs_to: Account
+  description: mTLS client certificate for checks against protected endpoints.
+- name: DeploymentTrigger
+  root: /v1/deployment-triggers
+  belongs_to: Account
+- name: SecretScan
+  root: /v1/secret-scans
+  belongs_to: Account
+  description: Findings from Checkly scanning check code and configuration for leaked secrets.
+- name: StaticIP
+  root: /v1/static-ips
+  description: >-
+    The egress IP ranges Checkly runs checks from, published as JSON, by-region JSON and plain text
+    so a customer can allowlist them. Reference data, unauthenticated in spirit.
+- name: Badge
+  root: /v1/badges/checks/{checkId}
+  belongs_to: Check
+  description: Embeddable status badge image for a check or group.
+relationships:
+- {from: Account, to: Check, type: has_many}
+- {from: Account, to: CheckGroup, type: has_many}
+- {from: CheckGroup, to: Check, type: has_many, via: groupId}
+- {from: Check, to: CheckResult, type: has_many}
+- {from: CheckResult, to: Asset, type: has_many}
+- {from: Check, to: ErrorGroup, type: has_many}
+- {from: ErrorGroup, to: RootCauseAnalysis, type: has_many}
+- {from: TestSession, to: TestSessionResult, type: has_many}
+- {from: TestSessionResult, to: Asset, type: has_many}
+- {from: TestSession, to: TestSessionErrorGroup, type: has_many}
+- {from: Check, to: Runtime, type: belongs_to, via: runtimeId}
+- {from: Check, to: Snippet, type: has_many, via: setupSnippetId / tearDownSnippetId}
+- {from: Check, to: AlertChannel, type: has_many, via: alertChannelId subscriptions}
+- {from: Check, to: PrivateLocation, type: has_many, via: privateLocationId}
+- {from: Check, to: ClientCertificate, type: belongs_to, via: sslClientCertificateId}
+- {from: StatusPage, to: StatusPageComponent, type: has_many}
+- {from: StatusPage, to: StatusPageIncident, type: has_many}
+- {from: StatusPageIncident, to: IncidentUpdate, type: has_many}
+- {from: StatusPageIncident, to: StatusPageComponent, type: has_many, via: component-impacts}
+- {from: StatusPage, to: StatusPageSubscriber, type: has_many}
+- {from: StatusPage, to: StatusPageAutomationRule, type: has_many}
+- {from: MaintenanceWindow, to: Maintenance, type: has_many}
+- {from: PrivateLocation, to: PrivateLocationKey, type: has_many}
+entity_count: 36
+notes:
+- >-
+  The polymorphic Check is the modelling decision that shapes everything else: one entity, ten
+  request/assertion shapes, and a separate create/update path per type (/v1/checks/api,
+  /v1/checks/browser, /v1/checks/url, /v1/checks/ssl, ...). The generic POST /v1/checks and
+  PUT /v1/checks/{id} are deprecated precisely because they could not express that.
+- >-
+  Naming in the schema layer is versioned and namespaced - ChecksV1UrlMonitorUpdate,
+  IncidentUpdateV1Response - which makes the 629 schemas navigable but means a v1 and a v3 model of
+  the same concept coexist under different names.

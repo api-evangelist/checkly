@@ -1,0 +1,430 @@
+openapi: 3.2.0
+info:
+  title: Checkly Public Incident Updates API
+  version: v1
+  description: These are the docs for the newly released Checkly Public API.<br />If you have any questions, please do not hesitate to get in touch with us.
+servers:
+- url: https://api.checklyhq.com
+security:
+- Bearer: []
+tags:
+- name: Incident Updates
+paths:
+  /v1/incidents/{incidentId}/updates:
+    post:
+      summary: Create an incident update
+      operationId: postV1IncidentsIncidentidUpdates
+      description: Creates a new update for an incident.
+      tags:
+      - Incident Updates
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IncidentUpdateV1CreateResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+      parameters:
+      - schema:
+          type: string
+          x-format:
+            guid: true
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+      - schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
+        name: incidentId
+        in: path
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IncidentUpdateV1CreateRequest'
+  /v1/incidents/{incidentId}/updates/{id}:
+    delete:
+      summary: Delete an incident update
+      operationId: deleteV1IncidentsIncidentidUpdatesId
+      description: Permanently removes an incident update.
+      tags:
+      - Incident Updates
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+      parameters:
+      - schema:
+          type: string
+          x-format:
+            guid: true
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+      - schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
+        name: id
+        in: path
+      - schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
+        name: incidentId
+        in: path
+    put:
+      summary: Update an incident update
+      operationId: putV1IncidentsIncidentidUpdatesId
+      description: Modifies an incident update.
+      tags:
+      - Incident Updates
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IncidentUpdateV1Response'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+      parameters:
+      - schema:
+          type: string
+          x-format:
+            guid: true
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+      - schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
+        name: id
+        in: path
+      - schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
+        name: incidentId
+        in: path
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IncidentUpdateV1UpdateRequest'
+components:
+  schemas:
+    attributes:
+      type: object
+    error:
+      type: string
+      enum:
+      - Unauthorized
+    IncidentUpdateV1CreateRequest:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+          - INVESTIGATING
+          - IDENTIFIED
+          - MONITORING
+          - RESOLVED
+          - MAINTENANCE
+          description: The incident update status. Must be one of INVESTIGATING,IDENTIFIED,MONITORING,RESOLVED,MAINTENANCE
+          example: INVESTIGATING
+        description:
+          type: string
+          description: A description about the status update.
+          example: We found the issue and we are working on it.
+      required:
+      - status
+      - description
+    ForbiddenError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 403
+        error:
+          $ref: '#/components/schemas/Model1'
+        message:
+          type: string
+          example: Forbidden
+      required:
+      - statusCode
+      - error
+    Model4:
+      type: string
+      enum:
+      - Not Found
+    ApiError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+        error:
+          type: string
+        message:
+          type: string
+      required:
+      - statusCode
+      - error
+      - message
+    IncidentUpdateV1UpdateRequest:
+      type: object
+      properties:
+        description:
+          type: string
+          description: A description about the status update.
+          example: We found the issue and we are working on it.
+      required:
+      - description
+    TooManyRequestsError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    IncidentUpdateV1Response:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+          - INVESTIGATING
+          - IDENTIFIED
+          - MONITORING
+          - RESOLVED
+          - MAINTENANCE
+          description: The incident update status. Must be one of INVESTIGATING,IDENTIFIED,MONITORING,RESOLVED,MAINTENANCE
+          example: INVESTIGATING
+        description:
+          type: string
+          description: A description about the status update.
+          example: We found the issue and we are working on it.
+        id:
+          type: string
+          x-format:
+            guid: true
+          description: The incident update universal and unique identificator.
+          example: e50ad839-1b90-4955-b716-1c6edbda57cb
+        created_at:
+          type: string
+          format: date-time
+          description: The timestamp when the incident update was created.
+          example: '2022-09-08T19:41:28.658Z'
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The timestamp when last the update.
+          example: '2022-09-08T20:41:28.658Z'
+      required:
+      - status
+      - description
+      - id
+      - created_at
+      - updated_at
+    Model1:
+      type: string
+      enum:
+      - Forbidden
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
+    IncidentUpdateV1CreateResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+          - INVESTIGATING
+          - IDENTIFIED
+          - MONITORING
+          - RESOLVED
+          - MAINTENANCE
+          description: The incident update status. Must be one of INVESTIGATING,IDENTIFIED,MONITORING,RESOLVED,MAINTENANCE
+          example: INVESTIGATING
+        description:
+          type: string
+          description: A description about the status update.
+          example: We found the issue and we are working on it.
+        id:
+          type: string
+          x-format:
+            guid: true
+          description: The incident update universal and unique identificator.
+          example: e50ad839-1b90-4955-b716-1c6edbda57cb
+        created_at:
+          type: string
+          format: date-time
+          description: The timestamp when the incident update was created.
+          example: '2022-09-08T19:41:28.658Z'
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        incidentId:
+          type: string
+          x-format:
+            guid: true
+      required:
+      - status
+      - description
+      - id
+      - created_at
+      - incidentId
+    UnauthorizedError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 401
+        error:
+          $ref: '#/components/schemas/error'
+        message:
+          type: string
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    NotFoundError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 404
+        error:
+          $ref: '#/components/schemas/Model4'
+        message:
+          type: string
+          example: Not Found
+      required:
+      - statusCode
+      - error
+  securitySchemes:
+    Bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: Bearer
+      description: 'The Checkly Public API uses API keys to authenticate requests. You can get the API Key <a href="https://app.checklyhq.com/settings/user/api-keys" target="_blank">here</a>.</br>Your API key is like a password: <br>keep it secure!</br></br>Authentication to the API is performed using the Bearer auth method in the Authorization header and using the account ID.</br></br>For example, set <b>Authorization</b> header while using cURL: <code>curl -H "Authorization: Bearer [apiKey]" "X-Checkly-Account: [accountId]"</code></br>'

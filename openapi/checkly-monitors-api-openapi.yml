@@ -1,0 +1,4162 @@
+openapi: 3.2.0
+info:
+  title: Checkly Public Monitors API
+  version: v1
+  description: These are the docs for the newly released Checkly Public API.<br />If you have any questions, please do not hesitate to get in touch with us.
+servers:
+- url: https://api.checklyhq.com
+security:
+- Bearer: []
+tags:
+- name: Monitors
+paths:
+  /v1/checks/dns/{id}:
+    put:
+      summary: Update an DNS Monitor
+      operationId: putV1ChecksDnsId
+      description: Updates an DNS monitor.
+      tags:
+      - Monitors
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChecksV1DnsMonitorMutationResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: string
+          minLength: 1
+          format: uuid
+        required: true
+        name: id
+        in: path
+      - schema:
+          type: boolean
+          default: true
+          description: Determines whether a new check will automatically be added as a subscriber to all existing alert channels when it gets created.
+        required: false
+        description: Determines whether a new check will automatically be added as a subscriber to all existing alert channels when it gets created.
+        name: autoAssignAlerts
+        in: query
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChecksV1DnsMonitorUpdate'
+  /v1/checks/icmp:
+    post:
+      summary: Create an ICMP monitor
+      operationId: postV1ChecksIcmp
+      description: "Creates a new ICMP monitor. Will return a `402` when you are over the limit of your plan.\n    When using the `globalAlertSetting`, the `alertSetting` can be `null`"
+      tags:
+      - Monitors
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChecksV1IcmpMonitor'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '402':
+          description: Payment Required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: boolean
+          default: true
+          description: Determines whether a new check will automatically be added as a subscriber to all existing alert channels when it gets created.
+        required: false
+        description: Determines whether a new check will automatically be added as a subscriber to all existing alert channels when it gets created.
+        name: autoAssignAlerts
+        in: query
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChecksV1IcmpMonitorCreate'
+  /v1/checks/icmp/{id}:
+    put:
+      summary: Update an ICMP Monitor
+      operationId: putV1ChecksIcmpId
+      description: Updates an ICMP monitor.
+      tags:
+      - Monitors
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChecksV1IcmpMonitor'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: string
+          minLength: 1
+          format: uuid
+        required: true
+        name: id
+        in: path
+      - schema:
+          type: boolean
+          default: true
+          description: Determines whether a new check will automatically be added as a subscriber to all existing alert channels when it gets created.
+        required: false
+        description: Determines whether a new check will automatically be added as a subscriber to all existing alert channels when it gets created.
+        name: autoAssignAlerts
+        in: query
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChecksV1IcmpMonitorUpdate'
+  /v1/checks/ssl:
+    post:
+      summary: Create an SSL monitor
+      operationId: postV1ChecksSsl
+      description: "Creates a new SSL monitor. Will return a `402` when you are over the limit of your plan.\n    When using the `globalAlertSetting`, the `alertSetting` can be `null`"
+      tags:
+      - Monitors
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChecksV1SslMonitorMutationResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '402':
+          description: Payment Required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: boolean
+          default: true
+          description: Determines whether a new check will automatically be added as a subscriber to all existing alert channels when it gets created.
+        required: false
+        description: Determines whether a new check will automatically be added as a subscriber to all existing alert channels when it gets created.
+        name: autoAssignAlerts
+        in: query
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChecksV1SslMonitorCreate'
+  /v1/checks/ssl/{id}:
+    put:
+      summary: Update an SSL Monitor
+      operationId: putV1ChecksSslId
+      description: Updates an SSL monitor.
+      tags:
+      - Monitors
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChecksV1SslMonitorMutationResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: string
+          minLength: 1
+          format: uuid
+        required: true
+        name: id
+        in: path
+      - schema:
+          type: boolean
+          default: true
+          description: Determines whether a new check will automatically be added as a subscriber to all existing alert channels when it gets created.
+        required: false
+        description: Determines whether a new check will automatically be added as a subscriber to all existing alert channels when it gets created.
+        name: autoAssignAlerts
+        in: query
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChecksV1SslMonitorUpdate'
+  /v1/checks/url:
+    post:
+      summary: Create a URL monitor
+      operationId: postV1ChecksUrl
+      description: "Creates a new URL monitor. Will return a `402` when you are over the limit of your plan.\n    When using the `globalAlertSetting`, the `alertSetting` can be `null`"
+      tags:
+      - Monitors
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChecksV1UrlMonitorMutationResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '402':
+          description: Payment Required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: boolean
+          default: true
+          description: Determines whether a new check will automatically be added as a subscriber to all existing alert channels when it gets created.
+        required: false
+        description: Determines whether a new check will automatically be added as a subscriber to all existing alert channels when it gets created.
+        name: autoAssignAlerts
+        in: query
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChecksV1UrlMonitorCreate'
+  /v1/checks/url/{id}:
+    put:
+      summary: Update an URL Monitor
+      operationId: putV1ChecksUrlId
+      description: Updates an URL monitor.
+      tags:
+      - Monitors
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChecksV1UrlMonitorMutationResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: string
+          minLength: 1
+          format: uuid
+        required: true
+        name: id
+        in: path
+      - schema:
+          type: boolean
+          default: true
+          description: Determines whether a new check will automatically be added as a subscriber to all existing alert channels when it gets created.
+        required: false
+        description: Determines whether a new check will automatically be added as a subscriber to all existing alert channels when it gets created.
+        name: autoAssignAlerts
+        in: query
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChecksV1UrlMonitorUpdate'
+components:
+  schemas:
+    ChecksV1IcmpRequestPatch:
+      type: object
+      properties:
+        hostname:
+          type: string
+          minLength: 1
+          maxLength: 2048
+        ipFamily:
+          type:
+          - string
+          - 'null'
+          enum:
+          - IPv4
+          - IPv6
+          - null
+        pingCount:
+          type:
+          - integer
+          - 'null'
+          minimum: 1
+          maximum: 50
+        assertions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChecksV1IcmpAssertionPatch'
+      required:
+      - hostname
+    ChecksV1SslRequestRead:
+      type: object
+      properties:
+        sslConfig:
+          $ref: '#/components/schemas/ChecksV1SslConfigRead'
+        sslClientCertificateId:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          format: uuid
+        assertions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChecksV1SslAssertionPatch'
+      required:
+      - sslConfig
+    ChecksV1UrlMonitorMutationResponse:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        activated:
+          type: boolean
+          default: true
+        muted:
+          type: boolean
+          default: false
+        doubleCheck:
+          type: boolean
+          default: true
+        shouldFail:
+          type: boolean
+          default: false
+        locations:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+            enum:
+            - us-east-1
+            - us-east-2
+            - us-west-1
+            - us-west-2
+            - ca-central-1
+            - sa-east-1
+            - eu-west-1
+            - eu-central-1
+            - eu-west-2
+            - eu-west-3
+            - eu-north-1
+            - eu-south-1
+            - me-south-1
+            - ap-southeast-1
+            - ap-northeast-1
+            - ap-east-1
+            - ap-southeast-2
+            - ap-southeast-3
+            - ap-northeast-2
+            - ap-northeast-3
+            - ap-south-1
+            - af-south-1
+          default: []
+        tags:
+          type: array
+          items:
+            type: string
+            minLength: 1
+          default: []
+        alertSettings:
+          $ref: '#/components/schemas/ChecksV1AlertSettings'
+        useGlobalAlertSettings:
+          type: boolean
+          default: true
+        groupId:
+          type:
+          - number
+          - 'null'
+          default: null
+        groupOrder:
+          type:
+          - number
+          - 'null'
+          minimum: 0
+          default: null
+        runtimeId:
+          type:
+          - string
+          - 'null'
+          enum:
+          - '2026.04'
+          - '2025.04'
+          - '2024.09'
+          - '2024.02'
+          - '2023.09'
+          - '2023.02'
+          - '2022.10'
+          - null
+          default: null
+        alertChannelSubscriptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChecksV1AlertChannelSubscription'
+        retryStrategy:
+          $ref: '#/components/schemas/ChecksV1RetryStrategy'
+        triggerIncident:
+          $ref: '#/components/schemas/ChecksV1TriggerIncident'
+        runParallel:
+          type: boolean
+          default: false
+        description:
+          type:
+          - string
+          - 'null'
+          maxLength: 500
+          default: null
+        intent:
+          type:
+          - object
+          - 'null'
+          properties:
+            goal:
+              type: string
+              minLength: 1
+              maxLength: 2000
+              description: The user or system outcome this check protects.
+            requiredOutcomes:
+              type: array
+              items:
+                type: string
+                minLength: 1
+                maxLength: 1000
+              maxItems: 20
+              default: []
+              description: Observable outcomes the check must continue to prove.
+            mustPreserve:
+              type: array
+              items:
+                type: string
+                minLength: 1
+                maxLength: 1000
+              maxItems: 20
+              default: []
+              description: Guardrails an AI repair must not weaken or bypass.
+          default: null
+          required:
+          - goal
+          additionalProperties: false
+        aiAutoRepairEnabled:
+          type:
+          - boolean
+          - 'null'
+          default: null
+        id:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        alertChannels:
+          $ref: '#/components/schemas/ChecksV1AlertChannels'
+        privateLocations:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+            minLength: 1
+        frequency:
+          type: integer
+          enum:
+          - 0
+          - 1
+          - 2
+          - 5
+          - 10
+          - 15
+          - 30
+          - 60
+          - 120
+          - 180
+          - 360
+          - 720
+          - 1440
+          default: 10
+        frequencyOffset:
+          type: integer
+          minimum: 1
+        degradedResponseTime:
+          type:
+          - number
+          - 'null'
+        maxResponseTime:
+          type:
+          - number
+          - 'null'
+        checkType:
+          type: string
+          enum:
+          - URL
+        request:
+          $ref: '#/components/schemas/ChecksV1UrlRequest'
+      required:
+      - name
+    ProjectBindingReferencesV1:
+      type: array
+      description: Projects that use this resource without owning it; their deploys leave it alone. Empty when there are none.
+      items:
+        $ref: '#/components/schemas/ProjectBindingV1'
+    ChecksV1AlertSettingsCreatePatch:
+      type: object
+      properties:
+        escalationType:
+          type: string
+          enum:
+          - RUN_BASED
+          - TIME_BASED
+        reminders:
+          type: object
+          properties:
+            amount:
+              type: integer
+              enum:
+              - 0
+              - 1
+              - 2
+              - 3
+              - 4
+              - 5
+              - 100000
+            interval:
+              type: integer
+              enum:
+              - 1
+              - 2
+              - 3
+              - 4
+              - 5
+              - 10
+              - 15
+              - 30
+        sslCertificates:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+            alertThreshold:
+              type: integer
+        runBasedEscalation:
+          $ref: '#/components/schemas/ChecksV1AlertSettingsRunBasedEscalation'
+        timeBasedEscalation:
+          $ref: '#/components/schemas/ChecksV1AlertSettingsTimeBasedEscalation'
+        parallelRunFailureThreshold:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+            percentage:
+              type: integer
+              enum:
+              - 10
+              - 20
+              - 30
+              - 40
+              - 50
+              - 60
+              - 70
+              - 80
+              - 90
+              - 100
+    ChecksV1IcmpMonitorCreate:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        activated:
+          type: boolean
+          default: true
+        muted:
+          type: boolean
+          default: false
+        doubleCheck:
+          type: boolean
+          default: true
+        shouldFail:
+          type: boolean
+          default: false
+        locations:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+            enum:
+            - us-east-1
+            - us-east-2
+            - us-west-1
+            - us-west-2
+            - ca-central-1
+            - sa-east-1
+            - eu-west-1
+            - eu-central-1
+            - eu-west-2
+            - eu-west-3
+            - eu-north-1
+            - eu-south-1
+            - me-south-1
+            - ap-southeast-1
+            - ap-northeast-1
+            - ap-east-1
+            - ap-southeast-2
+            - ap-southeast-3
+            - ap-northeast-2
+            - ap-northeast-3
+            - ap-south-1
+            - af-south-1
+          default: []
+        tags:
+          type: array
+          items:
+            type: string
+            minLength: 1
+          default: []
+        alertSettings:
+          $ref: '#/components/schemas/ChecksV1AlertSettingsCreate'
+        useGlobalAlertSettings:
+          type: boolean
+          default: true
+        groupId:
+          type:
+          - number
+          - 'null'
+          default: null
+        groupOrder:
+          type:
+          - number
+          - 'null'
+          minimum: 0
+          default: null
+        runtimeId:
+          type:
+          - string
+          - 'null'
+          enum:
+          - '2026.04'
+          - '2025.04'
+          - '2024.09'
+          - '2024.02'
+          - '2023.09'
+          - '2023.02'
+          - '2022.10'
+          - null
+          default: null
+        alertChannelSubscriptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChecksV1AlertChannelSubscription'
+        retryStrategy:
+          $ref: '#/components/schemas/ChecksV1RetryStrategy'
+        triggerIncident:
+          $ref: '#/components/schemas/ChecksV1TriggerIncident'
+        runParallel:
+          type: boolean
+          default: false
+        description:
+          type:
+          - string
+          - 'null'
+          maxLength: 510
+          default: null
+        intent:
+          type:
+          - object
+          - 'null'
+          properties:
+            goal:
+              type: string
+              minLength: 1
+              maxLength: 2000
+              description: The user or system outcome this check protects.
+            requiredOutcomes:
+              type: array
+              items:
+                type: string
+                minLength: 1
+                maxLength: 1000
+              maxItems: 20
+              default: []
+              description: Observable outcomes the check must continue to prove.
+            mustPreserve:
+              type: array
+              items:
+                type: string
+                minLength: 1
+                maxLength: 1000
+              maxItems: 20
+              default: []
+              description: Guardrails an AI repair must not weaken or bypass.
+          default: null
+          required:
+          - goal
+          additionalProperties: false
+        aiAutoRepairEnabled:
+          type:
+          - boolean
+          - 'null'
+          default: null
+        checkType:
+          type: string
+          enum:
+          - ICMP
+          default: ICMP
+        frequency:
+          type: integer
+          enum:
+          - 0
+          - 1
+          - 2
+          - 5
+          - 10
+          - 15
+          - 30
+          - 60
+          - 120
+          - 180
+          - 360
+          - 720
+          - 1440
+          default: 10
+        frequencyOffset:
+          type: integer
+          minimum: 1
+        heartbeat:
+          type:
+          - object
+          - 'null'
+          properties: {}
+          additionalProperties: {}
+        script:
+          type:
+          - string
+          - 'null'
+        scriptPath:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+        sslCheckDomain:
+          type:
+          - string
+          - 'null'
+        environmentVariables:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ChecksV1EnvironmentVariable'
+          maxItems: 200
+        setupSnippetId:
+          type:
+          - number
+          - 'null'
+          default: null
+        tearDownSnippetId:
+          type:
+          - number
+          - 'null'
+          default: null
+        localSetupScript:
+          type:
+          - string
+          - 'null'
+          default: null
+        localTearDownScript:
+          type:
+          - string
+          - 'null'
+          default: null
+        request:
+          $ref: '#/components/schemas/ChecksV1IcmpRequest'
+        degradedResponseTime:
+          type:
+          - number
+          - 'null'
+          minimum: 0
+          maximum: 300000
+          default: 10000
+        maxResponseTime:
+          type:
+          - number
+          - 'null'
+          minimum: 0
+          maximum: 300000
+          default: 20000
+        degradedPacketLossThreshold:
+          type:
+          - number
+          - 'null'
+          maximum: 100
+          default: 10
+          exclusiveMinimum: 0
+        maxPacketLossThreshold:
+          type:
+          - number
+          - 'null'
+          maximum: 100
+          default: 20
+          exclusiveMinimum: 0
+        privateLocations:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+            minLength: 1
+      required:
+      - name
+      - request
+    ChecksV1AlertChannels:
+      type:
+      - object
+      - 'null'
+      properties:
+        email:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChecksV1AlertEmail'
+        webhook:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChecksV1AlertWebhook'
+        slack:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChecksV1AlertSlack'
+        sms:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChecksV1AlertSms'
+    ChecksV1AlertChannelSubscription:
+      type: object
+      properties:
+        alertChannelId:
+          type: number
+        activated:
+          type: boolean
+      required:
+      - alertChannelId
+      - activated
+    ChecksV1UrlMonitorCreate:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        activated:
+          type: boolean
+          default: true
+        muted:
+          type: boolean
+          default: false
+        doubleCheck:
+          type: boolean
+          default: true
+        shouldFail:
+          type: boolean
+          default: false
+        locations:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+            enum:
+            - us-east-1
+            - us-east-2
+            - us-west-1
+            - us-west-2
+            - ca-central-1
+            - sa-east-1
+            - eu-west-1
+            - eu-central-1
+            - eu-west-2
+            - eu-west-3
+            - eu-north-1
+            - eu-south-1
+            - me-south-1
+            - ap-southeast-1
+            - ap-northeast-1
+            - ap-east-1
+            - ap-southeast-2
+            - ap-southeast-3
+            - ap-northeast-2
+            - ap-northeast-3
+            - ap-south-1
+            - af-south-1
+          default: []
+        tags:
+          type: array
+          items:
+            type: string
+            minLength: 1
+          default: []
+        alertSettings:
+          $ref: '#/components/schemas/ChecksV1AlertSettingsCreate'
+        useGlobalAlertSettings:
+          type: boolean
+          default: true
+        groupId:
+          type:
+          - number
+          - 'null'
+          default: null
+        groupOrder:
+          type:
+          - number
+          - 'null'
+          minimum: 0
+          default: null
+        runtimeId:
+          type:
+          - string
+          - 'null'
+          enum:
+          - '2026.04'
+          - '2025.04'
+          - '2024.09'
+          - '2024.02'
+          - '2023.09'
+          - '2023.02'
+          - '2022.10'
+          - null
+          default: null
+        alertChannelSubscriptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChecksV1AlertChannelSubscription'
+        retryStrategy:
+          $ref: '#/components/schemas/ChecksV1RetryStrategy'
+        triggerIncident:
+          $ref: '#/components/schemas/ChecksV1TriggerIncident'
+        runParallel:
+          type: boolean
+          default: false
+        description:
+          type:
+          - string
+          - 'null'
+          maxLength: 510
+          default: null
+        intent:
+          type:
+          - object
+          - 'null'
+          properties:
+            goal:
+              type: string
+              minLength: 1
+              maxLength: 2000
+              description: The user or system outcome this check protects.
+            requiredOutcomes:
+              type: array
+              items:
+                type: string
+                minLength: 1
+                maxLength: 1000
+              maxItems: 20
+              default: []
+              description: Observable outcomes the check must continue to prove.
+            mustPreserve:
+              type: array
+              items:
+                type: string
+                minLength: 1
+                maxLength: 1000
+              maxItems: 20
+              default: []
+              description: Guardrails an AI repair must not weaken or bypass.
+          default: null
+          required:
+          - goal
+          additionalProperties: false
+        aiAutoRepairEnabled:
+          type:
+          - boolean
+          - 'null'
+          default: null
+        checkType:
+          type: string
+          enum:
+          - URL
+          default: URL
+        request:
+          $ref: '#/components/schemas/ChecksV1UrlRequest'
+        frequency:
+          type: integer
+          enum:
+          - 0
+          - 1
+          - 2
+          - 5
+          - 10
+          - 15
+          - 30
+          - 60
+          - 120
+          - 180
+          - 360
+          - 720
+          - 1440
+          default: 10
+        frequencyOffset:
+          type: integer
+          minimum: 1
+        degradedResponseTime:
+          type:
+          - number
+          - 'null'
+          minimum: 0
+          maximum: 45000
+          default: 3000
+        maxResponseTime:
+          type:
+          - number
+          - 'null'
+          minimum: 0
+          maximum: 45000
+          default: 5000
+        privateLocations:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+            minLength: 1
+      required:
+      - name
+      - request
+    ChecksV1UrlMonitorUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        activated:
+          type: boolean
+        muted:
+          type: boolean
+        doubleCheck:
+          type: boolean
+        shouldFail:
+          type: boolean
+        locations:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+            enum:
+            - us-east-1
+            - us-east-2
+            - us-west-1
+            - us-west-2
+            - ca-central-1
+            - sa-east-1
+            - eu-west-1
+            - eu-central-1
+            - eu-west-2
+            - eu-west-3
+            - eu-north-1
+            - eu-south-1
+            - me-south-1
+            - ap-southeast-1
+            - ap-northeast-1
+            - ap-east-1
+            - ap-southeast-2
+            - ap-southeast-3
+            - ap-northeast-2
+            - ap-northeast-3
+            - ap-south-1
+            - af-south-1
+        tags:
+          type: array
+          items:
+            type: string
+            minLength: 1
+        alertSettings:
+          $ref: '#/components/schemas/ChecksV1AlertSettingsCreatePatch'
+        useGlobalAlertSettings:
+          type: boolean
+        groupId:
+          type:
+          - number
+          - 'null'
+        groupOrder:
+          type:
+          - number
+          - 'null'
+          minimum: 0
+        runtimeId:
+          type:
+          - string
+          - 'null'
+          enum:
+          - '2026.04'
+          - '2025.04'
+          - '2024.09'
+          - '2024.02'
+          - '2023.09'
+          - '2023.02'
+          - '2022.10'
+          - null
+        alertChannelSubscriptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChecksV1AlertChannelSubscription'
+        retryStrategy:
+          $ref: '#/components/schemas/ChecksV1RetryStrategyPatch'
+        triggerIncident:
+          $ref: '#/components/schemas/ChecksV1TriggerIncident'
+        runParallel:
+          type: boolean
+        description:
+          type:
+          - string
+          - 'null'
+          maxLength: 510
+        intent:
+          $ref: '#/components/schemas/ChecksV1CheckIntent'
+        aiAutoRepairEnabled:
+          type:
+          - boolean
+          - 'null'
+        checkType:
+          type: string
+          enum:
+          - URL
+        request:
+          $ref: '#/components/schemas/ChecksV1UrlRequestPatch'
+        frequency:
+          type: integer
+          enum:
+          - 0
+          - 1
+          - 2
+          - 5
+          - 10
+          - 15
+          - 30
+          - 60
+          - 120
+          - 180
+          - 360
+          - 720
+          - 1440
+        frequencyOffset:
+          type: integer
+          minimum: 1
+        degradedResponseTime:
+          type:
+          - number
+          - 'null'
+          minimum: 0
+          maximum: 45000
+        maxResponseTime:
+          type:
+          - number
+          - 'null'
+          minimum: 0
+          maximum: 45000
+        privateLocations:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+            minLength: 1
+    ChecksV1CheckIntent:
+      type:
+      - object
+      - 'null'
+      properties:
+        goal:
+          type: string
+          minLength: 1
+          maxLength: 2000
+          description: The user or system outcome this check protects.
+        requiredOutcomes:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 1000
+          maxItems: 20
+          default: []
+          description: Observable outcomes the check must continue to prove.
+        mustPreserve:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 1000
+          maxItems: 20
+          default: []
+          description: Guardrails an AI repair must not weaken or bypass.
+      required:
+      - goal
+      additionalProperties: false
+    ChecksV1IcmpRequest:
+      type: object
+      properties:
+        hostname:
+          type: string
+          minLength: 1
+          maxLength: 2048
+        ipFamily:
+          type:
+          - string
+          - 'null'
+          enum:
+          - IPv4
+          - IPv6
+          - null
+          default: IPv4
+        pingCount:
+          type:
+          - integer
+          - 'null'
+          minimum: 1
+          maximum: 50
+          default: 10
+        assertions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChecksV1IcmpAssertion'
+          default: []
+      required:
+      - hostname
+    ChecksV1SslMonitorMutationResponse:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        activated:
+          type: boolean
+          default: true
+        muted:
+          type: boolean
+          default: false
+        doubleCheck:
+          type: boolean
+          default: true
+        shouldFail:
+          type: boolean
+          default: false
+        locations:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+            enum:
+            - us-east-1
+            - us-east-2
+            - us-west-1
+            - us-west-2
+            - ca-central-1
+            - sa-east-1
+            - eu-west-1
+            - eu-central-1
+            - eu-west-2
+            - eu-west-3
+            - eu-north-1
+            - eu-south-1
+            - me-south-1
+            - ap-southeast-1
+            - ap-northeast-1
+            - ap-east-1
+            - ap-southeast-2
+            - ap-southeast-3
+            - ap-northeast-2
+            - ap-northeast-3
+            - ap-south-1
+            - af-south-1
+          default: []
+        tags:
+          type: array
+          items:
+            type: string
+            minLength: 1
+          default: []
+        alertSettings:
+          $ref: '#/components/schemas/ChecksV1AlertSettings'
+        useGlobalAlertSettings:
+          type: boolean
+          default: true
+        groupId:
+          type:
+          - number
+          - 'null'
+          default: null
+        groupOrder:
+          type:
+          - number
+          - 'null'
+          minimum: 0
+          default: null
+        runtimeId:
+          type:
+          - string
+          - 'null'
+          enum:
+          - '2026.04'
+          - '2025.04'
+          - '2024.09'
+          - '2024.02'
+          - '2023.09'
+          - '2023.02'
+          - '2022.10'
+          - null
+          default: null
+        alertChannelSubscriptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChecksV1AlertChannelSubscription'
+        retryStrategy:
+          $ref: '#/components/schemas/ChecksV1RetryStrategy'
+        triggerIncident:
+          $ref: '#/components/schemas/ChecksV1TriggerIncident'
+        runParallel:
+          type: boolean
+          default: false
+        description:
+          type:
+          - string
+          - 'null'
+          maxLength: 500
+          default: null
+        intent:
+          type:
+          - object
+          - 'null'
+          properties:
+            goal:
+              type: string
+              minLength: 1
+              maxLength: 2000
+              description: The user or system outcome this check protects.
+            requiredOutcomes:
+              type: array
+              items:
+                type: string
+                minLength: 1
+                maxLength: 1000
+              maxItems: 20
+              default: []
+              description: Observable outcomes the check must continue to prove.
+            mustPreserve:
+              type: array
+              items:
+                type: string
+                minLength: 1
+                maxLength: 1000
+              maxItems: 20
+              default: []
+              description: Guardrails an AI repair must not weaken or bypass.
+          default: null
+          required:
+          - goal
+          additionalProperties: false
+        aiAutoRepairEnabled:
+          type:
+          - boolean
+          - 'null'
+          default: null
+        id:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        alertChannels:
+          $ref: '#/components/schemas/ChecksV1AlertChannels'
+        privateLocations:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+            minLength: 1
+        frequency:
+          type: integer
+          enum:
+          - 0
+          - 1
+          - 2
+          - 5
+          - 10
+          - 15
+          - 30
+          - 60
+          - 120
+          - 180
+          - 360
+          - 720
+          - 1440
+          default: 10
+        frequencyOffset:
+          type: integer
+          minimum: 1
+        degradedResponseTime:
+          type:
+          - number
+          - 'null'
+        maxResponseTime:
+          type:
+          - number
+          - 'null'
+        checkType:
+          type: string
+          enum:
+          - SSL
+        request:
+          $ref: '#/components/schemas/ChecksV1SslRequestRead'
+      required:
+      - name
+    ChecksV1RetryStrategy:
+      type:
+      - object
+      - 'null'
+      properties:
+        type:
+          type: string
+          enum:
+          - FIXED
+          - LINEAR
+          - EXPONENTIAL
+          - SINGLE_RETRY
+        baseBackoffSeconds:
+          type: number
+          default: 60
+        sameRegion:
+          type: boolean
+          default: true
+        maxRetries:
+          type: number
+          minimum: 1
+          maximum: 10
+        maxDurationSeconds:
+          type: number
+          minimum: 0
+          maximum: 600
+        onlyOn:
+          type: array
+          items:
+            type: string
+            enum:
+            - NETWORK_ERROR
+      required:
+      - type
+    ChecksV1SslMonitorCreate:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        activated:
+          type: boolean
+          default: true
+        muted:
+          type: boolean
+          default: false
+        doubleCheck:
+          type: boolean
+          default: true
+        shouldFail:
+          type: boolean
+          default: false
+        locations:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+            enum:
+            - us-east-1
+            - us-east-2
+            - us-west-1
+            - us-west-2
+            - ca-central-1
+            - sa-east-1
+            - eu-west-1
+            - eu-central-1
+            - eu-west-2
+            - eu-west-3
+            - eu-north-1
+            - eu-south-1
+            - me-south-1
+            - ap-southeast-1
+            - ap-northeast-1
+            - ap-east-1
+            - ap-southeast-2
+            - ap-southeast-3
+            - ap-northeast-2
+            - ap-northeast-3
+            - ap-south-1
+            - af-south-1
+          default: []
+        tags:
+          type: array
+          items:
+            type: string
+            minLength: 1
+          default: []
+        alertSettings:
+          $ref: '#/components/schemas/ChecksV1AlertSettingsCreate'
+        useGlobalAlertSettings:
+          type: boolean
+          default: true
+        groupId:
+          type:
+          - number
+          - 'null'
+          default: null
+        groupOrder:
+          type:
+          - number
+          - 'null'
+          minimum: 0
+          default: null
+        runtimeId:
+          type:
+          - string
+          - 'null'
+          enum:
+          - '2026.04'
+          - '2025.04'
+          - '2024.09'
+          - '2024.02'
+          - '2023.09'
+          - '2023.02'
+          - '2022.10'
+          - null
+          default: null
+        alertChannelSubscriptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChecksV1AlertChannelSubscription'
+        retryStrategy:
+          $ref: '#/components/schemas/ChecksV1RetryStrategy'
+        triggerIncident:
+          $ref: '#/components/schemas/ChecksV1TriggerIncident'
+        runParallel:
+          type: boolean
+          default: false
+        description:
+          type:
+          - string
+          - 'null'
+          maxLength: 510
+          default: null
+        intent:
+          type:
+          - object
+          - 'null'
+          properties:
+            goal:
+              type: string
+              minLength: 1
+              maxLength: 2000
+              description: The user or system outcome this check protects.
+            requiredOutcomes:
+              type: array
+              items:
+                type: string
+                minLength: 1
+                maxLength: 1000
+              maxItems: 20
+              default: []
+              description: Observable outcomes the check must continue to prove.
+            mustPreserve:
+              type: array
+              items:
+                type: string
+                minLength: 1
+                maxLength: 1000
+              maxItems: 20
+              default: []
+              description: Guardrails an AI repair must not weaken or bypass.
+          default: null
+          required:
+          - goal
+          additionalProperties: false
+        aiAutoRepairEnabled:
+          type:
+          - boolean
+          - 'null'
+          default: null
+        checkType:
+          type: string
+          enum:
+          - SSL
+          default: SSL
+        frequency:
+          type: integer
+          enum:
+          - 0
+          - 1
+          - 2
+          - 5
+          - 10
+          - 15
+          - 30
+          - 60
+          - 120
+          - 180
+          - 360
+          - 720
+          - 1440
+          default: 10
+        frequencyOffset:
+          type: integer
+          minimum: 1
+        heartbeat:
+          type:
+          - object
+          - 'null'
+          properties: {}
+          additionalProperties: {}
+        script:
+          type:
+          - string
+          - 'null'
+        scriptPath:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+        sslCheckDomain:
+          type:
+          - string
+          - 'null'
+        environmentVariables:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ChecksV1EnvironmentVariable'
+          maxItems: 200
+        setupSnippetId:
+          type:
+          - number
+          - 'null'
+          default: null
+        tearDownSnippetId:
+          type:
+          - number
+          - 'null'
+          default: null
+        localSetupScript:
+          type:
+          - string
+          - 'null'
+          default: null
+        localTearDownScript:
+          type:
+          - string
+          - 'null'
+          default: null
+        request:
+          $ref: '#/components/schemas/ChecksV1SslRequest'
+        degradedResponseTime:
+          type: integer
+          minimum: 0
+          maximum: 30000
+          default: 3000
+        maxResponseTime:
+          type: integer
+          minimum: 0
+          maximum: 30000
+          default: 10000
+        privateLocations:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+            minLength: 1
+      required:
+      - name
+      - request
+    ChecksV1SslSecurityBaselineRead:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+        minTLSVersion:
+          type: object
+          properties:
+            value:
+              type: string
+              enum:
+              - TLS1.2
+              - TLS1.3
+            severity:
+              type: string
+              enum:
+              - fail
+              - degrade
+              - ignore
+          default: {}
+        minKeySizeBits:
+          type: object
+          properties:
+            value:
+              type: integer
+              minimum: 1024
+              maximum: 16384
+            severity:
+              type: string
+              enum:
+              - fail
+              - degrade
+              - ignore
+          default: {}
+        weakSignatureAlgorithm:
+          type: object
+          properties:
+            severity:
+              type: string
+              enum:
+              - fail
+              - degrade
+              - ignore
+          default: {}
+        weakCipherSuite:
+          type: object
+          properties:
+            severity:
+              type: string
+              enum:
+              - fail
+              - degrade
+              - ignore
+          default: {}
+        knownBadCA:
+          type: object
+          properties:
+            severity:
+              type: string
+              enum:
+              - fail
+              - degrade
+              - ignore
+          default: {}
+        recommendedTLSVersion:
+          type: object
+          properties:
+            value:
+              type: string
+              enum:
+              - TLS1.2
+              - TLS1.3
+            severity:
+              type: string
+              enum:
+              - fail
+              - degrade
+              - ignore
+          default: {}
+        recommendedKeySizeBits:
+          type: object
+          properties:
+            value:
+              type: integer
+              minimum: 1024
+              maximum: 16384
+            severity:
+              type: string
+              enum:
+              - fail
+              - degrade
+              - ignore
+          default: {}
+        ocspMustStapleRespected:
+          type: object
+          properties:
+            severity:
+              type: string
+              enum:
+              - fail
+              - degrade
+              - ignore
+          default: {}
+        sctPresent:
+          type: object
+          properties:
+            severity:
+              type: string
+              enum:
+              - fail
+              - degrade
+              - ignore
+          default: {}
+    ChecksV1AlertSlack:
+      type: object
+      properties:
+        url:
+          type: string
+          minLength: 1
+          default: ''
+    ChecksV1UrlAssertionPatch:
+      type: object
+      properties:
+        source:
+          type: string
+          enum:
+          - STATUS_CODE
+        comparison:
+          type: string
+          enum:
+          - EQUALS
+          - NOT_EQUALS
+          - LESS_THAN
+          - GREATER_THAN
+        property:
+          type: string
+        target:
+          type: string
+        regex:
+          type:
+          - string
+          - 'null'
+    ChecksV1DnsMonitorUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        activated:
+          type: boolean
+          default: true
+        muted:
+          type: boolean
+          default: false
+        doubleCheck:
+          type: boolean
+          default: true
+        shouldFail:
+          type: boolean
+          default: false
+        locations:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+            enum:
+            - us-east-1
+            - us-east-2
+            - us-west-1
+            - us-west-2
+            - ca-central-1
+            - sa-east-1
+            - eu-west-1
+            - eu-central-1
+            - eu-west-2
+            - eu-west-3
+            - eu-north-1
+            - eu-south-1
+            - me-south-1
+            - ap-southeast-1
+            - ap-northeast-1
+            - ap-east-1
+            - ap-southeast-2
+            - ap-southeast-3
+            - ap-northeast-2
+            - ap-northeast-3
+            - ap-south-1
+            - af-south-1
+          default: []
+        tags:
+          type: array
+          items:
+            type: string
+            minLength: 1
+          default: []
+        alertSettings:
+          $ref: '#/components/schemas/ChecksV1AlertSettings'
+        useGlobalAlertSettings:
+          type: boolean
+          default: true
+        groupId:
+          type:
+          - number
+          - 'null'
+          default: null
+        groupOrder:
+          type:
+          - number
+          - 'null'
+          minimum: 0
+          default: null
+        runtimeId:
+          type:
+          - string
+          - 'null'
+          enum:
+          - '2026.04'
+          - '2025.04'
+          - '2024.09'
+          - '2024.02'
+          - '2023.09'
+          - '2023.02'
+          - '2022.10'
+          - null
+          default: null
+        alertChannelSubscriptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChecksV1AlertChannelSubscription'
+        retryStrategy:
+          $ref: '#/components/schemas/ChecksV1RetryStrategy'
+        triggerIncident:
+          $ref: '#/components/schemas/ChecksV1TriggerIncident'
+        runParallel:
+          type: boolean
+          default: false
+        description:
+          type:
+          - string
+          - 'null'
+          maxLength: 500
+          default: null
+        intent:
+          type:
+          - object
+          - 'null'
+          properties:
+            goal:
+              type: string
+              minLength: 1
+              maxLength: 2000
+              description: The user or system outcome this check protects.
+            requiredOutcomes:
+              type: array
+              items:
+                type: string
+                minLength: 1
+                maxLength: 1000
+              maxItems: 20
+              default: []
+              description: Observable outcomes the check must continue to prove.
+            mustPreserve:
+              type: array
+              items:
+                type: string
+                minLength: 1
+                maxLength: 1000
+              maxItems: 20
+              default: []
+              description: Guardrails an AI repair must not weaken or bypass.
+          default: null
+          required:
+          - goal
+          additionalProperties: false
+        aiAutoRepairEnabled:
+          type:
+          - boolean
+          - 'null'
+          default: null
+        id:
+          type: string
+          minLength: 1
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        alertChannels:
+          $ref: '#/components/schemas/ChecksV1AlertChannels'
+        privateLocations:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+            minLength: 1
+        frequency:
+          type: integer
+          enum:
+          - 0
+          - 1
+          - 2
+          - 5
+          - 10
+          - 15
+          - 30
+          - 60
+          - 120
+          - 180
+          - 360
+          - 720
+          - 1440
+          default: 10
+        frequencyOffset:
+          type: integer
+          minimum: 1
+        degradedResponseTime:
+          type:
+          - number
+          - 'null'
+        maxResponseTime:
+          type:
+          - number
+          - 'null'
+        checkType:
+          type: string
+          enum:
+          - DNS
+        request:
+          $ref: '#/components/schemas/ChecksV1DnsRequest'
+      required:
+      - name
+    ChecksV1DnsRequest:
+      type: object
+      properties:
+        query:
+          type: string
+          minLength: 1
+          maxLength: 100
+        nameServer:
+          type: string
+          maxLength: 100
+        port:
+          type: number
+        recordType:
+          type: string
+          enum:
+          - A
+          - AAAA
+          - CNAME
+          - MX
+          - TXT
+          - SOA
+          - NS
+          - HTTPS
+        assertions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChecksV1DnsAssertion'
+          default: []
+        protocol:
+          type: string
+          enum:
+          - TCP
+          - UDP
+          default: UDP
+      required:
+      - query
+      - recordType
+    ChecksV1IcmpAssertionPatch:
+      type: object
+      properties:
+        source:
+          type: string
+          enum:
+          - LATENCY
+          - JSON_RESPONSE
+        comparison:
+          type: string
+          enum:
+          - EQUALS
+          - NOT_EQUALS
+          - IS_EMPTY
+          - NOT_EMPTY
+          - GREATER_THAN
+          - LESS_THAN
+          - CONTAINS
+          - NOT_CONTAINS
+          - IS_NULL
+          - NOT_NULL
+        property:
+          type: string
+        target:
+          type: string
+        regex:
+          type:
+          - string
+          - 'null'
+    ChecksV1AlertSettingsTimeBasedEscalation:
+      type: object
+      properties:
+        minutesFailingThreshold:
+          type: integer
+          enum:
+          - 5
+          - 10
+          - 15
+          - 30
+    ChecksV1AlertSettingsCreate:
+      type: object
+      properties:
+        escalationType:
+          type: string
+          enum:
+          - RUN_BASED
+          - TIME_BASED
+          default: RUN_BASED
+        reminders:
+          type: object
+          properties:
+            amount:
+              type: integer
+              enum:
+              - 0
+              - 1
+              - 2
+              - 3
+              - 4
+              - 5
+              - 100000
+              default: 0
+            interval:
+              type: integer
+              enum:
+              - 1
+              - 2
+              - 3
+              - 4
+              - 5
+              - 10
+              - 15
+              - 30
+              default: 5
+        sslCertificates:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+            alertThreshold:
+              type: integer
+        runBasedEscalation:
+          $ref: '#/components/schemas/ChecksV1AlertSettingsRunBasedEscalation'
+        timeBasedEscalation:
+          $ref: '#/components/schemas/ChecksV1AlertSettingsTimeBasedEscalation'
+        parallelRunFailureThreshold:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              default: false
+            percentage:
+              type: integer
+              enum:
+              - 10
+              - 20
+              - 30
+              - 40
+              - 50
+              - 60
+              - 70
+              - 80
+              - 90
+              - 100
+              default: 10
+      default:
+        escalationType: RUN_BASED
+        runBasedEscalation:
+          failedRunThreshold: 1
+        reminders:
+          amount: 0
+          interval: 5
+        parallelRunFailureThreshold:
+          enabled: false
+          percentage: 10
+    ChecksV1DnsAssertion:
+      type: object
+      properties:
+        source:
+          type: string
+          enum:
+          - RESPONSE_TIME
+          - RESPONSE_CODE
+          - TEXT_ANSWER
+          - JSON_ANSWER
+        comparison:
+          type: string
+          enum:
+          - EQUALS
+          - NOT_EQUALS
+          - HAS_KEY
+          - NOT_HAS_KEY
+          - HAS_VALUE
+          - NOT_HAS_VALUE
+          - IS_EMPTY
+          - NOT_EMPTY
+          - GREATER_THAN
+          - LESS_THAN
+          - CONTAINS
+          - NOT_CONTAINS
+          - IS_NULL
+          - NOT_NULL
+        property:
+          type: string
+          default: ''
+        target:
+          type: string
+          default: ''
+        regex:
+          type:
+          - string
+          - 'null'
+          default: ''
+    ChecksV1SslAssertionPatch:
+      type: object
+      properties:
+        source:
+          type: string
+          enum:
+          - CERTIFICATE
+          - CONNECTION
+          - RESPONSE_TIME
+          - JSON_RESPONSE
+          - TEXT_RESPONSE
+        property:
+          type: string
+        comparison:
+          type: string
+        target:
+          type: string
+        regex:
+          type:
+          - string
+          - 'null'
+      required:
+      - source
+      - comparison
+    ChecksV1SslMonitorUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        activated:
+          type: boolean
+        muted:
+          type: boolean
+        doubleCheck:
+          type: boolean
+        shouldFail:
+          type: boolean
+        locations:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+            enum:
+            - us-east-1
+            - us-east-2
+            - us-west-1
+            - us-west-2
+            - ca-central-1
+            - sa-east-1
+            - eu-west-1
+            - eu-central-1
+            - eu-west-2
+            - eu-west-3
+            - eu-north-1
+            - eu-south-1
+            - me-south-1
+            - ap-southeast-1
+            - ap-northeast-1
+            - ap-east-1
+            - ap-southeast-2
+            - ap-southeast-3
+            - ap-northeast-2
+            - ap-northeast-3
+            - ap-south-1
+            - af-south-1
+        tags:
+          type: array
+          items:
+            type: string
+            minLength: 1
+        alertSettings:
+          $ref: '#/components/schemas/ChecksV1AlertSettingsCreatePatch'
+        useGlobalAlertSettings:
+          type: boolean
+        groupId:
+          type:
+          - number
+          - 'null'
+        groupOrder:
+          type:
+          - number
+          - 'null'
+          minimum: 0
+        runtimeId:
+          type:
+          - string
+          - 'null'
+          enum:
+          - '2026.04'
+          - '2025.04'
+          - '2024.09'
+          - '2024.02'
+          - '2023.09'
+          - '2023.02'
+          - '2022.10'
+          - null
+        alertChannelSubscriptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChecksV1AlertChannelSubscription'
+        retryStrategy:
+          $ref: '#/components/schemas/ChecksV1RetryStrategyPatch'
+        triggerIncident:
+          $ref: '#/components/schemas/ChecksV1TriggerIncident'
+        runParallel:
+          type: boolean
+        description:
+          type:
+          - string
+          - 'null'
+          maxLength: 510
+        intent:
+          $ref: '#/components/schemas/ChecksV1CheckIntent'
+        aiAutoRepairEnabled:
+          type:
+          - boolean
+          - 'null'
+        checkType:
+          type: string
+          enum:
+          - SSL
+        frequency:
+          type: integer
+          enum:
+          - 0
+          - 1
+          - 2
+          - 5
+          - 10
+          - 15
+          - 30
+          - 60
+          - 120
+          - 180
+          - 360
+          - 720
+          - 1440
+        frequencyOffset:
+          type: integer
+          minimum: 1
+        heartbeat:
+          type:
+          - object
+          - 'null'
+          properties: {}
+          additionalProperties: {}
+        script:
+          type:
+          - string
+          - 'null'
+        scriptPath:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+        sslCheckDomain:
+          type:
+          - string
+          - 'null'
+        environmentVariables:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ChecksV1EnvironmentVariablePatch'
+          maxItems: 200
+        setupSnippetId:
+          type:
+          - number
+          - 'null'
+        tearDownSnippetId:
+          type:
+          - number
+          - 'null'
+        localSetupScript:
+          type:
+          - string
+          - 'null'
+        localTearDownScript:
+          type:
+          - string
+          - 'null'
+        request:
+          $ref: '#/components/schemas/ChecksV1SslRequestPatch'
+        degradedResponseTime:
+          type: integer
+          minimum: 0
+          maximum: 30000
+        maxResponseTime:
+          type: integer
+          minimum: 0
+          maximum: 30000
+        privateLocations:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+            minLength: 1
+    ChecksV1SslRequest:
+      type: object
+      properties:
+        sslConfig:
+          $ref: '#/components/schemas/ChecksV1SslConfig'
+        sslClientCertificateId:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          format: uuid
+        assertions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChecksV1SslAssertion'
+          default: []
+      required:
+      - sslConfig
+    ChecksV1AlertEmail:
+      type: object
+      properties:
+        address:
+          type: string
+          minLength: 1
+          default: ''
+    ChecksV1KeyValue:
+      type: object
+      properties:
+        key:
+          type: string
+          minLength: 1
+        value:
+          type: string
+        locked:
+          type: boolean
+          default: false
+      required:
+      - key
+      - value
+    ChecksV1UrlAssertion:
+      type: object
+      properties:
+        source:
+          type: string
+          enum:
+          - STATUS_CODE
+        comparison:
+          type: string
+          enum:
+          - EQUALS
+          - NOT_EQUALS
+          - LESS_THAN
+          - GREATER_THAN
+        property:
+          type: string
+          default: ''
+        target:
+          type: string
+          default: ''
+        regex:
+          type:
+          - string
+          - 'null'
+          default: ''
+    ChecksV1EnvironmentVariablePatch:
+      type: object
+      properties:
+        key:
+          type: string
+          minLength: 1
+        value:
+          type:
+          - string
+          - 'null'
+        locked:
+          type: boolean
+        secret:
+          type: boolean
+      required:
+      - key
+      - value
+    ChecksV1UrlRequest:
+      type: object
+      properties:
+        method:
+          type: string
+          enum:
+          - GET
+          default: GET
+        url:
+          type: string
+          minLength: 1
+          maxLength: 2048
+        followRedirects:
+          type: boolean
+        skipSSL:
+          type: boolean
+          default: false
+        ipFamily:
+          type: string
+          enum:
+          - IPv4
+          - IPv6
+          default: IPv4
+        assertions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChecksV1UrlAssertion'
+          default: []
+      required:
+      - url
+    ProjectBindingV1:
+      type: object
+      properties:
+        project:
+          $ref: '#/components/schemas/BindingProjectV1'
+        binding:
+          $ref: '#/components/schemas/ProjectBindingDetailsV1'
+      required:
+      - project
+      - binding
+    ApiError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+        error:
+          type: string
+        message:
+          type: string
+      required:
+      - statusCode
+      - error
+      - message
+    ChecksV1AlertWebhook:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          default: ''
+        url:
+          type: string
+          minLength: 1
+          default: ''
+        method:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          default: POST
+        headers:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChecksV1KeyValue'
+          default: []
+        queryParameters:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChecksV1KeyValue'
+          default: []
+    ProjectBindingDetailsV1:
+      type: object
+      description: The resource's side of this binding.
+      properties:
+        logicalId:
+          type: string
+          description: The resource's logical ID within this project, as declared in code.
+          example: homepage-check
+        pending:
+          type: boolean
+          description: True when the binding is reserved by an import plan that has not been deployed yet.
+      required:
+      - logicalId
+      - pending
+    ChecksV1EnvironmentVariable:
+      type: object
+      properties:
+        key:
+          type: string
+          minLength: 1
+        value:
+          type:
+          - string
+          - 'null'
+        locked:
+          type: boolean
+          default: false
+        secret:
+          type: boolean
+          default: false
+      required:
+      - key
+      - value
+    ProjectBindingOwnerV1:
+      type:
+      - object
+      - 'null'
+      description: The project that owns this resource — the one whose deploy can delete it. Null when no project owns it, including when other projects merely reference it. In the rare case that several projects hold an ownership record for one resource, this reports the preferred one and the rest are omitted.
+      properties:
+        project:
+          $ref: '#/components/schemas/BindingProjectV1'
+        binding:
+          $ref: '#/components/schemas/ProjectBindingDetailsV1'
+      required:
+      - project
+      - binding
+    ChecksV1AlertSettingsRunBasedEscalation:
+      type: object
+      properties:
+        failedRunThreshold:
+          type: integer
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+    BindingProjectV1:
+      type: object
+      description: The project this binding is to.
+      properties:
+        id:
+          type: string
+          description: The ID of the project.
+        logicalId:
+          type: string
+          description: The logical ID of the project, as declared in code.
+        name:
+          type: string
+          description: The name of the project.
+      required:
+      - id
+      - logicalId
+      - name
+    ChecksV1SslConfigRead:
+      type: object
+      properties:
+        hostname:
+          type: string
+          minLength: 1
+          maxLength: 2048
+          pattern: ^[^\x00-\x1f\x7f]*$
+        port:
+          type: integer
+          minimum: 1
+          maximum: 65535
+        serverName:
+          anyOf:
+          - type: string
+            minLength: 1
+            maxLength: 2048
+            pattern: ^[^\x00-\x1f\x7f]*$
+          - type: string
+            enum:
+            - ''
+          - {}
+        ipFamily:
+          type: string
+          enum:
+          - IPv4
+          - IPv6
+        skipChainValidation:
+          type: boolean
+        handshakeTimeoutMs:
+          type: integer
+          minimum: 1000
+          maximum: 30000
+        alertDaysBeforeExpiry:
+          type: integer
+          minimum: 1
+          maximum: 365
+        securityBaseline:
+          $ref: '#/components/schemas/ChecksV1SslSecurityBaselineRead'
+        clientCertificateMode:
+          type: string
+          enum:
+          - auto
+          - explicit
+      required:
+      - hostname
+    ChecksV1SslConfigPatch:
+      type: object
+      properties:
+        hostname:
+          type: string
+          minLength: 1
+          maxLength: 2048
+          pattern: ^[^\x00-\x1f\x7f]*$
+        port:
+          type: integer
+          minimum: 1
+          maximum: 65535
+        serverName:
+          anyOf:
+          - type: string
+            minLength: 1
+            maxLength: 2048
+            pattern: ^[^\x00-\x1f\x7f]*$
+          - type: string
+            enum:
+            - ''
+          - {}
+        ipFamily:
+          type: string
+          enum:
+          - IPv4
+          - IPv6
+        skipChainValidation:
+          type: boolean
+        handshakeTimeoutMs:
+          type: integer
+          minimum: 1000
+          maximum: 30000
+        alertDaysBeforeExpiry:
+          type: integer
+          minimum: 1
+          maximum: 365
+        securityBaseline:
+          $ref: '#/components/schemas/ChecksV1SslSecurityBaselinePatch'
+        clientCertificateMode:
+          type: string
+          enum:
+          - auto
+          - explicit
+      required:
+      - hostname
+    ChecksV1AlertSettings:
+      type:
+      - object
+      - 'null'
+      properties:
+        escalationType:
+          type: string
+          enum:
+          - RUN_BASED
+          - TIME_BASED
+          default: RUN_BASED
+        reminders:
+          type: object
+          properties:
+            amount:
+              type: integer
+              enum:
+              - 0
+              - 1
+              - 2
+              - 3
+              - 4
+              - 5
+              - 100000
+              default: 0
+            interval:
+              type: integer
+              enum:
+              - 1
+              - 2
+              - 3
+              - 4
+              - 5
+              - 10
+              - 15
+              - 30
+              default: 5
+        sslCertificates:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+            alertThreshold:
+              type: integer
+        runBasedEscalation:
+          $ref: '#/components/schemas/ChecksV1AlertSettingsRunBasedEscalation'
+        timeBasedEscalation:
+          $ref: '#/components/schemas/ChecksV1AlertSettingsTimeBasedEscalation'
+        parallelRunFailureThreshold:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              default: false
+            percentage:
+              type: integer
+              enum:
+              - 10
+              - 20
+              - 30
+              - 40
+              - 50
+              - 60
+              - 70
+              - 80
+              - 90
+              - 100
+              default: 10
+      default:
+        escalationType: RUN_BASED
+        runBasedEscalation:
+          failedRunThreshold: 1
+        reminders:
+          amount: 0
+          interval: 5
+        parallelRunFailureThreshold:
+          enabled: false
+          percentage: 10
+    ChecksV1IcmpAssertion:
+      type: object
+      properties:
+        source:
+          type: string
+          enum:
+          - LATENCY
+          - JSON_RESPONSE
+        comparison:
+          type: string
+          enum:
+          - EQUALS
+          - NOT_EQUALS
+          - IS_EMPTY
+          - NOT_EMPTY
+          - GREATER_THAN
+          - LESS_THAN
+          - CONTAINS
+          - NOT_CONTAINS
+          - IS_NULL
+          - NOT_NULL
+        property:
+          type: string
+          default: ''
+        target:
+          type: string
+          default: ''
+        regex:
+          type:
+          - string
+          - 'null'
+          default: ''
+    ChecksV1SslConfig:
+      type: object
+      properties:
+        hostname:
+          type: string
+          minLength: 1
+          maxLength: 2048
+          pattern: ^[^\x00-\x1f\x7f]*$
+        port:
+          type: integer
+          minimum: 1
+          maximum: 65535
+          default: 443
+        serverName:
+          anyOf:
+          - type: string
+            minLength: 1
+            maxLength: 2048
+            pattern: ^[^\x00-\x1f\x7f]*$
+          - type: string
+            enum:
+            - ''
+          - {}
+        ipFamily:
+          type: string
+          enum:
+          - IPv4
+          - IPv6
+          default: IPv4
+        skipChainValidation:
+          type: boolean
+          default: false
+        handshakeTimeoutMs:
+          type: integer
+          minimum: 1000
+          maximum: 30000
+          default: 10000
+        alertDaysBeforeExpiry:
+          type: integer
+          minimum: 1
+          maximum: 365
+          default: 20
+        securityBaseline:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              default: true
+            minTLSVersion:
+              type: object
+              properties:
+                value:
+                  type: string
+                  enum:
+                  - TLS1.2
+                  - TLS1.3
+                  default: TLS1.2
+                severity:
+                  type: string
+                  enum:
+                  - fail
+                  - degrade
+                  - ignore
+                  default: fail
+              default: {}
+              additionalProperties: false
+            minKeySizeBits:
+              type: object
+              properties:
+                value:
+                  type: integer
+                  minimum: 1024
+                  maximum: 16384
+                  default: 2048
+                severity:
+                  type: string
+                  enum:
+                  - fail
+                  - degrade
+                  - ignore
+                  default: fail
+              default: {}
+              additionalProperties: false
+            weakSignatureAlgorithm:
+              type: object
+              properties:
+                severity:
+                  type: string
+                  enum:
+                  - fail
+                  - degrade
+                  - ignore
+                  default: fail
+              default: {}
+              additionalProperties: false
+            weakCipherSuite:
+              type: object
+              properties:
+                severity:
+                  type: string
+                  enum:
+                  - fail
+                  - degrade
+                  - ignore
+                  default: fail
+              default: {}
+              additionalProperties: false
+            knownBadCA:
+              type: object
+              properties:
+                severity:
+                  type: string
+                  enum:
+                  - fail
+                  - degrade
+                  - ignore
+                  default: fail
+              default: {}
+              additionalProperties: false
+            recommendedTLSVersion:
+              type: object
+              properties:
+                value:
+                  type: string
+                  enum:
+                  - TLS1.2
+                  - TLS1.3
+                  default: TLS1.3
+                severity:
+                  type: string
+                  enum:
+                  - fail
+                  - degrade
+                  - ignore
+                  default: ignore
+              default: {}
+              additionalProperties: false
+            recommendedKeySizeBits:
+              type: object
+              properties:
+                value:
+                  type: integer
+                  minimum: 1024
+                  maximum: 16384
+                  default: 3072
+                severity:
+                  type: string
+                  enum:
+                  - fail
+                  - degrade
+                  - ignore
+                  default: ignore
+              default: {}
+              additionalProperties: false
+            ocspMustStapleRespected:
+              type: object
+              properties:
+                severity:
+                  type: string
+                  enum:
+                  - fail
+                  - degrade
+                  - ignore
+                  default: ignore
+              default: {}
+              additionalProperties: false
+            sctPresent:
+              type: object
+              properties:
+                severity:
+                  type: string
+                  enum:
+                  - fail
+                  - degrade
+                  - ignore
+                  default: ignore
+              default: {}
+              additionalProperties: false
+          default: {}
+          additionalProperties: false
+        clientCertificateMode:
+          type: string
+          enum:
+          - auto
+          - explicit
+      required:
+      - hostname
+    ChecksV1DnsMonitorMutationResponse:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        activated:
+          type: boolean
+          default: true
+        muted:
+          type: boolean
+          default: false
+        doubleCheck:
+          type: boolean
+          default: true
+        shouldFail:
+          type: boolean
+          default: false
+        locations:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+            enum:
+            - us-east-1
+            - us-east-2
+            - us-west-1
+            - us-west-2
+            - ca-central-1
+            - sa-east-1
+            - eu-west-1
+            - eu-central-1
+            - eu-west-2
+            - eu-west-3
+            - eu-north-1
+            - eu-south-1
+            - me-south-1
+            - ap-southeast-1
+            - ap-northeast-1
+            - ap-east-1
+            - ap-southeast-2
+            - ap-southeast-3
+            - ap-northeast-2
+            - ap-northeast-3
+            - ap-south-1
+            - af-south-1
+          default: []
+        tags:
+          type: array
+          items:
+            type: string
+            minLength: 1
+          default: []
+        alertSettings:
+          $ref: '#/components/schemas/ChecksV1AlertSettings'
+        useGlobalAlertSettings:
+          type: boolean
+          default: true
+        groupId:
+          type:
+          - number
+          - 'null'
+          default: null
+        groupOrder:
+          type:
+          - number
+          - 'null'
+          minimum: 0
+          default: null
+        runtimeId:
+          type:
+          - string
+          - 'null'
+          enum:
+          - '2026.04'
+          - '2025.04'
+          - '2024.09'
+          - '2024.02'
+          - '2023.09'
+          - '2023.02'
+          - '2022.10'
+          - null
+          default: null
+        alertChannelSubscriptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChecksV1AlertChannelSubscription'
+        retryStrategy:
+          $ref: '#/components/schemas/ChecksV1RetryStrategy'
+        triggerIncident:
+          $ref: '#/components/schemas/ChecksV1TriggerIncident'
+        runParallel:
+          type: boolean
+          default: false
+        description:
+          type:
+          - string
+          - 'null'
+          maxLength: 500
+          default: null
+        intent:
+          type:
+          - object
+          - 'null'
+          properties:
+            goal:
+              type: string
+              minLength: 1
+              maxLength: 2000
+              description: The user or system outcome this check protects.
+            requiredOutcomes:
+              type: array
+              items:
+                type: string
+                minLength: 1
+                maxLength: 1000
+              maxItems: 20
+              default: []
+              description: Observable outcomes the check must continue to prove.
+            mustPreserve:
+              type: array
+              items:
+                type: string
+                minLength: 1
+                maxLength: 1000
+              maxItems: 20
+              default: []
+              description: Guardrails an AI repair must not weaken or bypass.
+          default: null
+          required:
+          - goal
+          additionalProperties: false
+        aiAutoRepairEnabled:
+          type:
+          - boolean
+          - 'null'
+          default: null
+        id:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        alertChannels:
+          $ref: '#/components/schemas/ChecksV1AlertChannels'
+        privateLocations:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+            minLength: 1
+        frequency:
+          type: integer
+          enum:
+          - 0
+          - 1
+          - 2
+          - 5
+          - 10
+          - 15
+          - 30
+          - 60
+          - 120
+          - 180
+          - 360
+          - 720
+          - 1440
+          default: 10
+        frequencyOffset:
+          type: integer
+          minimum: 1
+        degradedResponseTime:
+          type:
+          - number
+          - 'null'
+        maxResponseTime:
+          type:
+          - number
+          - 'null'
+        checkType:
+          type: string
+          enum:
+          - DNS
+        request:
+          $ref: '#/components/schemas/ChecksV1DnsRequest'
+      required:
+      - name
+    ChecksV1AlertSms:
+      type: object
+      properties:
+        number:
+          type: string
+          minLength: 1
+          default: ''
+        name:
+          type: string
+      required:
+      - name
+    ChecksV1SslRequestPatch:
+      type: object
+      properties:
+        sslConfig:
+          $ref: '#/components/schemas/ChecksV1SslConfigPatch'
+        sslClientCertificateId:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          format: uuid
+        assertions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChecksV1SslAssertionPatch'
+      required:
+      - sslConfig
+    ChecksV1IcmpMonitor:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        activated:
+          type: boolean
+          default: true
+        muted:
+          type: boolean
+          default: false
+        doubleCheck:
+          type: boolean
+          default: true
+        shouldFail:
+          type: boolean
+          default: false
+        locations:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+            enum:
+            - us-east-1
+            - us-east-2
+            - us-west-1
+            - us-west-2
+            - ca-central-1
+            - sa-east-1
+            - eu-west-1
+            - eu-central-1
+            - eu-west-2
+            - eu-west-3
+            - eu-north-1
+            - eu-south-1
+            - me-south-1
+            - ap-southeast-1
+            - ap-northeast-1
+            - ap-east-1
+            - ap-southeast-2
+            - ap-southeast-3
+            - ap-northeast-2
+            - ap-northeast-3
+            - ap-south-1
+            - af-south-1
+          default: []
+        tags:
+          type: array
+          items:
+            type: string
+            minLength: 1
+          default: []
+        alertSettings:
+          $ref: '#/components/schemas/ChecksV1AlertSettings'
+        useGlobalAlertSettings:
+          type: boolean
+          default: true
+        groupId:
+          type:
+          - number
+          - 'null'
+          default: null
+        groupOrder:
+          type:
+          - number
+          - 'null'
+          minimum: 0
+          default: null
+        runtimeId:
+          type:
+          - string
+          - 'null'
+          enum:
+          - '2026.04'
+          - '2025.04'
+          - '2024.09'
+          - '2024.02'
+          - '2023.09'
+          - '2023.02'
+          - '2022.10'
+          - null
+          default: null
+        alertChannelSubscriptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChecksV1AlertChannelSubscription'
+        retryStrategy:
+          $ref: '#/components/schemas/ChecksV1RetryStrategy'
+        triggerIncident:
+          $ref: '#/components/schemas/ChecksV1TriggerIncident'
+        runParallel:
+          type: boolean
+          default: false
+        description:
+          type:
+          - string
+          - 'null'
+          maxLength: 500
+          default: null
+        intent:
+          type:
+          - object
+          - 'null'
+          properties:
+            goal:
+              type: string
+              minLength: 1
+              maxLength: 2000
+              description: The user or system outcome this check protects.
+            requiredOutcomes:
+              type: array
+              items:
+                type: string
+                minLength: 1
+                maxLength: 1000
+              maxItems: 20
+              default: []
+              description: Observable outcomes the check must continue to prove.
+            mustPreserve:
+              type: array
+              items:
+                type: string
+                minLength: 1
+                maxLength: 1000
+              maxItems: 20
+              default: []
+              description: Guardrails an AI repair must not weaken or bypass.
+          default: null
+          required:
+          - goal
+          additionalProperties: false
+        aiAutoRepairEnabled:
+          type:
+          - boolean
+          - 'null'
+          default: null
+        id:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        alertChannels:
+          $ref: '#/components/schemas/ChecksV1AlertChannels'
+        project:
+          $ref: '#/components/schemas/ChecksV1CheckProject'
+        logicalId:
+          type:
+          - string
+          - 'null'
+          description: The check's logical ID within the managing project, or null when it is not managed by code.
+        member:
+          type:
+          - boolean
+          - 'null'
+          description: 'True when the project owns this check, false when it merely references a check owned outside the project. Null when not managed by code. The same relationship appears structurally in `projectBindings`: an owning project under `projectBindings.owner`, a referencing one under `projectBindings.references`.'
+        pending:
+          type:
+          - boolean
+          - 'null'
+          description: True when the binding is reserved by an import plan that has not been deployed yet. Null when not managed by code.
+        projectBindings:
+          $ref: '#/components/schemas/ProjectBindingsV1'
+        privateLocations:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+            minLength: 1
+        frequency:
+          type: integer
+          enum:
+          - 0
+          - 1
+          - 2
+          - 5
+          - 10
+          - 15
+          - 30
+          - 60
+          - 120
+          - 180
+          - 360
+          - 720
+          - 1440
+          default: 10
+        frequencyOffset:
+          type: integer
+          minimum: 1
+        checkType:
+          type: string
+          enum:
+          - ICMP
+        request:
+          $ref: '#/components/schemas/ChecksV1IcmpRequest'
+        degradedPacketLossThreshold:
+          type:
+          - number
+          - 'null'
+        maxPacketLossThreshold:
+          type:
+          - number
+          - 'null'
+      required:
+      - name
+    ChecksV1UrlRequestPatch:
+      type: object
+      properties:
+        method:
+          type: string
+          enum:
+          - GET
+        url:
+          type: string
+          minLength: 1
+          maxLength: 2048
+        followRedirects:
+          type: boolean
+        skipSSL:
+          type: boolean
+        ipFamily:
+          type: string
+          enum:
+          - IPv4
+          - IPv6
+        assertions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChecksV1UrlAssertionPatch'
+      required:
+      - url
+    ChecksV1SslSecurityBaselinePatch:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+        minTLSVersion:
+          type: object
+          properties:
+            value:
+              type: string
+              enum:
+              - TLS1.2
+              - TLS1.3
+            severity:
+              type: string
+              enum:
+              - fail
+              - degrade
+              - ignore
+          default: {}
+          additionalProperties: false
+        minKeySizeBits:
+          type: object
+          properties:
+            value:
+              type: integer
+              minimum: 1024
+              maximum: 16384
+            severity:
+              type: string
+              enum:
+              - fail
+              - degrade
+              - ignore
+          default: {}
+          additionalProperties: false
+        weakSignatureAlgorithm:
+          type: object
+          properties:
+            severity:
+              type: string
+              enum:
+              - fail
+              - degrade
+              - ignore
+          default: {}
+          additionalProperties: false
+        weakCipherSuite:
+          type: object
+          properties:
+            severity:
+              type: string
+              enum:
+              - fail
+              - degrade
+              - ignore
+          default: {}
+          additionalProperties: false
+        knownBadCA:
+          type: object
+          properties:
+            severity:
+              type: string
+              enum:
+              - fail
+              - degrade
+              - ignore
+          default: {}
+          additionalProperties: false
+        recommendedTLSVersion:
+          type: object
+          properties:
+            value:
+              type: string
+              enum:
+              - TLS1.2
+              - TLS1.3
+            severity:
+              type: string
+              enum:
+              - fail
+              - degrade
+              - ignore
+          default: {}
+          additionalProperties: false
+        recommendedKeySizeBits:
+          type: object
+          properties:
+            value:
+              type: integer
+              minimum: 1024
+              maximum: 16384
+            severity:
+              type: string
+              enum:
+              - fail
+              - degrade
+              - ignore
+          default: {}
+          additionalProperties: false
+        ocspMustStapleRespected:
+          type: object
+          properties:
+            severity:
+              type: string
+              enum:
+              - fail
+              - degrade
+              - ignore
+          default: {}
+          additionalProperties: false
+        sctPresent:
+          type: object
+          properties:
+            severity:
+              type: string
+              enum:
+              - fail
+              - degrade
+              - ignore
+          default: {}
+          additionalProperties: false
+      additionalProperties: false
+    ProjectBindingsV1:
+      type: object
+      description: The Checkly CLI projects that manage this resource. `owner` is null and `references` empty when the resource is not managed by code.
+      properties:
+        owner:
+          $ref: '#/components/schemas/ProjectBindingOwnerV1'
+        references:
+          $ref: '#/components/schemas/ProjectBindingReferencesV1'
+      required:
+      - owner
+      - references
+    ChecksV1RetryStrategyPatch:
+      type:
+      - object
+      - 'null'
+      properties:
+        type:
+          type: string
+          enum:
+          - FIXED
+          - LINEAR
+          - EXPONENTIAL
+          - SINGLE_RETRY
+        baseBackoffSeconds:
+          type: number
+        sameRegion:
+          type: boolean
+        maxRetries:
+          type: number
+          minimum: 1
+          maximum: 10
+        maxDurationSeconds:
+          type: number
+          minimum: 0
+          maximum: 600
+        onlyOn:
+          type: array
+          items:
+            type: string
+            enum:
+            - NETWORK_ERROR
+      required:
+      - type
+    ChecksV1IcmpMonitorUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        activated:
+          type: boolean
+        muted:
+          type: boolean
+        doubleCheck:
+          type: boolean
+        shouldFail:
+          type: boolean
+        locations:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+            enum:
+            - us-east-1
+            - us-east-2
+            - us-west-1
+            - us-west-2
+            - ca-central-1
+            - sa-east-1
+            - eu-west-1
+            - eu-central-1
+            - eu-west-2
+            - eu-west-3
+            - eu-north-1
+            - eu-south-1
+            - me-south-1
+            - ap-southeast-1
+            - ap-northeast-1
+            - ap-east-1
+            - ap-southeast-2
+            - ap-southeast-3
+            - ap-northeast-2
+            - ap-northeast-3
+            - ap-south-1
+            - af-south-1
+        tags:
+          type: array
+          items:
+            type: string
+            minLength: 1
+        alertSettings:
+          $ref: '#/components/schemas/ChecksV1AlertSettingsCreatePatch'
+        useGlobalAlertSettings:
+          type: boolean
+        groupId:
+          type:
+          - number
+          - 'null'
+        groupOrder:
+          type:
+          - number
+          - 'null'
+          minimum: 0
+        runtimeId:
+          type:
+          - string
+          - 'null'
+          enum:
+          - '2026.04'
+          - '2025.04'
+          - '2024.09'
+          - '2024.02'
+          - '2023.09'
+          - '2023.02'
+          - '2022.10'
+          - null
+        alertChannelSubscriptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChecksV1AlertChannelSubscription'
+        retryStrategy:
+          $ref: '#/components/schemas/ChecksV1RetryStrategyPatch'
+        triggerIncident:
+          $ref: '#/components/schemas/ChecksV1TriggerIncident'
+        runParallel:
+          type: boolean
+        description:
+          type:
+          - string
+          - 'null'
+          maxLength: 510
+        intent:
+          $ref: '#/components/schemas/ChecksV1CheckIntent'
+        aiAutoRepairEnabled:
+          type:
+          - boolean
+          - 'null'
+        checkType:
+          type: string
+          enum:
+          - ICMP
+        frequency:
+          type: integer
+          enum:
+          - 0
+          - 1
+          - 2
+          - 5
+          - 10
+          - 15
+          - 30
+          - 60
+          - 120
+          - 180
+          - 360
+          - 720
+          - 1440
+        frequencyOffset:
+          type: integer
+          minimum: 1
+        heartbeat:
+          type:
+          - object
+          - 'null'
+          properties: {}
+          additionalProperties: {}
+        script:
+          type:
+          - string
+          - 'null'
+        scriptPath:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+        sslCheckDomain:
+          type:
+          - string
+          - 'null'
+        environmentVariables:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ChecksV1EnvironmentVariablePatch'
+          maxItems: 200
+        setupSnippetId:
+          type:
+          - number
+          - 'null'
+        tearDownSnippetId:
+          type:
+          - number
+          - 'null'
+        localSetupScript:
+          type:
+          - string
+          - 'null'
+        localTearDownScript:
+          type:
+          - string
+          - 'null'
+        request:
+          $ref: '#/components/schemas/ChecksV1IcmpRequestPatch'
+        degradedResponseTime:
+          type:
+          - number
+          - 'null'
+          minimum: 0
+          maximum: 300000
+        maxResponseTime:
+          type:
+          - number
+          - 'null'
+          minimum: 0
+          maximum: 300000
+        degradedPacketLossThreshold:
+          type:
+          - number
+          - 'null'
+          maximum: 100
+          exclusiveMinimum: 0
+        maxPacketLossThreshold:
+          type:
+          - number
+          - 'null'
+          maximum: 100
+          exclusiveMinimum: 0
+        privateLocations:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+            minLength: 1
+    ChecksV1SslAssertion:
+      type: object
+      properties:
+        source:
+          type: string
+          enum:
+          - CERTIFICATE
+          - CONNECTION
+          - RESPONSE_TIME
+          - JSON_RESPONSE
+          - TEXT_RESPONSE
+        property:
+          type: string
+          default: ''
+        comparison:
+          type: string
+        target:
+          type: string
+          default: ''
+        regex:
+          type:
+          - string
+          - 'null'
+          default: ''
+      required:
+      - source
+      - comparison
+    ChecksV1TriggerIncident:
+      type:
+      - object
+      - 'null'
+      properties:
+        serviceId:
+          type: string
+          minLength: 1
+          format: uuid
+        severity:
+          type: string
+          enum:
+          - CRITICAL
+          - MAJOR
+          - MEDIUM
+          - MINOR
+        name:
+          type: string
+        description:
+          type: string
+        notifySubscribers:
+          type: boolean
+      required:
+      - serviceId
+      - severity
+      - name
+      - description
+      - notifySubscribers
+    ChecksV1CheckProject:
+      type:
+      - object
+      - 'null'
+      properties:
+        id:
+          type: string
+          description: The ID of the project that manages this check.
+        logicalId:
+          type: string
+          description: The logical ID of the managing project, as declared in code.
+        name:
+          type: string
+          description: The name of the managing project.
+      description: The project that manages this check, or null when the check is not managed by code. When a check has more than one binding, this reports the preferred one.
+  securitySchemes:
+    Bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: Bearer
+      description: 'The Checkly Public API uses API keys to authenticate requests. You can get the API Key <a href="https://app.checklyhq.com/settings/user/api-keys" target="_blank">here</a>.</br>Your API key is like a password: <br>keep it secure!</br></br>Authentication to the API is performed using the Bearer auth method in the Authorization header and using the account ID.</br></br>For example, set <b>Authorization</b> header while using cURL: <code>curl -H "Authorization: Bearer [apiKey]" "X-Checkly-Account: [accountId]"</code></br>'

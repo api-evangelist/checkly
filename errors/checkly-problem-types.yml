@@ -1,0 +1,105 @@
+generated: '2026-08-29'
+method: derived
+source: openapi/_original/checkly-public-api-openapi.json (harvested 2026-08-29 from https://api.checklyhq.com/openapi.json),
+  cross-checked against a live unauthenticated GET https://api.checklyhq.com/v1/checks which returned
+  HTTP 401 and the documented envelope
+description: Error catalog for the Checkly Public API. Checkly uses a consistent hand-rolled JSON envelope
+  on every error, not RFC 9457 problem+json.
+format: custom-json
+rfc9457: false
+content_type: application/json
+envelope:
+  shape:
+    statusCode: number, equal to the HTTP status
+    error: string, the HTTP reason phrase
+    message: string, human readable
+    attributes: object, present on some 401/402/429 responses
+  required:
+  - statusCode
+  - error
+  example:
+    statusCode: 401
+    error: Unauthorized
+    message: Missing authentication
+  example_source: live response from GET https://api.checklyhq.com/v1/checks with no credentials, 2026-08-29
+  note: There is no machine-readable error code beyond the HTTP status - no 'code' or 'type' discriminator
+    - so an agent branching on failure has only the status and free-text message to work with.
+status_census:
+  '200': 156
+  '201': 37
+  '202': 3
+  '204': 31
+  '400': 90
+  '401': 214
+  '402': 26
+  '403': 214
+  '404': 141
+  '408': 3
+  '409': 5
+  '429': 223
+problem_types:
+- code: 400
+  schema: null
+  title: Bad Request
+  detail: Request body or query parameters failed validation.
+  remediation: Read the message field, correct the offending field and retry.
+  operations_declaring: 90
+  note: No named component schema for this status in the contract; the envelope shape is the same.
+- code: 401
+  schema: UnauthorizedError
+  title: Unauthorized
+  detail: Missing or invalid API key. The live unauthenticated probe of GET /v1/checks returned exactly
+    this envelope with message 'Missing authentication'.
+  remediation: 'Send Authorization: Bearer <api key> and X-Checkly-Account: <account id>.'
+  operations_declaring: 214
+  message_example: Bad Token
+- code: 402
+  schema: PaymentRequiredError
+  title: Payment Required
+  detail: The account's plan or entitlement does not cover the requested resource - for example creating
+    an alert channel beyond a plan limit.
+  remediation: Upgrade the plan or buy the matching add-on; retrying will not clear it.
+  operations_declaring: 26
+  message_example: Payment Required
+- code: 403
+  schema: ForbiddenError
+  title: Forbidden
+  detail: Authenticated, but the user or key lacks the role required for this operation.
+  remediation: Check the account role. Some writes need Owner, Admin or Read & Write.
+  operations_declaring: 214
+  message_example: Forbidden
+- code: 404
+  schema: NotFoundError
+  title: Not Found
+  detail: The addressed resource does not exist on the resolved account.
+  remediation: Confirm the id and the X-Checkly-Account header - a right id on the wrong account also
+    404s.
+  operations_declaring: 141
+  message_example: Not Found
+- code: 408
+  schema: null
+  title: Request Timeout
+  detail: Long-poll completion endpoints time out waiting for a session to finish.
+  remediation: Re-poll; the session is unaffected.
+  operations_declaring: 3
+  note: No named component schema for this status in the contract; the envelope shape is the same.
+- code: 409
+  schema: ConflictError
+  title: Conflict
+  detail: The write conflicts with existing state, e.g. a duplicate key.
+  remediation: Reconcile state and retry with different input.
+  operations_declaring: 5
+  message_example: Conflict
+- code: 429
+  schema: TooManyRequestsError
+  title: Too Many Requests
+  detail: Rate limit exceeded. Declared on 223 of 225 operations - effectively the whole surface.
+  remediation: Back off and retry. See rate-limits/checkly-rate-limits.yml; the documented ceiling is
+    600 requests per 60 seconds on most routes.
+  operations_declaring: 223
+  message_example: Too Many Requests
+gaps:
+- No RFC 9457 application/problem+json representation.
+- No stable machine-readable error identifier; message strings are the only discriminator below the HTTP
+  status.
+- No documented error reference page in the Checkly docs - the contract is the only catalog.

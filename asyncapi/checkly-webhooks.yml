@@ -1,0 +1,99 @@
+generated: '2026-08-29'
+method: searched
+source: >-
+  https://www.checklyhq.com/docs/alerting/webhooks (HTTP 200),
+  https://www.checklyhq.com/docs/communicate/alerts/overview (HTTP 200),
+  https://www.checklyhq.com/docs/constructs/webhook-alert-channel (HTTP 200).
+description: >-
+  Checkly's event surface is outbound webhook alerts, not an event stream a consumer subscribes to.
+  It publishes no AsyncAPI document and no message broker; there is nothing to fabricate one from.
+  What it does publish, in full, is the webhook contract: a customer-authored URL and payload
+  template rendered with Handlebars against a documented variable set, fired on documented alert
+  state transitions.
+asyncapi_published: false
+asyncapi_probe:
+  note: >-
+    No /asyncapi.yaml, /asyncapi.json or event-catalog surface is referenced from Checkly's docs,
+    llms.txt, well-known documents or GitHub organisation. Recorded as absent, not fabricated.
+model: outbound-webhook
+delivery:
+  direction: provider-to-consumer
+  method: POST
+  url: consumer-defined, templated - may embed environment variables and secrets with '{{NAME}}'
+  body: consumer-defined Handlebars template
+  templating: Handlebars, including built-in helpers (if, unless, each) plus Checkly helpers
+  configuration:
+  - UI alert channel editor (with a Send test message button)
+  - WebhookAlertChannel construct in the Checkly CLI
+  - POST /v1/alert-channels in the REST API
+  docs: https://www.checklyhq.com/docs/alerting/webhooks
+events:
+  model: alert state transitions on a check
+  codes:
+  - {code: NO_ALERT, transition: passing -> passing, notification: none}
+  - {code: ALERT_DEGRADED, transition: passing -> degraded, notification: degraded}
+  - {code: ALERT_FAILURE, transition: passing -> failing, notification: failure}
+  - {code: ALERT_DEGRADED_REMAIN, transition: degraded -> degraded, notification: degraded}
+  - {code: ALERT_DEGRADED_RECOVERY, transition: degraded -> passing, notification: recovery}
+  - {code: ALERT_DEGRADED_FAILURE, transition: degraded -> failing, notification: failure, note: escalation - overrides any threshold setting}
+  - {code: ALERT_FAILURE_REMAIN, transition: failing -> failing, notification: failure}
+  - {code: ALERT_FAILURE_DEGRADED, transition: failing -> degraded, notification: degraded, note: deescalation - overrides any threshold setting}
+  - {code: ALERT_RECOVERY, transition: failing -> passing, notification: recovery}
+  event_count: 9
+  additional:
+  - {code: ALERT_SSL, note: SSL certificate expiry alerts; populates SSL_CHECK_DOMAIN and SSL_DAYS_REMAINING}
+  note: Browser checks do not have a degraded state, so the degraded transitions do not apply to them.
+payload_variables:
+- {name: ALERT_TITLE, description: Human readable title, e.g. 'Check "My API check" has failed'}
+- {name: ALERT_TYPE, description: The alert transition code from the table above}
+- {name: CHECK_ID, description: The UUID of the check}
+- {name: CHECK_NAME, description: Full name of the check}
+- {name: CHECK_DESCRIPTION, description: The description of the check, if set}
+- {name: CHECK_TYPE, description: The check type, e.g. API, BROWSER}
+- {name: CHECK_ERROR_MESSAGE, description: The check error message}
+- {name: CHECK_RESULT_ID, description: The UUID of the result that triggered this message}
+- {name: RESULT_LINK, description: The full link to the check result}
+- {name: RESPONSE_TIME, description: The reported response time for this result}
+- {name: STARTED_AT, description: ISO timestamp from when this check run started}
+- {name: REGION, description: Region code where the check ran, e.g. us-east-1}
+- {name: RUN_LOCATION, description: Human-readable location where the check ran}
+- {name: GROUP_NAME, description: The name of the group, if the check belongs to one}
+- {name: TAGS, description: An array of tags assigned to the check}
+- {name: IS_REMINDER, description: Whether this alert is a reminder (true) or the initial alert (false)}
+- {name: REMINDER_SEQUENCE, description: The reminder number - 0 for initial alerts, 1+ for reminders}
+- {name: API_CHECK_RESPONSE_STATUS_CODE, description: Response status code. API checks only}
+- {name: API_CHECK_RESPONSE_STATUS_TEXT, description: Response status text. API checks only}
+- {name: SSL_CHECK_DOMAIN, description: Domain of the SSL certificate. ALERT_SSL only}
+- {name: SSL_DAYS_REMAINING, description: Days remaining on the SSL certificate. ALERT_SSL only}
+- {name: AI_ANALYSIS_CLASSIFICATION, description: Classification of the failure. Requires Rocky AI automation}
+- {name: AI_ANALYSIS_ROOT_CAUSE, description: Description of the possible root cause. Requires Rocky AI automation}
+- {name: AI_ANALYSIS_USER_IMPACT, description: Description of the user impact. Requires Rocky AI automation}
+- {name: AI_ANALYSIS_CODE_FIX, description: A suggested code fix. Requires Rocky AI automation}
+- {name: AI_ANALYSIS_LINK, description: Direct link to the full AI analysis. Requires Rocky AI automation}
+variable_count: 26
+template_helpers:
+- {name: $UUID, description: Generates a random UUID v4}
+- {name: $RANDOM_NUMBER, description: Random integer from 0 through 10000}
+- {name: tagValue, description: 'Returns the value from the first matching team:value or team=value tag, with a fallback argument'}
+- {name: startsWith, description: Whether a string starts with a prefix}
+- {name: replace, description: Replaces the first matching string}
+- {name: split, description: Splits a string and returns the item at a zero-based index}
+- {name: year, description: Current year, four or two digits}
+- {name: date / moment, description: Formats a date with Day.js-compatible tokens; accepts relative phrases such as 'yesterday' or '2 days ago'}
+security:
+  secrets_in_config: >-
+    Any literal-secret field in a webhook channel (URL, API key, bearer token, service key) accepts a
+    '{{NAME}}' variable or account secret reference, and a value can be promoted to an encrypted
+    account secret from the field itself. Encoding is skipped with triple braces '{{{NAME}}}'.
+  signing: not documented
+  signing_note: >-
+    No HMAC signature header or shared-secret verification scheme is documented for outbound webhooks.
+    A receiver authenticates the caller by whatever secret the sender embeds in the URL or headers,
+    which is a weaker posture than a signed payload.
+  replay_protection: not documented
+testing:
+  method: Send a test message from the webhook editor to inspect the rendered request before saving.
+gaps:
+- No AsyncAPI or other machine-readable event contract - the variable catalogue is prose tables only.
+- No webhook signing scheme documented.
+- No published delivery-retry policy or dead-letter behaviour for webhook alerts.

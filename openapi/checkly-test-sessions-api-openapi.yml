@@ -1,0 +1,1744 @@
+openapi: 3.2.0
+info:
+  title: Checkly Public Test sessions API
+  version: v1
+  description: These are the docs for the newly released Checkly Public API.<br />If you have any questions, please do not hesitate to get in touch with us.
+servers:
+- url: https://api.checklyhq.com
+security:
+- Bearer: []
+tags:
+- name: Test sessions
+paths:
+  /v1/test-sessions:
+    get:
+      summary: List test sessions
+      operationId: getV1Testsessions
+      description: Retrieves test sessions for the selected account. Use the optional query parameters to filter by creation time, status, branch, user, provider, text, or error group.
+      tags:
+      - Test sessions
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListTestSessionsResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '402':
+          description: Payment Required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: number
+          description: Only include test sessions created at or after this Unix timestamp.
+        required: false
+        description: Only include test sessions created at or after this Unix timestamp.
+        name: from
+        in: query
+      - schema:
+          type: number
+          description: Only include test sessions created before this Unix timestamp.
+        required: false
+        description: Only include test sessions created before this Unix timestamp.
+        name: to
+        in: query
+      - schema:
+          type:
+          - integer
+          - 'null'
+          maximum: 100
+          default: 20
+          description: Maximum number of test sessions to return.
+        required: false
+        description: Maximum number of test sessions to return.
+        name: limit
+        in: query
+      - schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - RUNNING
+            - FAILED
+            - PASSED
+            - CANCELLED
+          default:
+          - FAILED
+          - PASSED
+          - RUNNING
+          - CANCELLED
+          description: Filter by test session status.
+        required: false
+        description: Filter by test session status.
+        name: statuses
+        in: query
+      - schema:
+          type: array
+          items:
+            type: string
+          default: []
+          description: Filter by Git branch name.
+        required: false
+        description: Filter by Git branch name.
+        name: branches
+        in: query
+      - schema:
+          type: array
+          items:
+            type: string
+          default: []
+          description: Filter by commit owner or invoking user ID.
+        required: false
+        description: Filter by commit owner or invoking user ID.
+        name: users
+        in: query
+      - schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - GITHUB
+            - VERCEL
+            - API
+            - TRIGGER
+            - PW_REPORTER
+          default: []
+          description: Filter by test session provider.
+        required: false
+        description: Filter by test session provider.
+        name: providers
+        in: query
+      - schema:
+          type: boolean
+          default: false
+          description: Include sessions with no commit owner and no invoking user.
+        required: false
+        description: Include sessions with no commit owner and no invoking user.
+        name: noUsers
+        in: query
+      - schema:
+          type: string
+          minLength: 1
+          description: Opaque cursor returned from a previous list response.
+        required: false
+        description: Opaque cursor returned from a previous list response.
+        name: nextId
+        in: query
+      - schema:
+          type: string
+          minLength: 3
+          maxLength: 200
+          description: Search test session text fields.
+        required: false
+        description: Search test session text fields.
+        name: textSearch
+        in: query
+      - schema:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          description: Filter by test-session error group ID.
+        required: false
+        description: Filter by test-session error group ID.
+        name: errorGroupId
+        in: query
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+  /v1/test-sessions/trigger:
+    post:
+      summary: Trigger a new test session
+      operationId: postV1TestsessionsTrigger
+      description: 'Starts a tests session with checks matching the provided target filters. If no filters are given, matches all eligible checks.
+
+
+        This endpoint does not wait for the test session to complete. Use the `GET /v1/test-sessions/{testSessionId}/completion` or `GET /v1/test-sessions/{testSessionId}` endpoints to track progress if needed.
+
+
+        Test sessions do not produce alerts.
+
+
+        Equivalent to the `npx checkly trigger` command of the Checkly CLI.'
+      tags:
+      - Test sessions
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TriggerTestSessionResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '402':
+          description: Payment Required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TriggerTestSessionRequest'
+  /v1/test-sessions/{testSessionId}:
+    get:
+      summary: Retrieve a test session
+      operationId: getV1TestsessionsTestsessionid
+      description: Retrieves a test session. Note that the returned data may be incomplete if the test session is still in progress.
+      tags:
+      - Test sessions
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FindOneTestSessionResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: string
+          format: uuid
+          description: Test session ID.
+        required: true
+        description: Test session ID.
+        name: testSessionId
+        in: path
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+  /v1/test-sessions/{testSessionId}/cancel:
+    post:
+      summary: Cancel a test session
+      operationId: postV1TestsessionsTestsessionidCancel
+      description: 'Cancels in-progress Playwright runs within the specified test session. Use the optional `sequenceId` field in the request body to cancel only specific results within the session; omit it to cancel everything still running.
+
+
+        Returns `204 No Content` once the cancellation requests have been dispatched. Returns `404 Not Found` if the test session does not exist.'
+      tags:
+      - Test sessions
+      responses:
+        '204':
+          description: Cancellation accepted.
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: string
+          format: uuid
+          description: Test session ID.
+        required: true
+        description: Test session ID.
+        name: testSessionId
+        in: path
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TestSessionsV1CancelRequest'
+  /v1/test-sessions/{testSessionId}/completion:
+    get:
+      summary: Await the completion of a test session
+      operationId: getV1TestsessionsTestsessionidCompletion
+      description: 'Call this endpoint to await the completion of a test session. A successful response code will be returned once the test session reaches its final state (i.e. when it passes or fails).
+
+
+        If the test session takes a long time to complete, the endpoint will return a timeout error code. You should keep calling the endpoint until you receive a successful response, or a non-timeout related error code. If using *curl*, its `--retry` option is suitable.
+
+
+        The successful response of this endpoint is equivalent to the `GET /v1/test-sessions/{testSessionId}` endpoint''s response for a completed test session.'
+      tags:
+      - Test sessions
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AwaitTestSessionCompletionResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '408':
+          description: Request Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: string
+          format: uuid
+          description: Test session ID.
+        required: true
+        description: Test session ID.
+        name: testSessionId
+        in: path
+      - schema:
+          type: number
+          minimum: 1
+          maximum: 30
+          description: Maximum time to wait for completion before returning a retryable timeout response.
+        required: false
+        description: Maximum time to wait for completion before returning a retryable timeout response.
+        name: maxWaitSeconds
+        in: query
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+  /v1/test-sessions/{testSessionId}/results/{testSessionResultId}:
+    get:
+      summary: Retrieve a test session result
+      operationId: getV1TestsessionsTestsessionidResultsTestsessionresultid
+      description: Retrieves detailed data for a single result within a test session, including check-type details and uploaded asset references when available.
+      tags:
+      - Test sessions
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FindOneTestSessionResultResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: string
+          format: uuid
+          description: Test session ID.
+        required: true
+        description: Test session ID.
+        name: testSessionId
+        in: path
+      - schema:
+          type: string
+          format: uuid
+          description: Test session result ID.
+        required: true
+        description: Test session result ID.
+        name: testSessionResultId
+        in: path
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+  /v1/test-sessions/{testSessionId}/results/{testSessionResultId}/assets:
+    get:
+      summary: Retrieve a normalized asset manifest for a test-session result
+      operationId: getV1TestsessionsTestsessionidResultsTestsessionresultidAssets
+      description: Returns a normalized manifest of downloadable assets for the test-session result.
+      tags:
+      - Test sessions
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssetManifest'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: string
+          format: uuid
+          description: Test session ID.
+        required: true
+        description: Test session ID.
+        name: testSessionId
+        in: path
+      - schema:
+          type: string
+          format: uuid
+          description: Test session result ID.
+        required: true
+        description: Test session result ID.
+        name: testSessionResultId
+        in: path
+      - schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - log
+            - trace
+            - video
+            - screenshot
+            - pcap
+            - report
+            - file
+          description: Filter assets by normalized asset type. Repeat the query parameter to include multiple types.
+        required: false
+        description: Filter assets by normalized asset type. Repeat the query parameter to include multiple types.
+        name: type
+        in: query
+      - schema:
+          type: string
+          maxLength: 200
+          description: Glob pattern matched case-insensitively against the asset name and archive entry path. Empty patterns are ignored.
+        required: false
+        description: Glob pattern matched case-insensitively against the asset name and archive entry path. Empty patterns are ignored.
+        name: name
+        in: query
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+components:
+  schemas:
+    TestSessionEnvironmentVariable:
+      anyOf:
+      - type: object
+        properties:
+          key:
+            type: string
+            minLength: 1
+          locked:
+            type: boolean
+            default: false
+          value: {}
+          secret:
+            type: boolean
+            enum:
+            - true
+        required:
+        - key
+        - value
+        - secret
+      - type: object
+        properties:
+          key:
+            type: string
+            minLength: 1
+          locked:
+            type: boolean
+            default: false
+          value:
+            type:
+            - string
+            - 'null'
+            minLength: 1
+          secret:
+            type: boolean
+            enum:
+            - false
+            default: false
+        required:
+        - key
+        - value
+    TestSessionApiResultDetails:
+      type:
+      - object
+      - 'null'
+      properties:
+        assertions:
+          type:
+          - array
+          - 'null'
+          items:
+            type: object
+            properties: {}
+            additionalProperties: {}
+        request:
+          type: object
+          properties: {}
+          additionalProperties: {}
+        response:
+          type: object
+          properties: {}
+          additionalProperties: {}
+        requestError:
+          type:
+          - string
+          - 'null'
+        jobLog:
+          description: Check run log output, when an uploaded log asset is available.
+        jobAssets:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: Asset URLs generated from the test-session result.
+        pcapDataUrl:
+          type:
+          - string
+          - 'null'
+          description: Packet capture data if available as a redirect/download URL.
+      additionalProperties: {}
+    TestSessionListEntryInvoker:
+      type:
+      - object
+      - 'null'
+      properties:
+        name:
+          type: string
+        picture:
+          type:
+          - string
+          - 'null'
+      required:
+      - name
+    TestSessionGitHubMetadata:
+      type: object
+      properties:
+        reporting:
+          type: boolean
+        repository:
+          type:
+          - string
+          - 'null'
+        sha:
+          type:
+          - string
+          - 'null'
+        runId:
+          type:
+          - string
+          - 'null'
+        runAttempt:
+          type:
+          - string
+          - 'null'
+        workflow:
+          type:
+          - string
+          - 'null'
+        job:
+          type:
+          - string
+          - 'null'
+        eventName:
+          type:
+          - string
+          - 'null'
+        ref:
+          type:
+          - string
+          - 'null'
+        headRef:
+          type:
+          - string
+          - 'null'
+        baseRef:
+          type:
+          - string
+          - 'null'
+        serverUrl:
+          type:
+          - string
+          - 'null'
+      required:
+      - reporting
+    ListTestSessionsResponse:
+      type: object
+      properties:
+        length:
+          type: integer
+          minimum: 0
+        entries:
+          type: array
+          items:
+            $ref: '#/components/schemas/TestSessionListEntry'
+        nextId:
+          type:
+          - string
+          - 'null'
+      required:
+      - length
+      - entries
+    TestSessionMetadata:
+      type: object
+      properties:
+        environment:
+          type: string
+          minLength: 1
+          description: A short description for the testing environment.
+        repoUrl:
+          type:
+          - string
+          - 'null'
+        commitId:
+          type:
+          - string
+          - 'null'
+        commitOwner:
+          type:
+          - string
+          - 'null'
+        commitMessage:
+          type:
+          - string
+          - 'null'
+        branchName:
+          type:
+          - string
+          - 'null'
+        github:
+          $ref: '#/components/schemas/TestSessionGitHubMetadata'
+    TestSessionResult:
+      type: object
+      properties:
+        testSessionResultId:
+          type: string
+          format: uuid
+        testSessionResultLink:
+          type: string
+          format: uri
+        checkId:
+          type:
+          - string
+          - 'null'
+          format: uuid
+        checkType:
+          type: string
+          enum:
+          - AGENTIC
+          - API
+          - BROWSER
+          - HEARTBEAT
+          - ICMP
+          - MULTI_STEP
+          - TCP
+          - PLAYWRIGHT
+          - URL
+          - DNS
+          - SSL
+          - GRPC
+          - TRACEROUTE
+        name:
+          type: string
+        runLocation:
+          type: string
+        errorGroupIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+          description: IDs of the test-session error groups associated with this result.
+        resultType:
+          type: string
+          enum:
+          - FINAL
+          - ATTEMPT
+          - PENDING
+        status:
+          type: string
+          enum:
+          - RUNNING
+          - FAILED
+          - PASSED
+          - CANCELLED
+        hasErrors:
+          type: boolean
+        hasFailures:
+          type: boolean
+        isDegraded:
+          type: boolean
+        aborted:
+          type: boolean
+        responseTime:
+          type:
+          - number
+          - 'null'
+          description: 'Time the check spent producing its result, in milliseconds. For protocol checks this is the measured operation time (a subset of the run): request time for API and URL checks, connection time for TCP, resolution time for DNS, average latency for ICMP and TRACEROUTE, request timing for GRPC, and TLS handshake time for SSL. For browser, multi-step, Playwright and agentic checks it is the run wall-clock duration. Null until the check has finished. For the total wall-clock time a check run took, use `stoppedAt` - `startedAt`.'
+        startedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: When the check run started. Null until the check has started.
+        stoppedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: When the check run finished. Subtract `startedAt` for the total wall-clock duration of the run. Null until the check has finished.
+      required:
+      - testSessionResultId
+      - testSessionResultLink
+      - checkType
+      - errorGroupIds
+      - status
+      - hasErrors
+      - hasFailures
+      - isDegraded
+      - aborted
+    ApiError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+        error:
+          type: string
+        message:
+          type: string
+      required:
+      - statusCode
+      - error
+      - message
+    TestSessionBrowserResultDetails:
+      type:
+      - object
+      - 'null'
+      properties:
+        type:
+          type: string
+        traceSummary:
+          type: object
+          properties: {}
+          additionalProperties: {}
+        pages:
+          type: array
+          items:
+            type: object
+            properties: {}
+            additionalProperties: {}
+        errors:
+          type: array
+          items: {}
+        endTime:
+          type: number
+        startTime:
+          type: number
+        runtimeVersion:
+          type: string
+        jobLog:
+          description: Check run log output, when an uploaded log asset is available.
+        jobAssets:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: Asset URLs generated from the test-session result.
+        pcapDataUrl:
+          type:
+          - string
+          - 'null'
+          description: Packet capture data if available as a redirect/download URL.
+        playwrightTestVideos:
+          type: array
+          items:
+            type: string
+          description: Signed URLs for Playwright test videos.
+        playwrightTestTraces:
+          type: array
+          items:
+            type: string
+          description: Signed URLs for Playwright test traces.
+        playwrightTestJsonReportFile:
+          type: string
+          description: Signed URL for the Playwright JSON report.
+      additionalProperties: {}
+    TriggerTestSessionResponse:
+      type: object
+      properties:
+        testSessionId:
+          type: string
+          format: uuid
+        testSessionLink:
+          type: string
+          format: uri
+        name:
+          type: string
+        status:
+          type: string
+          enum:
+          - RUNNING
+          - FAILED
+          - PASSED
+          - CANCELLED
+        errorGroupIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+          description: IDs of the test-session error groups observed in this test session.
+        startedAt:
+          type: string
+          format: date-time
+        stoppedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        timeElapsed:
+          type: number
+        metadata:
+          $ref: '#/components/schemas/TestSessionMetadata'
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/TestSessionResult'
+      required:
+      - testSessionId
+      - testSessionLink
+      - name
+      - status
+      - errorGroupIds
+      - startedAt
+      - timeElapsed
+    AssetManifestEntry:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - log
+          - trace
+          - video
+          - screenshot
+          - pcap
+          - report
+          - file
+          description: Normalized asset type.
+        name:
+          type: string
+          minLength: 1
+          description: Display/download name for the asset.
+        url:
+          type: string
+          format: uri
+          description: Authenticated API URL for downloading or redirecting to the asset.
+        contentType:
+          type: string
+          minLength: 1
+          description: Best-effort content type inferred from the asset metadata.
+        source:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+              - check-result
+              - test-session-result
+              description: Result endpoint scope that produced this asset entry.
+            checkId:
+              type: string
+              format: uuid
+              description: Check ID associated with this asset.
+            checkName:
+              type: string
+              minLength: 1
+              description: Check name associated with this asset.
+            checkType:
+              type: string
+              minLength: 1
+              description: Check type associated with this asset.
+            resultId:
+              type: string
+              format: uuid
+              description: Result ID associated with this asset.
+            testSessionId:
+              type: string
+              format: uuid
+              description: Test session ID associated with this asset.
+          required:
+          - type
+          description: Stable source identifiers for correlating the asset to checks and results.
+        archive:
+          type: object
+          properties:
+            entryName:
+              type: string
+              minLength: 1
+              description: File path inside the downloadable archive.
+          required:
+          - entryName
+          description: Present when the asset is an entry inside a ZIP archive.
+      required:
+      - type
+      - name
+      - url
+      - source
+    TestSessionsV1CancelRequest:
+      type: object
+      properties:
+        sequenceId:
+          type: array
+          items:
+            type: string
+            format: uuid
+          minItems: 1
+          description: Subset of sequence IDs to cancel. Omit to cancel all in-progress sequences.
+      additionalProperties: false
+    TestSessionAgenticResultDetails:
+      type:
+      - object
+      - 'null'
+      properties:
+        summary:
+          type:
+          - string
+          - 'null'
+        prompt:
+          type:
+          - string
+          - 'null'
+        assertions:
+          type:
+          - array
+          - 'null'
+          items:
+            type: object
+            properties: {}
+            additionalProperties: {}
+        suggestions:
+          type:
+          - array
+          - 'null'
+          items:
+            type: object
+            properties: {}
+            additionalProperties: {}
+        steps:
+          type:
+          - array
+          - 'null'
+          items:
+            type: object
+            properties: {}
+            additionalProperties: {}
+        errors:
+          type:
+          - array
+          - 'null'
+          items: {}
+        artifactManifest:
+          type:
+          - object
+          - 'null'
+          properties: {}
+          additionalProperties: {}
+        jobLog:
+          description: Check run log output, when an uploaded log asset is available.
+        jobAssets:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: Asset URLs generated from the test-session result.
+        pcapDataUrl:
+          type:
+          - string
+          - 'null'
+          description: Packet capture data if available as a redirect/download URL.
+      additionalProperties: {}
+    TestSessionMultiStepResultDetails:
+      type:
+      - object
+      - 'null'
+      properties:
+        errors:
+          type: array
+          items: {}
+        endTime:
+          type: number
+        startTime:
+          type: number
+        runtimeVersion:
+          type: string
+        jobLog:
+          description: Check run log output, when an uploaded log asset is available.
+        jobAssets:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: Asset URLs generated from the test-session result.
+        pcapDataUrl:
+          type:
+          - string
+          - 'null'
+          description: Packet capture data if available as a redirect/download URL.
+        playwrightTestVideos:
+          type: array
+          items:
+            type: string
+          description: Signed URLs for Playwright test videos.
+        playwrightTestTraces:
+          type: array
+          items:
+            type: string
+          description: Signed URLs for Playwright test traces.
+        playwrightTestJsonReportFile:
+          type: string
+          description: Signed URL for the Playwright JSON report.
+      additionalProperties: {}
+    AssetManifest:
+      type: object
+      properties:
+        assets:
+          type: array
+          items:
+            $ref: '#/components/schemas/AssetManifestEntry'
+          description: Normalized assets for the result.
+        truncated:
+          type: boolean
+          description: Whether the manifest omitted entries because the stored archive entry list exceeded the endpoint cap.
+        entriesReturned:
+          type: integer
+          minimum: 0
+          description: Number of archive entries represented in the response when the manifest is truncated.
+        entriesTotal:
+          type: integer
+          minimum: 0
+          description: Total number of manifestable archive entries found in storage when the manifest is truncated.
+      required:
+      - assets
+    TriggerTestSessionRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          description: The name of the test session.
+        runLocation:
+          type: string
+          minLength: 1
+          description: A public region code or private location slug name.
+        target:
+          type: object
+          properties:
+            matchTags:
+              type: array
+              items:
+                type: array
+                items:
+                  type: string
+                  minLength: 1
+              description: Tags used to select checks to trigger. Each nested array is matched as one tag group.
+            checkId:
+              type: array
+              items:
+                type: string
+                format: uuid
+              description: Check ID or list of check IDs to trigger.
+            allowDeactivated:
+              type: boolean
+              default: false
+              description: Allow deactivated checks to match.
+        environmentVariables:
+          type: array
+          items:
+            $ref: '#/components/schemas/TestSessionEnvironmentVariable'
+          maxItems: 50
+        retryStrategy:
+          anyOf:
+          - type: object
+            properties:
+              baseBackoffSeconds:
+                type: number
+                default: 60
+              sameRegion:
+                type: boolean
+                default: true
+              onlyOn:
+                type: array
+                items:
+                  type: string
+                  enum:
+                  - NETWORK_ERROR
+              type:
+                type: string
+                enum:
+                - FIXED
+                - LINEAR
+                - EXPONENTIAL
+              maxRetries:
+                type: number
+                minimum: 1
+                maximum: 10
+                default: 2
+              maxDurationSeconds:
+                type: number
+                minimum: 0
+                maximum: 600
+                default: 600
+            required:
+            - type
+          - type: object
+            properties:
+              baseBackoffSeconds:
+                type: number
+                default: 60
+              sameRegion:
+                type: boolean
+                default: true
+              onlyOn:
+                type: array
+                items:
+                  type: string
+                  enum:
+                  - NETWORK_ERROR
+              type:
+                type: string
+                enum:
+                - SINGLE_RETRY
+            required:
+            - type
+          - {}
+        refreshCache:
+          type: boolean
+          default: false
+          description: Skip existing caches and install dependencies from scratch.
+        metadata:
+          $ref: '#/components/schemas/TestSessionMetadata'
+      required:
+      - name
+      - runLocation
+    FindOneTestSessionResultResponse:
+      type: object
+      properties:
+        testSessionResultId:
+          type: string
+          format: uuid
+        testSessionResultLink:
+          type: string
+          format: uri
+        checkId:
+          type:
+          - string
+          - 'null'
+          format: uuid
+        checkType:
+          type: string
+          enum:
+          - AGENTIC
+          - API
+          - BROWSER
+          - HEARTBEAT
+          - ICMP
+          - MULTI_STEP
+          - TCP
+          - PLAYWRIGHT
+          - URL
+          - DNS
+          - SSL
+          - GRPC
+          - TRACEROUTE
+        name:
+          type: string
+        runLocation:
+          type: string
+        errorGroupIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+          description: IDs of the test-session error groups associated with this result.
+        resultType:
+          type: string
+          enum:
+          - FINAL
+          - ATTEMPT
+          - PENDING
+        status:
+          type: string
+          enum:
+          - RUNNING
+          - FAILED
+          - PASSED
+          - CANCELLED
+        hasErrors:
+          type: boolean
+        hasFailures:
+          type: boolean
+        isDegraded:
+          type: boolean
+        aborted:
+          type: boolean
+        responseTime:
+          type:
+          - number
+          - 'null'
+          description: 'Time the check spent producing its result, in milliseconds. For protocol checks this is the measured operation time (a subset of the run): request time for API and URL checks, connection time for TCP, resolution time for DNS, average latency for ICMP and TRACEROUTE, request timing for GRPC, and TLS handshake time for SSL. For browser, multi-step, Playwright and agentic checks it is the run wall-clock duration. Null until the check has finished. For the total wall-clock time a check run took, use `stoppedAt` - `startedAt`.'
+        startedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: When the check run started. Null until the check has started.
+        stoppedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: When the check run finished. Subtract `startedAt` for the total wall-clock duration of the run. Null until the check has finished.
+        id:
+          type: string
+          format: uuid
+          description: Alias of testSessionResultId for check-result detail response parity.
+        privateLocationId:
+          type:
+          - string
+          - 'null'
+          format: uuid
+        filePath:
+          type:
+          - string
+          - 'null'
+        isCancelled:
+          type: boolean
+        overMaxResponseTime:
+          type: boolean
+        attempts:
+          type: integer
+          minimum: 0
+        sequenceId:
+          type:
+          - string
+          - 'null'
+          format: uuid
+        scheduleError:
+          type:
+          - string
+          - 'null'
+        traceId:
+          type:
+          - string
+          - 'null'
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        apiCheckResult:
+          $ref: '#/components/schemas/TestSessionApiResultDetails'
+        browserCheckResult:
+          $ref: '#/components/schemas/TestSessionBrowserResultDetails'
+        multiStepCheckResult:
+          $ref: '#/components/schemas/TestSessionMultiStepResultDetails'
+        playwrightCheckResult:
+          $ref: '#/components/schemas/TestSessionPlaywrightResultDetails'
+        agenticCheckResult:
+          $ref: '#/components/schemas/TestSessionAgenticResultDetails'
+      required:
+      - testSessionResultId
+      - testSessionResultLink
+      - checkType
+      - errorGroupIds
+      - status
+      - hasErrors
+      - hasFailures
+      - isDegraded
+      - aborted
+      - id
+      - isCancelled
+      - overMaxResponseTime
+      - attempts
+      - traceId
+      - created_at
+    TestSessionPlaywrightResultDetails:
+      type:
+      - object
+      - 'null'
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items: {}
+        playwrightTraceFiles:
+          type:
+          - array
+          - 'null'
+          items:
+            type: object
+            properties: {}
+            additionalProperties: {}
+        jobLog:
+          description: Check run log output, when an uploaded log asset is available.
+        jobAssets:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: Asset URLs generated from the test-session result.
+        pcapDataUrl:
+          type:
+          - string
+          - 'null'
+          description: Packet capture data if available as a redirect/download URL.
+        playwrightTestVideos:
+          type: array
+          items:
+            type: string
+          description: Signed URLs for Playwright test videos.
+        playwrightTestTraces:
+          type: array
+          items:
+            type: string
+          description: Signed URLs for Playwright test traces.
+        playwrightTestJsonReportFile:
+          type: string
+          description: Signed URL for the Playwright JSON report.
+      additionalProperties: {}
+    FindOneTestSessionResponse:
+      type: object
+      properties:
+        testSessionId:
+          type: string
+          format: uuid
+        testSessionLink:
+          type: string
+          format: uri
+        name:
+          type: string
+        status:
+          type: string
+          enum:
+          - RUNNING
+          - FAILED
+          - PASSED
+          - CANCELLED
+        errorGroupIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+          description: IDs of the test-session error groups observed in this test session.
+        startedAt:
+          type: string
+          format: date-time
+        stoppedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        timeElapsed:
+          type: number
+        metadata:
+          $ref: '#/components/schemas/TestSessionMetadata'
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/TestSessionResult'
+      required:
+      - testSessionId
+      - testSessionLink
+      - name
+      - status
+      - errorGroupIds
+      - startedAt
+      - timeElapsed
+    TestSessionListEntry:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        accountId:
+          type: string
+          format: uuid
+        projectId:
+          type:
+          - string
+          - 'null'
+          format: uuid
+        name:
+          type: string
+        provider:
+          type: string
+        errorGroupIds:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+            format: uuid
+          description: IDs of the test-session error groups observed in this session. Pass one as `errorGroupId` (with type `test-session-error-group`) to get-error-group-root-cause-analyses or trigger-root-cause-analysis. This is the field that bridges a listed session to a root cause analysis.
+        running:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+            format: uuid
+          description: Result sequence IDs (`sequenceId`) of in-progress results — not result IDs and not error-group IDs.
+        passed:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+            format: uuid
+          description: Result sequence IDs (`sequenceId`) of passed results — not result IDs and not error-group IDs.
+        failed:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+            format: uuid
+          description: Result sequence IDs (`sequenceId`) of failed results — NOT test-session result IDs and NOT error-group IDs. To act on a failed result, call get-test-session to enumerate its results (each with a `testSessionResultId` and `errorGroupIds`).
+        cancelled:
+          type: array
+          items:
+            type: string
+            format: uuid
+          default: []
+          description: Result sequence IDs (`sequenceId`) of cancelled results — not result IDs and not error-group IDs.
+        status:
+          type: string
+          enum:
+          - RUNNING
+          - FAILED
+          - PASSED
+          - CANCELLED
+        region:
+          type: string
+        privateLocationId:
+          type:
+          - string
+          - 'null'
+          format: uuid
+        invoker:
+          $ref: '#/components/schemas/TestSessionListEntryInvoker'
+        repoUrl:
+          type:
+          - string
+          - 'null'
+        commitId:
+          type:
+          - string
+          - 'null'
+        commitOwner:
+          type:
+          - string
+          - 'null'
+        commitMessage:
+          type:
+          - string
+          - 'null'
+        branchName:
+          type:
+          - string
+          - 'null'
+        environment:
+          type:
+          - string
+          - 'null'
+        startedAt:
+          type: string
+          format: date-time
+        stoppedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+      required:
+      - id
+      - accountId
+      - name
+      - provider
+      - region
+      - startedAt
+      - created_at
+    AwaitTestSessionCompletionResponse:
+      type: object
+      properties:
+        testSessionId:
+          type: string
+          format: uuid
+        testSessionLink:
+          type: string
+          format: uri
+        name:
+          type: string
+        status:
+          type: string
+          enum:
+          - FAILED
+          - PASSED
+          - CANCELLED
+        errorGroupIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+          description: IDs of the test-session error groups observed in this test session.
+        startedAt:
+          type: string
+          format: date-time
+        stoppedAt:
+          type: string
+          format: date-time
+        timeElapsed:
+          type: number
+        metadata:
+          $ref: '#/components/schemas/TestSessionMetadata'
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/TestSessionResult'
+      required:
+      - testSessionId
+      - testSessionLink
+      - name
+      - status
+      - errorGroupIds
+      - startedAt
+      - stoppedAt
+      - timeElapsed
+  securitySchemes:
+    Bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: Bearer
+      description: 'The Checkly Public API uses API keys to authenticate requests. You can get the API Key <a href="https://app.checklyhq.com/settings/user/api-keys" target="_blank">here</a>.</br>Your API key is like a password: <br>keep it secure!</br></br>Authentication to the API is performed using the Bearer auth method in the Authorization header and using the account ID.</br></br>For example, set <b>Authorization</b> header while using cURL: <code>curl -H "Authorization: Bearer [apiKey]" "X-Checkly-Account: [accountId]"</code></br>'

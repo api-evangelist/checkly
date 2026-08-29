@@ -1,0 +1,218 @@
+generated: '2026-08-29'
+method: searched
+source: https://www.checklyhq.com/docs/api-reference/overview (HTTP 200), https://www.checklyhq.com/changelog/
+  (HTTP 200), https://is.checkly.online/ (HTTP 200), and openapi/_original/checkly-public-api-openapi.json
+  harvested 2026-08-29 from https://api.checklyhq.com/openapi.json
+description: Versioning, deprecation and operational lifecycle posture for the Checkly Public API. Checkly
+  versions in the path and runs three generations side by side (/v1, /v2, /v3), marking superseded operations
+  deprecated in the contract itself rather than only in prose.
+versioning:
+  scheme: path
+  current: v1 with v2 and v3 families live for checks, check-groups, check-results, check-sessions and
+    status pages
+  versions_in_contract:
+  - v1
+  - v2
+  - v3
+  info_version: v1
+  note: info.version still reads 'v1' while the contract carries /v2 and /v3 paths, so the document version
+    is not a reliable read of the API generation - the path is.
+deprecation:
+  policy_published: true
+  mechanism: OpenAPI deprecated:true plus an inline [DEPRECATED] banner in the operation description naming
+    the replacement
+  sunset_headers: false
+  sunset_header_note: No RFC 8594 Sunset or Deprecation response headers appear anywhere in the contract;
+    a client learns about deprecation from the spec or the docs, never at runtime.
+  removal_dates_published: false
+  removal_note: Deprecated operations say 'will be removed soon' without a date. A consumer cannot plan
+    a migration window from the published contract.
+  deprecated_operation_count: 37
+  deprecated_operations:
+  - operationId: postV1Checkgroups
+    method: POST
+    path: /v1/check-groups
+    tag: Check groups
+  - operationId: putV1CheckgroupsId
+    method: PUT
+    path: /v1/check-groups/{id}
+    tag: Check groups
+  - operationId: getV1CheckresultsCheckid
+    method: GET
+    path: /v1/check-results/{checkId}
+    tag: Check results
+    replacement: GET /v2/check-results/{checkId}
+  - operationId: postV1ChecksessionsTrigger
+    method: POST
+    path: /v1/check-sessions/trigger
+    tag: Check sessions
+  - operationId: getV1ChecksessionsChecksessionid
+    method: GET
+    path: /v1/check-sessions/{checkSessionId}
+    tag: Check sessions
+  - operationId: getV1ChecksessionsChecksessionidCompletion
+    method: GET
+    path: /v1/check-sessions/{checkSessionId}/completion
+    tag: Check sessions
+  - operationId: postV1Checks
+    method: POST
+    path: /v1/checks
+    tag: Checks
+    replacement: POST /checks/api
+  - operationId: putV1ChecksId
+    method: PUT
+    path: /v1/checks/{id}
+    tag: Checks
+    replacement: PUT /checks/api/{id}
+  - operationId: getV1Statuspages
+    method: GET
+    path: /v1/status-pages
+    tag: Status Pages
+  - operationId: postV1Statuspages
+    method: POST
+    path: /v1/status-pages
+    tag: Status Pages
+  - operationId: getV1StatuspagesIncidents
+    method: GET
+    path: /v1/status-pages/incidents
+    tag: Status Page Incidents
+  - operationId: postV1StatuspagesIncidents
+    method: POST
+    path: /v1/status-pages/incidents
+    tag: Status Page Incidents
+  - operationId: deleteV1StatuspagesIncidentsIncidentid
+    method: DELETE
+    path: /v1/status-pages/incidents/{incidentId}
+    tag: Status Page Incidents
+  - operationId: getV1StatuspagesIncidentsIncidentid
+    method: GET
+    path: /v1/status-pages/incidents/{incidentId}
+    tag: Status Page Incidents
+  - operationId: putV1StatuspagesIncidentsIncidentid
+    method: PUT
+    path: /v1/status-pages/incidents/{incidentId}
+    tag: Status Page Incidents
+  - operationId: getV1StatuspagesIncidentsIncidentidIncidentupdates
+    method: GET
+    path: /v1/status-pages/incidents/{incidentId}/incident-updates
+    tag: Status Page Incidents
+  - operationId: postV1StatuspagesIncidentsIncidentidIncidentupdates
+    method: POST
+    path: /v1/status-pages/incidents/{incidentId}/incident-updates
+    tag: Status Page Incidents
+  - operationId: deleteV1StatuspagesIncidentsIncidentidIncidentupdatesIncidentupdateid
+    method: DELETE
+    path: /v1/status-pages/incidents/{incidentId}/incident-updates/{incidentUpdateId}
+    tag: Status Page Incidents
+  - operationId: getV1StatuspagesIncidentsIncidentidIncidentupdatesIncidentupdateid
+    method: GET
+    path: /v1/status-pages/incidents/{incidentId}/incident-updates/{incidentUpdateId}
+    tag: Status Page Incidents
+  - operationId: putV1StatuspagesIncidentsIncidentidIncidentupdatesIncidentupdateid
+    method: PUT
+    path: /v1/status-pages/incidents/{incidentId}/incident-updates/{incidentUpdateId}
+    tag: Status Page Incidents
+  - operationId: getV1StatuspagesServices
+    method: GET
+    path: /v1/status-pages/services
+    tag: Status Page Services
+  - operationId: postV1StatuspagesServices
+    method: POST
+    path: /v1/status-pages/services
+    tag: Status Page Services
+  - operationId: deleteV1StatuspagesServicesServiceid
+    method: DELETE
+    path: /v1/status-pages/services/{serviceId}
+    tag: Status Page Services
+  - operationId: getV1StatuspagesServicesServiceid
+    method: GET
+    path: /v1/status-pages/services/{serviceId}
+    tag: Status Page Services
+  - operationId: putV1StatuspagesServicesServiceid
+    method: PUT
+    path: /v1/status-pages/services/{serviceId}
+    tag: Status Page Services
+  - operationId: deleteV1StatuspagesStatuspageid
+    method: DELETE
+    path: /v1/status-pages/{statusPageId}
+    tag: Status Pages
+  - operationId: getV1StatuspagesStatuspageid
+    method: GET
+    path: /v1/status-pages/{statusPageId}
+    tag: Status Pages
+    replacement: GET /v3/status-pages/{statusPageId}
+  - operationId: putV1StatuspagesStatuspageid
+    method: PUT
+    path: /v1/status-pages/{statusPageId}
+    tag: Status Pages
+  - operationId: getV1StatuspagesStatuspageidSubscriptions
+    method: GET
+    path: /v1/status-pages/{statusPageId}/subscriptions
+    tag: Status Pages
+  - operationId: postV1StatuspagesStatuspageidSubscriptionsBulk
+    method: POST
+    path: /v1/status-pages/{statusPageId}/subscriptions/bulk
+    tag: Status Pages
+  - operationId: deleteV1StatuspagesStatuspageidSubscriptionsSubscriptionid
+    method: DELETE
+    path: /v1/status-pages/{statusPageId}/subscriptions/{subscriptionId}
+    tag: Status Pages
+  - operationId: deleteV1TriggersCheckgroupsGroupid
+    method: DELETE
+    path: /v1/triggers/check-groups/{groupId}
+    tag: Triggers
+    replacement: Checkly CLI (https://www.checklyhq.com/docs/cli)
+  - operationId: getV1TriggersCheckgroupsGroupid
+    method: GET
+    path: /v1/triggers/check-groups/{groupId}
+    tag: Triggers
+    replacement: Checkly CLI (https://www.checklyhq.com/docs/cli)
+  - operationId: postV1TriggersCheckgroupsGroupid
+    method: POST
+    path: /v1/triggers/check-groups/{groupId}
+    tag: Triggers
+    replacement: Checkly CLI (https://www.checklyhq.com/docs/cli)
+  - operationId: deleteV1TriggersChecksCheckid
+    method: DELETE
+    path: /v1/triggers/checks/{checkId}
+    tag: Triggers
+    replacement: Checkly CLI (https://www.checklyhq.com/docs/cli)
+  - operationId: getV1TriggersChecksCheckid
+    method: GET
+    path: /v1/triggers/checks/{checkId}
+    tag: Triggers
+    replacement: Checkly CLI (https://www.checklyhq.com/docs/cli)
+  - operationId: postV1TriggersChecksCheckid
+    method: POST
+    path: /v1/triggers/checks/{checkId}
+    tag: Triggers
+    replacement: Checkly CLI (https://www.checklyhq.com/docs/cli)
+  families_fully_deprecated:
+  - Status Pages v1 (superseded by /v3/status-pages)
+  - Status Page Incidents v1 (superseded by /v3/status-pages/{statusPageId}/incidents)
+  - Status Page Services v1 (superseded by the v3 components model)
+  - Triggers (/v1/triggers/checks and /v1/triggers/check-groups - Checkly routes users to the CLI)
+legacy_contracts:
+- name: Swagger 2.0
+  url: https://api.checklyhq.com/swagger.json
+  status: 200
+  state: frozen / deprecated
+  evidence: The document's own info.description opens with '<strong>Deprecated:</strong> This Swagger
+    2.0 document is frozen. The current public API description is available at /openapi.json.'
+  operations: 166
+  note: Still served, still 200, 59 operations behind the OpenAPI 3 document. Not registered in apis.yml
+    - it would publish a stale contract as a live one.
+status_page:
+  url: https://is.checkly.online/
+  status: 200
+  note: Checkly runs its own status page on its own product.
+changelog:
+  url: https://www.checklyhq.com/changelog/
+  status: 200
+  cadence: monthly roll-up with dated in-month entries
+sla:
+  published: false
+  note: No public SLA document found on checklyhq.com; contractual SLAs are an Enterprise-plan item per
+    the pricing page.
+support: https://www.checklyhq.com/support/
+terms: https://www.checklyhq.com/terms/

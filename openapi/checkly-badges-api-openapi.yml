@@ -1,0 +1,173 @@
+openapi: 3.2.0
+info:
+  title: Checkly Public Badges API
+  version: v1
+  description: These are the docs for the newly released Checkly Public API.<br />If you have any questions, please do not hesitate to get in touch with us.
+servers:
+- url: https://api.checklyhq.com
+security:
+- Bearer: []
+tags:
+- name: Badges
+paths:
+  /v1/badges/checks/{checkId}:
+    get:
+      operationId: getV1BadgesChecksCheckid
+      description: Get check status badge. You can enable the badges feature in <a href="https://app.checklyhq.com/settings/account/general">account settings</a>
+      tags:
+      - Badges
+      responses:
+        '200':
+          description: Successful
+          content:
+            image/svg+xml:
+              schema:
+                $ref: '#/components/schemas/BadgeSvgResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+      parameters:
+      - schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
+        name: checkId
+        in: path
+      - schema:
+          $ref: '#/components/schemas/BadgeStyle'
+        required: false
+        name: style
+        in: query
+      - schema:
+          $ref: '#/components/schemas/BadgeTheme'
+        required: false
+        name: theme
+        in: query
+      - schema:
+          type: boolean
+          default: false
+        required: false
+        name: responseTime
+        in: query
+  /v1/badges/groups/{groupId}:
+    get:
+      operationId: getV1BadgesGroupsGroupid
+      description: Get group status badge. You can enable the badges feature in <a href="https://app.checklyhq.com/settings/account/general">account settings</a>
+      tags:
+      - Badges
+      responses:
+        '200':
+          description: Successful
+          content:
+            image/svg+xml:
+              schema:
+                $ref: '#/components/schemas/BadgeSvgResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+      parameters:
+      - schema:
+          type: integer
+          exclusiveMinimum: 0
+        required: true
+        name: groupId
+        in: path
+      - schema:
+          $ref: '#/components/schemas/BadgeStyle'
+        required: false
+        name: style
+        in: query
+      - schema:
+          $ref: '#/components/schemas/BadgeTheme'
+        required: false
+        name: theme
+        in: query
+      - schema:
+          type: boolean
+          default: false
+        required: false
+        name: responseTime
+        in: query
+components:
+  schemas:
+    attributes:
+      type: object
+    BadgeTheme:
+      type: string
+      enum:
+      - light
+      - dark
+      - default
+      default: default
+    BadgeStyle:
+      type: string
+      enum:
+      - flat
+      - plastic
+      - flat-square
+      - for-the-badge
+      - social
+      default: flat
+    ApiError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+        error:
+          type: string
+        message:
+          type: string
+      required:
+      - statusCode
+      - error
+      - message
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
+    BadgeSvgResponse:
+      type: string
+      pattern: (<svg)([^<]*|[^>]*)
+      description: An SVG image containing the current Checkly check or group status.
+    TooManyRequestsError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+  securitySchemes:
+    Bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: Bearer
+      description: 'The Checkly Public API uses API keys to authenticate requests. You can get the API Key <a href="https://app.checklyhq.com/settings/user/api-keys" target="_blank">here</a>.</br>Your API key is like a password: <br>keep it secure!</br></br>Authentication to the API is performed using the Bearer auth method in the Authorization header and using the account ID.</br></br>For example, set <b>Authorization</b> header while using cURL: <code>curl -H "Authorization: Bearer [apiKey]" "X-Checkly-Account: [accountId]"</code></br>'

@@ -1,0 +1,321 @@
+openapi: 3.2.0
+info:
+  title: Checkly Public Deployment Triggers API
+  version: v1
+  description: These are the docs for the newly released Checkly Public API.<br />If you have any questions, please do not hesitate to get in touch with us.
+servers:
+- url: https://api.checklyhq.com
+security:
+- Bearer: []
+tags:
+- name: Deployment Triggers
+paths:
+  /v1/deployment-triggers:
+    get:
+      summary: List all deployment triggers
+      operationId: getV1Deploymenttriggers
+      description: Lists all deployment triggers in your account.
+      parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      tags:
+      - Deployment Triggers
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeploymentTriggers'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+    post:
+      summary: Create a deployment trigger
+      operationId: postV1Deploymenttriggers
+      description: 'Creates a deployment trigger that runs a check (or check group) whenever the linked GitHub repository reports a successful deployment. Set `useEnvironmentUrl` to run against the deployment’s `environment_url`, and `environmentRegexFilter` to restrict which environments trigger a run. Idempotent per check/group: a trigger that already exists for the same target is returned unchanged.'
+      parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      tags:
+      - Deployment Triggers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDeploymentTrigger'
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeploymentTrigger'
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeploymentTrigger'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+components:
+  schemas:
+    attributes:
+      type: object
+    error:
+      type: string
+      enum:
+      - Unauthorized
+    CreateDeploymentTrigger:
+      type: object
+      properties:
+        checkId:
+          type:
+          - string
+          - 'null'
+          description: The ID of the check to run on deploy.
+          x-format:
+            guid: true
+        groupId:
+          type:
+          - number
+          - 'null'
+          description: The ID of the check group to run on deploy.
+          x-constraint:
+            sign: positive
+        repoId:
+          description: The provider-side repository ID, e.g. GitHub’s numeric `id`.
+          anyOf:
+          - type: number
+          - type: string
+        repoName:
+          type: string
+          description: The repository name, e.g. `acme/storefront`.
+        repoLink:
+          type: string
+          description: A link to the repository.
+          default: ''
+        useEnvironmentUrl:
+          type: boolean
+          description: Run the check against the deployment’s `environment_url` instead of its own target. API and URL checks get their host swapped; browser and multi-step checks receive it as the `ENVIRONMENT_URL` environment variable.
+          default: true
+        includeScreenshots:
+          type: boolean
+          description: Attach screenshots to the check run posted back to the commit.
+          default: false
+        provider:
+          $ref: '#/components/schemas/provider'
+        runLocation:
+          $ref: '#/components/schemas/PublicDeploymentTriggerRunLocation'
+        environmentRegexFilter:
+          type:
+          - string
+          - 'null'
+          description: Only deployments whose environment name matches this regular expression trigger a run, e.g. `^(?:Preview|staging)$`.
+          default: null
+          maxLength: 255
+        environmentUrlRegexFilter:
+          type:
+          - string
+          - 'null'
+          description: Only deployments whose environment URL matches this regular expression trigger a run.
+          default: null
+          maxLength: 255
+      required:
+      - repoId
+      - repoName
+    provider:
+      type: string
+      description: The deployment provider. Only `GITHUB` is supported.
+      default: GITHUB
+      enum:
+      - GITHUB
+    ForbiddenError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 403
+        error:
+          $ref: '#/components/schemas/Model1'
+        message:
+          type: string
+          example: Forbidden
+      required:
+      - statusCode
+      - error
+    PublicDeploymentTriggerRunLocation:
+      type: string
+      description: The region the triggered run executes in.
+      default: us-east-1
+      enum:
+      - us-east-1
+      - us-east-2
+      - us-west-1
+      - us-west-2
+      - ca-central-1
+      - sa-east-1
+      - eu-west-1
+      - eu-central-1
+      - eu-west-2
+      - eu-west-3
+      - eu-north-1
+      - eu-south-1
+      - me-south-1
+      - ap-southeast-1
+      - ap-northeast-1
+      - ap-east-1
+      - ap-southeast-2
+      - ap-southeast-3
+      - ap-northeast-2
+      - ap-northeast-3
+      - ap-south-1
+      - af-south-1
+    Model4:
+      type: string
+      enum:
+      - Not Found
+    Model1:
+      type: string
+      enum:
+      - Forbidden
+    DeploymentTriggers:
+      type: array
+      items:
+        $ref: '#/components/schemas/DeploymentTrigger'
+    NotFoundError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 404
+        error:
+          $ref: '#/components/schemas/Model4'
+        message:
+          type: string
+          example: Not Found
+      required:
+      - statusCode
+      - error
+    UnauthorizedError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 401
+        error:
+          $ref: '#/components/schemas/error'
+        message:
+          type: string
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    DeploymentTrigger:
+      type: object
+      properties:
+        id:
+          type: number
+          description: The deployment trigger ID.
+        checkId:
+          type:
+          - string
+          - 'null'
+          description: The check this trigger runs.
+          x-format:
+            guid: true
+        groupId:
+          type:
+          - number
+          - 'null'
+          description: The check group this trigger runs.
+        provider:
+          type: string
+          description: The deployment provider. Always `GITHUB` for this endpoint.
+        repoId:
+          type: string
+          description: The provider-side repository ID.
+        repoName:
+          type: string
+          description: The repository name, e.g. `acme/storefront`.
+        repoLink:
+          type:
+          - string
+          - 'null'
+          description: A link to the repository.
+        useEnvironmentUrl:
+          type: boolean
+          description: Whether the deployment’s `environment_url` is injected into the run.
+        includeScreenshots:
+          type: boolean
+          description: Whether screenshots are attached to the posted check run.
+        environmentRegexFilter:
+          type:
+          - string
+          - 'null'
+          description: Only deployments whose environment name matches this regex trigger a run.
+        environmentUrlRegexFilter:
+          type:
+          - string
+          - 'null'
+          description: Only deployments whose environment URL matches this regex trigger a run.
+        runLocation:
+          type: string
+          description: The region the triggered run executes in.
+        created_at:
+          type: string
+          format: date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date
+  securitySchemes:
+    Bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: Bearer
+      description: 'The Checkly Public API uses API keys to authenticate requests. You can get the API Key <a href="https://app.checklyhq.com/settings/user/api-keys" target="_blank">here</a>.</br>Your API key is like a password: <br>keep it secure!</br></br>Authentication to the API is performed using the Bearer auth method in the Authorization header and using the account ID.</br></br>For example, set <b>Authorization</b> header while using cURL: <code>curl -H "Authorization: Bearer [apiKey]" "X-Checkly-Account: [accountId]"</code></br>'

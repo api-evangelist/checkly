@@ -1,0 +1,428 @@
+openapi: 3.2.0
+info:
+  title: Checkly Public Error Groups API
+  version: v1
+  description: These are the docs for the newly released Checkly Public API.<br />If you have any questions, please do not hesitate to get in touch with us.
+servers:
+- url: https://api.checklyhq.com
+security:
+- Bearer: []
+tags:
+- name: Error Groups
+paths:
+  /v1/error-groups:
+    get:
+      summary: List all error groups in your account.
+      operationId: getV1Errorgroups
+      description: List all error groups in your account.
+      parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          description: Limit the number of results
+          default: 10
+          minimum: 1
+          maximum: 100
+        description: Limit the number of results
+      - name: page
+        in: query
+        schema:
+          type: number
+          description: Page number
+          default: 1
+          x-constraint:
+            sign: positive
+        description: Page number
+      tags:
+      - Error Groups
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorGroupsList'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+  /v1/error-groups/checks/{checkId}:
+    get:
+      summary: List all error groups for a specific check.
+      operationId: getV1ErrorgroupsChecksCheckid
+      description: List all error groups for a specific check.
+      parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      - name: checkId
+        in: path
+        schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          description: Limit the number of results
+          default: 10
+          minimum: 1
+          maximum: 100
+        description: Limit the number of results
+      - name: page
+        in: query
+        schema:
+          type: number
+          description: Page number
+          default: 1
+          x-constraint:
+            sign: positive
+        description: Page number
+      tags:
+      - Error Groups
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorGroupsList'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+  /v1/error-groups/{id}:
+    get:
+      summary: Retrieve one error group.
+      operationId: getV1ErrorgroupsId
+      description: Retrieve one error group.
+      parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      - name: id
+        in: path
+        schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
+      tags:
+      - Error Groups
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorGroup'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+    patch:
+      summary: Update an error group. Mainly used for archiving error groups.
+      operationId: patchV1ErrorgroupsId
+      description: Update an error group. Mainly used for archiving error groups.
+      parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      - name: id
+        in: path
+        schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
+      tags:
+      - Error Groups
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorGroupPatch'
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorGroup'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+components:
+  schemas:
+    attributes:
+      type: object
+    error:
+      type: string
+      enum:
+      - Unauthorized
+    Model40:
+      type: object
+      properties:
+        id:
+          type: string
+        checkId:
+          type: string
+        errorHash:
+          type: string
+          description: The hash of the cleaned error message for quicker deduplication.
+        rawErrorMessage:
+          type:
+          - string
+          - 'null'
+          description: The raw error message as recorded in a check result.
+        cleanedErrorMessage:
+          type: string
+          description: The cleaned and sanitized error message used for hashing and grouping.
+        firstSeen:
+          type: string
+          format: date
+        lastSeen:
+          type: string
+          format: date
+        archivedUntilNextEvent:
+          type: boolean
+        rootCauseAnalyses:
+          $ref: '#/components/schemas/rootCauseAnalyses'
+      required:
+      - id
+      - checkId
+      - errorHash
+      - rawErrorMessage
+      - cleanedErrorMessage
+      - firstSeen
+      - lastSeen
+      - archivedUntilNextEvent
+    ErrorGroupsList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Model40'
+    ForbiddenError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 403
+        error:
+          $ref: '#/components/schemas/Model1'
+        message:
+          type: string
+          example: Forbidden
+      required:
+      - statusCode
+      - error
+    Model4:
+      type: string
+      enum:
+      - Not Found
+    rootCauseAnalyses:
+      type: array
+      items:
+        $ref: '#/components/schemas/attributes'
+    TooManyRequestsError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    ErrorGroup:
+      type: object
+      properties:
+        id:
+          type: string
+        checkId:
+          type: string
+        errorHash:
+          type: string
+          description: The hash of the cleaned error message for quicker deduplication.
+        rawErrorMessage:
+          type:
+          - string
+          - 'null'
+          description: The raw error message as recorded in a check result.
+        cleanedErrorMessage:
+          type: string
+          description: The cleaned and sanitized error message used for hashing and grouping.
+        firstSeen:
+          type: string
+          format: date
+        lastSeen:
+          type: string
+          format: date
+        archivedUntilNextEvent:
+          type: boolean
+        rootCauseAnalyses:
+          $ref: '#/components/schemas/rootCauseAnalyses'
+      required:
+      - id
+      - checkId
+      - errorHash
+      - rawErrorMessage
+      - cleanedErrorMessage
+      - firstSeen
+      - lastSeen
+      - archivedUntilNextEvent
+    Model1:
+      type: string
+      enum:
+      - Forbidden
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
+    UnauthorizedError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 401
+        error:
+          $ref: '#/components/schemas/error'
+        message:
+          type: string
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    ErrorGroupPatch:
+      type: object
+      properties:
+        archiveForEver:
+          type: boolean
+        archivedUntilNextEvent:
+          type: boolean
+    NotFoundError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 404
+        error:
+          $ref: '#/components/schemas/Model4'
+        message:
+          type: string
+          example: Not Found
+      required:
+      - statusCode
+      - error
+  securitySchemes:
+    Bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: Bearer
+      description: 'The Checkly Public API uses API keys to authenticate requests. You can get the API Key <a href="https://app.checklyhq.com/settings/user/api-keys" target="_blank">here</a>.</br>Your API key is like a password: <br>keep it secure!</br></br>Authentication to the API is performed using the Bearer auth method in the Authorization header and using the account ID.</br></br>For example, set <b>Authorization</b> header while using cURL: <code>curl -H "Authorization: Bearer [apiKey]" "X-Checkly-Account: [accountId]"</code></br>'

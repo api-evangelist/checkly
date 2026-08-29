@@ -1,0 +1,377 @@
+openapi: 3.2.0
+info:
+  title: Checkly Public Subscriptions API
+  version: v1
+  description: These are the docs for the newly released Checkly Public API.<br />If you have any questions, please do not hesitate to get in touch with us.
+servers:
+- url: https://api.checklyhq.com
+security:
+- Bearer: []
+tags:
+- name: Subscriptions
+paths:
+  /v1/status-pages/{statusPageId}/subscriptions:
+    get:
+      summary: Get all subscriptions for a specific status page
+      operationId: getV1StatuspagesStatuspageidSubscriptions
+      description: Get all subscriptions for a specific status page
+      parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      - name: statusPageId
+        in: path
+        schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
+      tags:
+      - Subscriptions
+      responses:
+        '200':
+          description: The list of subscriptions for the status page.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionsList'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+      deprecated: true
+  /v1/status-pages/{statusPageId}/subscriptions/bulk:
+    post:
+      summary: Bulk create subscriptions for a specific status page
+      operationId: postV1StatuspagesStatuspageidSubscriptionsBulk
+      description: Bulk create subscriptions for a specific status page.
+      parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      - name: statusPageId
+        in: path
+        schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
+      tags:
+      - Subscriptions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkCreateSubscriptionsPayload'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkCreateSubscriptionsResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+      deprecated: true
+  /v1/status-pages/{statusPageId}/subscriptions/{subscriptionId}:
+    delete:
+      summary: Delete a subscription belonging to a specific status page
+      operationId: deleteV1StatuspagesStatuspageidSubscriptionsSubscriptionid
+      description: Delete a subscription belonging to a specific status page using the subscription id
+      parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      - name: statusPageId
+        in: path
+        schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
+      - name: subscriptionId
+        in: path
+        schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
+      tags:
+      - Subscriptions
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+      deprecated: true
+components:
+  schemas:
+    attributes:
+      type: object
+    BulkCreateSubscriptionsPayload:
+      type: object
+      properties:
+        subscriptions:
+          $ref: '#/components/schemas/subscriptions'
+        autoVerify:
+          type: boolean
+          description: Whether to create subscriptions as verified without sending confirmation emails.
+          default: false
+      required:
+      - subscriptions
+    Model81:
+      type: string
+      description: The status of the created subscriptions.
+      enum:
+      - PENDING
+      - VERIFIED
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
+    TooManyRequestsError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    UnauthorizedError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 401
+        error:
+          $ref: '#/components/schemas/error'
+        message:
+          type: string
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    BulkCreateSubscriptionsResponse:
+      type: object
+      properties:
+        created:
+          type: number
+          description: The number of subscriptions successfully created.
+        skipped:
+          type: number
+          description: The number of subscriptions skipped (already exist).
+        status:
+          $ref: '#/components/schemas/Model81'
+      required:
+      - created
+      - skipped
+      - status
+    Model80:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/Model79'
+        config:
+          type: string
+          description: The configuration details for the status page subscription. These can be very different based on the type of the subscriptions.
+      required:
+      - type
+      - config
+    Model79:
+      type: string
+      description: The type of subscription type, i.e. EMAIL.
+      example: EMAIL
+      enum:
+      - EMAIL
+    Model77:
+      type: string
+      description: The type of subscription.
+      enum:
+      - EMAIL
+    ForbiddenError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 403
+        error:
+          $ref: '#/components/schemas/Model1'
+        message:
+          type: string
+          example: Forbidden
+      required:
+      - statusCode
+      - error
+    SubscriptionsList:
+      type: array
+      description: The list of subscriptions for the status page.
+      items:
+        $ref: '#/components/schemas/Subscription'
+    Model78:
+      type: string
+      description: The status of the subscription.
+      enum:
+      - PENDING
+      - VERIFIED
+    NotFoundError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 404
+        error:
+          $ref: '#/components/schemas/Model4'
+        message:
+          type: string
+          example: Not Found
+      required:
+      - statusCode
+      - error
+    subscriptions:
+      type: array
+      description: The list of subscriptions to create (max 100).
+      minItems: 1
+      maxItems: 100
+      items:
+        $ref: '#/components/schemas/Model80'
+    error:
+      type: string
+      enum:
+      - Unauthorized
+    Model4:
+      type: string
+      enum:
+      - Not Found
+    Model1:
+      type: string
+      enum:
+      - Forbidden
+    Subscription:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of the subscription.
+        type:
+          $ref: '#/components/schemas/Model77'
+        address:
+          type: string
+          description: The email address to subscribe to the status page.
+          x-format:
+            email: true
+        status:
+          $ref: '#/components/schemas/Model78'
+        created_at:
+          type: string
+          format: date
+          description: The date the subscription was created.
+        updated_at:
+          type: string
+          format: date
+          description: The date the subscription was last updated.
+      required:
+      - id
+      - type
+      - address
+      - status
+      - created_at
+      - updated_at
+  securitySchemes:
+    Bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: Bearer
+      description: 'The Checkly Public API uses API keys to authenticate requests. You can get the API Key <a href="https://app.checklyhq.com/settings/user/api-keys" target="_blank">here</a>.</br>Your API key is like a password: <br>keep it secure!</br></br>Authentication to the API is performed using the Bearer auth method in the Authorization header and using the account ID.</br></br>For example, set <b>Authorization</b> header while using cURL: <code>curl -H "Authorization: Bearer [apiKey]" "X-Checkly-Account: [accountId]"</code></br>'

@@ -1,0 +1,218 @@
+generated: '2026-08-29'
+method: searched
+source: >-
+  https://www.checklyhq.com/docs/api-reference/overview (HTTP 200),
+  https://www.checklyhq.com/docs/admin/creating-api-key (HTTP 200),
+  https://www.checklyhq.com/docs/ai/mcp-server/tools (HTTP 200), a live unauthenticated request to
+  https://api.checklyhq.com/v1/checks (HTTP 401, headers captured), and
+  openapi/_original/checkly-public-api-openapi.json harvested 2026-08-29.
+description: >-
+  Cross-cutting runtime semantics for the Checkly Public API: how to authenticate, page, retry, and
+  above all whether a write can be taken back. Checkly's own guidance is that resources should be
+  managed as code through the CLI, Terraform or Pulumi rather than by direct API writes, and that
+  posture shows in the conventions - there is no idempotency machinery on the REST surface.
+authentication:
+  style: bearer-api-key
+  header: 'Authorization: Bearer <api key>'
+  account_selector: 'X-Checkly-Account: <account id>'
+  note: >-
+    Both headers are required. The account header is not an OpenAPI securityScheme in the current
+    contract - it is documented in the API reference and in the scheme description - so a generated
+    client built from the spec alone will 401 until the account header is added by hand.
+  key_types:
+  - user API key
+  - service API key
+  docs: https://www.checklyhq.com/docs/admin/creating-api-key
+  oauth:
+    rest: false
+    mcp: true
+    note: OAuth 2.1 with 14 scopes exists, but only on the MCP endpoint. See scopes/checkly-scopes.yml.
+idempotency:
+  supported: false
+  header: null
+  evidence: >-
+    The harvested contract contains zero occurrences of 'Idempotency' or 'idempotency-key' across
+    225 operations, and no docs page describes one. Checkly's MCP tool reference goes the other way
+    and labels its write tools explicitly - invite-account-member, create-status-page-incident,
+    update-status-page-incident and resolve-status-page-incident are each documented as "Not
+    idempotent".
+  consequence: >-
+    A retried POST after a timeout can create a second incident, a second incident update, or a
+    second invite. An agent must read-back before retrying any write.
+  mitigation: >-
+    Most write surfaces are key-addressed rather than id-addressed for the resources agents touch
+    most - environment variables are PUT /v1/variables/{key}, which is naturally idempotent, and
+    check configuration is meant to be applied declaratively through `checkly deploy`.
+pagination:
+  styles:
+  - style: page-number
+    params:
+    - limit
+    - page
+    used_by: 42 operations declare limit, 29 declare page
+    note: 1-based page numbers. The MCP list-check-stats tool documents a default page size of 25 and a maximum of 100.
+  - style: cursor
+    params:
+    - nextId
+    used_by: 12 operations
+    note: Used on the higher-volume result and session listings.
+  response_metadata:
+    fields:
+    - length
+    - total
+    - page
+    - limit
+    - totalPages
+    - filters
+    note: >-
+      Documented for the MCP tool responses; the REST listings return the collection directly and
+      pagination metadata varies by endpoint rather than following one envelope.
+  time_windows:
+    params:
+    - from
+    - to
+    - quickRange
+    note: Analytics and result endpoints take an explicit window or a named quick range such as last24Hours.
+filtering:
+  common_params:
+  - tag
+  - checkType
+  - status
+  - search
+  - filterByStatus
+  - hasFailures
+field_expansion:
+  supported: false
+  note: No expand, include or fields parameter anywhere in the contract.
+metadata:
+  mechanism: tags
+  note: >-
+    Checks carry a free-form tags array, and Checkly's webhook templating exposes a tagValue helper
+    that reads key:value or key=value metadata out of it. Tags are the de-facto metadata store.
+request_id_tracing:
+  header: null
+  note: >-
+    No x-request-id or correlation header was observed on live responses. The only trace-shaped
+    headers returned are Cloudflare's cf-ray and NEL reporting headers, which are edge artifacts,
+    not an API request id. There is no documented way to quote a failing call back to support.
+  observed_response_headers:
+  - cf-ray
+  - strict-transport-security
+  - x-content-type-options
+  - x-frame-options
+  - access-control-expose-headers
+versioning:
+  style: path
+  current: v1, with v2 and v3 families live for checks, results, sessions and status pages
+  see: lifecycle/checkly-lifecycle.yml
+error_envelope:
+  shape: '{ statusCode, error, message, attributes? }'
+  rfc9457: false
+  see: errors/checkly-problem-types.yml
+rate_limit_signaling:
+  documented_limit: 600 requests per 60 seconds on most routes
+  headers_documented: false
+  headers_observed: false
+  status_on_exhaustion: 429
+  note: >-
+    429 is declared on 223 of 225 operations, but no X-RateLimit-*, RateLimit-* or Retry-After header
+    is described in the contract or the docs, and none appeared on a live unauthenticated response.
+    An agent cannot see how close it is to the ceiling until it hits it. See
+    rate-limits/checkly-rate-limits.yml.
+dry_run_mode:
+  supported: partial
+  grade: documented
+  evidence: >-
+    Not on the REST API. The Checkly CLI provides the rehearsal path, and the docs describe it in
+    those words: `checkly test` "provides a dry-run capability for testing your monitoring setup
+    before deployment" and runs checks without deploying them as monitors; `checkly test --list`
+    enumerates without running; `checkly deploy --preview` shows the changes the deploy would make.
+    Checkly's Agent Skills index also documents that CLI write commands exit with code 2 and a JSON
+    confirmation envelope that an agent must explicitly confirm before the change is applied - a
+    deliberate agent guardrail, and `--force` is what an operator passes to skip it in CI.
+  commands:
+  - checkly test
+  - checkly test --list
+  - checkly deploy --preview
+  docs: https://www.checklyhq.com/docs/cli/checkly-test
+reversibility:
+  grade: documented
+  applicable: true
+  summary: >-
+    Checkly publishes real reversal paths for its two in-flight operations (cancel a check session,
+    cancel a test session) and a semantic reversal for incidents (resolve). What it does not publish
+    anywhere is a WINDOW - no restore period after a delete, no undo horizon, no stated retention
+    for a deleted check, dashboard, status page or incident. Deletes are documented as permanent and
+    should be treated as unrecoverable.
+  surfaces:
+  - write: trigger a check session
+    operationIds:
+    - postV2ChecksessionsTrigger
+    reversal: cancel the session
+    reversal_operationId: postV1ChecksessionsChecksessionidCancel
+    window: >-
+      Only while the session is running - the operation exists to stop an in-flight run. No duration
+      is stated in the docs or the contract.
+    window_stated: false
+    docs: https://www.checklyhq.com/docs/api-reference/overview/
+  - write: trigger a test session
+    operationIds:
+    - postV1TestsessionsTrigger
+    reversal: cancel the session
+    reversal_operationId: postV1TestsessionsTestsessionidCancel
+    window: While the session is in progress. No duration stated.
+    window_stated: false
+  - write: create a status page incident
+    operationIds:
+    - createStatusPageV3IncidentPublic
+    reversal: resolve the incident, or delete it
+    reversal_operationId: deleteStatusPageV3IncidentPublic
+    window: >-
+      No window stated. Resolving posts a final update and leaves the record; deleting is documented
+      in the v1 equivalent as "Permanently removes an incident and all its updates".
+    window_stated: false
+    caution: >-
+      Incident creates and updates can notify subscribers. A notification that has gone out cannot be
+      recalled by deleting the incident, so this write is only partially reversible in effect.
+  - write: create or update an account environment variable
+    operationIds:
+    - postV1Variables
+    - putV1VariablesKey
+    reversal: overwrite with the prior value, or delete the key
+    reversal_operationId: deleteV1VariablesKey
+    window: No window. There is no version history on variables and secret values are never echoed back.
+    window_stated: false
+    caution: >-
+      Overwriting a secret is destructive - the previous value cannot be read back before or after
+      the write, so an agent cannot restore it.
+  - write: delete a check, check group, dashboard, snippet, private location, maintenance window,
+      client certificate, status page or alert channel
+    operationIds:
+    - deleteV1ChecksId
+    - deleteV1CheckgroupsId
+    - deleteV1DashboardsDashboardid
+    - deleteV1SnippetsId
+    - deleteV1PrivatelocationsId
+    - deleteV1MaintenancewindowsId
+    - deleteV1ClientcertificatesId
+    - deleteStatusPageV3Public
+    - deleteV1AlertchannelsId
+    reversal: none published
+    window: none
+    window_stated: false
+    mitigation: >-
+      This is precisely what monitoring-as-code buys: a resource deleted through the API can be
+      re-created from the versioned project with `checkly deploy`. That is a recovery path in the
+      customer's git history, not a restore feature of the API. The CLI also ships one real
+      soft-delete: `checkly deploy --preserve-resources` detaches resources removed from code,
+      keeping them and their run history instead of deleting them.
+  no_invented_windows: >-
+    No retention or restore window is asserted here because Checkly publishes none. Any number in
+    this block would be a guess with real consequences.
+cross_references:
+  errors: errors/checkly-problem-types.yml
+  lifecycle: lifecycle/checkly-lifecycle.yml
+  authentication: authentication/checkly-authentication.yml
+  rate_limits: rate-limits/checkly-rate-limits.yml
+  scopes: scopes/checkly-scopes.yml
+  mcp: mcp/checkly-mcp.yml

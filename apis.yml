@@ -1,7 +1,14 @@
 aid: checkly
 name: Checkly
 description: >-
-  Checkly is a monitoring-as-code platform for API and synthetic monitoring with Playwright-based browser checks and programmable API checks.
+  Checkly is a code-first reliability platform for synthetic monitoring, uptime monitoring, alerting
+  and AI-assisted incident investigation. Engineering teams define monitors as versioned code with
+  the Checkly CLI, Terraform or Pulumi, reuse existing Playwright suites as production browser
+  checks, and run them from 22 global locations or from private locations inside their own network.
+  The platform spans three modules: Detect (uptime, API and browser monitoring), Communicate
+  (alerting, status pages and dashboards) and Resolve (OpenTelemetry tracing and Rocky AI root cause
+  analysis). Checkly exposes a 225-operation public REST API, a hosted MCP server, four published
+  Agent Skills and machine-readable llms.txt, docs and pricing.
 type: Index
 deliveryModel:
   model: unknown
@@ -31,10 +38,18 @@ image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/checkly.pn
 tags:
   - Monitoring
   - Testing
+  - Synthetic Monitoring
+  - Observability
+  - Uptime
+  - Alerting
+  - Status Pages
+  - Monitoring as Code
+  - Playwright
+  - DevOps
 url: >-
   https://raw.githubusercontent.com/api-evangelist/checkly/refs/heads/main/apis.yml
 created: '2026-03-25'
-modified: '2026-03-25'
+modified: '2026-08-29'
 specificationVersion: '0.23'
 apis:
 - aid: checkly:checkly
@@ -43,6 +58,7 @@ apis:
     Checkly is a monitoring-as-code platform for API and synthetic monitoring with Playwright-based browser
     checks and programmable API checks.
   humanURL: https://www.checklyhq.com
+  baseURL: https://api.checklyhq.com
   tags:
   - Monitoring
   - Testing
@@ -53,8 +69,9 @@ apis:
     url: https://github.com/checkly
 - aid: checkly:checkly-accounts-api
   name: Checkly Accounts API
-  description: The Accounts API from Checkly — 2 operation(s) for accounts.
+  description: The Accounts API from Checkly — 11 operation(s) for accounts.
   humanURL: https://www.checklyhq.com
+  baseURL: https://api.checklyhq.com
   tags:
   - Account
   tags_raw:
@@ -64,8 +81,9 @@ apis:
     url: openapi/checkly-accounts-api-openapi.yml
 - aid: checkly:checkly-alert-channels-api
   name: Checkly Alert Channels API
-  description: The Alert Channels API from Checkly — 2 operation(s) for alert channels.
+  description: The Alert Channels API from Checkly — 6 operation(s) for alert channels.
   humanURL: https://www.checklyhq.com
+  baseURL: https://api.checklyhq.com
   tags:
   - Alert Channels
   properties:
@@ -73,8 +91,9 @@ apis:
     url: openapi/checkly-alert-channels-api-openapi.yml
 - aid: checkly:checkly-analytics-api
   name: Checkly Analytics API
-  description: The Analytics API from Checkly — 3 operation(s) for analytics.
+  description: The Analytics API from Checkly — 12 operation(s) for analytics.
   humanURL: https://www.checklyhq.com
+  baseURL: https://api.checklyhq.com
   tags:
   - Analytics
   properties:
@@ -84,6 +103,7 @@ apis:
   name: Checkly Check Alerts API
   description: The Check Alerts API from Checkly — 2 operation(s) for check alerts.
   humanURL: https://www.checklyhq.com
+  baseURL: https://api.checklyhq.com
   tags:
   - Check Alerts
   properties:
@@ -91,8 +111,9 @@ apis:
     url: openapi/checkly-check-alerts-api-openapi.yml
 - aid: checkly:checkly-check-groups-api
   name: Checkly Check Groups API
-  description: The Check Groups API from Checkly — 1 operation(s) for check groups.
+  description: The Check Groups API from Checkly — 11 operation(s) for check groups.
   humanURL: https://www.checklyhq.com
+  baseURL: https://api.checklyhq.com
   tags:
   - Check Groups
   properties:
@@ -100,26 +121,19 @@ apis:
     url: openapi/checkly-check-groups-api-openapi.yml
 - aid: checkly:checkly-check-results-api
   name: Checkly Check Results API
-  description: The Check Results API from Checkly — 2 operation(s) for check results.
+  description: The Check Results API from Checkly — 4 operation(s) for check results.
   humanURL: https://www.checklyhq.com
+  baseURL: https://api.checklyhq.com
   tags:
   - Check Results
   properties:
   - type: OpenAPI
     url: openapi/checkly-check-results-api-openapi.yml
-- aid: checkly:checkly-check-statuses-api
-  name: Checkly Check Statuses API
-  description: The Check Statuses API from Checkly — 1 operation(s) for check statuses.
-  humanURL: https://www.checklyhq.com
-  tags:
-  - Check Statuses
-  properties:
-  - type: OpenAPI
-    url: openapi/checkly-check-statuses-api-openapi.yml
 - aid: checkly:checkly-checks-api
   name: Checkly Checks API
-  description: The Checks API from Checkly — 1 operation(s) for checks.
+  description: The Checks API from Checkly — 18 operation(s) for checks.
   humanURL: https://www.checklyhq.com
+  baseURL: https://api.checklyhq.com
   tags:
   - Checks
   properties:
@@ -127,8 +141,9 @@ apis:
     url: openapi/checkly-checks-api-openapi.yml
 - aid: checkly:checkly-dashboards-api
   name: Checkly Dashboards API
-  description: The Dashboards API from Checkly — 1 operation(s) for dashboards.
+  description: The Dashboards API from Checkly — 5 operation(s) for dashboards.
   humanURL: https://www.checklyhq.com
+  baseURL: https://api.checklyhq.com
   tags:
   - Dashboards
   properties:
@@ -136,8 +151,9 @@ apis:
     url: openapi/checkly-dashboards-api-openapi.yml
 - aid: checkly:checkly-heartbeats-api
   name: Checkly Heartbeats API
-  description: The Heartbeats API from Checkly — 1 operation(s) for heartbeats.
+  description: The Heartbeats API from Checkly — 5 operation(s) for heartbeats.
   humanURL: https://www.checklyhq.com
+  baseURL: https://api.checklyhq.com
   tags:
   - Heartbeats
   properties:
@@ -145,26 +161,19 @@ apis:
     url: openapi/checkly-heartbeats-api-openapi.yml
 - aid: checkly:checkly-incidents-api
   name: Checkly Incidents API
-  description: The Incidents API from Checkly — 1 operation(s) for incidents.
+  description: The Incidents API from Checkly — 4 operation(s) for incidents.
   humanURL: https://www.checklyhq.com
+  baseURL: https://api.checklyhq.com
   tags:
   - Incidents
   properties:
   - type: OpenAPI
     url: openapi/checkly-incidents-api-openapi.yml
-- aid: checkly:checkly-locations-api
-  name: Checkly Locations API
-  description: The Locations API from Checkly — 1 operation(s) for locations.
-  humanURL: https://www.checklyhq.com
-  tags:
-  - Locations
-  properties:
-  - type: OpenAPI
-    url: openapi/checkly-locations-api-openapi.yml
 - aid: checkly:checkly-maintenance-windows-api
   name: Checkly Maintenance Windows API
-  description: The Maintenance Windows API from Checkly — 1 operation(s) for maintenance windows.
+  description: The Maintenance Windows API from Checkly — 12 operation(s) for maintenance windows.
   humanURL: https://www.checklyhq.com
+  baseURL: https://api.checklyhq.com
   tags:
   - Maintenance Windows
   properties:
@@ -172,31 +181,310 @@ apis:
     url: openapi/checkly-maintenance-windows-api-openapi.yml
 - aid: checkly:checkly-private-locations-api
   name: Checkly Private Locations API
-  description: The Private Locations API from Checkly — 1 operation(s) for private locations.
+  description: The Private Locations API from Checkly — 8 operation(s) for private locations.
   humanURL: https://www.checklyhq.com
+  baseURL: https://api.checklyhq.com
   tags:
   - Private Locations
   properties:
   - type: OpenAPI
     url: openapi/checkly-private-locations-api-openapi.yml
-- aid: checkly:checkly-reports-api
-  name: Checkly Reports API
-  description: The Reports API from Checkly — 1 operation(s) for reports.
+- aid: checkly:checkly-alert-notifications-api
+  name: Checkly Alert notifications API
+  description: The Alert notifications API from Checkly — 1 operation(s) for alert notifications.
   humanURL: https://www.checklyhq.com
+  baseURL: https://api.checklyhq.com
   tags:
-  - Reports
+  - Alert notifications
   properties:
   - type: OpenAPI
-    url: openapi/checkly-reports-api-openapi.yml
-- aid: checkly:checkly-variables-api
-  name: Checkly Variables API
-  description: The Variables API from Checkly — 1 operation(s) for variables.
+    url: openapi/checkly-alert-notifications-api-openapi.yml
+- aid: checkly:checkly-badges-api
+  name: Checkly Badges API
+  description: The Badges API from Checkly — 2 operation(s) for badges.
   humanURL: https://www.checklyhq.com
+  baseURL: https://api.checklyhq.com
   tags:
-  - Variables
+  - Badges
   properties:
   - type: OpenAPI
-    url: openapi/checkly-variables-api-openapi.yml
+    url: openapi/checkly-badges-api-openapi.yml
+- aid: checkly:checkly-check-sessions-api
+  name: Checkly Check sessions API
+  description: The Check sessions API from Checkly — 7 operation(s) for check sessions.
+  humanURL: https://www.checklyhq.com
+  baseURL: https://api.checklyhq.com
+  tags:
+  - Check sessions
+  properties:
+  - type: OpenAPI
+    url: openapi/checkly-check-sessions-api-openapi.yml
+- aid: checkly:checkly-check-status-api
+  name: Checkly Check status API
+  description: The Check status API from Checkly — 2 operation(s) for check status.
+  humanURL: https://www.checklyhq.com
+  baseURL: https://api.checklyhq.com
+  tags:
+  - Check status
+  properties:
+  - type: OpenAPI
+    url: openapi/checkly-check-status-api-openapi.yml
+- aid: checkly:checkly-client-certificates-api
+  name: Checkly Client certificates API
+  description: The Client certificates API from Checkly — 4 operation(s) for client certificates.
+  humanURL: https://www.checklyhq.com
+  baseURL: https://api.checklyhq.com
+  tags:
+  - Client certificates
+  properties:
+  - type: OpenAPI
+    url: openapi/checkly-client-certificates-api-openapi.yml
+- aid: checkly:checkly-deployment-triggers-api
+  name: Checkly Deployment Triggers API
+  description: The Deployment Triggers API from Checkly — 2 operation(s) for deployment triggers.
+  humanURL: https://www.checklyhq.com
+  baseURL: https://api.checklyhq.com
+  tags:
+  - Deployment Triggers
+  properties:
+  - type: OpenAPI
+    url: openapi/checkly-deployment-triggers-api-openapi.yml
+- aid: checkly:checkly-environment-variables-api
+  name: Checkly Environment variables API
+  description: The Environment variables API from Checkly — 5 operation(s) for environment variables.
+  humanURL: https://www.checklyhq.com
+  baseURL: https://api.checklyhq.com
+  tags:
+  - Environment variables
+  properties:
+  - type: OpenAPI
+    url: openapi/checkly-environment-variables-api-openapi.yml
+- aid: checkly:checkly-error-groups-api
+  name: Checkly Error Groups API
+  description: The Error Groups API from Checkly — 4 operation(s) for error groups.
+  humanURL: https://www.checklyhq.com
+  baseURL: https://api.checklyhq.com
+  tags:
+  - Error Groups
+  properties:
+  - type: OpenAPI
+    url: openapi/checkly-error-groups-api-openapi.yml
+- aid: checkly:checkly-incident-updates-api
+  name: Checkly Incident Updates API
+  description: The Incident Updates API from Checkly — 3 operation(s) for incident updates.
+  humanURL: https://www.checklyhq.com
+  baseURL: https://api.checklyhq.com
+  tags:
+  - Incident Updates
+  properties:
+  - type: OpenAPI
+    url: openapi/checkly-incident-updates-api-openapi.yml
+- aid: checkly:checkly-location-api
+  name: Checkly Location API
+  description: The Location API from Checkly — 1 operation(s) for location.
+  humanURL: https://www.checklyhq.com
+  baseURL: https://api.checklyhq.com
+  tags:
+  - Location
+  properties:
+  - type: OpenAPI
+    url: openapi/checkly-location-api-openapi.yml
+- aid: checkly:checkly-monitors-api
+  name: Checkly Monitors API
+  description: The Monitors API from Checkly — 7 operation(s) for monitors.
+  humanURL: https://www.checklyhq.com
+  baseURL: https://api.checklyhq.com
+  tags:
+  - Monitors
+  properties:
+  - type: OpenAPI
+    url: openapi/checkly-monitors-api-openapi.yml
+- aid: checkly:checkly-reporting-api
+  name: Checkly Reporting API
+  description: The Reporting API from Checkly — 1 operation(s) for reporting.
+  humanURL: https://www.checklyhq.com
+  baseURL: https://api.checklyhq.com
+  tags:
+  - Reporting
+  properties:
+  - type: OpenAPI
+    url: openapi/checkly-reporting-api-openapi.yml
+- aid: checkly:checkly-rocky-ai-api
+  name: Checkly Rocky AI API
+  description: The Rocky AI API from Checkly — 3 operation(s) for rocky ai.
+  humanURL: https://www.checklyhq.com
+  baseURL: https://api.checklyhq.com
+  tags:
+  - Rocky AI
+  properties:
+  - type: OpenAPI
+    url: openapi/checkly-rocky-ai-api-openapi.yml
+- aid: checkly:checkly-runtimes-api
+  name: Checkly Runtimes API
+  description: The Runtimes API from Checkly — 2 operation(s) for runtimes.
+  humanURL: https://www.checklyhq.com
+  baseURL: https://api.checklyhq.com
+  tags:
+  - Runtimes
+  properties:
+  - type: OpenAPI
+    url: openapi/checkly-runtimes-api-openapi.yml
+- aid: checkly:checkly-secret-scans-api
+  name: Checkly Secret scans API
+  description: The Secret scans API from Checkly — 1 operation(s) for secret scans.
+  humanURL: https://www.checklyhq.com
+  baseURL: https://api.checklyhq.com
+  tags:
+  - Secret scans
+  properties:
+  - type: OpenAPI
+    url: openapi/checkly-secret-scans-api-openapi.yml
+- aid: checkly:checkly-snippets-api
+  name: Checkly Snippets API
+  description: The Snippets API from Checkly — 5 operation(s) for snippets.
+  humanURL: https://www.checklyhq.com
+  baseURL: https://api.checklyhq.com
+  tags:
+  - Snippets
+  properties:
+  - type: OpenAPI
+    url: openapi/checkly-snippets-api-openapi.yml
+- aid: checkly:checkly-static-ips-api
+  name: Checkly Static IPs API
+  description: The Static IPs API from Checkly — 6 operation(s) for static ips.
+  humanURL: https://www.checklyhq.com
+  baseURL: https://api.checklyhq.com
+  tags:
+  - Static IPs
+  properties:
+  - type: OpenAPI
+    url: openapi/checkly-static-ips-api-openapi.yml
+- aid: checkly:checkly-status-page-incidents-api
+  name: Checkly Status Page Incidents API
+  description: The Status Page Incidents API from Checkly — 10 operation(s) for status page incidents.
+  humanURL: https://www.checklyhq.com
+  baseURL: https://api.checklyhq.com
+  tags:
+  - Status Page Incidents
+  properties:
+  - type: OpenAPI
+    url: openapi/checkly-status-page-incidents-api-openapi.yml
+- aid: checkly:checkly-status-page-services-api
+  name: Checkly Status Page Services API
+  description: The Status Page Services API from Checkly — 5 operation(s) for status page services.
+  humanURL: https://www.checklyhq.com
+  baseURL: https://api.checklyhq.com
+  tags:
+  - Status Page Services
+  properties:
+  - type: OpenAPI
+    url: openapi/checkly-status-page-services-api-openapi.yml
+- aid: checkly:checkly-status-pages-api
+  name: Checkly Status Pages API
+  description: The Status Pages API from Checkly — 8 operation(s) for status pages.
+  humanURL: https://www.checklyhq.com
+  baseURL: https://api.checklyhq.com
+  tags:
+  - Status Pages
+  properties:
+  - type: OpenAPI
+    url: openapi/checkly-status-pages-api-openapi.yml
+- aid: checkly:checkly-status-pages-v3-api
+  name: Checkly Status Pages V3 API
+  description: The Status Pages V3 API from Checkly — 7 operation(s) for status pages v3.
+  humanURL: https://www.checklyhq.com
+  baseURL: https://api.checklyhq.com
+  tags:
+  - Status Pages V3
+  properties:
+  - type: OpenAPI
+    url: openapi/checkly-status-pages-v3-api-openapi.yml
+- aid: checkly:checkly-status-pages-v3-automation-rules-api
+  name: Checkly Status Pages V3 Automation Rules API
+  description: >-
+    The Status Pages V3 Automation Rules API from Checkly — 5 operation(s) for status pages v3 automation
+    rules.
+  humanURL: https://www.checklyhq.com
+  baseURL: https://api.checklyhq.com
+  tags:
+  - Status Pages V3 Automation Rules
+  properties:
+  - type: OpenAPI
+    url: openapi/checkly-status-pages-v3-automation-rules-api-openapi.yml
+- aid: checkly:checkly-status-pages-v3-components-api
+  name: Checkly Status Pages V3 Components API
+  description: >-
+    The Status Pages V3 Components API from Checkly — 5 operation(s) for status pages v3 components.
+  humanURL: https://www.checklyhq.com
+  baseURL: https://api.checklyhq.com
+  tags:
+  - Status Pages V3 Components
+  properties:
+  - type: OpenAPI
+    url: openapi/checkly-status-pages-v3-components-api-openapi.yml
+- aid: checkly:checkly-status-pages-v3-incidents-api
+  name: Checkly Status Pages V3 Incidents API
+  description: >-
+    The Status Pages V3 Incidents API from Checkly — 11 operation(s) for status pages v3 incidents.
+  humanURL: https://www.checklyhq.com
+  baseURL: https://api.checklyhq.com
+  tags:
+  - Status Pages V3 Incidents
+  properties:
+  - type: OpenAPI
+    url: openapi/checkly-status-pages-v3-incidents-api-openapi.yml
+- aid: checkly:checkly-status-pages-v3-subscribers-api
+  name: Checkly Status Pages V3 Subscribers API
+  description: >-
+    The Status Pages V3 Subscribers API from Checkly — 3 operation(s) for status pages v3 subscribers.
+  humanURL: https://www.checklyhq.com
+  baseURL: https://api.checklyhq.com
+  tags:
+  - Status Pages V3 Subscribers
+  properties:
+  - type: OpenAPI
+    url: openapi/checkly-status-pages-v3-subscribers-api-openapi.yml
+- aid: checkly:checkly-subscriptions-api
+  name: Checkly Subscriptions API
+  description: The Subscriptions API from Checkly — 3 operation(s) for subscriptions.
+  humanURL: https://www.checklyhq.com
+  baseURL: https://api.checklyhq.com
+  tags:
+  - Subscriptions
+  properties:
+  - type: OpenAPI
+    url: openapi/checkly-subscriptions-api-openapi.yml
+- aid: checkly:checkly-test-session-error-groups-api
+  name: Checkly Test Session Error Groups API
+  description: >-
+    The Test Session Error Groups API from Checkly — 4 operation(s) for test session error groups.
+  humanURL: https://www.checklyhq.com
+  baseURL: https://api.checklyhq.com
+  tags:
+  - Test Session Error Groups
+  properties:
+  - type: OpenAPI
+    url: openapi/checkly-test-session-error-groups-api-openapi.yml
+- aid: checkly:checkly-test-sessions-api
+  name: Checkly Test sessions API
+  description: The Test sessions API from Checkly — 7 operation(s) for test sessions.
+  humanURL: https://www.checklyhq.com
+  baseURL: https://api.checklyhq.com
+  tags:
+  - Test sessions
+  properties:
+  - type: OpenAPI
+    url: openapi/checkly-test-sessions-api-openapi.yml
+- aid: checkly:checkly-triggers-api
+  name: Checkly Triggers API
+  description: The Triggers API from Checkly — 9 operation(s) for triggers.
+  humanURL: https://www.checklyhq.com
+  baseURL: https://api.checklyhq.com
+  tags:
+  - Triggers
+  properties:
+  - type: OpenAPI
+    url: openapi/checkly-triggers-api-openapi.yml
 common:
   - type: AgenticAccess
     url: agentic-access/checkly-agentic-access.yml
@@ -219,6 +507,87 @@ common:
     url: https://github.com/checkly
   - type: Blog
     url: https://www.checklyhq.com/blog/feed
+  - type: Packages
+    url: packages/checkly-packages.yml
+  - type: SDKs
+    url: packages/checkly-packages.yml
+  - type: CLI
+    url: cli/checkly-cli.yml
+  - type: WellKnown
+    url: well-known/checkly-well-known.yml
+  - type: SecurityTxt
+    url: well-known/checkly-security.txt
+  - type: MCPServer
+    url: mcp/checkly-mcp.yml
+  - type: ToolCrosswalk
+    url: mcp/checkly-tool-crosswalk.yml
+  - type: AgentSkill
+    url: skills/_index.yml
+  - type: LLMsTxt
+    url: llms/checkly-llms.txt
+  - type: Overlay
+    url: overlays/checkly-public-api-overlay.yaml
+  - type: Conformance
+    url: conformance/checkly-conformance.yml
+  - type: Compliance
+    url: conformance/checkly-conformance.yml
+  - type: ErrorCatalog
+    url: errors/checkly-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/checkly-lifecycle.yml
+  - type: Deprecation
+    url: lifecycle/checkly-lifecycle.yml
+  - type: StatusPage
+    url: https://is.checkly.online/
+  - type: OAuthScopes
+    url: scopes/checkly-scopes.yml
+  - type: Conventions
+    url: conventions/checkly-conventions.yml
+  - type: ChangeLog
+    url: changelog/checkly-changelog.yml
+  - type: DataModel
+    url: data-model/checkly-data-model.yml
+  - type: Webhooks
+    url: asyncapi/checkly-webhooks.yml
+  - type: Plans
+    url: plans/checkly-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/checkly-rate-limits.yml
+  - type: VulnerabilityDisclosure
+    url: security/checkly-vulnerability-disclosure.yml
+  - type: Security
+    url: security/checkly-vulnerability-disclosure.yml
+  - type: FinOps
+    url: finops/checkly-finops.yml
+  - type: APIReference
+    url: https://www.checklyhq.com/docs/api-reference/overview/
+  - type: DeveloperPortal
+    url: https://www.checklyhq.com/docs/
+  - type: GettingStarted
+    url: https://www.checklyhq.com/docs/what-is-checkly/
+  - type: Quickstart
+    url: https://www.checklyhq.com/docs/cli/installation/
+  - type: Support
+    url: https://www.checklyhq.com/support/
+  - type: Pricing
+    url: https://www.checklyhq.com/pricing/
+  - type: SignUp
+    url: https://app.checklyhq.com/signup/
+  - type: Login
+    url: https://app.checklyhq.com/login
+  - type: TermsOfService
+    url: https://www.checklyhq.com/terms/
+  - type: PrivacyPolicy
+    url: https://www.checklyhq.com/privacy/
+  - type: Roadmap
+    url: https://www.checklyhq.com/roadmap/
+  - type: GitHubRepository
+    url: https://github.com/checkly/checkly-cli
+x-enrichment:
+  date: '2026-08-29'
+  status: enriched
+  artifacts_added: 53
+  pass: local-v1
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com

@@ -1,0 +1,155 @@
+generated: '2026-08-29'
+method: searched
+source: >-
+  openapi/_original/checkly-public-api-openapi.json (harvested 2026-08-29 from
+  https://api.checklyhq.com/openapi.json), https://api.checklyhq.com/.well-known/oauth-protected-resource
+  (200), https://auth.checklyhq.com/.well-known/oauth-authorization-server (200),
+  https://www.checklyhq.com/.well-known/mcp.json (200),
+  https://developers.checklyhq.com/.well-known/security.txt (200),
+  https://www.checklyhq.com/security/ (200).
+description: >-
+  Cross-cutting standards conformance for Checkly, each entry backed by the exact document or spec
+  location that proves or disproves it. Checkly's strength is on the agent-protocol axis - MCP,
+  RFC 9728, OAuth 2.1, llms.txt, Agent Skills - and its gaps are on the HTTP-hygiene axis: no
+  RFC 9457 errors, no RFC 8594 deprecation headers, no rate-limit headers.
+standards:
+- id: openapi
+  conforms: true
+  version: 3.0.0
+  evidence: >-
+    https://api.checklyhq.com/openapi.json returns a valid OpenAPI 3.0.0 document with 157 paths,
+    225 operations and 629 component schemas. Served from the API host itself, no docs-site shell.
+  defects:
+  - >-
+    Five dangling $refs in the published document, including
+    #/components/schemas/ChecksV1DnsRequestPatch. These are the provider's own defects, present in
+    the upstream file; they were reported by the refiner and left unfixed rather than papered over.
+- id: swagger2
+  conforms: true
+  version: '2.0'
+  status: deprecated by the provider
+  evidence: >-
+    https://api.checklyhq.com/swagger.json returns a Swagger 2.0 document whose own description
+    states it is frozen and points at /openapi.json. 119 paths / 166 operations, 59 behind the
+    current contract.
+- id: mcp
+  conforms: true
+  version: MCP server manifest (draft) over Streamable HTTP
+  evidence: >-
+    https://www.checklyhq.com/.well-known/mcp.json declares $schema
+    https://modelcontextprotocol.io/schemas/draft/server-manifest.json and a streamable-http remote
+    at https://api.checklyhq.com/mcp. A live tools/list POST returned 401 with a conformant
+    challenge, proving the endpoint is a real MCP server and not a placeholder.
+- id: rfc9728
+  name: OAuth 2.0 Protected Resource Metadata
+  conforms: true
+  evidence: >-
+    https://api.checklyhq.com/.well-known/oauth-protected-resource returns resource,
+    authorization_servers, scopes_supported and bearer_methods_supported. The 401 from the MCP
+    endpoint carries WWW-Authenticate with resource_metadata and the full scope list, which is the
+    complete discovery loop working unauthenticated.
+- id: rfc8414
+  name: OAuth 2.0 Authorization Server Metadata
+  conforms: true
+  evidence: >-
+    https://auth.checklyhq.com/.well-known/oauth-authorization-server returns issuer, authorization,
+    token, device-authorization, revocation, jwks and dynamic client registration endpoints.
+- id: oauth2
+  conforms: true
+  scope: MCP surface only
+  evidence: >-
+    14 checkly:* scopes with a clean read/write split, published at the protected-resource document.
+    The REST Public API declares no oauth2 securityScheme - it is bearer API key plus an
+    X-Checkly-Account header.
+- id: oidc
+  conforms: true
+  scope: end-user sign-in, via Auth0
+  evidence: https://auth.checklyhq.com/.well-known/openid-configuration returns a full OIDC discovery document.
+- id: rfc9116
+  name: security.txt
+  conforms: true
+  evidence: >-
+    https://developers.checklyhq.com/.well-known/security.txt returns Contact, Preferred-Languages,
+    Canonical, Policy and Hiring fields.
+  defects:
+  - >-
+    Its Canonical field names https://checklyhq.com/.well-known/security.txt, which returned 404 -
+    the file is not served at its own declared canonical location, and 404s on www, api and app too.
+- id: llmstxt
+  conforms: true
+  evidence: >-
+    https://www.checklyhq.com/llms.txt (200), https://www.checklyhq.com/docs/llms.txt (200) and
+    https://www.checklyhq.com/product/llms.txt (200). Every docs page also serves a .md twin at
+    <path>.md, and pricing is published as machine-readable markdown at /pricing.md.
+- id: agent-skills
+  conforms: true
+  evidence: >-
+    https://www.checklyhq.com/.well-known/agent-skills/index.json publishes four named skills with
+    install instructions for both the Checkly CLI and a skills registry.
+- id: rfc9457
+  name: Problem Details for HTTP APIs
+  conforms: false
+  evidence: >-
+    Zero occurrences of application/problem+json in the contract. Errors use a custom envelope
+    { statusCode, error, message, attributes? } with no machine-readable error code.
+- id: rfc8594
+  name: Sunset HTTP Header
+  conforms: false
+  evidence: >-
+    37 operations are marked deprecated:true in the contract, but no Sunset or Deprecation response
+    header is defined on any of them and no removal date is published anywhere.
+- id: rate-limit-headers
+  name: IETF RateLimit header fields
+  conforms: false
+  evidence: >-
+    429 is declared on 223 of 225 operations, but no RateLimit-*, X-RateLimit-* or Retry-After header
+    appears in the contract, in the docs, or on a live response captured 2026-08-29.
+- id: idempotency
+  name: Idempotency-Key
+  conforms: false
+  evidence: >-
+    No Idempotency-Key header anywhere in 225 operations. Checkly's MCP tool reference labels four
+    write tools "Not idempotent" explicitly.
+- id: pagination
+  conforms: true
+  evidence: >-
+    Two consistent styles - limit/page (42 and 29 operations) for configuration collections, and a
+    nextId cursor (12 operations) for high-volume result and session listings.
+- id: json-api
+  conforms: false
+  evidence: Plain JSON resource representations; no JSON:API document structure, media type or links object.
+- id: odata
+  conforms: false
+- id: scim
+  conforms: false
+  evidence: >-
+    Account membership is managed through /v1/accounts/{accountId}/members with a bespoke shape; no
+    urn:ietf:params:scim:schemas:* URN appears in the contract.
+- id: opentelemetry
+  conforms: true
+  scope: product capability, not the API's own instrumentation
+  evidence: >-
+    Checkly's Traces product ingests OpenTelemetry, and its May 2026 changelog adds Prometheus
+    metrics for Private Locations. This is a standard Checkly speaks as a monitoring vendor, not a
+    conformance of the Public API itself.
+domain_standards:
+  market: synthetic monitoring / observability
+  assessment: >-
+    Observability has real interchange standards - OpenTelemetry, OTLP, Prometheus exposition,
+    W3C Trace Context - and Checkly speaks them on the ingest and export side of its product. What
+    the Public API does NOT do is declare one in its own contract: there is no OTLP endpoint, no
+    Prometheus /metrics surface and no W3C traceparent handling described in the 225 operations. The
+    contract is a bespoke management API for a monitoring product, which is the norm in this market
+    rather than a deficiency.
+  declared_in_contract: false
+  reward_only: >-
+    No domain-standard conformance is asserted for the API contract because none is declared in it.
+    This is not scored against Checkly.
+compliance:
+  certifications:
+  - SOC 2
+  - ISO 27001
+  - HIPAA
+  - GDPR
+  source: https://www.checklyhq.com/security/
+  see: security/checkly-trust-center.yml

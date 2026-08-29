@@ -1,189 +1,1146 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   title: Checkly Public Accounts API
   version: v1
-  description: The Checkly Public API allows you to programmatically manage your monitoring checks, alerts, and more. If you have any questions, please do not hesitate to get in touch with us.
-  contact:
-    name: Checkly Support
-    url: https://checklyhq.com/support
-  license:
-    name: MIT
+  description: These are the docs for the newly released Checkly Public API.<br />If you have any questions, please do not hesitate to get in touch with us.
 servers:
 - url: https://api.checklyhq.com
-  description: Production server
 security:
-- bearerAuth: []
-  accountId: []
+- Bearer: []
 tags:
 - name: Accounts
 paths:
   /v1/accounts:
     get:
-      summary: List Accounts
-      description: Fetch user accounts based on supplied API key
-      operationId: listAccounts
-      parameters:
-      - name: limit
-        in: query
-        description: Limit the number of results
-        schema:
-          type: integer
-          default: 10
-          minimum: 1
-          maximum: 100
-      - name: page
-        in: query
-        description: Page number
-        schema:
-          type: integer
-          default: 1
-          minimum: 1
+      summary: Fetch user accounts
+      operationId: getV1Accounts
+      description: List account details based on supplied API key.
+      tags:
+      - Accounts
       responses:
         '200':
-          description: List of accounts
+          description: Successful
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/AccountList'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+      parameters:
+      - schema:
+          type: string
+          x-format:
+            guid: true
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+  /v1/accounts/me:
+    get:
+      summary: Fetch current account details
+      operationId: getV1AccountsMe
+      description: Get details from the current account.
       tags:
       - Accounts
-  /v1/accounts/{accountId}:
-    get:
-      summary: Get Account
-      description: Get details from a specific account
-      operationId: getAccount
-      parameters:
-      - name: accountId
-        in: path
-        required: true
-        description: The account ID
-        schema:
-          type: string
-          format: uuid
       responses:
         '200':
-          description: Account details
+          description: Successful
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Account'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+      parameters:
+      - schema:
+          type: string
+          x-format:
+            guid: true
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+  /v1/accounts/me/entitlements:
+    get:
+      summary: Fetch current account entitlements
+      operationId: getV1AccountsMeEntitlements
+      description: Fetch the entitlements for the account, including feature access and limits based on the current plan.
       tags:
       - Accounts
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entitlements'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+      parameters:
+      - schema:
+          type: string
+          x-format:
+            guid: true
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+  /v1/accounts/me/members:
+    get:
+      summary: List current account members and pending invites
+      operationId: getV1AccountsMeMembers
+      tags:
+      - Accounts
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountMembersList'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: string
+          description: Case-insensitive partial match against member name, member email, and invite email. Empty searches are ignored.
+        required: false
+        description: Case-insensitive partial match against member name, member email, and invite email. Empty searches are ignored.
+        name: search
+        in: query
+      - schema:
+          type: string
+          enum:
+          - member
+          - invite
+          description: Filter by account member list item type.
+        required: false
+        description: Filter by account member list item type.
+        name: type
+        in: query
+      - schema:
+          type: string
+          enum:
+          - OWNER
+          - ADMIN
+          - READ_WRITE
+          - READ_RUN
+          - READ_ONLY
+          description: Filter by account role. Valid filters may produce no results for invites.
+        required: false
+        description: Filter by account role. Valid filters may produce no results for invites.
+        name: role
+        in: query
+      - schema:
+          type: string
+          enum:
+          - ACTIVE
+          - PENDING
+          - EXPIRED
+          description: Filter by member or invite status. Valid filters may produce no results for some item types.
+        required: false
+        description: Filter by member or invite status. Valid filters may produce no results for some item types.
+        name: status
+        in: query
+      - schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          description: Page length. Omitted returns all matching members and invites.
+        required: false
+        description: Page length. Omitted returns all matching members and invites.
+        name: limit
+        in: query
+      - schema:
+          type: string
+          minLength: 1
+          description: Opaque cursor returned from a previous limited request. Only accepted with limit and the same query params.
+        required: false
+        description: Opaque cursor returned from a previous limited request. Only accepted with limit and the same query params.
+        name: nextId
+        in: query
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+  /v1/accounts/me/members/{userId}:
+    delete:
+      summary: Remove a current account member
+      operationId: deleteV1AccountsMeMembersUserid
+      tags:
+      - Accounts
+      responses:
+        '204':
+          description: Member removed.
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: string
+          format: uuid
+        required: true
+        name: userId
+        in: path
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+    patch:
+      summary: Update a current account member role
+      operationId: patchV1AccountsMeMembersUserid
+      tags:
+      - Accounts
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountMember'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: string
+          format: uuid
+        required: true
+        name: userId
+        in: path
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountMemberUpdate'
+  /v1/accounts/{accountId}:
+    get:
+      summary: Fetch a given account details
+      operationId: getV1AccountsAccountid
+      description: Get details from a specific account.
+      tags:
+      - Accounts
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+      parameters:
+      - schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
+        name: accountId
+        in: path
+      - schema:
+          type: string
+          x-format:
+            guid: true
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+  /v1/accounts/{accountId}/entitlements:
+    get:
+      summary: Fetch account entitlements
+      operationId: getV1AccountsAccountidEntitlements
+      description: Fetch the entitlements for the account, including feature access and limits based on the current plan.
+      tags:
+      - Accounts
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entitlements'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+      parameters:
+      - schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
+        name: accountId
+        in: path
+      - schema:
+          type: string
+          x-format:
+            guid: true
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+  /v1/accounts/{accountId}/members:
+    get:
+      summary: List account members and pending invites
+      operationId: getV1AccountsAccountidMembers
+      tags:
+      - Accounts
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountMembersList'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: string
+          format: uuid
+        required: true
+        name: accountId
+        in: path
+      - schema:
+          type: string
+          description: Case-insensitive partial match against member name, member email, and invite email. Empty searches are ignored.
+        required: false
+        description: Case-insensitive partial match against member name, member email, and invite email. Empty searches are ignored.
+        name: search
+        in: query
+      - schema:
+          type: string
+          enum:
+          - member
+          - invite
+          description: Filter by account member list item type.
+        required: false
+        description: Filter by account member list item type.
+        name: type
+        in: query
+      - schema:
+          type: string
+          enum:
+          - OWNER
+          - ADMIN
+          - READ_WRITE
+          - READ_RUN
+          - READ_ONLY
+          description: Filter by account role. Valid filters may produce no results for invites.
+        required: false
+        description: Filter by account role. Valid filters may produce no results for invites.
+        name: role
+        in: query
+      - schema:
+          type: string
+          enum:
+          - ACTIVE
+          - PENDING
+          - EXPIRED
+          description: Filter by member or invite status. Valid filters may produce no results for some item types.
+        required: false
+        description: Filter by member or invite status. Valid filters may produce no results for some item types.
+        name: status
+        in: query
+      - schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          description: Page length. Omitted returns all matching members and invites.
+        required: false
+        description: Page length. Omitted returns all matching members and invites.
+        name: limit
+        in: query
+      - schema:
+          type: string
+          minLength: 1
+          description: Opaque cursor returned from a previous limited request. Only accepted with limit and the same query params.
+        required: false
+        description: Opaque cursor returned from a previous limited request. Only accepted with limit and the same query params.
+        name: nextId
+        in: query
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+  /v1/accounts/{accountId}/members/{userId}:
+    delete:
+      summary: Remove an account member
+      operationId: deleteV1AccountsAccountidMembersUserid
+      tags:
+      - Accounts
+      responses:
+        '204':
+          description: Member removed.
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: string
+          format: uuid
+        required: true
+        name: accountId
+        in: path
+      - schema:
+          type: string
+          format: uuid
+        required: true
+        name: userId
+        in: path
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+    patch:
+      summary: Update an account member role
+      operationId: patchV1AccountsAccountidMembersUserid
+      tags:
+      - Accounts
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountMember'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: string
+          format: uuid
+        required: true
+        name: accountId
+        in: path
+      - schema:
+          type: string
+          format: uuid
+        required: true
+        name: userId
+        in: path
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountMemberUpdate'
 components:
   schemas:
+    attributes:
+      type: object
+    AccountMembersList:
+      type: object
+      properties:
+        members:
+          type: array
+          items:
+            $ref: '#/components/schemas/AccountMembersListItems'
+        length:
+          type: integer
+          minimum: 0
+          description: Number of items returned in this page. This is not the total matching count.
+        nextId:
+          type:
+          - string
+          - 'null'
+          description: Opaque cursor for the next page. Null means there are no more results.
+      required:
+      - members
+      - length
+      - nextId
     Account:
       type: object
       properties:
         id:
           type: string
-          format: uuid
-          description: Unique identifier for the account
-          example: 550e8400-e29b-41d4-a716-446655440000
+          x-format:
+            guid: true
+          description: Checkly account ID.
+          example: d43967ee-81db-4e0b-a18c-06be5c995288
         name:
           type: string
-          description: Display name of the account
-          example: Acme Corp Production
+          description: The name of the account.
+          example: Checkly
+        runtimeId:
+          type: string
+          description: The account default runtime ID.
+          example: '2022.10'
         plan:
-          type: object
-          properties:
-            name:
-              type: string
-              description: Plan name
-              example: Team
-            type:
-              type: string
-              description: Plan type
-              example: subscription
-            features:
-              type: object
-              properties:
-                maxChecks:
-                  type: integer
-                  description: Maximum number of checks allowed
-                  example: 100
-                maxAlertChannels:
-                  type: integer
-                  description: Maximum number of alert channels allowed
-                  example: 50
-                maxPrivateLocations:
-                  type: integer
-                  description: Maximum number of private locations allowed
-                  example: 10
-                supportLevel:
-                  type: string
-                  description: Support level
-                  example: standard
+          type: string
+          description: The account plan type.
+          example: team
+        planDisplayName:
+          type: string
+          description: The human-readable display name of the account plan.
+          example: Team
+        addons:
+          $ref: '#/components/schemas/AccountAddons'
         settings:
-          type: object
-          properties:
-            timezone:
-              type: string
-              description: Account timezone
-              example: America/New_York
-            dateFormat:
-              type: string
-              description: Preferred date format
-              example: MM/DD/YYYY
-            defaultCheckFrequency:
-              type: integer
-              description: Default frequency for new checks in minutes
-              example: 10
-        usage:
-          type: object
-          properties:
-            checksUsed:
-              type: integer
-              description: Number of checks currently in use
-              example: 45
-            alertChannelsUsed:
-              type: integer
-              description: Number of alert channels currently in use
-              example: 12
-            privateLocationsUsed:
-              type: integer
-              description: Number of private locations currently in use
-              example: 2
+          $ref: '#/components/schemas/AccountSettings'
+        alertSettings:
+          $ref: '#/components/schemas/AccountAlertSettings'
+        features:
+          type: array
+          items:
+            type: string
+          description: Client-visible account feature flags.
+          example:
+          - EXTENDED_RESPONSE_TIME_LIMITS
+      required:
+      - id
+    AccountSettings:
+      type: object
+      properties: {}
+      additionalProperties: true
+      description: The settings of the account.
+    AccountEntitlementLocation:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Location identifier (e.g. us-east-1).
+        name:
+          type: string
+          description: Human-readable location name (e.g. N. Virginia).
+        available:
+          type: boolean
+          description: Whether this location is available on the current plan.
+      required:
+      - id
+      - name
+      - available
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
+    TooManyRequestsError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    UnauthorizedError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 401
+        error:
+          $ref: '#/components/schemas/error'
+        message:
+          type: string
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    AccountRequiredAddon:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The addon name.
+        displayName:
+          type: string
+          description: Human-readable addon name.
+        tier:
+          type: string
+          enum:
+          - hobby
+          - starter
+          - team
+          description: The minimum addon tier required (e.g. starter, team).
+        tierDisplayName:
+          type: string
+          description: Human-readable addon tier name.
+      required:
+      - name
+      - displayName
+      - tier
+      - tierDisplayName
+      description: The addon and tier required to unlock this entitlement. Only present for disabled entitlements.
+    Entitlements:
+      type: object
+      properties:
+        plan:
+          type: string
+          description: The account plan type.
+          example: team
+        planDisplayName:
+          type: string
+          description: The human-readable display name of the account plan.
+          example: Team
+        addons:
+          $ref: '#/components/schemas/AccountAddons'
+        locations:
+          $ref: '#/components/schemas/AccountEntitlementLocations'
+        entitlements:
+          type: array
+          items:
+            $ref: '#/components/schemas/AccountEntitlement'
+          description: List of entitled features for this account.
+      required:
+      - plan
+      - locations
+      - entitlements
+    AccountAlertSettings:
+      type: object
+      properties: {}
+      additionalProperties: true
+      description: The alert settings of the account.
+    AccountEntitlement:
+      type: object
+      properties:
+        key:
+          type: string
+          description: Unique entitlement identifier.
+        name:
+          type: string
+          description: Human-friendly display name.
+        description:
+          type: string
+          description: Short description of what this entitlement controls.
+        type:
+          type: string
+          enum:
+          - flag
+          - metered
+          description: Whether this entitlement is a boolean feature flag or a metered resource with a quantity limit.
+        enabled:
+          type: boolean
+          description: Whether this entitlement is available on the current plan.
+        quantity:
+          type: integer
+          minimum: 0
+          description: Maximum allowed quantity. Only present for metered entitlements.
+        requiredPlan:
+          type: string
+          description: The minimum plan required to unlock this entitlement. Only present for disabled entitlements.
+        requiredPlanDisplayName:
+          type: string
+          description: Human-readable name of the required plan.
+        requiredAddon:
+          $ref: '#/components/schemas/AccountRequiredAddon'
+      required:
+      - key
+      - name
+      - description
+      - type
+      - enabled
+    AccountEntitlementLocations:
+      type: object
+      properties:
+        all:
+          type: array
+          items:
+            $ref: '#/components/schemas/AccountEntitlementLocation'
+          description: All Checkly locations with availability for this account.
+        maxPerCheck:
+          type: integer
+          minimum: 1
+          description: Maximum locations selectable per check. Absent when unlimited.
+      required:
+      - all
+      description: Check run locations and limits for this account.
+    AccountMember:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - member
+        accountId:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        name:
+          type:
+          - string
+          - 'null'
+        email:
+          type: string
+          format: email
+        role:
+          type: string
+          enum:
+          - OWNER
+          - ADMIN
+          - READ_WRITE
+          - READ_RUN
+          - READ_ONLY
+        status:
+          type: string
+          enum:
+          - ACTIVE
         createdAt:
           type: string
           format: date-time
-          description: Account creation timestamp
-          example: '2024-01-15T10:30:00.000Z'
         updatedAt:
           type: string
           format: date-time
-          description: Account last update timestamp
-          example: '2024-01-20T14:45:00.000Z'
-    PaginationMeta:
+        isSupportMembership:
+          type: boolean
+        ssoEnabled:
+          type: boolean
+        mfaEnabled:
+          type: boolean
+      required:
+      - type
+      - accountId
+      - userId
+      - name
+      - email
+      - role
+      - status
+      - createdAt
+      - updatedAt
+      - isSupportMembership
+      - ssoEnabled
+      - mfaEnabled
+    AccountAddonTier:
       type: object
       properties:
-        currentPage:
-          type: integer
-          description: Current page number
-        totalPages:
-          type: integer
-          description: Total number of pages
-        totalItems:
-          type: integer
-          description: Total number of items
-        limit:
-          type: integer
-          description: Items per page
+        tier:
+          type: string
+          enum:
+          - hobby
+          - starter
+          - team
+          description: The add-on tier.
+          example: starter
+        tierDisplayName:
+          type: string
+          description: The human-readable display name of the add-on tier.
+          example: Communicate Starter
+    AccountMembersListItems:
+      oneOf:
+      - $ref: '#/components/schemas/AccountMember'
+      - $ref: '#/components/schemas/AccountInvite'
+      discriminator:
+        propertyName: type
+        mapping:
+          member: '#/components/schemas/AccountMember'
+          invite: '#/components/schemas/AccountInvite'
+    AccountMemberUpdate:
+      type: object
+      properties:
+        role:
+          type: string
+          enum:
+          - ADMIN
+          - READ_WRITE
+          - READ_RUN
+          - READ_ONLY
+          description: New account member role. OWNER is not supported.
+      required:
+      - role
+      additionalProperties: false
+    ForbiddenError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 403
+        error:
+          $ref: '#/components/schemas/Model1'
+        message:
+          type: string
+          example: Forbidden
+      required:
+      - statusCode
+      - error
+    ApiError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+        error:
+          type: string
+        message:
+          type: string
+      required:
+      - statusCode
+      - error
+      - message
     AccountList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Account'
+    NotFoundError:
       type: object
       properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Account'
-        meta:
-          $ref: '#/components/schemas/PaginationMeta'
+        statusCode:
+          type: number
+          enum:
+          - 404
+        error:
+          $ref: '#/components/schemas/Model4'
+        message:
+          type: string
+          example: Not Found
+      required:
+      - statusCode
+      - error
+    error:
+      type: string
+      enum:
+      - Unauthorized
+    Model4:
+      type: string
+      enum:
+      - Not Found
+    Model1:
+      type: string
+      enum:
+      - Forbidden
+    AccountInvite:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - invite
+        id:
+          type: string
+          format: uuid
+        accountId:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        role:
+          type: string
+          enum:
+          - ADMIN
+          - READ_WRITE
+          - READ_RUN
+          - READ_ONLY
+        status:
+          type: string
+          enum:
+          - PENDING
+          - EXPIRED
+        inviterEmail:
+          type: string
+          format: email
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        expiresAt:
+          type: string
+          format: date-time
+      required:
+      - type
+      - id
+      - accountId
+      - email
+      - role
+      - status
+      - inviterEmail
+      - createdAt
+      - updatedAt
+      - expiresAt
+    AccountAddons:
+      type: object
+      properties:
+        communicate:
+          $ref: '#/components/schemas/AccountAddonTier'
+        resolve:
+          $ref: '#/components/schemas/AccountAddonTier'
+      description: The add-ons available to the account.
   securitySchemes:
-    bearerAuth:
+    Bearer:
       type: http
       scheme: bearer
-      description: API Key authentication for Checkly API. You can get your API key at https://app.checklyhq.com/settings/user/api-keys
-    accountId:
-      type: apiKey
-      in: header
-      name: X-Checkly-Account
-      description: Your Checkly account ID. You can find it at https://app.checklyhq.com/settings/account/general
+      bearerFormat: Bearer
+      description: 'The Checkly Public API uses API keys to authenticate requests. You can get the API Key <a href="https://app.checklyhq.com/settings/user/api-keys" target="_blank">here</a>.</br>Your API key is like a password: <br>keep it secure!</br></br>Authentication to the API is performed using the Bearer auth method in the Authorization header and using the account ID.</br></br>For example, set <b>Authorization</b> header while using cURL: <code>curl -H "Authorization: Bearer [apiKey]" "X-Checkly-Account: [accountId]"</code></br>'

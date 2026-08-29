@@ -1,0 +1,65 @@
+generated: '2026-08-29'
+method: searched
+source: https://www.checklyhq.com/changelog/
+url: https://www.checklyhq.com/changelog/
+status: 200
+description: >-
+  Checkly publishes a dated product changelog grouped by month, with per-item permalinks and an
+  "Also shipped" roll-up under each month. It is a product changelog rather than an API changelog -
+  breaking API changes are not called out separately, and the OpenAPI carries no version history, so
+  the deprecation flags in the contract are the more reliable read on API change. See
+  lifecycle/checkly-lifecycle.yml.
+scheme: monthly roll-up with dated in-month entries and per-entry permalinks
+granularity: month
+current_version: v1 (path-versioned API; the changelog does not version itself)
+api_changelog: false
+api_changelog_note: >-
+  No separate API changelog or release-notes feed for the Public API was found. Consumers track API
+  change through the OpenAPI document and its deprecated flags.
+entries:
+- period: '2026-07'
+  highlights:
+  - Run Checkly from GitHub Actions with native CI feedback
+  - gRPC, SSL and Traceroute monitors are generally available
+  - Web Vitals in Playwright Check Suite results
+  - Status Pages now publish RSS, Atom and Slack feeds
+  breaking: []
+  additions:
+  - gRPC monitor type
+  - SSL monitor type
+  - Traceroute monitor type
+  - Status page RSS/Atom/Slack feeds
+- period: '2026-06'
+  highlights:
+  - The Checkly MCP Server is here
+  - Download check artifacts straight from the terminal
+  - 'Tag Manager: manage tags in one place'
+  - The Checkly Slack app
+  - Rocky AI RCA now pulls in OTel traces and the last passing result
+  breaking: []
+  additions:
+  - Remote MCP server at https://api.checklyhq.com/mcp
+  - CLI asset download
+  - Tag Manager
+  - Slack app
+- period: '2026-05'
+  highlights:
+  - 'Checkly CLI 8: ESM-only, cancellable runs, recording by default'
+  - 'Playwright Check Suites: faster runs, fewer false negatives'
+  - Private Location metrics in the UI and Prometheus
+  - Alert channels now support environment secrets
+  breaking:
+  - Checkly CLI 8 is ESM-only - a major-version break for consumers importing the CLI packages in CJS.
+  additions:
+  - Cancellable check runs
+  - Node/Bun runtime engine selection for Playwright Check Suites
+  - Browser caching across runs in Private Locations
+  - Private Location Prometheus metrics
+window: last three published months as of 2026-08-29
+notes:
+- >-
+  The June 2026 entry is the primary provenance for the MCP server captured in mcp/checkly-mcp.yml -
+  it is a shipped product, not a preview.
+- >-
+  Entry dates are month-level in the roll-up headings; individual items carry permalinks but the page
+  does not expose per-item ISO dates in its markup, so no day-level dates are asserted here.

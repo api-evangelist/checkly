@@ -1,0 +1,311 @@
+openapi: 3.2.0
+info:
+  title: Checkly Public Reporting API
+  version: v1
+  description: These are the docs for the newly released Checkly Public API.<br />If you have any questions, please do not hesitate to get in touch with us.
+servers:
+- url: https://api.checklyhq.com
+security:
+- Bearer: []
+tags:
+- name: Reporting
+paths:
+  /v1/reporting:
+    get:
+      summary: Generates a report with aggregate statistics for checks and check groups.
+      operationId: getV1Reporting
+      description: Generates a report with aggregated statistics for all checks or a filtered set of checks over a specified time window.
+      parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      - name: from
+        in: query
+        schema:
+          type: string
+          format: date
+          description: Custom start time of reporting window in unix timestamp format. Setting a custom "from" timestamp overrides the use of any "quickRange".
+        description: Custom start time of reporting window in unix timestamp format. Setting a custom "from" timestamp overrides the use of any "quickRange".
+      - name: to
+        in: query
+        schema:
+          type: string
+          format: date
+          description: Custom end time of reporting window in unix timestamp format. Setting a custom "to" timestamp overrides the use of any "quickRange".
+        description: Custom end time of reporting window in unix timestamp format. Setting a custom "to" timestamp overrides the use of any "quickRange".
+      - name: quickRange
+        in: query
+        schema:
+          type: string
+          description: Preset reporting windows are used for quickly generating report on commonly used windows. Can be overridden by using a custom "to" and "from" timestamp.
+          default: last24Hrs
+          enum:
+          - last24Hrs
+          - last7Days
+          - last30Days
+          - thisWeek
+          - thisMonth
+          - lastWeek
+          - lastMonth
+        description: Preset reporting windows are used for quickly generating report on commonly used windows. Can be overridden by using a custom "to" and "from" timestamp.
+      - name: filterByTags
+        in: query
+        schema:
+          type: array
+          description: Use tags to filter the checks you want to see in your report.
+          example:
+          - production
+          x-constraint:
+            single: true
+          items:
+            type: string
+        description: Use tags to filter the checks you want to see in your report.
+        style: form
+        explode: true
+      - name: deactivated
+        in: query
+        schema:
+          type:
+          - boolean
+          - 'null'
+          description: Filter checks by activated status. When set to true, only deactivated checks are returned. When set to false, only activated checks are returned. When omitted, all checks are returned.
+          default: null
+        description: Filter checks by activated status. When set to true, only deactivated checks are returned. When set to false, only activated checks are returned. When omitted, all checks are returned.
+      - name: granularity
+        in: query
+        schema:
+          type: string
+          description: Split the reporting window into calendar buckets and return one aggregate per bucket in "aggregates" instead of a single "aggregate". Bucket boundaries use UTC unless "timezone" is set. The window may span at most 400 days and at most 120 buckets at the chosen granularity.
+          enum:
+          - day
+          - week
+          - month
+        description: Split the reporting window into calendar buckets and return one aggregate per bucket in "aggregates" instead of a single "aggregate". Bucket boundaries use UTC unless "timezone" is set. The window may span at most 400 days and at most 120 buckets at the chosen granularity.
+      - name: timezone
+        in: query
+        schema:
+          type: string
+          description: Named IANA time zone used for calendar bucket boundaries when "granularity" is set. UTC offset identifiers such as "+05:00" are not accepted. Defaults to UTC.
+          example: America/New_York
+        description: Named IANA time zone used for calendar bucket boundaries when "granularity" is set. UTC offset identifiers such as "+05:00" are not accepted. Defaults to UTC.
+      tags:
+      - Reporting
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportingList'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+components:
+  schemas:
+    attributes:
+      type: object
+    error:
+      type: string
+      enum:
+      - Unauthorized
+    ReportingTagList:
+      type: array
+      description: Check tags.
+      example:
+      - production
+      items:
+        type: string
+    ForbiddenError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 403
+        error:
+          $ref: '#/components/schemas/Model1'
+        message:
+          type: string
+          example: Forbidden
+      required:
+      - statusCode
+      - error
+    Reporting:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Check name.
+          example: API Check
+        checkId:
+          type: string
+          description: Check ID.
+          example: d2881e09-411b-4c8d-84b8-fe05fbca80b6
+        checkType:
+          type: string
+          description: Check type.
+          example: API
+        deactivated:
+          type: boolean
+          description: Check deactivated.
+          default: false
+        tags:
+          $ref: '#/components/schemas/ReportingTagList'
+        aggregate:
+          $ref: '#/components/schemas/ReportingAggregate'
+        aggregates:
+          $ref: '#/components/schemas/ReportingBucketAggregateList'
+      required:
+      - name
+      - checkId
+      - checkType
+      - deactivated
+      - tags
+    ReportingList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Reporting'
+    UnauthorizedError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 401
+        error:
+          $ref: '#/components/schemas/error'
+        message:
+          type: string
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    Model1:
+      type: string
+      enum:
+      - Forbidden
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
+    ReportingAggregate:
+      type: object
+      description: Whole-window aggregate. Absent when "granularity" is used.
+      properties:
+        successRatio:
+          type: number
+          description: Success ratio of the check over selected date range, rounded to four decimal places. Percentage is in decimal form.
+          example: 50
+          minimum: 0
+        avg:
+          type: number
+          description: Average response time of the check over selected date range in milliseconds.
+          example: 100
+          minimum: 0
+        p95:
+          type: number
+          description: P95 response time of the check over selected date range in milliseconds.
+          example: 200
+          minimum: 0
+        p99:
+          type: number
+          description: P99 response time of the check over selected date range in milliseconds.
+          example: 100
+          minimum: 0
+      required:
+      - successRatio
+      - avg
+      - p95
+      - p99
+    ReportingBucketAggregateList:
+      type: array
+      description: Per-bucket aggregates, ascending by bucket start. Only present when "granularity" is used. Buckets without any check runs are omitted.
+      items:
+        $ref: '#/components/schemas/ReportingBucketAggregate'
+    ReportingBucketAggregate:
+      type: object
+      properties:
+        successRatio:
+          type: number
+          description: Success ratio of the check over selected date range, rounded to four decimal places. Percentage is in decimal form.
+          example: 50
+          minimum: 0
+        avg:
+          type: number
+          description: Average response time of the check over selected date range in milliseconds.
+          example: 100
+          minimum: 0
+        p95:
+          type: number
+          description: P95 response time of the check over selected date range in milliseconds.
+          example: 200
+          minimum: 0
+        p99:
+          type: number
+          description: P99 response time of the check over selected date range in milliseconds.
+          example: 100
+          minimum: 0
+        from:
+          type: string
+          description: Start of the bucket, clamped to the requested window.
+          example: '2026-06-01T00:00:00.000Z'
+          x-format:
+            isoDate: true
+        to:
+          type: string
+          description: End of the bucket, clamped to the requested window.
+          example: '2026-07-01T00:00:00.000Z'
+          x-format:
+            isoDate: true
+      required:
+      - successRatio
+      - avg
+      - p95
+      - p99
+      - from
+      - to
+    TooManyRequestsError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+  securitySchemes:
+    Bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: Bearer
+      description: 'The Checkly Public API uses API keys to authenticate requests. You can get the API Key <a href="https://app.checklyhq.com/settings/user/api-keys" target="_blank">here</a>.</br>Your API key is like a password: <br>keep it secure!</br></br>Authentication to the API is performed using the Bearer auth method in the Authorization header and using the account ID.</br></br>For example, set <b>Authorization</b> header while using cURL: <code>curl -H "Authorization: Bearer [apiKey]" "X-Checkly-Account: [accountId]"</code></br>'

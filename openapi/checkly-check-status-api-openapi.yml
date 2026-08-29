@@ -1,0 +1,274 @@
+openapi: 3.2.0
+info:
+  title: Checkly Public Check status API
+  version: v1
+  description: These are the docs for the newly released Checkly Public API.<br />If you have any questions, please do not hesitate to get in touch with us.
+servers:
+- url: https://api.checklyhq.com
+security:
+- Bearer: []
+tags:
+- name: Check status
+paths:
+  /v1/check-statuses:
+    get:
+      summary: List all check statuses
+      operationId: getV1Checkstatuses
+      description: Shows the current status information for all checks in your account. The check status records are continuously updated as new check results come in.
+      tags:
+      - Check status
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckStatusList'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+      parameters:
+      - schema:
+          type: string
+          x-format:
+            guid: true
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+  /v1/check-statuses/{checkId}:
+    get:
+      summary: Retrieve check status details
+      operationId: getV1CheckstatusesCheckid
+      description: Show the current status information for a specific check.
+      tags:
+      - Check status
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckStatus'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+      parameters:
+      - schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
+        name: checkId
+        in: path
+      - schema:
+          type: string
+          x-format:
+            guid: true
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+components:
+  schemas:
+    attributes:
+      type: object
+    error:
+      type: string
+      enum:
+      - Unauthorized
+    ForbiddenError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 403
+        error:
+          $ref: '#/components/schemas/Model1'
+        message:
+          type: string
+          example: Forbidden
+      required:
+      - statusCode
+      - error
+    Model4:
+      type: string
+      enum:
+      - Not Found
+    CheckStatus:
+      type:
+      - object
+      - 'null'
+      properties:
+        name:
+          type: string
+          example: API Check
+          description: The name of the check.
+        checkId:
+          type: string
+          example: 1008ca04-d3ca-41fa-b477-9e99b761dbb4
+          description: The ID of check this status belongs to.
+        hasFailures:
+          type: boolean
+          example: false
+          description: Describes if this check is currently failing. If any of the assertions for an API checkfail this value is true. If a browser check fails for whatever reason, this is true.
+        hasErrors:
+          type: boolean
+          example: false
+          description: Describes if due to some error outside of normal operation this check is failing. This should be extremely rare and only when there is an error in the Checkly backend.
+        isDegraded:
+          type: boolean
+          example: true
+          description: A check is degraded if it is over the degradation limit set by the "degradedResponseTime" field on the check. Applies only to API checks.
+        longestRun:
+          type:
+          - number
+          - 'null'
+          example: 10
+          description: The longest ever recorded response time for this check.
+        shortestRun:
+          type:
+          - number
+          - 'null'
+          example: 5
+          description: The shortest ever recorded response time for this check.
+        lastRunLocation:
+          type:
+          - string
+          - 'null'
+          example: us-east-1
+          description: What location this check was last run at.
+        lastCheckRunId:
+          type:
+          - string
+          - 'null'
+          example: f10d711f-cd16-4303-91ce-741c92586b4a
+          description: The unique incrementing ID for each check run.
+        sslDaysRemaining:
+          type:
+          - number
+          - 'null'
+          example: 3
+          description: How many days remain till the current SSL certificate expires.
+        created_at:
+          type: string
+          format: date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+      required:
+      - name
+    CheckStatusList:
+      type: array
+      items:
+        $ref: '#/components/schemas/CheckStatus'
+    TooManyRequestsError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    Model1:
+      type: string
+      enum:
+      - Forbidden
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
+    UnauthorizedError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 401
+        error:
+          $ref: '#/components/schemas/error'
+        message:
+          type: string
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    NotFoundError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 404
+        error:
+          $ref: '#/components/schemas/Model4'
+        message:
+          type: string
+          example: Not Found
+      required:
+      - statusCode
+      - error
+  securitySchemes:
+    Bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: Bearer
+      description: 'The Checkly Public API uses API keys to authenticate requests. You can get the API Key <a href="https://app.checklyhq.com/settings/user/api-keys" target="_blank">here</a>.</br>Your API key is like a password: <br>keep it secure!</br></br>Authentication to the API is performed using the Bearer auth method in the Authorization header and using the account ID.</br></br>For example, set <b>Authorization</b> header while using cURL: <code>curl -H "Authorization: Bearer [apiKey]" "X-Checkly-Account: [accountId]"</code></br>'

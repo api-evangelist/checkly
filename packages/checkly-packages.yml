@@ -1,0 +1,98 @@
+generated: '2026-08-29'
+method: searched
+source: >-
+  registry.npmjs.org, pypi.org, registry.terraform.io, proxy.golang.org, plus the Checkly docs
+  (https://www.checklyhq.com/docs/cli/overview) and the published Agent Skills index
+  (https://www.checklyhq.com/.well-known/agent-skills/index.json), which names `checkly` on npm as
+  the first-party CLI package.
+description: >-
+  First-party Checkly client libraries, CLI packages and infrastructure-as-code providers, with the
+  latest published version and release date read from each registry's metadata endpoint on
+  2026-08-29. Checkly's distribution is monitoring-as-code first: the npm CLI is the primary
+  interface, with Terraform and Pulumi providers and a Go SDK alongside it.
+packages:
+- name: checkly
+  registry: npm
+  url: https://www.npmjs.com/package/checkly
+  official: true
+  language: TypeScript
+  role: CLI
+  version: 8.23.2
+  published: '2026-08-28'
+  repository: https://github.com/checkly/checkly-cli
+  install: npm install -g checkly
+  note: >-
+    The Checkly CLI. Also the binary behind `npx checkly skills install`, which installs Checkly's
+    published Agent Skills into a local agent project.
+- name: create-checkly
+  registry: npm
+  url: https://www.npmjs.com/package/create-checkly
+  official: true
+  language: TypeScript
+  role: project scaffolder
+  version: 8.23.2
+  published: '2026-08-28'
+  repository: https://github.com/checkly/checkly-cli
+  install: npm create checkly@latest
+- name: '@checkly/playwright-reporter'
+  registry: npm
+  url: https://www.npmjs.com/package/@checkly/playwright-reporter
+  official: true
+  language: TypeScript
+  role: test reporter
+  version: 1.13.2
+  published: '2026-06-17'
+  note: Standalone Playwright reporter that ships local Playwright runs into the Checkly dashboard.
+- name: '@checkly/pulumi'
+  registry: npm
+  url: https://www.npmjs.com/package/@checkly/pulumi
+  official: true
+  language: TypeScript
+  role: IaC provider
+  version: 2.12.0
+  published: '2026-07-02'
+- name: pulumi-checkly
+  registry: pypi
+  url: https://pypi.org/project/pulumi-checkly/
+  official: true
+  language: Python
+  role: IaC provider
+  version: 2.12.0
+  published: '2026-07-02'
+  note: Python build of the same Pulumi provider; versions track the npm package exactly.
+- name: checkly/checkly
+  registry: terraform
+  url: https://registry.terraform.io/providers/checkly/checkly/latest
+  official: true
+  language: Go
+  role: IaC provider
+  version: 1.27.0
+  published: '2026-07-23'
+  repository: https://github.com/checkly/terraform-provider-checkly
+- name: github.com/checkly/checkly-go-sdk
+  registry: go
+  url: https://pkg.go.dev/github.com/checkly/checkly-go-sdk
+  official: true
+  language: Go
+  role: SDK
+  version: v1.22.0
+  published: '2026-07-23'
+  note: >-
+    The Go client the Terraform provider is built on. Read from proxy.golang.org; it is the only
+    conventional server-side SDK Checkly publishes.
+absent:
+- registry: pypi
+  package: checkly
+  status: 404
+  note: No first-party Python client library for the REST API; Python users get the Pulumi provider only.
+- registry: npm
+  package: '@checkly/mcp-server'
+  status: 404
+  note: >-
+    Checkly's MCP server is hosted and remote (https://api.checklyhq.com/mcp) - there is no stdio
+    npm package to install. Probed @checkly/mcp-server, @checkly/mcp and checkly-mcp; all 404.
+currency:
+  checked: '2026-08-29'
+  note: >-
+    Every first-party package published within the last ten weeks; the CLI shipped the day before
+    this probe. No abandonment signal in this set.

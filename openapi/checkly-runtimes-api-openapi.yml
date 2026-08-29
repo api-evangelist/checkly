@@ -1,0 +1,213 @@
+openapi: 3.2.0
+info:
+  title: Checkly Public Runtimes API
+  version: v1
+  description: These are the docs for the newly released Checkly Public API.<br />If you have any questions, please do not hesitate to get in touch with us.
+servers:
+- url: https://api.checklyhq.com
+security:
+- Bearer: []
+tags:
+- name: Runtimes
+paths:
+  /v1/runtimes:
+    get:
+      summary: Lists all supported runtimes
+      operationId: getV1Runtimes
+      description: Lists all supported runtimes and the included NPM packages for Browser checks and setup & teardown scripts for API checks.
+      tags:
+      - Runtimes
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RuntimeList'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+      parameters:
+      - schema:
+          type: string
+          x-format:
+            guid: true
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+  /v1/runtimes/{id}:
+    get:
+      summary: Shows details for one specific runtime
+      operationId: getV1RuntimesId
+      description: Shows the details of all included NPM packages and their version for one specific runtime
+      tags:
+      - Runtimes
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Runtime'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+      parameters:
+      - schema:
+          type: string
+          minLength: 1
+        required: true
+        name: id
+        in: path
+      - schema:
+          type: string
+          x-format:
+            guid: true
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+components:
+  schemas:
+    attributes:
+      type: object
+    RuntimeDependencies:
+      type: object
+      additionalProperties:
+        type: string
+        minLength: 1
+      description: An object with all dependency package names and versions as in a standard package.json.
+    Model4:
+      type: string
+      enum:
+      - Not Found
+    ApiError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+        error:
+          type: string
+        message:
+          type: string
+      required:
+      - statusCode
+      - error
+      - message
+    Runtime:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          description: The unique name of this runtime.
+        multiStepSupport:
+          type: boolean
+          description: Whether this runtime supports multi-step checks.
+        nodeJsVersion:
+          type: string
+          minLength: 1
+          description: The full Node.js version available in this runtime.
+        stage:
+          $ref: '#/components/schemas/RuntimeStage'
+        runtimeEndOfLife:
+          type: string
+          minLength: 1
+          description: Date which a runtime will be removed from our platform.
+          example: 12/31/2022
+        description:
+          type: string
+          minLength: 1
+          description: A short, human readable description of the main updates in this runtime.
+          example: Main updates are Playwright 1.58.2
+        dependencies:
+          $ref: '#/components/schemas/RuntimeDependencies'
+      required:
+      - name
+      - multiStepSupport
+      - nodeJsVersion
+      - dependencies
+    RuntimeStage:
+      type: string
+      enum:
+      - ALPHA
+      - BETA
+      - CURRENT
+      - DEPRECATED
+      - REMOVED
+      - STABLE
+      description: Current life stage of a runtime.
+      example: STABLE
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
+    TooManyRequestsError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    NotFoundError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 404
+        error:
+          $ref: '#/components/schemas/Model4'
+        message:
+          type: string
+          example: Not Found
+      required:
+      - statusCode
+      - error
+    RuntimeList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Runtime'
+  securitySchemes:
+    Bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: Bearer
+      description: 'The Checkly Public API uses API keys to authenticate requests. You can get the API Key <a href="https://app.checklyhq.com/settings/user/api-keys" target="_blank">here</a>.</br>Your API key is like a password: <br>keep it secure!</br></br>Authentication to the API is performed using the Bearer auth method in the Authorization header and using the account ID.</br></br>For example, set <b>Authorization</b> header while using cURL: <code>curl -H "Authorization: Bearer [apiKey]" "X-Checkly-Account: [accountId]"</code></br>'

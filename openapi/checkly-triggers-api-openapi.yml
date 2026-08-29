@@ -1,0 +1,1337 @@
+openapi: 3.2.0
+info:
+  title: Checkly Public Triggers API
+  version: v1
+  description: These are the docs for the newly released Checkly Public API.<br />If you have any questions, please do not hesitate to get in touch with us.
+servers:
+- url: https://api.checklyhq.com
+security:
+- Bearer: []
+tags:
+- name: Triggers
+paths:
+  /v1/check-sessions/trigger:
+    post:
+      summary: Trigger a new check session
+      operationId: postV1ChecksessionsTrigger
+      description: 'Starts a check session for each check that matches the provided target filters. If no filters are given, matches all eligible checks.
+
+
+        This endpoint does not wait for the check session to complete. Use the `GET /v1/check-sessions/{checkSessionId}/completion` or `GET /v1/check-sessions/{checkSessionId}` endpoints to track progress if needed.
+
+
+        Standard alerting rules apply to finished check runs.
+
+
+        Equivalent to the _Schedule Now_ button in the UI.'
+      tags:
+      - Triggers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TriggerCheckSessionRequestPayload'
+      responses:
+        '201':
+          description: Returns a check session for each check matching target conditions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TriggerCheckSessionResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '402':
+          description: Payment Required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentRequiredError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Returned when there are no matching checks.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoMatchingChecksFoundErrorResponse'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+      deprecated: true
+  /v1/test-sessions/trigger:
+    post:
+      summary: Trigger a new test session
+      operationId: postV1TestsessionsTrigger
+      description: 'Starts a tests session with checks matching the provided target filters. If no filters are given, matches all eligible checks.
+
+
+        This endpoint does not wait for the test session to complete. Use the `GET /v1/test-sessions/{testSessionId}/completion` or `GET /v1/test-sessions/{testSessionId}` endpoints to track progress if needed.
+
+
+        Test sessions do not produce alerts.
+
+
+        Equivalent to the `npx checkly trigger` command of the Checkly CLI.'
+      tags:
+      - Triggers
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TriggerTestSessionResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '402':
+          description: Payment Required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TriggerTestSessionRequest'
+  /v1/triggers/check-groups/{groupId}:
+    delete:
+      summary: Delete the check group trigger
+      operationId: deleteV1TriggersCheckgroupsGroupid
+      description: <b>[DEPRECATED]</b> This endpoint will be removed soon. Please use the <a href="https://www.checklyhq.com/docs/cli">Checkly CLI</a> to test and trigger checks. Deletes the check groups trigger
+      parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      - name: groupId
+        in: path
+        schema:
+          type: integer
+          x-constraint:
+            sign: positive
+        required: true
+      tags:
+      - Triggers
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+      deprecated: true
+    get:
+      summary: Get the check group trigger
+      operationId: getV1TriggersCheckgroupsGroupid
+      description: <b>[DEPRECATED]</b> This endpoint will be removed soon. Please use the <a href="https://www.checklyhq.com/docs/cli">Checkly CLI</a> to test and trigger checks. Finds the check group trigger
+      parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      - name: groupId
+        in: path
+        schema:
+          type: integer
+          x-constraint:
+            sign: positive
+        required: true
+      tags:
+      - Triggers
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckGroupTrigger'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+      deprecated: true
+    post:
+      summary: Create the check group trigger
+      operationId: postV1TriggersCheckgroupsGroupid
+      description: <b>[DEPRECATED]</b> This endpoint will be removed soon. Please use the <a href="https://www.checklyhq.com/docs/cli">Checkly CLI</a> to test and trigger checks. Creates the check group trigger
+      parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      - name: groupId
+        in: path
+        schema:
+          type: integer
+          x-constraint:
+            sign: positive
+        required: true
+      tags:
+      - Triggers
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckGroupTrigger'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+      deprecated: true
+  /v1/triggers/checks/{checkId}:
+    delete:
+      summary: Delete the check trigger
+      operationId: deleteV1TriggersChecksCheckid
+      description: <b>[DEPRECATED]</b> This endpoint will be removed soon. Please use the <a href="https://www.checklyhq.com/docs/cli">Checkly CLI</a> to test and trigger checks. Deletes the check trigger
+      parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      - name: checkId
+        in: path
+        schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
+      tags:
+      - Triggers
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+      deprecated: true
+    get:
+      summary: Get the check trigger
+      operationId: getV1TriggersChecksCheckid
+      description: <b>[DEPRECATED]</b> This endpoint will be removed soon. Please use the <a href="https://www.checklyhq.com/docs/cli">Checkly CLI</a> to test and trigger checks. Finds the check trigger.
+      parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      - name: checkId
+        in: path
+        schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
+      tags:
+      - Triggers
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckTrigger'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+      deprecated: true
+    post:
+      summary: Create the check trigger
+      operationId: postV1TriggersChecksCheckid
+      description: <b>[DEPRECATED]</b> This endpoint will be removed soon. Please use the <a href="https://www.checklyhq.com/docs/cli">Checkly CLI</a> to test and trigger checks. Creates the check trigger
+      parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      - name: checkId
+        in: path
+        schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
+      tags:
+      - Triggers
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckTrigger'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+      deprecated: true
+  /v2/check-sessions/trigger:
+    post:
+      summary: Trigger a new check session
+      operationId: postV2ChecksessionsTrigger
+      description: 'Starts a check session for each check that matches the provided target filters. If no filters are given, matches all eligible checks.
+
+
+        This endpoint does not wait for the check session to complete. Use the `GET /v2/check-sessions/{checkSessionId}/completion` or `GET /v2/check-sessions/{checkSessionId}` endpoints to track progress.
+
+
+        Use `POST /v1/check-sessions/{checkSessionId}/cancel` to cancel an in-progress check session.
+
+
+        Standard alerting rules apply to finished check runs.
+
+
+        Equivalent to the _Schedule Now_ button in the UI.'
+      tags:
+      - Triggers
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckSessionsV2TriggerResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '402':
+          description: Payment Required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckSessionsV2TriggerRequest'
+components:
+  schemas:
+    attributes:
+      type: object
+    TriggerCheckSessionResponse:
+      type: object
+      description: Returns a check session for each check matching target conditions.
+      properties:
+        sessions:
+          $ref: '#/components/schemas/sessions'
+      required:
+      - sessions
+    TriggerCheckSessionRequestPayload:
+      type: object
+      properties:
+        target:
+          $ref: '#/components/schemas/TriggerCheckSessionTarget'
+        refreshCache:
+          type: boolean
+          description: If true, the runner will skip existing caches and install dependencies from scratch. This applies only to Playwright Check Suites.
+          default: false
+    TestSessionEnvironmentVariable:
+      anyOf:
+      - type: object
+        properties:
+          key:
+            type: string
+            minLength: 1
+          locked:
+            type: boolean
+            default: false
+          value: {}
+          secret:
+            type: boolean
+            enum:
+            - true
+        required:
+        - key
+        - value
+        - secret
+      - type: object
+        properties:
+          key:
+            type: string
+            minLength: 1
+          locked:
+            type: boolean
+            default: false
+          value:
+            type:
+            - string
+            - 'null'
+            minLength: 1
+          secret:
+            type: boolean
+            enum:
+            - false
+            default: false
+        required:
+        - key
+        - value
+    checkId:
+      type: array
+      description: Match checks with the given identifiers.
+      example:
+      - a4cd4ad9-4815-4a9e-92d2-0a7c562ee69a
+      x-constraint:
+        single: true
+      items:
+        type: string
+        x-format:
+          guid: true
+    Model23:
+      type: array
+      x-constraint:
+        single: true
+      items:
+        type: string
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
+    TooManyRequestsError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    UnauthorizedError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 401
+        error:
+          $ref: '#/components/schemas/error'
+        message:
+          type: string
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    Model24:
+      type: string
+      example: API
+      enum:
+      - AGENTIC
+      - API
+      - BROWSER
+      - ICMP
+      - MULTI_STEP
+      - TCP
+      - PLAYWRIGHT
+      - TRACEROUTE
+      - URL
+      - DNS
+      - SSL
+      - GRPC
+    CheckSessionsV2CheckSession:
+      type: object
+      properties:
+        checkSessionId:
+          type: string
+          format: uuid
+        checkSessionLink:
+          type: string
+          format: uri
+        checkId:
+          type: string
+          format: uuid
+        checkType:
+          type: string
+          enum:
+          - AGENTIC
+          - API
+          - BROWSER
+          - HEARTBEAT
+          - ICMP
+          - MULTI_STEP
+          - TCP
+          - PLAYWRIGHT
+          - URL
+          - DNS
+          - SSL
+          - GRPC
+          - TRACEROUTE
+        name:
+          type: string
+        status:
+          type: string
+          enum:
+          - STARTED
+          - PROGRESS
+          - FAILED
+          - PASSED
+          - DEGRADED
+          - PROGRESS_FAILED
+          - PROGRESS_DEGRADED
+          - TIMED_OUT
+          - CANCELLED
+        startedAt:
+          type: string
+          format: date-time
+        stoppedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        timeElapsed:
+          type: number
+        runLocations:
+          type: array
+          items:
+            type: string
+        runSource:
+          type:
+          - string
+          - 'null'
+          enum:
+          - CLI_DEPLOY
+          - DEPLOYMENT
+          - DEPLOYMENT_CACHE_WARMER
+          - EDITOR
+          - GROUP_RUN_ALL
+          - LEGACY_TRIGGER
+          - SCHEDULER
+          - SCHEDULE_NOW
+          - TEST_NO_RECORD
+          - TEST_RECORD
+          - TRIGGER_NO_RECORD
+          - TRIGGER_RECORD
+          - TRIGGER_API
+          - null
+      required:
+      - checkSessionId
+      - checkSessionLink
+      - checkId
+      - checkType
+      - status
+      - startedAt
+      - stoppedAt
+      - timeElapsed
+      - runLocations
+      - runSource
+    PaymentRequiredError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 402
+        error:
+          $ref: '#/components/schemas/Model3'
+        message:
+          type: string
+          example: Payment Required
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    TestSessionGitHubMetadata:
+      type: object
+      properties:
+        reporting:
+          type: boolean
+        repository:
+          type:
+          - string
+          - 'null'
+        sha:
+          type:
+          - string
+          - 'null'
+        runId:
+          type:
+          - string
+          - 'null'
+        runAttempt:
+          type:
+          - string
+          - 'null'
+        workflow:
+          type:
+          - string
+          - 'null'
+        job:
+          type:
+          - string
+          - 'null'
+        eventName:
+          type:
+          - string
+          - 'null'
+        ref:
+          type:
+          - string
+          - 'null'
+        headRef:
+          type:
+          - string
+          - 'null'
+        baseRef:
+          type:
+          - string
+          - 'null'
+        serverUrl:
+          type:
+          - string
+          - 'null'
+      required:
+      - reporting
+    Model25:
+      type: string
+      description: The status of the check session.
+      example: PASSED
+      enum:
+      - STARTED
+      - PROGRESS
+      - FAILED
+      - PASSED
+      - DEGRADED
+      - PROGRESS_FAILED
+      - PROGRESS_DEGRADED
+      - TIMED_OUT
+      - CANCELLED
+    runLocations:
+      type: array
+      description: The run locations of the check session.
+      example:
+      - us-east-1
+      - eu-central-1
+      items:
+        type: string
+    NoMatchingChecksFoundErrorResponse:
+      type: object
+      description: Returned when there are no matching checks.
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 404
+        error:
+          type: string
+          example: Not Found
+        message:
+          type: string
+          example: No matching checks were found.
+      required:
+      - statusCode
+    sessions:
+      type: array
+      description: A list of check sessions, with one check session for each check.
+      items:
+        $ref: '#/components/schemas/CheckSession'
+    runSource:
+      type:
+      - string
+      - 'null'
+      description: The source that triggered the check session.
+      example: TRIGGER_API
+      enum:
+      - CLI_DEPLOY
+      - DEPLOYMENT
+      - DEPLOYMENT_CACHE_WARMER
+      - EDITOR
+      - GROUP_RUN_ALL
+      - LEGACY_TRIGGER
+      - SCHEDULER
+      - SCHEDULE_NOW
+      - SLACK_RERUN
+      - TEST_NO_RECORD
+      - TEST_RECORD
+      - TRIGGER_NO_RECORD
+      - TRIGGER_RECORD
+      - TRIGGER_API
+    ForbiddenError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 403
+        error:
+          $ref: '#/components/schemas/Model1'
+        message:
+          type: string
+          example: Forbidden
+      required:
+      - statusCode
+      - error
+    TestSessionMetadata:
+      type: object
+      properties:
+        environment:
+          type: string
+          minLength: 1
+          description: A short description for the testing environment.
+        repoUrl:
+          type:
+          - string
+          - 'null'
+        commitId:
+          type:
+          - string
+          - 'null'
+        commitOwner:
+          type:
+          - string
+          - 'null'
+        commitMessage:
+          type:
+          - string
+          - 'null'
+        branchName:
+          type:
+          - string
+          - 'null'
+        github:
+          $ref: '#/components/schemas/TestSessionGitHubMetadata'
+    TestSessionResult:
+      type: object
+      properties:
+        testSessionResultId:
+          type: string
+          format: uuid
+        testSessionResultLink:
+          type: string
+          format: uri
+        checkId:
+          type:
+          - string
+          - 'null'
+          format: uuid
+        checkType:
+          type: string
+          enum:
+          - AGENTIC
+          - API
+          - BROWSER
+          - HEARTBEAT
+          - ICMP
+          - MULTI_STEP
+          - TCP
+          - PLAYWRIGHT
+          - URL
+          - DNS
+          - SSL
+          - GRPC
+          - TRACEROUTE
+        name:
+          type: string
+        runLocation:
+          type: string
+        errorGroupIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+          description: IDs of the test-session error groups associated with this result.
+        resultType:
+          type: string
+          enum:
+          - FINAL
+          - ATTEMPT
+          - PENDING
+        status:
+          type: string
+          enum:
+          - RUNNING
+          - FAILED
+          - PASSED
+          - CANCELLED
+        hasErrors:
+          type: boolean
+        hasFailures:
+          type: boolean
+        isDegraded:
+          type: boolean
+        aborted:
+          type: boolean
+        responseTime:
+          type:
+          - number
+          - 'null'
+          description: 'Time the check spent producing its result, in milliseconds. For protocol checks this is the measured operation time (a subset of the run): request time for API and URL checks, connection time for TCP, resolution time for DNS, average latency for ICMP and TRACEROUTE, request timing for GRPC, and TLS handshake time for SSL. For browser, multi-step, Playwright and agentic checks it is the run wall-clock duration. Null until the check has finished. For the total wall-clock time a check run took, use `stoppedAt` - `startedAt`.'
+        startedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: When the check run started. Null until the check has started.
+        stoppedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: When the check run finished. Subtract `startedAt` for the total wall-clock duration of the run. Null until the check has finished.
+      required:
+      - testSessionResultId
+      - testSessionResultLink
+      - checkType
+      - errorGroupIds
+      - status
+      - hasErrors
+      - hasFailures
+      - isDegraded
+      - aborted
+    CheckGroupTrigger:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        token:
+          type: string
+          example: h7QMmh8c0hYw
+        created_at:
+          type: string
+          format: date
+        called_at:
+          type:
+          - string
+          - 'null'
+          format: date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date
+        groupId:
+          type: number
+          example: 1
+      required:
+      - id
+      - token
+      - created_at
+      - groupId
+    ApiError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+        error:
+          type: string
+        message:
+          type: string
+      required:
+      - statusCode
+      - error
+      - message
+    TriggerTestSessionResponse:
+      type: object
+      properties:
+        testSessionId:
+          type: string
+          format: uuid
+        testSessionLink:
+          type: string
+          format: uri
+        name:
+          type: string
+        status:
+          type: string
+          enum:
+          - RUNNING
+          - FAILED
+          - PASSED
+          - CANCELLED
+        errorGroupIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+          description: IDs of the test-session error groups observed in this test session.
+        startedAt:
+          type: string
+          format: date-time
+        stoppedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        timeElapsed:
+          type: number
+        metadata:
+          $ref: '#/components/schemas/TestSessionMetadata'
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/TestSessionResult'
+      required:
+      - testSessionId
+      - testSessionLink
+      - name
+      - status
+      - errorGroupIds
+      - startedAt
+      - timeElapsed
+    CheckSession:
+      type: object
+      properties:
+        checkSessionId:
+          type: string
+          description: The unique identifier of the check session.
+          example: 8166fa86-c9b4-4162-8541-d380c6c212d8
+          x-format:
+            guid: true
+        checkSessionLink:
+          type: string
+          description: A link to the check session.
+          example: https://app.checklyhq.com/accounts/1397c172-1938-4973-a225-5862298e571a/checks/a4cd4ad9-4815-4a9e-92d2-0a7c562ee69a/check-sessions/8166fa86-c9b4-4162-8541-d380c6c212d8
+          x-format:
+            uri: true
+        checkId:
+          type: string
+          description: The ID of the check.
+          example: a4cd4ad9-4815-4a9e-92d2-0a7c562ee69a
+          x-format:
+            guid: true
+        checkType:
+          $ref: '#/components/schemas/Model24'
+        name:
+          type: string
+          example: Example API Check
+        status:
+          $ref: '#/components/schemas/Model25'
+        startedAt:
+          type: string
+          format: date-time
+          description: The date and time when the session started.
+          example: '2025-08-28T18:23:40.262Z'
+        stoppedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The date and time when the session stopped.
+          example: '2025-08-28T18:28:40.993Z'
+        timeElapsed:
+          type: number
+          description: The time the check session took, in milliseconds.
+          example: 300731
+        runLocations:
+          $ref: '#/components/schemas/runLocations'
+        runSource:
+          $ref: '#/components/schemas/runSource'
+      required:
+      - checkSessionId
+      - checkSessionLink
+      - checkId
+      - checkType
+      - status
+      - startedAt
+      - timeElapsed
+      - runLocations
+    CheckTrigger:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        token:
+          type: string
+          example: h7QMmh8c0hYw
+        created_at:
+          type: string
+          format: date
+        called_at:
+          type:
+          - string
+          - 'null'
+          format: date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date
+        checkId:
+          type: string
+          example: a13a7875-ec45-4780-b39f-675ec288cfe1
+      required:
+      - id
+      - token
+      - created_at
+      - checkId
+    Model3:
+      type: string
+      enum:
+      - Payment Required
+    matchTags:
+      type: array
+      description: 'Match checks with the given tags. Group tags also match.
+
+
+        The value is a two-dimensional array. The top level array defines `OR` conditions, and the second level `AND` conditions. Tags can also be prefixed with `!` to only match checks without those tags.
+
+
+        Example: `[[a, b], [a, c, !d]]` means `(a && b) || (a && c && !d)`.'
+      example:
+      - - production
+        - '!skip-e2e'
+      items:
+        $ref: '#/components/schemas/Model23'
+    error:
+      type: string
+      enum:
+      - Unauthorized
+    CheckSessionsV2TriggerRequest:
+      type: object
+      properties:
+        target:
+          type: object
+          properties:
+            matchTags:
+              type: array
+              items:
+                type: array
+                items:
+                  type: string
+              description: Tags used to select checks to trigger. Each nested array is matched as one tag group.
+            checkId:
+              type: array
+              items:
+                type: string
+                format: uuid
+              description: Check ID or list of check IDs to trigger.
+          description: Optional filters selecting which checks to trigger.
+        refreshCache:
+          type: boolean
+          default: false
+          description: Refresh the selected checks cache before triggering the sessions.
+    TriggerTestSessionRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          description: The name of the test session.
+        runLocation:
+          type: string
+          minLength: 1
+          description: A public region code or private location slug name.
+        target:
+          type: object
+          properties:
+            matchTags:
+              type: array
+              items:
+                type: array
+                items:
+                  type: string
+                  minLength: 1
+              description: Tags used to select checks to trigger. Each nested array is matched as one tag group.
+            checkId:
+              type: array
+              items:
+                type: string
+                format: uuid
+              description: Check ID or list of check IDs to trigger.
+            allowDeactivated:
+              type: boolean
+              default: false
+              description: Allow deactivated checks to match.
+        environmentVariables:
+          type: array
+          items:
+            $ref: '#/components/schemas/TestSessionEnvironmentVariable'
+          maxItems: 50
+        retryStrategy:
+          anyOf:
+          - type: object
+            properties:
+              baseBackoffSeconds:
+                type: number
+                default: 60
+              sameRegion:
+                type: boolean
+                default: true
+              onlyOn:
+                type: array
+                items:
+                  type: string
+                  enum:
+                  - NETWORK_ERROR
+              type:
+                type: string
+                enum:
+                - FIXED
+                - LINEAR
+                - EXPONENTIAL
+              maxRetries:
+                type: number
+                minimum: 1
+                maximum: 10
+                default: 2
+              maxDurationSeconds:
+                type: number
+                minimum: 0
+                maximum: 600
+                default: 600
+            required:
+            - type
+          - type: object
+            properties:
+              baseBackoffSeconds:
+                type: number
+                default: 60
+              sameRegion:
+                type: boolean
+                default: true
+              onlyOn:
+                type: array
+                items:
+                  type: string
+                  enum:
+                  - NETWORK_ERROR
+              type:
+                type: string
+                enum:
+                - SINGLE_RETRY
+            required:
+            - type
+          - {}
+        refreshCache:
+          type: boolean
+          default: false
+          description: Skip existing caches and install dependencies from scratch.
+        metadata:
+          $ref: '#/components/schemas/TestSessionMetadata'
+      required:
+      - name
+      - runLocation
+    TriggerCheckSessionTarget:
+      type: object
+      properties:
+        matchTags:
+          $ref: '#/components/schemas/matchTags'
+        checkId:
+          $ref: '#/components/schemas/checkId'
+    Model1:
+      type: string
+      enum:
+      - Forbidden
+    CheckSessionsV2TriggerResponse:
+      type: object
+      properties:
+        sessions:
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckSessionsV2CheckSession'
+      required:
+      - sessions
+  securitySchemes:
+    Bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: Bearer
+      description: 'The Checkly Public API uses API keys to authenticate requests. You can get the API Key <a href="https://app.checklyhq.com/settings/user/api-keys" target="_blank">here</a>.</br>Your API key is like a password: <br>keep it secure!</br></br>Authentication to the API is performed using the Bearer auth method in the Authorization header and using the account ID.</br></br>For example, set <b>Authorization</b> header while using cURL: <code>curl -H "Authorization: Bearer [apiKey]" "X-Checkly-Account: [accountId]"</code></br>'

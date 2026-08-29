@@ -1,0 +1,104 @@
+generated: '2026-08-29'
+method: searched
+source: >-
+  https://www.checklyhq.com/docs/cli/overview (HTTP 200), the per-command docs index at
+  https://www.checklyhq.com/docs/llms.txt, https://www.checklyhq.com/docs/cli/checkly-test (HTTP 200),
+  https://www.checklyhq.com/docs/cli/checkly-deploy (HTTP 200), and registry.npmjs.org/checkly.
+description: >-
+  The Checkly CLI is the primary interface to Checkly, not a convenience wrapper on the API. Checkly
+  routes both humans and agents to it for anything that creates or changes a monitor - its own API
+  reference tells you to prefer the CLI over direct API writes, and its MCP server refuses that work
+  on purpose because it runs remotely and cannot see a local project.
+name: checkly
+package: checkly
+registry: npm
+url: https://www.npmjs.com/package/checkly
+repository: https://github.com/checkly/checkly-cli
+version: 8.23.2
+published: '2026-08-28'
+documentation: https://www.checklyhq.com/docs/cli/overview/
+install:
+- method: npm global
+  command: npm install -g checkly
+- method: npx
+  command: npx checkly <command>
+- method: scaffold
+  command: npm create checkly@latest
+  note: Uses the create-checkly package.
+project_model:
+  config_file: checkly.config.ts or checkly.config.js
+  language: TypeScript / JavaScript constructs
+  note: >-
+    Monitoring is declared as code in constructs (UrlMonitor, DnsMonitor, TcpMonitor, IcmpMonitor,
+    SslMonitor, GrpcMonitor, TracerouteMonitor, HeartbeatMonitor, ApiCheck, MultistepCheck,
+    BrowserCheck, PlaywrightCheckSuite, alert channels, dashboards, status pages) and reconciled
+    with the account on deploy.
+commands:
+- group: session
+  commands:
+  - {name: login, description: Sign up for a new Checkly account or log in to an existing one.}
+  - {name: logout, description: Log out of your Checkly account.}
+  - {name: whoami, description: Display current account and user information.}
+  - {name: switch, description: Switch between multiple Checkly accounts.}
+  - {name: account, description: View account plan, entitlements, feature limits and available locations.}
+  - {name: members, description: List, update and delete members in your Checkly account.}
+- group: authoring and deployment
+  commands:
+  - {name: init, description: Initialize Checkly in your project with interactive or AI-assisted onboarding.}
+  - {name: test, description: Run checks in your project as a dry run without deploying them as monitors.}
+  - {name: deploy, description: Deploy checks and resources to your Checkly account.}
+  - {name: destroy, description: Destroy all project resources from your Checkly account.}
+  - {name: import, description: Import existing resources into your CLI-managed project.}
+  - {name: sync-playwright, description: Synchronize Playwright configuration with Checkly settings.}
+  - {name: pw-test, description: Run Playwright tests with Checkly monitoring features.}
+- group: operations
+  commands:
+  - {name: checks, description: List, inspect, run and analyze checks in your account.}
+  - {name: trigger, description: Trigger checks already in your Checkly account.}
+  - {name: test-sessions, description: Inspect recorded test sessions and their error groups.}
+  - {name: assets, description: List and download result assets such as logs, traces, videos and screenshots.}
+  - {name: rca, description: Trigger and retrieve AI-powered root cause analyses for error groups.}
+  - {name: alert-channels, description: List and inspect alert channels and their notification logs.}
+  - {name: runtimes, description: List all available runtimes and their dependencies.}
+  - {name: env, description: Manage the global environment variables of a Checkly account.}
+- group: incident communication
+  commands:
+  - {name: status-pages, description: List and inspect status pages in your account.}
+  - {name: incidents, description: Create, update and resolve incidents on your status pages.}
+- group: agent
+  commands:
+  - {name: skills, description: Print Checkly project, CLI and workflow context as Markdown for AI agents and LLMs; `checkly skills install` installs Checkly's published Agent Skills.}
+  - {name: api, description: Make authenticated HTTP requests to the Checkly API from the command line.}
+command_count: 24
+key_flows:
+- name: Scaffold and first deploy
+  steps:
+  - npm create checkly@latest
+  - npx checkly login
+  - npx checkly test
+  - npx checkly deploy
+- name: Rehearse before changing production monitoring
+  steps:
+  - npx checkly test --list
+  - npx checkly deploy --preview
+  - npx checkly deploy
+- name: Investigate a failure from the terminal
+  steps:
+  - npx checkly checks
+  - npx checkly test-sessions
+  - npx checkly assets
+  - npx checkly rca
+agent_safety:
+  confirmation_envelope: >-
+    Checkly's published Agent Skills index states that CLI write commands (create, update, resolve,
+    deploy) exit with code 2 and a JSON confirmation envelope that an agent must explicitly confirm
+    before the change is applied. `--force` skips the dialog, which is the documented CI path.
+  preserve_resources: >-
+    `checkly deploy --preserve-resources` detaches resources removed from code, keeping them and
+    their run history, instead of deleting them.
+  source: https://www.checklyhq.com/.well-known/agent-skills/index.json
+notes:
+- >-
+  Checkly's API reference explicitly recommends the CLI over the REST API for creating and updating
+  resources - unusual candour for a provider that also publishes a 225-operation OpenAPI.
+- Terraform and Pulumi providers cover the same declarative ground; see packages/checkly-packages.yml.

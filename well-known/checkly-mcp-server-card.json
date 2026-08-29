@@ -1,0 +1,16 @@
+{
+	"name": "Checkly MCP Server",
+	"description": "Model Context Protocol server for Checkly. Lets MCP clients inspect checks and test sessions, trigger existing checks, read root cause analysis, and manage status page incidents.",
+	"url": "https://api.checklyhq.com/mcp",
+	"transport": "streamable-http",
+	"authentication": ["oauth", "api-key"],
+	"protected_resource_metadata": "https://api.checklyhq.com/.well-known/oauth-protected-resource",
+	"authorization_servers": ["https://auth.checklyhq.com/"],
+	"documentation": "https://www.checklyhq.com/docs/ai/mcp-server/",
+	"manifest": "https://www.checklyhq.com/.well-known/mcp.json",
+	"when_to_use": "Use the Checkly MCP server to answer questions about whether a deployed service is currently healthy, to read why a synthetic or uptime check failed, to re-run a check on demand, to pull AI root cause analysis for a failure, and to open or update an incident on a Checkly status page.",
+	"provider": {
+		"name": "Checkly",
+		"url": "https://www.checklyhq.com"
+	}
+}

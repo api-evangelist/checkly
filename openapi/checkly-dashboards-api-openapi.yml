@@ -1,94 +1,986 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Checkly Public Accounts Dashboards API
+  title: Checkly Public Dashboards API
   version: v1
-  description: The Checkly Public API allows you to programmatically manage your monitoring checks, alerts, and more. If you have any questions, please do not hesitate to get in touch with us.
-  contact:
-    name: Checkly Support
-    url: https://checklyhq.com/support
-  license:
-    name: MIT
+  description: These are the docs for the newly released Checkly Public API.<br />If you have any questions, please do not hesitate to get in touch with us.
 servers:
 - url: https://api.checklyhq.com
-  description: Production server
 security:
-- bearerAuth: []
-  accountId: []
+- Bearer: []
 tags:
 - name: Dashboards
 paths:
   /v1/dashboards:
     get:
-      summary: List Dashboards
-      description: Retrieve all public dashboards
-      operationId: listDashboards
-      parameters:
-      - name: limit
-        in: query
-        description: Limit the number of results
-        schema:
-          type: integer
-          default: 10
-          minimum: 1
-          maximum: 100
+      summary: List all dashboards
+      operationId: getV1Dashboards
+      description: Lists all current dashboards in your account.
+      tags:
+      - Dashboards
       responses:
         '200':
-          description: List of dashboards
+          description: Successful
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DashboardList'
+                $ref: '#/components/schemas/DashboardsList'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+          description: Limit the number of results
+        required: false
+        description: Limit the number of results
+        name: limit
+        in: query
+      - schema:
+          type: number
+          default: 1
+          description: Page number
+          exclusiveMinimum: 0
+        required: false
+        description: Page number
+        name: page
+        in: query
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+    post:
+      summary: Create a dashboard
+      operationId: postV1Dashboards
+      description: Creates a new dashboard. Will return a 409 when attempting to create a dashboard with a custom URL or custom domain that is already taken.
       tags:
       - Dashboards
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dashboard'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DashboardCreate'
+  /v1/dashboards/{dashboardId}:
+    delete:
+      summary: Delete a dashboard
+      operationId: deleteV1DashboardsDashboardid
+      description: Permanently removes a dashboard.
+      tags:
+      - Dashboards
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: string
+        required: true
+        name: dashboardId
+        in: path
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+    get:
+      summary: Retrieve a dashboard
+      operationId: getV1DashboardsDashboardid
+      description: Show details of a specific dashboard.<br><br><b>Rate-limiting is applied to this endpoint, you can send 20 requests / 20 seconds at most.<b>
+      tags:
+      - Dashboards
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dashboard'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: string
+        required: true
+        name: dashboardId
+        in: path
+      - schema:
+          type: string
+          enum:
+          - customUrl
+          - customDomain
+        required: false
+        name: type
+        in: query
+    put:
+      summary: Update a dashboard
+      operationId: putV1DashboardsDashboardid
+      description: Updates a dashboard. Will return a 409 when attempting to create a dashboard with a custom URL or custom domain that is already taken.
+      tags:
+      - Dashboards
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dashboard'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: string
+        required: true
+        name: dashboardId
+        in: path
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DashboardUpdate'
 components:
   schemas:
-    PaginationMeta:
+    DashboardTagList:
+      type: array
+      items:
+        type: string
+      default: []
+      description: A list of one or more tags that filter which checks to display on the dashboard.
+    ProjectBindingV1:
       type: object
       properties:
-        currentPage:
-          type: integer
-          description: Current page number
-        totalPages:
-          type: integer
-          description: Total number of pages
-        totalItems:
-          type: integer
-          description: Total number of items
-        limit:
-          type: integer
-          description: Items per page
+        project:
+          $ref: '#/components/schemas/BindingProjectV1'
+        binding:
+          $ref: '#/components/schemas/ProjectBindingDetailsV1'
+      required:
+      - project
+      - binding
+    ProjectBindingReferencesV1:
+      type: array
+      description: Projects that use this resource without owning it; their deploys leave it alone. Empty when there are none.
+      items:
+        $ref: '#/components/schemas/ProjectBindingV1'
+    ApiError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+        error:
+          type: string
+        message:
+          type: string
+      required:
+      - statusCode
+      - error
+      - message
+    DashboardCreate:
+      type: object
+      properties:
+        customUrl:
+          type:
+          - string
+          - 'null'
+          description: A subdomain name under "checklyhq.com". Needs to be unique across all users.
+        customDomain:
+          type:
+          - string
+          - 'null'
+          description: A custom user domain, e.g. "status.example.com". See the docs on updating your DNS and SSL usage.
+        logo:
+          anyOf:
+          - type: string
+            format: uri
+          - type: string
+            enum:
+            - ''
+          - {}
+          description: A URL pointing to an image file.
+        favicon:
+          anyOf:
+          - type: string
+            format: uri
+          - type: string
+            enum:
+            - ''
+          - {}
+          description: A URL pointing to an image file used as dashboard favicon.
+        link:
+          anyOf:
+          - type: string
+            format: uri
+          - type: string
+            enum:
+            - ''
+          - {}
+          description: A URL link to redirect when dashboard logo is clicked on.
+        header:
+          type: string
+          description: A piece of text displayed at the top of your dashboard.
+        description:
+          type:
+          - string
+          - 'null'
+          description: A piece of text displayed below the header or title of your dashboard.
+        width:
+          type: string
+          enum:
+          - FULL
+          - 960PX
+          default: FULL
+          description: Determines whether to use the full screen or focus in the center.
+        refreshRate:
+          type: number
+          default: 60
+          description: How often to refresh the dashboard in seconds.
+        paginate:
+          type: boolean
+          default: true
+          description: Determines of pagination is on or off.
+        paginationRate:
+          type: number
+          default: 60
+          description: How often to trigger pagination in seconds.
+        sortByStatus:
+          type: boolean
+          default: false
+          description: Sort checks by status with failing checks first.
+        checksPerPage:
+          type:
+          - number
+          - 'null'
+          minimum: 1
+          maximum: 20
+          default: 15
+          description: Number of checks displayed per page.
+        useTagsAndOperator:
+          type:
+          - boolean
+          - 'null'
+          default: false
+          description: When to use AND operator for tags lookup.
+        hideTags:
+          type: boolean
+          default: false
+          description: Show or hide the tags on the dashboard.
+        enableIncidents:
+          type: boolean
+          default: false
+          description: Enable or disable incidents on the dashboard.
+        expandChecks:
+          type: boolean
+          default: false
+          description: Expand or collapse checks on the dashboard.
+        tags:
+          $ref: '#/components/schemas/DashboardTagList'
+        showHeader:
+          type: boolean
+          default: true
+          description: Show or hide header and description on the dashboard.
+        showCheckRunLinks:
+          type: boolean
+          default: false
+          description: Show or hide check run links on the dashboard.
+        showGroupNames:
+          type: boolean
+          default: true
+          description: Show or hide group names on the dashboard.
+        customCSS:
+          type:
+          - string
+          - 'null'
+          default: ''
+          description: Custom CSS to be applied to the dashboard.
+        isPrivate:
+          type: boolean
+          default: false
+          description: Determines if the dashboard is public or private.
+        showP95:
+          type: boolean
+          default: true
+          description: Show or hide the P95 stats on the dashboard.
+        showP99:
+          type: boolean
+          default: true
+          description: Show or hide the P99 stats on the dashboard.
+        keys:
+          type: array
+          items:
+            $ref: '#/components/schemas/DashboardKey'
+          default: []
+          description: Show key for private dashboard.
+      required:
+      - header
+    ProjectBindingDetailsV1:
+      type: object
+      description: The resource's side of this binding.
+      properties:
+        logicalId:
+          type: string
+          description: The resource's logical ID within this project, as declared in code.
+          example: homepage-check
+        pending:
+          type: boolean
+          description: True when the binding is reserved by an import plan that has not been deployed yet.
+      required:
+      - logicalId
+      - pending
+    ProjectBindingsV1:
+      type: object
+      description: The Checkly CLI projects that manage this resource. `owner` is null and `references` empty when the resource is not managed by code.
+      properties:
+        owner:
+          $ref: '#/components/schemas/ProjectBindingOwnerV1'
+        references:
+          $ref: '#/components/schemas/ProjectBindingReferencesV1'
+      required:
+      - owner
+      - references
+    ProjectBindingOwnerV1:
+      type:
+      - object
+      - 'null'
+      description: The project that owns this resource — the one whose deploy can delete it. Null when no project owns it, including when other projects merely reference it. In the rare case that several projects hold an ownership record for one resource, this reports the preferred one and the rest are omitted.
+      properties:
+        project:
+          $ref: '#/components/schemas/BindingProjectV1'
+        binding:
+          $ref: '#/components/schemas/ProjectBindingDetailsV1'
+      required:
+      - project
+      - binding
+    BindingProjectV1:
+      type: object
+      description: The project this binding is to.
+      properties:
+        id:
+          type: string
+          description: The ID of the project.
+        logicalId:
+          type: string
+          description: The logical ID of the project, as declared in code.
+        name:
+          type: string
+          description: The name of the project.
+      required:
+      - id
+      - logicalId
+      - name
     Dashboard:
+      type: object
+      properties:
+        customUrl:
+          type:
+          - string
+          - 'null'
+          description: A subdomain name under "checklyhq.com". Needs to be unique across all users.
+        customDomain:
+          type:
+          - string
+          - 'null'
+          description: A custom user domain, e.g. "status.example.com". See the docs on updating your DNS and SSL usage.
+        logo:
+          anyOf:
+          - type: string
+            format: uri
+          - type: string
+            enum:
+            - ''
+          - {}
+          description: A URL pointing to an image file.
+        favicon:
+          anyOf:
+          - type: string
+            format: uri
+          - type: string
+            enum:
+            - ''
+          - {}
+          description: A URL pointing to an image file used as dashboard favicon.
+        link:
+          anyOf:
+          - type: string
+            format: uri
+          - type: string
+            enum:
+            - ''
+          - {}
+          description: A URL link to redirect when dashboard logo is clicked on.
+        header:
+          type: string
+          description: A piece of text displayed at the top of your dashboard.
+        description:
+          type:
+          - string
+          - 'null'
+          description: A piece of text displayed below the header or title of your dashboard.
+        width:
+          type: string
+          enum:
+          - FULL
+          - 960PX
+          default: FULL
+          description: Determines whether to use the full screen or focus in the center.
+        refreshRate:
+          type: number
+          default: 60
+          description: How often to refresh the dashboard in seconds.
+        paginate:
+          type: boolean
+          default: true
+          description: Determines of pagination is on or off.
+        paginationRate:
+          type: number
+          default: 60
+          description: How often to trigger pagination in seconds.
+        sortByStatus:
+          type: boolean
+          default: false
+          description: Sort checks by status with failing checks first.
+        checksPerPage:
+          type:
+          - number
+          - 'null'
+          minimum: 1
+          maximum: 20
+          default: 15
+          description: Number of checks displayed per page.
+        useTagsAndOperator:
+          type:
+          - boolean
+          - 'null'
+          default: false
+          description: When to use AND operator for tags lookup.
+        hideTags:
+          type: boolean
+          default: false
+          description: Show or hide the tags on the dashboard.
+        enableIncidents:
+          type: boolean
+          default: false
+          description: Enable or disable incidents on the dashboard.
+        expandChecks:
+          type: boolean
+          default: false
+          description: Expand or collapse checks on the dashboard.
+        tags:
+          $ref: '#/components/schemas/DashboardTagList'
+        showHeader:
+          type: boolean
+          default: true
+          description: Show or hide header and description on the dashboard.
+        showCheckRunLinks:
+          type: boolean
+          default: false
+          description: Show or hide check run links on the dashboard.
+        showGroupNames:
+          type: boolean
+          default: true
+          description: Show or hide group names on the dashboard.
+        customCSS:
+          type:
+          - string
+          - 'null'
+          default: ''
+          description: Custom CSS to be applied to the dashboard.
+        isPrivate:
+          type: boolean
+          default: false
+          description: Determines if the dashboard is public or private.
+        showP95:
+          type: boolean
+          default: true
+          description: Show or hide the P95 stats on the dashboard.
+        showP99:
+          type: boolean
+          default: true
+          description: Show or hide the P99 stats on the dashboard.
+        keys:
+          type: array
+          items:
+            $ref: '#/components/schemas/DashboardKey'
+          default: []
+          description: Show key for private dashboard.
+        id:
+          type: number
+        dashboardId:
+          type: string
+          description: The dashboard ID.
+        created_at:
+          type: string
+          format: date-time
+      required:
+      - id
+      - dashboardId
+      - created_at
+    DashboardListItem:
+      type: object
+      properties:
+        customUrl:
+          type:
+          - string
+          - 'null'
+          description: A subdomain name under "checklyhq.com". Needs to be unique across all users.
+        customDomain:
+          type:
+          - string
+          - 'null'
+          description: A custom user domain, e.g. "status.example.com". See the docs on updating your DNS and SSL usage.
+        logo:
+          anyOf:
+          - type: string
+            format: uri
+          - type: string
+            enum:
+            - ''
+          - {}
+          description: A URL pointing to an image file.
+        favicon:
+          anyOf:
+          - type: string
+            format: uri
+          - type: string
+            enum:
+            - ''
+          - {}
+          description: A URL pointing to an image file used as dashboard favicon.
+        link:
+          anyOf:
+          - type: string
+            format: uri
+          - type: string
+            enum:
+            - ''
+          - {}
+          description: A URL link to redirect when dashboard logo is clicked on.
+        header:
+          type: string
+          description: A piece of text displayed at the top of your dashboard.
+        description:
+          type:
+          - string
+          - 'null'
+          description: A piece of text displayed below the header or title of your dashboard.
+        width:
+          type: string
+          enum:
+          - FULL
+          - 960PX
+          default: FULL
+          description: Determines whether to use the full screen or focus in the center.
+        refreshRate:
+          type: number
+          default: 60
+          description: How often to refresh the dashboard in seconds.
+        paginate:
+          type: boolean
+          default: true
+          description: Determines of pagination is on or off.
+        paginationRate:
+          type: number
+          default: 60
+          description: How often to trigger pagination in seconds.
+        sortByStatus:
+          type: boolean
+          default: false
+          description: Sort checks by status with failing checks first.
+        checksPerPage:
+          type:
+          - number
+          - 'null'
+          minimum: 1
+          maximum: 20
+          default: 15
+          description: Number of checks displayed per page.
+        useTagsAndOperator:
+          type:
+          - boolean
+          - 'null'
+          default: false
+          description: When to use AND operator for tags lookup.
+        hideTags:
+          type: boolean
+          default: false
+          description: Show or hide the tags on the dashboard.
+        enableIncidents:
+          type: boolean
+          default: false
+          description: Enable or disable incidents on the dashboard.
+        expandChecks:
+          type: boolean
+          default: false
+          description: Expand or collapse checks on the dashboard.
+        tags:
+          $ref: '#/components/schemas/DashboardTagList'
+        showHeader:
+          type: boolean
+          default: true
+          description: Show or hide header and description on the dashboard.
+        showCheckRunLinks:
+          type: boolean
+          default: false
+          description: Show or hide check run links on the dashboard.
+        showGroupNames:
+          type: boolean
+          default: true
+          description: Show or hide group names on the dashboard.
+        customCSS:
+          type:
+          - string
+          - 'null'
+          default: ''
+          description: Custom CSS to be applied to the dashboard.
+        isPrivate:
+          type: boolean
+          default: false
+          description: Determines if the dashboard is public or private.
+        showP95:
+          type: boolean
+          default: true
+          description: Show or hide the P95 stats on the dashboard.
+        showP99:
+          type: boolean
+          default: true
+          description: Show or hide the P99 stats on the dashboard.
+        keys:
+          type: array
+          items:
+            $ref: '#/components/schemas/DashboardKey'
+          default: []
+          description: Show key for private dashboard.
+        id:
+          type: number
+        dashboardId:
+          type: string
+          description: The dashboard ID.
+        created_at:
+          type: string
+          format: date-time
+        projectBindings:
+          $ref: '#/components/schemas/ProjectBindingsV1'
+      required:
+      - id
+      - dashboardId
+      - created_at
+    DashboardsList:
+      type: array
+      items:
+        $ref: '#/components/schemas/DashboardListItem'
+    DashboardUpdate:
+      type: object
+      properties:
+        customUrl:
+          type:
+          - string
+          - 'null'
+          description: A subdomain name under "checklyhq.com". Needs to be unique across all users.
+        customDomain:
+          type:
+          - string
+          - 'null'
+          description: A custom user domain, e.g. "status.example.com". See the docs on updating your DNS and SSL usage.
+        logo:
+          anyOf:
+          - type: string
+            format: uri
+          - type: string
+            enum:
+            - ''
+          - {}
+          description: A URL pointing to an image file.
+        favicon:
+          anyOf:
+          - type: string
+            format: uri
+          - type: string
+            enum:
+            - ''
+          - {}
+          description: A URL pointing to an image file used as dashboard favicon.
+        link:
+          anyOf:
+          - type: string
+            format: uri
+          - type: string
+            enum:
+            - ''
+          - {}
+          description: A URL link to redirect when dashboard logo is clicked on.
+        header:
+          type: string
+          description: A piece of text displayed at the top of your dashboard.
+        description:
+          type:
+          - string
+          - 'null'
+          description: A piece of text displayed below the header or title of your dashboard.
+        width:
+          type: string
+          enum:
+          - FULL
+          - 960PX
+          default: FULL
+          description: Determines whether to use the full screen or focus in the center.
+        refreshRate:
+          type: number
+          default: 60
+          description: How often to refresh the dashboard in seconds.
+        paginate:
+          type: boolean
+          default: true
+          description: Determines of pagination is on or off.
+        paginationRate:
+          type: number
+          default: 60
+          description: How often to trigger pagination in seconds.
+        sortByStatus:
+          type: boolean
+          default: false
+          description: Sort checks by status with failing checks first.
+        checksPerPage:
+          type:
+          - number
+          - 'null'
+          minimum: 1
+          maximum: 20
+          default: 15
+          description: Number of checks displayed per page.
+        useTagsAndOperator:
+          type:
+          - boolean
+          - 'null'
+          default: false
+          description: When to use AND operator for tags lookup.
+        hideTags:
+          type: boolean
+          default: false
+          description: Show or hide the tags on the dashboard.
+        enableIncidents:
+          type: boolean
+          default: false
+          description: Enable or disable incidents on the dashboard.
+        expandChecks:
+          type: boolean
+          default: false
+          description: Expand or collapse checks on the dashboard.
+        tags:
+          $ref: '#/components/schemas/DashboardTagList'
+        showHeader:
+          type: boolean
+          default: true
+          description: Show or hide header and description on the dashboard.
+        showCheckRunLinks:
+          type: boolean
+          default: false
+          description: Show or hide check run links on the dashboard.
+        showGroupNames:
+          type: boolean
+          default: true
+          description: Show or hide group names on the dashboard.
+        customCSS:
+          type:
+          - string
+          - 'null'
+          default: ''
+          description: Custom CSS to be applied to the dashboard.
+        isPrivate:
+          type: boolean
+          default: false
+          description: Determines if the dashboard is public or private.
+        showP95:
+          type: boolean
+          default: true
+          description: Show or hide the P95 stats on the dashboard.
+        showP99:
+          type: boolean
+          default: true
+          description: Show or hide the P99 stats on the dashboard.
+        keys:
+          type: array
+          items:
+            $ref: '#/components/schemas/DashboardKey'
+          default: []
+          description: Show key for private dashboard.
+    DashboardKey:
       type: object
       properties:
         id:
           type: string
-          description: Dashboard ID
-        name:
+          format: uuid
+        rawKey:
           type: string
-          description: Dashboard name
-        url:
+          description: The raw key value.
+        maskedKey:
           type: string
-          description: Public dashboard URL
-        createdAt:
+          description: The masked key value.
+        created_at:
           type: string
           format: date-time
-          description: Creation timestamp
-    DashboardList:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Dashboard'
-        meta:
-          $ref: '#/components/schemas/PaginationMeta'
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+      required:
+      - id
+      - rawKey
+      - maskedKey
+      - created_at
   securitySchemes:
-    bearerAuth:
+    Bearer:
       type: http
       scheme: bearer
-      description: API Key authentication for Checkly API. You can get your API key at https://app.checklyhq.com/settings/user/api-keys
-    accountId:
-      type: apiKey
-      in: header
-      name: X-Checkly-Account
-      description: Your Checkly account ID. You can find it at https://app.checklyhq.com/settings/account/general
+      bearerFormat: Bearer
+      description: 'The Checkly Public API uses API keys to authenticate requests. You can get the API Key <a href="https://app.checklyhq.com/settings/user/api-keys" target="_blank">here</a>.</br>Your API key is like a password: <br>keep it secure!</br></br>Authentication to the API is performed using the Bearer auth method in the Authorization header and using the account ID.</br></br>For example, set <b>Authorization</b> header while using cURL: <code>curl -H "Authorization: Bearer [apiKey]" "X-Checkly-Account: [accountId]"</code></br>'

@@ -1,23 +1,98 @@
-generated: '2026-07-11'
-method: derived
-source: openapi/checkly-openapi.json
+generated: '2026-08-29'
+method: searched
+source: >-
+  openapi/_original/checkly-public-api-openapi.json (harvested 2026-08-29 from
+  https://api.checklyhq.com/openapi.json), upgraded with
+  https://www.checklyhq.com/docs/api-reference/overview (HTTP 200),
+  https://www.checklyhq.com/docs/admin/creating-api-key (HTTP 200), and the MCP OAuth documents at
+  https://api.checklyhq.com/.well-known/oauth-protected-resource and
+  https://auth.checklyhq.com/.well-known/oauth-authorization-server (both HTTP 200).
+docs: https://www.checklyhq.com/docs/api-reference/overview
+description: >-
+  Checkly authenticates two surfaces differently. The REST Public API takes a bearer API key plus an
+  account header. The MCP server takes OAuth 2.1 with scopes, or a bearer API key for clients that
+  cannot do OAuth. End-user sign-in to the app is OIDC via Auth0.
 summary:
   types:
-  - apiKey
   - http
-  api_key_in:
-  - header
+  - apiKey
+  - oauth2
+  surfaces:
+  - rest
+  - mcp
+  - app-signin
 schemes:
-- name: bearerAuth
+- name: Bearer
+  surface: rest
   type: http
   scheme: bearer
-  description: API Key authentication for Checkly API. You can get your API key at https://app.checklyhq.com/settings/user/api-keys
+  bearerFormat: Bearer
+  in: header
+  parameter: Authorization
+  declared_in_openapi: true
+  description: >-
+    API key sent as a bearer token. Keys are issued in user settings at
+    https://app.checklyhq.com/settings/user/api-keys. Two kinds exist - user API keys tied to a
+    person, and service API keys for automation with a stable account identity.
   sources:
-  - openapi/checkly-openapi.json
-- name: accountId
+  - openapi/_original/checkly-public-api-openapi.json
+  - https://www.checklyhq.com/docs/admin/creating-api-key
+- name: X-Checkly-Account
+  surface: rest
   type: apiKey
   in: header
   parameter: X-Checkly-Account
-  description: Your Checkly account ID. You can find it at https://app.checklyhq.com/settings/account/general
+  declared_in_openapi: false
+  required: true
+  description: >-
+    The account id the request runs against. Documented as required in the API reference and
+    described inside the Bearer scheme's own description, but it is NOT declared as a securityScheme
+    in the current OpenAPI document - the previous Swagger 2.0 contract did declare it. This is the
+    single most likely reason a generated client fails on first call: it sends a valid key and gets
+    a 401 or a 404 against the wrong account.
+  found_at: https://app.checklyhq.com/settings/account/general
   sources:
-  - openapi/checkly-openapi.json
+  - https://www.checklyhq.com/docs/api-reference/overview
+- name: OAuth 2.1
+  surface: mcp
+  type: oauth2
+  flows:
+    authorizationCode:
+      authorizationUrl: https://auth.checklyhq.com/authorize
+      tokenUrl: https://auth.checklyhq.com/oauth/token
+      registrationUrl: https://auth.checklyhq.com/oidc/register
+      revocationUrl: https://auth.checklyhq.com/oauth/revoke
+      scopes: 14 checkly:* scopes - see scopes/checkly-scopes.yml
+  description: >-
+    The documented and recommended path for the MCP server at https://api.checklyhq.com/mcp. Access
+    is restricted to Checkly-approved MCP clients; clients outside that list use an API-key header
+    instead. Discovery is fully anonymous via RFC 9728 protected-resource metadata.
+  sources:
+  - https://api.checklyhq.com/.well-known/oauth-protected-resource
+  - https://www.checklyhq.com/.well-known/mcp.json
+- name: OIDC (Auth0)
+  surface: app-signin
+  type: openIdConnect
+  openIdConnectUrl: https://auth.checklyhq.com/.well-known/openid-configuration
+  description: End-user sign-in to app.checklyhq.com. Not an API credential path.
+key_management:
+  rotation_policy: not published
+  expiry: not published
+  scoping: >-
+    REST API keys are not scoped - a key carries the permissions of its user or service identity
+    across the whole account. Fine-grained scoping exists only on the MCP surface.
+  storage_guidance: >-
+    Checkly's own docs say the key "is like a password: keep it secure". Alert-channel configuration
+    fields accept account secrets by '{{NAME}}' reference so a webhook token need not be stored in
+    plain text.
+mtls:
+  supported: true
+  context: >-
+    Not for calling Checkly. Client certificates are a Checkly feature for the checks it runs against
+    a customer's protected endpoints (POST /v1/client-certificates).
+gaps:
+- >-
+  X-Checkly-Account is mandatory but absent from the OpenAPI security model, so no generated client
+  or agent reading the spec alone can authenticate successfully.
+- No published key rotation or expiry policy for REST API keys.
+- No scope granularity on REST API keys - all-or-nothing per identity.

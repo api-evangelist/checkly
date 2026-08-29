@@ -1,46 +1,52 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Checkly Public Accounts Alert Channels API
+  title: Checkly Public Alert channels API
   version: v1
-  description: The Checkly Public API allows you to programmatically manage your monitoring checks, alerts, and more. If you have any questions, please do not hesitate to get in touch with us.
-  contact:
-    name: Checkly Support
-    url: https://checklyhq.com/support
-  license:
-    name: MIT
+  description: These are the docs for the newly released Checkly Public API.<br />If you have any questions, please do not hesitate to get in touch with us.
 servers:
 - url: https://api.checklyhq.com
-  description: Production server
 security:
-- bearerAuth: []
-  accountId: []
+- Bearer: []
 tags:
-- name: Alert Channels
+- name: Alert channels
 paths:
   /v1/alert-channels:
     get:
       summary: List all alert channels
-      description: Lists all alert channels in your account.
-      operationId: listAlertChannels
+      operationId: getV1Alertchannels
+      description: Lists all configured alert channels and their subscribed checks.
       parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
       - name: limit
         in: query
-        description: Limit the number of results
         schema:
           type: integer
+          description: Limit the number of results
           default: 10
           minimum: 1
           maximum: 100
+        description: Limit the number of results
       - name: page
         in: query
-        description: Page number
         schema:
-          type: integer
+          type: number
+          description: Page number
           default: 1
-          minimum: 1
+          x-constraint:
+            sign: positive
+        description: Page number
+      tags:
+      - Alert channels
       responses:
         '200':
-          description: List of alert channels
+          description: Successful
           content:
             application/json:
               schema:
@@ -50,85 +56,197 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/UnauthorizedError'
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/ForbiddenError'
         '429':
           description: Too Many Requests
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-      tags:
-      - Alert Channels
+                $ref: '#/components/schemas/TooManyRequestsError'
     post:
       summary: Create an alert channel
-      description: Creates a new alert channel in your account.
-      operationId: createAlertChannel
+      operationId: postV1Alertchannels
+      description: Creates a new alert channel
+      parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      tags:
+      - Alert channels
       requestBody:
-        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/AlertChannelCreate'
       responses:
         '201':
-          description: Alert channel created
+          description: Created
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/AlertChannel'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/UnauthorizedError'
         '402':
           description: Payment Required
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/PaymentRequiredError'
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/ForbiddenError'
         '429':
           description: Too Many Requests
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-      tags:
-      - Alert Channels
+                $ref: '#/components/schemas/TooManyRequestsError'
   /v1/alert-channels/{id}:
-    get:
-      summary: Retrieve an alert channel
-      description: Gets a specific alert channel by ID.
-      operationId: getAlertChannel
+    delete:
+      summary: Delete an alert channel
+      operationId: deleteV1AlertchannelsId
+      description: Permanently removes an alert channel
       parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
       - name: id
         in: path
-        required: true
-        description: The alert channel ID
         schema:
           type: integer
+          x-constraint:
+            sign: positive
+        required: true
+      tags:
+      - Alert channels
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+    get:
+      summary: Retrieve an alert channel
+      operationId: getV1AlertchannelsId
+      description: Show details of a specific alert channel.
+      parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      - name: id
+        in: path
+        schema:
+          type: integer
+          x-constraint:
+            sign: positive
+        required: true
+      tags:
+      - Alert channels
       responses:
         '200':
-          description: Alert channel details
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlertChannelRead'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+    put:
+      summary: Update an alert channel
+      operationId: putV1AlertchannelsId
+      description: Update an alert channel
+      parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      - name: id
+        in: path
+        schema:
+          type: integer
+          x-constraint:
+            sign: positive
+        required: true
+      tags:
+      - Alert channels
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlertChannelCreate'
+      responses:
+        '200':
+          description: Successful
           content:
             application/json:
               schema:
@@ -138,122 +256,462 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/UnauthorizedError'
+        '402':
+          description: Payment Required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentRequiredError'
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/ForbiddenError'
         '429':
           description: Too Many Requests
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/TooManyRequestsError'
+  /v1/alert-channels/{id}/subscriptions:
+    put:
+      summary: Update the subscriptions of an alert channel
+      operationId: putV1AlertchannelsIdSubscriptions
+      description: 'Update the subscriptions of an alert channel. Use this to add a check to an alert channel so failure and recovery alerts are send out for that check. Note: when passing the subscription object, you can only specify a "checkId" or a "groupId, not both.'
+      parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      - name: id
+        in: path
+        schema:
+          type: integer
+          x-constraint:
+            sign: positive
+        required: true
       tags:
-      - Alert Channels
+      - Alert channels
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlertChannelSubscriptionCreate'
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlertChanelSubscription'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
 components:
   schemas:
+    attributes:
+      type: object
+    ProjectBindingReferencesV1:
+      type: array
+      description: Projects that use this resource without owning it; their deploys leave it alone. Empty when there are none.
+      items:
+        $ref: '#/components/schemas/ProjectBindingV1'
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
+    TooManyRequestsError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    UnauthorizedError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 401
+        error:
+          $ref: '#/components/schemas/error'
+        message:
+          type: string
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
     AlertChannelCreate:
       type: object
+      properties:
+        subscriptions:
+          $ref: '#/components/schemas/AlertChanelSubscriptionList'
+        type:
+          $ref: '#/components/schemas/type'
+        config:
+          $ref: '#/components/schemas/AlertChannelCreateConfig'
+        sendRecovery:
+          type: boolean
+        sendFailure:
+          type: boolean
+        sendDegraded:
+          type: boolean
+        sslExpiry:
+          type: boolean
+          description: Determines if an alert should be sent for expiring SSL certificates.
+          default: false
+        sslExpiryThreshold:
+          type: integer
+          description: At what moment in time to start alerting on SSL certificates.
+          default: 30
+          minimum: 1
+          maximum: 30
+        autoSubscribe:
+          type: boolean
+          description: Automatically subscribe newly created checks to this alert channel.
+          default: false
       required:
       - type
-      - name
+      - config
+    AlertChannelSubscriptionCreate:
+      type: object
       properties:
-        type:
-          type: string
+        checkId:
+          type:
+          - string
+          - 'null'
+          description: You can either pass a checkId or a groupId, but not both.
+          example: 0bbfc00c-44df-46a7-a4d9-ba38deca8bfd
+          x-format:
+            guid: true
+        groupId:
+          type:
+          - number
+          - 'null'
+          description: You can either pass a checkId or a groupId, but not both.
+          example: null
+          x-constraint:
+            sign: positive
+        activated:
+          type: boolean
+      required:
+      - activated
+    PaymentRequiredError:
+      type: object
+      properties:
+        statusCode:
+          type: number
           enum:
-          - EMAIL
-          - WEBHOOK
-          - SLACK
-          - SMS
-          - PHONE
-          description: Type of alert channel
-        name:
+          - 402
+        error:
+          $ref: '#/components/schemas/Model3'
+        message:
           type: string
-          description: Display name of the alert channel
-        config:
-          type: object
-          description: Configuration specific to the alert channel type
+          example: Payment Required
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
     AlertChannel:
       type: object
       properties:
         id:
-          type: integer
-          description: Unique identifier for the alert channel
+          type: number
+          example: 1
+          x-constraint:
+            sign: positive
         type:
-          type: string
-          enum:
-          - EMAIL
-          - WEBHOOK
-          - SLACK
-          - SMS
-          - PHONE
-          description: Type of alert channel
-        name:
-          type: string
-          description: Display name of the alert channel
-        createdAt:
+          $ref: '#/components/schemas/type'
+        config:
+          $ref: '#/components/schemas/AlertChannelConfig'
+        subscriptions:
+          $ref: '#/components/schemas/AlertChanelSubscriptionList'
+        sendRecovery:
+          type: boolean
+        sendFailure:
+          type: boolean
+        sendDegraded:
+          type: boolean
+        sslExpiry:
+          type: boolean
+          description: Determines if an alert should be sent for expiring SSL certificates.
+          default: false
+        sslExpiryThreshold:
+          type: integer
+          description: At what moment in time to start alerting on SSL certificates.
+          default: 30
+          minimum: 1
+          maximum: 30
+        autoSubscribe:
+          type: boolean
+          description: Automatically subscribe newly created checks to this alert channel.
+          default: false
+        created_at:
           type: string
           format: date-time
-          description: ISO 8601 timestamp when the alert channel was created
-        updatedAt:
-          type: string
+        updated_at:
+          type:
+          - string
+          - 'null'
           format: date-time
-          description: ISO 8601 timestamp when the alert channel was last updated
-    Error:
-      type: object
       required:
-      - error
-      - message
+      - id
+      - type
+      - config
+    ProjectBindingV1:
+      type: object
       properties:
+        project:
+          $ref: '#/components/schemas/BindingProjectV1'
+        binding:
+          $ref: '#/components/schemas/ProjectBindingDetailsV1'
+      required:
+      - project
+      - binding
+    AlertChannelList:
+      type: array
+      items:
+        $ref: '#/components/schemas/AlertChannelRead'
+    ForbiddenError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 403
         error:
-          type: string
-          description: Error type
+          $ref: '#/components/schemas/Model1'
         message:
           type: string
-          description: Error message
+          example: Forbidden
+      required:
+      - statusCode
+      - error
+    ProjectBindingDetailsV1:
+      type: object
+      description: The resource's side of this binding.
+      properties:
+        logicalId:
+          type: string
+          description: The resource's logical ID within this project, as declared in code.
+          example: homepage-check
+        pending:
+          type: boolean
+          description: True when the binding is reserved by an import plan that has not been deployed yet.
+      required:
+      - logicalId
+      - pending
+    AlertChanelSubscription:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        checkId:
+          type:
+          - string
+          - 'null'
+          example: 47ccf418-6224-429c-a096-637364249882
+          x-format:
+            guid: true
+        groupId:
+          type:
+          - number
+          - 'null'
+          example: null
+          x-constraint:
+            sign: positive
+        activated:
+          type: boolean
+      required:
+      - activated
+    ProjectBindingOwnerV1:
+      type:
+      - object
+      - 'null'
+      description: The project that owns this resource — the one whose deploy can delete it. Null when no project owns it, including when other projects merely reference it. In the rare case that several projects hold an ownership record for one resource, this reports the preferred one and the rest are omitted.
+      properties:
+        project:
+          $ref: '#/components/schemas/BindingProjectV1'
+        binding:
+          $ref: '#/components/schemas/ProjectBindingDetailsV1'
+      required:
+      - project
+      - binding
+    BindingProjectV1:
+      type: object
+      description: The project this binding is to.
+      properties:
+        id:
+          type: string
+          description: The ID of the project.
+        logicalId:
+          type: string
+          description: The logical ID of the project, as declared in code.
+        name:
+          type: string
+          description: The name of the project.
+      required:
+      - id
+      - logicalId
+      - name
+    Model3:
+      type: string
+      enum:
+      - Payment Required
+    NotFoundError:
+      type: object
+      properties:
         statusCode:
-          type: integer
-          description: HTTP status code
-    PaginationMeta:
+          type: number
+          enum:
+          - 404
+        error:
+          $ref: '#/components/schemas/Model4'
+        message:
+          type: string
+          example: Not Found
+      required:
+      - statusCode
+      - error
+    error:
+      type: string
+      enum:
+      - Unauthorized
+    type:
+      type: string
+      example: SMS
+      enum:
+      - EMAIL
+      - SLACK
+      - SLACK_APP
+      - WEBHOOK
+      - SMS
+      - PAGERDUTY
+      - OPSGENIE
+      - CALL
+    Model4:
+      type: string
+      enum:
+      - Not Found
+    AlertChannelConfig:
+      type: object
+      description: The configuration details for this alert channel. These can be very different based on the type of the channel.
+    Model1:
+      type: string
+      enum:
+      - Forbidden
+    ProjectBindingsV1:
+      type: object
+      description: The Checkly CLI projects that manage this resource. `owner` is null and `references` empty when the resource is not managed by code.
+      properties:
+        owner:
+          $ref: '#/components/schemas/ProjectBindingOwnerV1'
+        references:
+          $ref: '#/components/schemas/ProjectBindingReferencesV1'
+      required:
+      - owner
+      - references
+    AlertChannelCreateConfig:
+      type: object
+    AlertChannelRead:
       type: object
       properties:
-        currentPage:
+        id:
+          type: number
+          example: 1
+          x-constraint:
+            sign: positive
+        type:
+          $ref: '#/components/schemas/type'
+        config:
+          $ref: '#/components/schemas/AlertChannelConfig'
+        subscriptions:
+          $ref: '#/components/schemas/AlertChanelSubscriptionList'
+        sendRecovery:
+          type: boolean
+        sendFailure:
+          type: boolean
+        sendDegraded:
+          type: boolean
+        sslExpiry:
+          type: boolean
+          description: Determines if an alert should be sent for expiring SSL certificates.
+          default: false
+        sslExpiryThreshold:
           type: integer
-          description: Current page number
-        totalPages:
-          type: integer
-          description: Total number of pages
-        totalItems:
-          type: integer
-          description: Total number of items
-        limit:
-          type: integer
-          description: Items per page
-    AlertChannelList:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/AlertChannel'
-        meta:
-          $ref: '#/components/schemas/PaginationMeta'
+          description: At what moment in time to start alerting on SSL certificates.
+          default: 30
+          minimum: 1
+          maximum: 30
+        autoSubscribe:
+          type: boolean
+          description: Automatically subscribe newly created checks to this alert channel.
+          default: false
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        projectBindings:
+          $ref: '#/components/schemas/ProjectBindingsV1'
+      required:
+      - id
+      - type
+      - config
+    AlertChanelSubscriptionList:
+      type: array
+      description: All checks subscribed to this channel.
+      example: []
+      items:
+        $ref: '#/components/schemas/AlertChanelSubscription'
   securitySchemes:
-    bearerAuth:
+    Bearer:
       type: http
       scheme: bearer
-      description: API Key authentication for Checkly API. You can get your API key at https://app.checklyhq.com/settings/user/api-keys
-    accountId:
-      type: apiKey
-      in: header
-      name: X-Checkly-Account
-      description: Your Checkly account ID. You can find it at https://app.checklyhq.com/settings/account/general
+      bearerFormat: Bearer
+      description: 'The Checkly Public API uses API keys to authenticate requests. You can get the API Key <a href="https://app.checklyhq.com/settings/user/api-keys" target="_blank">here</a>.</br>Your API key is like a password: <br>keep it secure!</br></br>Authentication to the API is performed using the Bearer auth method in the Authorization header and using the account ID.</br></br>For example, set <b>Authorization</b> header while using cURL: <code>curl -H "Authorization: Bearer [apiKey]" "X-Checkly-Account: [accountId]"</code></br>'

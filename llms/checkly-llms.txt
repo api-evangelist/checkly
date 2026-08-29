@@ -1,0 +1,151 @@
+# Checkly
+
+> Checkly is the synthetic monitoring and testing platform for modern engineering teams. Test and monitor your APIs and web apps from pull request to production — from the outside in.
+
+Checkly helps engineering teams build reliable, performant applications by proactively detecting issues before users do. Unlike traditional monitoring that only tells you when servers are down, Checkly validates that customer-facing workflows actually work.
+
+## When to use Checkly
+
+Reach for Checkly when the job is any of these:
+
+- Verify that a deployed API, endpoint, or user journey actually works right now, from outside the network, from 22+ global regions.
+- Turn an existing Playwright test suite into production monitoring without rewriting it.
+- Define monitoring as code (TypeScript/JavaScript, Terraform, or Pulumi), version it in Git, and deploy it from CI.
+- Get alerted when a scheduled job, cron task, or background worker stops checking in.
+- Investigate a failing check with traces, logs, and AI root cause analysis.
+- Open, update, and resolve incidents on a branded public status page.
+
+Checkly is not an APM or a log aggregator, and it is not a real user monitoring tool. It observes an application the way a customer does and reports when a user-facing path breaks. For host metrics and log search, use an observability backend alongside it.
+
+### How an agent should call Checkly
+
+- **CLI** (best for creating and deploying monitors): npm package `checkly` (https://www.npmjs.com/package/checkly). Install with `npm install -g checkly`, scaffold with `npx checkly init`, deploy with `npx checkly deploy`. Write commands exit with code 2 and a JSON confirmation envelope that must be explicitly confirmed, so an agent cannot mutate an account by accident.
+- **MCP server** (best for reading live state during an incident): `https://api.checklyhq.com/mcp` over Streamable HTTP. Manifest at https://www.checklyhq.com/.well-known/mcp.json
+- **Agent Skills** (best for giving an agent Checkly expertise): `npx checkly skills install`. Index at https://www.checklyhq.com/.well-known/agent-skills/index.json
+- **REST API** (best for custom integrations): `https://api.checklyhq.com/v1/`, OpenAPI spec at https://www.checklyhq.com/openapi.json
+
+## Platform
+
+The Checkly Platform is made up of three products that work together: from pull-request to post-mortem.
+
+- **Checkly Detect**: Test and monitor applications, services, and infrastructure with uptime monitoring, synthetic monitoring powered by Playwright, and continuous testing across staging, CI/CD, and production.
+- **Checkly Communicate**: Notify and inform stakeholders about incidents with rich alerting (Slack, PagerDuty, SMS), branded status pages, and real-time dashboards.
+- **Checkly Resolve**: Investigate and resolve incidents faster with OpenTelemetry-based distributed tracing and Rocky AI for AI-powered incident investigation.
+
+## Differentiators
+
+- **Signal Over Noise**: Proactive, outside-in monitoring that delivers actionable signal instead of data overload. Catch user-impacting issues before users do.
+- **Monitoring as Code**: Define, version, and manage monitoring as code with CLI, Terraform, and Pulumi providers. No agents required.
+- **Developer Experience**: A developer-first platform with CLI, API, and SDK. Engineers define, test, and deploy monitors without leaving Git.
+- **Native Playwright Support**: Built natively on Playwright. Reuse the same test scripts from CI for production monitoring.
+- **Unified Platform**: Combines synthetic monitoring, distributed tracing, and incident response in a single platform.
+
+## Products
+
+- [Synthetic Monitoring](https://www.checklyhq.com/product/synthetic-monitoring/): Validate real user journeys with full Chromium browser checks powered by Playwright, API checks, and performance metrics like LCP and TTI.
+- [API Monitoring](https://www.checklyhq.com/product/api-monitoring/): Programmable API tests that validate payloads, schema, status codes, headers, and performance for REST and GraphQL endpoints.
+- [Uptime Monitoring](https://www.checklyhq.com/product/uptime-monitoring/): Monitor availability with URL checks (HTTP/HTTPS), TCP, DNS, and ICMP checks from 22+ global regions at frequencies up to 1 second.
+- [Heartbeat Monitoring](https://www.checklyhq.com/product/heartbeat-monitoring/): Monitor cron jobs, scheduled tasks, workers, and data pipelines. Get alerted when jobs fail silently.
+- [TCP Monitoring](https://www.checklyhq.com/product/tcp-monitoring/): Low-level connectivity testing for databases, caches, message brokers, and internal microservices.
+- [Playwright Check Suites](https://www.checklyhq.com/product/playwright-check-suites/): Run multi-file Playwright test suites natively in production from 22+ global locations.
+- [Traces](https://www.checklyhq.com/product/traces/): OpenTelemetry-based distributed tracing that connects failure points to root causes.
+- [Alerting](https://www.checklyhq.com/product/alerting/): Rich alerts with screenshots, traces, and logs delivered to Slack, SMS, PagerDuty, OpsGenie, and more.
+- [Status Pages](https://www.checklyhq.com/product/status-pages/): Branded, public-facing status pages to communicate availability to customers.
+- [Dashboards](https://www.checklyhq.com/product/dashboards/): Internal dashboards for real-time visibility into application health and performance.
+- [Monitoring as Code](https://www.checklyhq.com/product/monitoring-as-code/): Define, version, and manage monitoring infrastructure entirely as code.
+- [CLI](https://www.checklyhq.com/cli/): Developer-first command-line interface for creating, testing, and deploying monitors.
+- [Terraform Provider](https://www.checklyhq.com/product/terraform-provider/): Manage Checkly resources with Terraform for infrastructure-as-code workflows.
+- [Pulumi Provider](https://www.checklyhq.com/product/pulumi-provider/): Manage Checkly resources with Pulumi for infrastructure-as-code workflows.
+- [Private Locations](https://www.checklyhq.com/product/private-locations/): Run monitors from within your own network to test internal services and applications behind firewalls.
+- [AI Analysis](https://www.checklyhq.com/product/ai-analysis/): AI-powered analysis and investigation for faster incident resolution.
+
+## Docs
+
+For full documentation, see the [Checkly Docs llms.txt](https://www.checklyhq.com/docs/llms.txt). For a scoped index of just the product pages, see the [Product llms.txt](https://www.checklyhq.com/product/llms.txt).
+
+- [Documentation Home](https://www.checklyhq.com/docs/): Complete Checkly documentation and reference.
+- [API Reference](https://www.checklyhq.com/docs/api-reference/overview/): REST API for managing checks, groups, alerts, dashboards, and more.
+- [CLI Documentation](https://www.checklyhq.com/docs/cli/overview/): Install, configure, and use the Checkly CLI.
+- [Changelog](https://feedback.checklyhq.com/changelog): Latest product updates and releases.
+
+## AI Agents & MCP
+
+- [Agent Skills](https://www.checklyhq.com/docs/ai/skills/): Install Checkly's Configure, Investigate, Communicate, and Manage skills with `npx checkly skills install`. Machine-readable index at https://www.checklyhq.com/.well-known/agent-skills/index.json
+- [MCP Server](https://www.checklyhq.com/docs/ai/mcp-server/): Connect MCP clients to `https://api.checklyhq.com/mcp` over Streamable HTTP to inspect checks, test sessions, and RCA, and to manage status page incidents. Manifest at https://www.checklyhq.com/.well-known/mcp.json, server card at https://www.checklyhq.com/.well-known/mcp/server-card.json
+
+## Developer resources
+
+Every resource below lives at a stable, predictable URL.
+
+- [Checkly documentation](https://www.checklyhq.com/docs/): Full product and reference documentation.
+- [Checkly API reference](https://www.checklyhq.com/docs/api-reference/overview/): REST API overview, including bearer-token authentication and the required `x-checkly-account` header.
+- [Checkly OpenAPI specification](https://www.checklyhq.com/openapi.json): OpenAPI 3.0 spec for the Checkly Public API, 194 operations, every one with an operationId. Also served from https://api.checklyhq.com/openapi.json
+- [Checkly CLI](https://www.checklyhq.com/cli/): Product page. Reference docs at https://www.checklyhq.com/docs/cli/overview/ and the npm package at https://www.npmjs.com/package/checkly
+- [Checkly MCP server](https://www.checklyhq.com/docs/ai/mcp-server/): Streamable HTTP MCP server. Manifest at https://www.checklyhq.com/.well-known/mcp.json, server card at https://www.checklyhq.com/.well-known/mcp/server-card.json, OAuth metadata at https://api.checklyhq.com/.well-known/oauth-protected-resource
+- [Checkly Agent Skills](https://www.checklyhq.com/docs/ai/skills/): Configure, Investigate, Communicate, and Manage skills. Index at https://www.checklyhq.com/.well-known/agent-skills/index.json
+- [Checkly webhooks](https://www.checklyhq.com/docs/communicate/alerts/webhooks/): Send check results and alerts to any HTTP endpoint.
+- [Checkly Terraform provider](https://registry.terraform.io/providers/checkly/checkly/latest/docs): Manage Checkly resources with Terraform.
+- [Checkly Pulumi provider](https://www.checklyhq.com/product/pulumi-provider/): Manage Checkly resources with Pulumi.
+- [Checkly on GitHub](https://github.com/checkly): Open-source CLI, providers, and examples.
+
+## Markdown for agents
+
+This site does server-driven content negotiation (https://acceptmarkdown.com). Send `Accept: text/markdown` to any page URL and you get `text/markdown` back instead of HTML; responses carry `Vary: Accept`. Hand-authored markdown twins are also reachable directly:
+
+- https://www.checklyhq.com/home.md (the homepage)
+- https://www.checklyhq.com/pricing.md
+- https://www.checklyhq.com/product/uptime-monitoring.md
+- https://www.checklyhq.com/product/synthetic-monitoring.md
+- https://www.checklyhq.com/product/api-monitoring.md
+- https://www.checklyhq.com/product/traces.md
+
+Requests for a path that does not exist return HTTP 404 with a markdown body listing where to look next.
+
+## Guides
+
+### Playwright
+- [What is Playwright?](https://www.checklyhq.com/docs/learn/playwright/what-is-playwright/): Introduction to the Playwright browser automation framework.
+- [Installing Playwright](https://www.checklyhq.com/docs/learn/playwright/how-to-set-up-locally/): How to install and set up Playwright locally.
+- [Navigating user interfaces](https://www.checklyhq.com/docs/learn/playwright/navigation/): Navigate pages, click elements, and interact with web UIs using Playwright.
+- [Waits and timeouts](https://www.checklyhq.com/docs/learn/playwright/waits-and-timeouts/): Handle dynamic content with Playwright's auto-waiting and timeout configuration.
+- [Authentication](https://www.checklyhq.com/docs/learn/playwright/authentication/): Test login flows and manage authentication state in Playwright.
+- [Measuring page performance](https://www.checklyhq.com/docs/learn/playwright/performance/): Capture Core Web Vitals and performance metrics with Playwright.
+- [Debugging errors](https://www.checklyhq.com/docs/learn/playwright/debugging/): Debug failing Playwright tests with traces, screenshots, and logs.
+- [Request interception](https://www.checklyhq.com/docs/learn/playwright/intercept-requests/): Intercept and modify network requests in Playwright tests.
+- [Basic selectors](https://www.checklyhq.com/docs/learn/playwright/selectors/): Locate elements using Playwright's built-in selector engine.
+
+### Monitoring
+- [What is Monitoring as Code?](https://www.checklyhq.com/docs/learn/monitoring/monitoring-as-code/): Define and manage monitoring infrastructure as code.
+- [The Phases of the SDLC](https://www.checklyhq.com/docs/learn/monitoring/intro-to-sdlc/): Understanding the software development lifecycle and where monitoring fits.
+- [Web Application Monitoring](https://www.checklyhq.com/docs/learn/monitoring/web-application-monitoring/): Guide to monitoring web applications end-to-end.
+- [Frontend Monitoring](https://www.checklyhq.com/docs/learn/monitoring/frontend-monitoring/): Monitor frontend performance, errors, and user experience.
+
+### OpenTelemetry
+- [Getting started with Observability](https://www.checklyhq.com/docs/learn/opentelemetry/getting-started-with-observability/): Introduction to observability concepts and OpenTelemetry.
+- [How to instrument your application stack](https://www.checklyhq.com/docs/learn/opentelemetry/how-to-instrument/): Add OpenTelemetry instrumentation to your applications.
+- [Metrics](https://www.checklyhq.com/docs/learn/opentelemetry/metrics/): Understand and collect metrics with OpenTelemetry.
+- [Traces](https://www.checklyhq.com/docs/learn/opentelemetry/traces/): Distributed tracing concepts and implementation with OpenTelemetry.
+
+### Kubernetes
+- [Getting started](https://www.checklyhq.com/docs/learn/kubernetes/monitoring-challenges/): Kubernetes monitoring challenges and how to address them.
+- [Logging best practices](https://www.checklyhq.com/docs/learn/kubernetes/logging-best-practices/): Best practices for logging in Kubernetes environments.
+- [Structured logging](https://www.checklyhq.com/docs/learn/kubernetes/structured-logging/): Implement structured logging in Kubernetes.
+- [Events](https://www.checklyhq.com/docs/learn/kubernetes/events/): Monitor and manage Kubernetes events.
+
+## Learn
+
+- [Playwright Guides](https://www.checklyhq.com/docs/learn/playwright/overview/): Comprehensive guides for browser automation and testing with Playwright.
+- [Monitoring Guides](https://www.checklyhq.com/docs/learn/monitoring/overview/): Learn monitoring concepts, strategies, and best practices.
+- [OpenTelemetry Guides](https://www.checklyhq.com/docs/learn/opentelemetry/overview/): Get started with observability and OpenTelemetry instrumentation.
+- [Kubernetes Guides](https://www.checklyhq.com/docs/learn/kubernetes/overview/): Monitor, log, and observe Kubernetes workloads.
+- [Blog](https://www.checklyhq.com/blog/): Technical articles, tutorials, and product updates.
+- [Webinars](https://www.checklyhq.com/webinars/): On-demand webinars on monitoring, testing, and reliability.
+- [Customer Case Studies](https://www.checklyhq.com/customers/): How engineering teams use Checkly to improve reliability.
+
+## Additional Resources
+
+- [Pricing](https://www.checklyhq.com/pricing/): Plans and pricing for Checkly.
+- [Pricing Details (Markdown)](https://www.checklyhq.com/pricing.md): Detailed pricing breakdown with plan comparisons, add-ons, overage rates, and feature comparison tables across Hobby, Starter, Team, and Enterprise plans.
+- [Sign Up](https://app.checklyhq.com/signup/): Create a free Checkly account.
+- [GitHub](https://github.com/checkly): Checkly open-source projects and examples.
+- [Status Page](https://is.checkly.online/): Checkly platform status.

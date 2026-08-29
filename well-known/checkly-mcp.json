@@ -1,0 +1,51 @@
+{
+	"$schema": "https://modelcontextprotocol.io/schemas/draft/server-manifest.json",
+	"name": "com.checklyhq/checkly",
+	"title": "Checkly MCP Server",
+	"description": "Inspect Checkly checks, check results, and test sessions, trigger existing checks, read AI root cause analysis, and manage status page incidents.",
+	"websiteUrl": "https://www.checklyhq.com",
+	"documentationUrl": "https://www.checklyhq.com/docs/ai/mcp-server/",
+	"remotes": [
+		{
+			"type": "streamable-http",
+			"url": "https://api.checklyhq.com/mcp"
+		}
+	],
+	"authentication": {
+		"schemes": ["oauth2", "bearer"],
+		"protectedResourceMetadata": "https://api.checklyhq.com/.well-known/oauth-protected-resource",
+		"authorizationServers": ["https://auth.checklyhq.com/"],
+		"bearerMethodsSupported": ["header"],
+		"scopesSupported": [
+			"checkly:account:read",
+			"checkly:account:invite",
+			"checkly:checks:read",
+			"checkly:checks:write",
+			"checkly:checks:run",
+			"checkly:incidents:read",
+			"checkly:incidents:write",
+			"checkly:environment-variables:read",
+			"checkly:environment-variables:write",
+			"checkly:status-pages:read",
+			"checkly:rca:read",
+			"checkly:rca:run",
+			"checkly:test-sessions:read",
+			"checkly:assets:read"
+		]
+	},
+	"whenToUse": "Use the Checkly MCP server to answer questions about whether a deployed service is currently healthy, to read why a synthetic or uptime check failed, to re-run a check on demand, to pull AI root cause analysis for a failure, and to open or update an incident on a Checkly status page.",
+	"provider": {
+		"name": "Checkly",
+		"url": "https://www.checklyhq.com"
+	},
+	"repository": {
+		"url": "https://github.com/checkly",
+		"source": "github"
+	},
+	"related": {
+		"serverCard": "https://www.checklyhq.com/.well-known/mcp/server-card.json",
+		"agentSkills": "https://www.checklyhq.com/.well-known/agent-skills/index.json",
+		"openapi": "https://www.checklyhq.com/openapi.json",
+		"llmsTxt": "https://www.checklyhq.com/llms.txt"
+	}
+}

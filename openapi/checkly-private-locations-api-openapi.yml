@@ -1,126 +1,875 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Checkly Public Accounts Private Locations API
+  title: Checkly Public Private locations API
   version: v1
-  description: The Checkly Public API allows you to programmatically manage your monitoring checks, alerts, and more. If you have any questions, please do not hesitate to get in touch with us.
-  contact:
-    name: Checkly Support
-    url: https://checklyhq.com/support
-  license:
-    name: MIT
+  description: These are the docs for the newly released Checkly Public API.<br />If you have any questions, please do not hesitate to get in touch with us.
 servers:
 - url: https://api.checklyhq.com
-  description: Production server
 security:
-- bearerAuth: []
-  accountId: []
+- Bearer: []
 tags:
-- name: Private Locations
+- name: Private locations
 paths:
   /v1/private-locations:
     get:
-      summary: List Private Locations
-      description: Retrieve all private locations
-      operationId: listPrivateLocations
+      summary: List all private locations
+      operationId: getV1Privatelocations
+      description: Lists all private locations in your account.
       parameters:
-      - name: limit
-        in: query
-        description: Limit the number of results
+      - name: x-checkly-account
+        in: header
         schema:
-          type: integer
-          default: 10
-          minimum: 1
-          maximum: 100
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      - name: versions
+        in: query
+        schema:
+          type: boolean
+          default: false
+      tags:
+      - Private locations
       responses:
         '200':
-          description: List of private locations
+          description: Successful
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PrivateLocationList'
-      tags:
-      - Private Locations
+                $ref: '#/components/schemas/privateLocationsListSchema'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
     post:
-      summary: Create Private Location
-      description: Create a new private location
-      operationId: createPrivateLocation
+      summary: Create a private location
+      operationId: postV1Privatelocations
+      description: Creates a new private location.
+      parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      tags:
+      - Private locations
       requestBody:
-        required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PrivateLocationCreate'
+              $ref: '#/components/schemas/privateLocationCreate'
       responses:
         '201':
-          description: Private location created
+          description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PrivateLocation'
+                $ref: '#/components/schemas/commonPrivateLocationSchemaResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '402':
+          description: Payment Required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentRequiredError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+  /v1/private-locations/{id}:
+    delete:
+      summary: Remove a private location
+      operationId: deleteV1PrivatelocationsId
+      description: Permanently removes a private location.
+      parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      - name: id
+        in: path
+        schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
       tags:
-      - Private Locations
+      - Private locations
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConflictError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+    get:
+      summary: Retrieve a private location
+      operationId: getV1PrivatelocationsId
+      description: Show details of a specific private location.
+      parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      - name: id
+        in: path
+        schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
+      tags:
+      - Private locations
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/privateLocationsSchema'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+    put:
+      summary: Update a private location
+      operationId: putV1PrivatelocationsId
+      description: Updates a private location.
+      parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      - name: id
+        in: path
+        schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
+      tags:
+      - Private locations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/privateLocationUpdate'
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/commonPrivateLocationSchemaResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+  /v1/private-locations/{id}/keys:
+    post:
+      summary: Generate a new API Key for a private location
+      operationId: postV1PrivatelocationsIdKeys
+      description: Creates an api key on the private location.
+      parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      - name: id
+        in: path
+        schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
+      tags:
+      - Private locations
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/privateLocationKeys'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '402':
+          description: Payment Required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentRequiredError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+  /v1/private-locations/{id}/keys/{keyId}:
+    delete:
+      summary: Remove an existing API key for a private location
+      operationId: deleteV1PrivatelocationsIdKeysKeyid
+      description: Permanently removes an api key from a private location.
+      parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      - name: id
+        in: path
+        schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
+      - name: keyId
+        in: path
+        schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
+      tags:
+      - Private locations
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+  /v1/private-locations/{id}/metrics:
+    get:
+      summary: Get private location health metrics from a window of time.
+      operationId: getV1PrivatelocationsIdMetrics
+      description: Get private location health metrics from a window of time.<br><br><b>Rate-limiting is applied to this endpoint, you can send 300 requests per day at most.<b>
+      parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      - name: id
+        in: path
+        schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
+      - name: from
+        in: query
+        schema:
+          type: string
+          format: date
+          description: Select metrics beginning with this UNIX timestamp. Must be less than 15 days ago.
+        description: Select metrics beginning with this UNIX timestamp. Must be less than 15 days ago.
+        required: true
+      - name: to
+        in: query
+        schema:
+          type: string
+          format: date
+          description: Select metrics up to this UNIX timestamp.
+        description: Select metrics up to this UNIX timestamp.
+        required: true
+      tags:
+      - Private locations
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/privateLocationsMetricsHistoryResponseSchema'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
 components:
   schemas:
-    PrivateLocationCreate:
+    attributes:
       type: object
+    ProjectBindingReferencesV1:
+      type: array
+      description: Projects that use this resource without owning it; their deploys leave it alone. Empty when there are none.
+      items:
+        $ref: '#/components/schemas/ProjectBindingV1'
+    RunningAgent:
+      type: object
+      properties:
+        version:
+          type: string
+        isOutdated:
+          type: boolean
+        count:
+          type: number
+        agents:
+          $ref: '#/components/schemas/agents'
       required:
-      - name
-      properties:
-        name:
-          type: string
-          description: Private location name
-        slugName:
-          type: string
-          description: URL-friendly name
-        icon:
-          type: string
-          description: Location icon
-    PrivateLocationList:
+      - version
+      - isOutdated
+      - count
+      - agents
+    agents:
+      type: array
+      items:
+        $ref: '#/components/schemas/RunningAgentInfo'
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
+    timestamps:
+      type: array
+      items:
+        type: string
+        format: date-time
+    queueSize:
+      type: array
+      items:
+        type: number
+    UnauthorizedError:
       type: object
       properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/PrivateLocation'
-        meta:
-          $ref: '#/components/schemas/PaginationMeta'
-    PrivateLocation:
+        statusCode:
+          type: number
+          enum:
+          - 401
+        error:
+          $ref: '#/components/schemas/error'
+        message:
+          type: string
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    runningAgents:
+      type: array
+      description: A list of agent versions and their counts currently connected to this private location.
+      items:
+        $ref: '#/components/schemas/RunningAgent'
+    TooManyRequestsError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    Model16:
+      type: string
+      enum:
+      - Conflict
+    PaymentRequiredError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 402
+        error:
+          $ref: '#/components/schemas/Model3'
+        message:
+          type: string
+          example: Payment Required
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    privateLocationKeys:
       type: object
       properties:
         id:
           type: string
-          description: Private location ID
-        name:
+          example: fed3ada8-7d9b-4634-a0fe-471afe0518b6
+          x-format:
+            guid: true
+        rawKey:
           type: string
-          description: Private location name
-        slugName:
+          example: pl_a89026d28a0c45cf9e11b4c3637f3912
+        maskedKey:
           type: string
-          description: URL-friendly name
-        icon:
+          description: The masked key value.
+          example: '...6a1e'
+        created_at:
           type: string
-          description: Location icon
-    PaginationMeta:
+          format: date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date
+      required:
+      - id
+      - rawKey
+      - maskedKey
+      - created_at
+    ConflictError:
       type: object
       properties:
-        currentPage:
-          type: integer
-          description: Current page number
-        totalPages:
-          type: integer
-          description: Total number of pages
-        totalItems:
-          type: integer
-          description: Total number of items
-        limit:
-          type: integer
-          description: Items per page
+        statusCode:
+          type: number
+          enum:
+          - 409
+        error:
+          $ref: '#/components/schemas/Model16'
+        message:
+          type: string
+          example: Conflict
+      required:
+      - statusCode
+      - error
+    privateLocationsSchema:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 0baf2a80-7266-44af-b56c-2af7086782ee
+          x-format:
+            guid: true
+        name:
+          type: string
+          description: The name assigned to the private location.
+          example: New Private Location
+        slugName:
+          type: string
+          description: Valid slug name.
+          example: new-private-location
+        icon:
+          type: string
+          description: The private location icon.
+          example: location
+        created_at:
+          type: string
+          format: date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date
+        keys:
+          $ref: '#/components/schemas/keys'
+        proxyUrl:
+          type:
+          - string
+          - 'null'
+          description: A proxy for outgoing API check HTTP calls from your private location.
+          example: https://user:password@164.92.149.127:3128
+        lastSeen:
+          type:
+          - string
+          - 'null'
+          format: date
+        agentCount:
+          type:
+          - number
+          - 'null'
+        minAgentVersion:
+          type:
+          - string
+          - 'null'
+          description: The lowest agent version currently connected to this private location.
+        runningAgents:
+          $ref: '#/components/schemas/runningAgents'
+        projectBindings:
+          $ref: '#/components/schemas/ProjectBindingsV1'
+      required:
+      - id
+      - name
+      - slugName
+      - created_at
+    commonPrivateLocationSchemaResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 0baf2a80-7266-44af-b56c-2af7086782ee
+          x-format:
+            guid: true
+        name:
+          type: string
+          description: The name assigned to the private location.
+          example: New Private Location
+        slugName:
+          type: string
+          description: Valid slug name.
+          example: new-private-location
+        icon:
+          type: string
+          description: The private location icon.
+          example: location
+        created_at:
+          type: string
+          format: date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date
+        keys:
+          $ref: '#/components/schemas/keys'
+        proxyUrl:
+          type:
+          - string
+          - 'null'
+          description: A proxy for outgoing API check HTTP calls from your private location.
+          example: https://user:password@164.92.149.127:3128
+      required:
+      - id
+      - name
+      - slugName
+      - created_at
+    privateLocationsMetricsHistoryResponseSchema:
+      type: object
+      properties:
+        timestamps:
+          $ref: '#/components/schemas/timestamps'
+        queueSize:
+          $ref: '#/components/schemas/queueSize'
+        oldestScheduledCheckRun:
+          $ref: '#/components/schemas/oldestScheduledCheckRun'
+    oldestScheduledCheckRun:
+      type: array
+      items:
+        type: number
+    keys:
+      type: array
+      items:
+        $ref: '#/components/schemas/privateLocationKeys'
+    ProjectBindingV1:
+      type: object
+      properties:
+        project:
+          $ref: '#/components/schemas/BindingProjectV1'
+        binding:
+          $ref: '#/components/schemas/ProjectBindingDetailsV1'
+      required:
+      - project
+      - binding
+    ForbiddenError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 403
+        error:
+          $ref: '#/components/schemas/Model1'
+        message:
+          type: string
+          example: Forbidden
+      required:
+      - statusCode
+      - error
+    ProjectBindingDetailsV1:
+      type: object
+      description: The resource's side of this binding.
+      properties:
+        logicalId:
+          type: string
+          description: The resource's logical ID within this project, as declared in code.
+          example: homepage-check
+        pending:
+          type: boolean
+          description: True when the binding is reserved by an import plan that has not been deployed yet.
+      required:
+      - logicalId
+      - pending
+    ProjectBindingOwnerV1:
+      type:
+      - object
+      - 'null'
+      description: The project that owns this resource — the one whose deploy can delete it. Null when no project owns it, including when other projects merely reference it. In the rare case that several projects hold an ownership record for one resource, this reports the preferred one and the rest are omitted.
+      properties:
+        project:
+          $ref: '#/components/schemas/BindingProjectV1'
+        binding:
+          $ref: '#/components/schemas/ProjectBindingDetailsV1'
+      required:
+      - project
+      - binding
+    BindingProjectV1:
+      type: object
+      description: The project this binding is to.
+      properties:
+        id:
+          type: string
+          description: The ID of the project.
+        logicalId:
+          type: string
+          description: The logical ID of the project, as declared in code.
+        name:
+          type: string
+          description: The name of the project.
+      required:
+      - id
+      - logicalId
+      - name
+    Model3:
+      type: string
+      enum:
+      - Payment Required
+    NotFoundError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 404
+        error:
+          $ref: '#/components/schemas/Model4'
+        message:
+          type: string
+          example: Not Found
+      required:
+      - statusCode
+      - error
+    error:
+      type: string
+      enum:
+      - Unauthorized
+    privateLocationCreate:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name assigned to the private location.
+          example: New Private Location
+        slugName:
+          type: string
+          description: Valid slug name.
+          example: new-private-location
+          pattern: ^((?!((us(-gov)?|ap|ca|cn|eu|sa|af|me)-(central|(north|south)?(east|west)?)-\d+))[a-zA-Z0-9-]{1,30})$
+        icon:
+          type: string
+          example: location
+          default: location
+        proxyUrl:
+          type:
+          - string
+          - 'null'
+          description: A proxy for outgoing API check HTTP calls from your private location.
+          example: https://user:password@164.92.149.127:3128
+      required:
+      - name
+      - slugName
+    privateLocationsListSchema:
+      type: array
+      items:
+        $ref: '#/components/schemas/privateLocationsSchema'
+    Model4:
+      type: string
+      enum:
+      - Not Found
+    Model1:
+      type: string
+      enum:
+      - Forbidden
+    ProjectBindingsV1:
+      type: object
+      description: The Checkly CLI projects that manage this resource. `owner` is null and `references` empty when the resource is not managed by code.
+      properties:
+        owner:
+          $ref: '#/components/schemas/ProjectBindingOwnerV1'
+        references:
+          $ref: '#/components/schemas/ProjectBindingReferencesV1'
+      required:
+      - owner
+      - references
+    RunningAgentInfo:
+      type: object
+      properties:
+        id:
+          type: string
+        lastSeenAt:
+          type: string
+      required:
+      - id
+      - lastSeenAt
+    privateLocationUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name assigned to the private location.
+          example: New Private Location
+        icon:
+          type: string
+          example: location
+        proxyUrl:
+          type:
+          - string
+          - 'null'
+          description: A proxy for outgoing API check HTTP calls from your private location.
+          example: https://user:password@164.92.149.127:3128
+      required:
+      - name
   securitySchemes:
-    bearerAuth:
+    Bearer:
       type: http
       scheme: bearer
-      description: API Key authentication for Checkly API. You can get your API key at https://app.checklyhq.com/settings/user/api-keys
-    accountId:
-      type: apiKey
-      in: header
-      name: X-Checkly-Account
-      description: Your Checkly account ID. You can find it at https://app.checklyhq.com/settings/account/general
+      bearerFormat: Bearer
+      description: 'The Checkly Public API uses API keys to authenticate requests. You can get the API Key <a href="https://app.checklyhq.com/settings/user/api-keys" target="_blank">here</a>.</br>Your API key is like a password: <br>keep it secure!</br></br>Authentication to the API is performed using the Bearer auth method in the Authorization header and using the account ID.</br></br>For example, set <b>Authorization</b> header while using cURL: <code>curl -H "Authorization: Bearer [apiKey]" "X-Checkly-Account: [accountId]"</code></br>'

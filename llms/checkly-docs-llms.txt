@@ -1,0 +1,176 @@
+# Checkly Docs
+
+- [Docs (202 pages)](https://www.checklyhq.com/docs/_llms/docs.md): Documentation for Docs.
+
+## Constructs
+
+### Getting Started
+
+- [Using Checkly CLI Constructs](https://www.checklyhq.com/docs/constructs/overview.md): Build monitoring infrastructure using JavaScript/TypeScript and the Checkly CLI
+- [Create Checks Automatically from Files](https://www.checklyhq.com/docs/constructs/including-checks.md): Learn how to automatically include checks in your project
+- [Dynamic monitor creation](https://www.checklyhq.com/docs/constructs/dynamic-monitor-creation.md): Create monitors dynamically with the Checkly CLI by looping over lists of targets in TypeScript or JavaScript, managing checks at scale without duplication.
+
+### DETECT
+
+- [UrlMonitor Construct](https://www.checklyhq.com/docs/constructs/url-monitor.md): Learn how to configure URL monitors with the Checkly CLI.
+- [DnsMonitor Construct](https://www.checklyhq.com/docs/constructs/dns-monitor.md): Learn how to configure DNS monitors with the Checkly CLI.
+- [TcpMonitor Construct](https://www.checklyhq.com/docs/constructs/tcp-monitor.md): Learn how to configure TCP monitors with the Checkly CLI.
+- [IcmpMonitor Construct](https://www.checklyhq.com/docs/constructs/icmp-monitor.md): Learn how to configure ICMP monitors with the Checkly CLI.
+- [TracerouteMonitor Construct](https://www.checklyhq.com/docs/constructs/traceroute-monitor.md): Learn how to configure Traceroute monitors with the Checkly CLI.
+- [GrpcMonitor Construct](https://www.checklyhq.com/docs/constructs/grpc-monitor.md): Learn how to configure gRPC monitors with the Checkly CLI.
+- [SslMonitor Construct](https://www.checklyhq.com/docs/constructs/ssl-monitor.md): Learn how to configure SSL monitors with the Checkly CLI.
+- [Heartbeat Monitor Construct](https://www.checklyhq.com/docs/constructs/heartbeat-monitor.md): Learn how to configure heartbeat monitors with the Checkly CLI.
+- [API Check Construct](https://www.checklyhq.com/docs/constructs/api-check.md): Learn how to configure API Checks with the Checkly CLI.
+- [Multistep Check Construct](https://www.checklyhq.com/docs/constructs/multistep-check.md): Learn how to configure multistep checks with the Checkly CLI.
+- [Browser Check Construct](https://www.checklyhq.com/docs/constructs/browser-check.md): Learn how to configure browser checks with the Checkly CLI.
+- [Playwright Check Suite](https://www.checklyhq.com/docs/constructs/playwright-check.md): Learn how to configure Playwright check suites with the Checkly CLI.
+
+### COMMUNICATE
+
+- [Alert Escalation Policy Construct](https://www.checklyhq.com/docs/constructs/alert-escalation-policy.md): Learn how to configure alert escalation policies with the Checkly CLI.
+- [RetryStrategyBuilder Construct](https://www.checklyhq.com/docs/constructs/retry-strategy.md): Learn how to configure retry strategies with the Checkly CLI.
+- [Dashboard Construct](https://www.checklyhq.com/docs/constructs/dashboard.md): Learn how to configure dashboards with the Checkly CLI.
+- [MaintenanceWindow Construct](https://www.checklyhq.com/docs/constructs/maintenance-window.md): Learn how to configure maintenance windows with the Checkly CLI.
+
+#### Alert Channels
+
+- [Alert Channel Overview](https://www.checklyhq.com/docs/constructs/alert-channel.md): Learn how to configure alert channels with the Checkly CLI.
+- [EmailAlertChannel Construct](https://www.checklyhq.com/docs/constructs/email-alert-channel.md): Learn how to configure email alert channels with the Checkly CLI.
+- [SmsAlertChannel Construct](https://www.checklyhq.com/docs/constructs/sms-alert-channel.md): Learn how to configure SMS alert channels with the Checkly CLI.
+- [PhoneCallAlertChannel Construct](https://www.checklyhq.com/docs/constructs/phone-call-alert-channel.md): Learn how to configure phone call alert channels with the Checkly CLI.
+- [SlackAppAlertChannel Construct](https://www.checklyhq.com/docs/constructs/slack-app-alert-channel.md): Learn how to configure Slack alert channels with the Checkly CLI.
+- [SlackAlertChannel Construct](https://www.checklyhq.com/docs/constructs/slack-alert-channel.md): Learn how to configure Slack alert channels with the Checkly CLI.
+- [WebhookAlertChannel Construct](https://www.checklyhq.com/docs/constructs/webhook-alert-channel.md): Learn how to configure webhook alert channels with the Checkly CLI.
+- [OpsgenieAlertChannel Construct](https://www.checklyhq.com/docs/constructs/opsgenie-alert-channel.md): Learn how to configure Opsgenie alert channels with the Checkly CLI.
+- [PagerdutyAlertChannel Construct](https://www.checklyhq.com/docs/constructs/pagerduty-alert-channel.md): Learn how to configure Pagerduty alert channels with the Checkly CLI.
+- [IncidentioAlertChannel Construct](https://www.checklyhq.com/docs/constructs/incidentio-alert-channel.md): Learn how to configure Incident.io alert channels with the Checkly CLI.
+- [MSTeamsAlertChannel Construct](https://www.checklyhq.com/docs/constructs/msteams-alert-channel.md): Learn how to configure Microsoft Teams alert channels with the Checkly CLI.
+- [TelegramAlertChannel Construct](https://www.checklyhq.com/docs/constructs/telegram-alert-channel.md): Learn how to configure Telegram alert channels and forum topics with the Checkly CLI.
+
+#### Status Pages
+
+- [StatusPage Construct](https://www.checklyhq.com/docs/constructs/status-page.md): Learn how to configure status pages with the Checkly CLI.
+- [StatusPageService Construct](https://www.checklyhq.com/docs/constructs/status-page-service.md): Learn how to configure status page services with the Checkly CLI.
+- [IncidentTrigger Configuration](https://www.checklyhq.com/docs/constructs/incident-trigger.md): Learn how to configure status page incident automation with the Checkly CLI.
+
+### Project & Configuration
+
+- [Project Construct](https://www.checklyhq.com/docs/constructs/project.md): Learn how to configure projects with the Checkly CLI.
+- [CheckGroupV2 Construct](https://www.checklyhq.com/docs/constructs/check-group-v2.md): Learn how to configure check groups with the Checkly CLI.
+- [CheckGroup Construct](https://www.checklyhq.com/docs/constructs/check-group.md): Learn how to configure check groups with the Checkly CLI.
+
+### Platform
+
+- [PrivateLocation Construct](https://www.checklyhq.com/docs/constructs/private-location.md): Learn how to configure private locations with the Checkly CLI.
+
+## CLI Reference
+
+### Getting Started
+
+- [Checkly CLI](https://www.checklyhq.com/docs/cli/overview.md): Code, test, and deploy synthetic monitoring at scale with the Checkly CLI.
+- [Intallation](https://www.checklyhq.com/docs/cli/installation.md): Creating a CLI project from scratch
+- [Authentication](https://www.checklyhq.com/docs/cli/authentication.md): How to authenticate with the Checkly CLI
+- [Environment Variables](https://www.checklyhq.com/docs/cli/environment-variables.md): Learn how to use environment variables in your Checkly project
+- [Using npm packages and local dependencies](https://www.checklyhq.com/docs/cli/dependencies.md): Use npm packages and local JavaScript or TypeScript files in your checks, and see how dependencies differ between Checkly runtimes and Playwright Check Suites.
+- [Attaching Git metadata](https://www.checklyhq.com/docs/cli/attaching-git-metadata.md): Attach git metadata like branch, commit SHA, and owner to your Checkly test sessions and deployments so you can cross-reference monitoring with code changes.
+- [Importing existing Checks into your CLI project](https://www.checklyhq.com/docs/cli/importing.md): Learn how to import checks from the UI into the CLI
+- [CLI vs. Terraform & Pulumi](https://www.checklyhq.com/docs/cli/cli-vs-terraform-pulumi.md): Comparing your options for Monitoring as Code
+
+### CLI Commands
+
+- [checkly account](https://www.checklyhq.com/docs/cli/checkly-account.md): View your Checkly account plan, entitlements, feature limits, and available locations.
+- [checkly alert-channels](https://www.checklyhq.com/docs/cli/checkly-alert-channels.md): List and inspect alert channels and their notification logs from the Checkly CLI.
+- [checkly api](https://www.checklyhq.com/docs/cli/checkly-api.md): Make authenticated HTTP requests to the Checkly API from the command line.
+- [checkly assets](https://www.checklyhq.com/docs/cli/checkly-assets.md): List and download result assets such as logs, traces, videos, and screenshots.
+- [checkly checks](https://www.checklyhq.com/docs/cli/checkly-checks.md): List, inspect, run, and analyze checks in your Checkly account.
+- [checkly deploy](https://www.checklyhq.com/docs/cli/checkly-deploy.md): Deploy checks and resources to your Checkly account.
+- [checkly destroy](https://www.checklyhq.com/docs/cli/checkly-destroy.md): Destroy all project resources from your Checkly account.
+- [checkly env](https://www.checklyhq.com/docs/cli/checkly-env.md): Manage the global variables of a Checkly account.
+- [checkly import](https://www.checklyhq.com/docs/cli/checkly-import.md): Import existing resources into your CLI-managed project.
+- [checkly incidents](https://www.checklyhq.com/docs/cli/checkly-incidents.md): Create, update, and resolve incidents on your status pages from the CLI.
+- [checkly init](https://www.checklyhq.com/docs/cli/checkly-init.md): Initialize Checkly in your project with interactive or AI-assisted onboarding.
+- [checkly login](https://www.checklyhq.com/docs/cli/checkly-login.md): Sign up for a new Checkly account or log in to your existing account.
+- [checkly logout](https://www.checklyhq.com/docs/cli/checkly-logout.md): Log out of your Checkly account.
+- [checkly members](https://www.checklyhq.com/docs/cli/checkly-members.md): List, update, and delete members in your Checkly account.
+- [checkly pw-test](https://www.checklyhq.com/docs/cli/checkly-pw-test.md): Run Playwright tests with Checkly monitoring features
+- [checkly rca](https://www.checklyhq.com/docs/cli/checkly-rca.md): Trigger and retrieve AI-powered root cause analyses for error groups.
+- [checkly runtimes](https://www.checklyhq.com/docs/cli/checkly-runtimes.md): List all available runtimes and their dependencies.
+- [checkly skills](https://www.checklyhq.com/docs/cli/checkly-skills.md): Print Checkly project, CLI and workflow context as Markdown for AI agents and LLMs.
+- [checkly status-pages](https://www.checklyhq.com/docs/cli/checkly-status-pages.md): List and inspect status pages in your Checkly account.
+- [checkly switch](https://www.checklyhq.com/docs/cli/checkly-switch.md): Switch between multiple Checkly accounts.
+- [checkly sync-playwright](https://www.checklyhq.com/docs/cli/checkly-sync-playwright.md): Synchronize Playwright configuration with Checkly settings.
+- [checkly test](https://www.checklyhq.com/docs/cli/checkly-test.md): Run checks in your project using the Checkly CLI.
+- [checkly test-sessions](https://www.checklyhq.com/docs/cli/checkly-test-sessions.md): Inspect recorded test sessions and their error groups.
+- [checkly trigger](https://www.checklyhq.com/docs/cli/checkly-trigger.md): Trigger checks already in your Checkly account.
+- [checkly whoami](https://www.checklyhq.com/docs/cli/checkly-whoami.md): Display current account and user information.
+
+- [API Reference (195 pages)](https://www.checklyhq.com/docs/_llms/api-reference.md): Documentation for API Reference.
+
+## Guides
+
+### Overview
+
+- [Guides to Using Checkly](https://www.checklyhq.com/docs/guides/overview.md): Comprehensive collection of practical guides for monitoring, testing, and automation with Checkly
+
+### AI and LLMs
+
+- [Control and Configure your Monitoring Infrastructure with AI](https://www.checklyhq.com/docs/guides/agentic-workflows.md): Thanks to Checkly's Monitoring as Code approach, LLMs and AI agents can set up, configure and control your entire monitoring setup.
+
+### Monitoring Guides
+
+- [What is End to End Monitoring? An Overview with Examples](https://www.checklyhq.com/docs/guides/end-to-end-monitoring.md): Learn end-to-end monitoring with playwright to test key website flows. Follow our guide that gets you up and running in 10 minutes.
+- [A Step-by-Step Engineering Guide for Checkly](https://www.checklyhq.com/docs/guides/startup-guide-detect-communicate-resolve.md): How to get started with Checkly and Monitoring as Code.
+- [Getting Started with Monitoring as Code](https://www.checklyhq.com/docs/guides/getting-started-with-monitoring-as-code.md): Monitoring is essential to ensure that your applications run smoothly, efficiently, and reliably. As systems grow more complex, the need for scalable and automated monitoring has never been greater. This is where Monitoring as Code (MaC) comes into play, allowing you to define, deploy, and manage mo…
+- [Empowering DevOps with Monitoring as Code](https://www.checklyhq.com/docs/guides/empowering-developers-with-checkly.md): Discover how Checkly empowers developers and platform teams to streamline complex monitoring through a code-first approach. Learn how collaboration, automation, and integrated alerts improve reliability and reduce bottlenecks in modern software delivery workflows.
+- [Communicate User Feature Availability with Status Pages](https://www.checklyhq.com/docs/guides/communicate-availability.md): Learn how Checkly status pages reflect actual user experience through synthetic monitoring, not arbitrary status indicators.
+- [Go From Playwright Testing to Playwright Monitoring with Checkly](https://www.checklyhq.com/docs/guides/playwright-testing-to-monitoring.md): Whether you're running a small startup or a large enterprise, integrating Playwright and Checkly into your workflow can transform how you approach testing and monitoring. So, start testing in production today—your users will thank you!
+- [Use Uptime Monitoring as Your First Line of Defense](https://www.checklyhq.com/docs/guides/uptime-monitoring.md): The three main components of uptime monitors.
+- [Creating a Keyword Monitor](https://www.checklyhq.com/docs/guides/keyword-monitoring.md): With Checkly, we can use Playwright to create monitors that verify page content by checking for keywords.
+- [Reusing Playwright Monitors Across Every Phase of your Software Development Life Cycle](https://www.checklyhq.com/docs/guides/sdlc-monitoring.md): The same Playwright code you write for end-to-end testing before deployment, can also test code earlier as part of the dev process, and end-to-end tests can be run on a cadence in Checkly to turn test code into monitoring code.
+- [Automate Uptime Monitor Creation at Scale](https://www.checklyhq.com/docs/guides/create-multiple-monitors.md): Monitoring hundreds or even thousands of pages doesn’t have to be a manual process. With Checkly’s Monitoring as Code approach, you can dynamically create, update, and manage URL monitors at scale.
+
+### API Monitoring
+
+- [How to Create an API Monitor using an OpenAPI (Swagger) Spec](https://www.checklyhq.com/docs/guides/monitoring-an-openapi-spec.md): OpenAPI and Swagger help users design and document APIs in a way that is readable from both humans and machines. As a consequence, they can also be used to generate the code that will run the specified API - both on the provider and consumer side. Can we leverage this same principle to simplify API…
+- [How to monitor the Stripe customer API with Checkly | API Monitoring Examples](https://www.checklyhq.com/docs/guides/monitoring-the-stripe-api.md): Application Programming Interfaces (APIs) are used throughout software to define interactions between different software applications. In this article we focus on web APIs specifically, taking a look at how they fit in the Jamstack architecture and how we can set up API monitoring in order to make s…
+- [How to Use Setup and Teardown Scripts for Better API Monitoring](https://www.checklyhq.com/docs/guides/setup-scripts-for-apis.md): Setup and teardown scripts are fundamental tools to tailor API checks to your target endpoints. This guide presents real-world examples to help you master these tools.
+
+### E-commerce Monitoring
+
+- [How to Monitor an E-Commerce Application with Playwright](https://www.checklyhq.com/docs/guides/monitoring-ecommerce-apps-using-playwright.md): Discover how Monitoring as Code transforms cloud infrastructure management with a hands-on Checkly case study. Start optimizing your workflow today!
+- [How to Monitor an E-Commerce Application Using Terraform](https://www.checklyhq.com/docs/guides/monitoring-ecommerce-apps-using-terraform.md): The trend of declaring infrastructure as code has been picking up steam over the last few years, offering a way for DevOps teams to transparently manage and scale cloud infrastructure. Why should the way we manage monitoring be any different? In this article, we address this point and illustrate it…
+
+### Playwright Guides
+
+- [The Complete Guide to Migrating from Puppeteer to Playwright](https://www.checklyhq.com/docs/guides/moving-from-puppeteer-to-playwright.md): The switch from Puppeteer to Playwright is easy. But is it worth it? And how exactly does one migrate existing scripts from one tool to another? What are the required code-level changes, and what new features and approaches does the switch enable?
+- [Automating Check Steps for Developers](https://www.checklyhq.com/docs/guides/developer-fixtures.md): When we enable developers to create page or API monitors, we want to automate as much of the code writing process as possible, so that developers can test the functionality they care about without getting bogged down in setup steps.
+- [Troubleshooting Auto-Waiting in Playwright](https://www.checklyhq.com/docs/guides/auto-waiting-methods.md): Playwright's auto-waiting is a great feature to avoid test flakiness, but in some situations it doesn't work as expected, what are the alternatives?
+- [A guide to diagnosing failures with Playwright Traces](https://www.checklyhq.com/docs/guides/reading-traces.md): When you get a notification of a failed check, you can often determine the cause right in the Checkly dashboard. This guide covers some the most common failure modes and where to find answers.
+- [How to use environment variables in Checkly Playwright Check Suites](https://www.checklyhq.com/docs/guides/playwright-environments.md): Learn how to run the same Playwright tests against different environments and URLs using Checkly.
+
+### Advanced Topics
+
+- [In-Depth Monitoring With Checkly and Claude Code](https://www.checklyhq.com/docs/guides/claude-code-monitoring.md): By integrating AI into your development workflow, you can generate valid Checkly constructs—including URL monitors and Playwright-based browser checks—with minimal effort.
+- [Monitoring for Broken Links with Playwright & Checkly](https://www.checklyhq.com/docs/guides/how-to-monitor-broken-links.md): Learn how to check for broken links on your webpages with Playwright.
+
+- [Learn (100 pages)](https://www.checklyhq.com/docs/_llms/learn.md): Documentation for Learn.
+
+## Comparisons
+
+### Frameworks
+
+- [Playwright vs Cypress - Detailed comparison [2024]](https://www.checklyhq.com/docs/comparisons/frameworks/playwright-vs-cypress.md): Discover the differences between Playwright and Cypress. Explore key features, pros and cons, and how to pick the right framework.
+- [Playwright vs Selenium - Detailed Comparison for 2024](https://www.checklyhq.com/docs/comparisons/frameworks/playwright-vs-selenium.md): Explore the key differences between Playwright and Selenium in web testing. Discover the examples, pros and cons, and learn how to run the tests.
+- [Playwright vs other automation frameworks](https://www.checklyhq.com/docs/comparisons/frameworks/playwright-vs-others.md): Learn how Playwright, a browser automation tool, simplifies testing across Chrome, Firefox, and WebKit. Start building more reliable web applications today.
+
+## OpenAPI Specs
+
+- [openapi](/docs/api-reference/openapi.json)
+
+> The links below point to documentation indexes. Follow each `/_llms/` index recursively until you reach documentation pages.
+
+## Indexes
+
+- [Docs (202 pages)](https://www.checklyhq.com/docs/_llms/docs.md): Documentation for Docs.
+- [API Reference (195 pages)](https://www.checklyhq.com/docs/_llms/api-reference.md): Documentation for API Reference.
+- [Learn (100 pages)](https://www.checklyhq.com/docs/_llms/learn.md): Documentation for Learn.

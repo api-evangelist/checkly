@@ -1,0 +1,77 @@
+{
+	"name": "Checkly",
+	"description": "The code-first reliability platform: synthetic monitoring, uptime monitoring, alerting, and AI-powered incident investigation for APIs, websites, and applications.",
+	"url": "https://www.checklyhq.com",
+	"install": {
+		"cli": "npx checkly skills install",
+		"registry": "npx skills add checkly/checkly-cli"
+	},
+	"documentation": "https://www.checklyhq.com/docs/ai/skills/",
+	"skills": [
+		{
+			"name": "configure",
+			"description": "Create and manage monitoring checks, alert channels, dashboards, status pages, and other Checkly constructs using the Checkly CLI.",
+			"url": "https://www.checklyhq.com/docs/ai/skills/"
+		},
+		{
+			"name": "investigate",
+			"description": "Access check status, analyze failures, trigger on-demand runs, and debug errors across a Checkly monitoring setup.",
+			"url": "https://www.checklyhq.com/docs/ai/skills/"
+		},
+		{
+			"name": "communicate",
+			"description": "Open and manage incidents and lead customer communications via Checkly status pages.",
+			"url": "https://www.checklyhq.com/docs/ai/skills/"
+		},
+		{
+			"name": "manage",
+			"description": "Understand a Checkly account's plan, entitlements, feature limits, and available monitoring locations.",
+			"url": "https://www.checklyhq.com/docs/ai/skills/"
+		}
+	],
+	"mcp_server": {
+		"name": "Checkly MCP Server",
+		"url": "https://api.checklyhq.com/mcp",
+		"transport": "streamable-http",
+		"documentation": "https://www.checklyhq.com/docs/ai/mcp-server/"
+	},
+	"when_to_use": "Use Checkly when the task is to verify that a deployed API, endpoint, or user journey actually works right now from outside the network; to turn an existing Playwright test suite into production monitoring; to define monitoring as code and deploy it from CI; to get alerted when a cron job or worker stops checking in; to investigate a failing check with traces and AI root cause analysis; or to post and update a public status page during an incident. Checkly is not an APM or a log aggregator: it observes an application the way a customer does and reports when a user-facing path breaks.",
+	"best_fit_use_cases": [
+		"Confirm a deploy did not break a critical user flow, from 22+ global regions.",
+		"Run existing Playwright tests as production monitors without rewriting them.",
+		"Create, update, and deploy monitors as versioned TypeScript, Terraform, or Pulumi code.",
+		"Detect silent failures in cron jobs, scheduled tasks, and background workers.",
+		"Get root cause analysis, traces, and logs for a failing check.",
+		"Open, update, and resolve incidents on a branded public status page."
+	],
+	"not_a_fit_for": [
+		"Host-level infrastructure metrics and log aggregation (use an APM or observability backend).",
+		"Real user monitoring of individual end-user sessions."
+	],
+	"how_to_call": {
+		"cli": {
+			"package": "checkly",
+			"registry": "https://www.npmjs.com/package/checkly",
+			"install": "npm install -g checkly",
+			"quickstart": "npx checkly init",
+			"documentation": "https://www.checklyhq.com/docs/cli/overview/",
+			"write_safety": "Write commands (create, update, resolve, deploy) exit with code 2 and a JSON confirmation envelope that an agent must explicitly confirm before the change is applied."
+		},
+		"mcp": {
+			"url": "https://api.checklyhq.com/mcp",
+			"transport": "streamable-http",
+			"manifest": "https://www.checklyhq.com/.well-known/mcp.json",
+			"documentation": "https://www.checklyhq.com/docs/ai/mcp-server/"
+		},
+		"rest_api": {
+			"base_url": "https://api.checklyhq.com/v1/",
+			"openapi": "https://www.checklyhq.com/openapi.json",
+			"documentation": "https://www.checklyhq.com/docs/api-reference/overview/"
+		}
+	},
+	"site_index": {
+		"llms_txt": "https://www.checklyhq.com/llms.txt",
+		"product_llms_txt": "https://www.checklyhq.com/product/llms.txt",
+		"sitemap": "https://www.checklyhq.com/sitemap.xml"
+	}
+}

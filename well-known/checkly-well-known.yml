@@ -1,0 +1,110 @@
+generated: '2026-08-29'
+method: probed
+source: live HTTP probes of every Checkly host named in apis.yml and in the OpenAPI servers[] block
+description: >-
+  Well-known document probe for Checkly. The five standard paths (security.txt, openid-configuration,
+  oauth-authorization-server, api-catalog, ai-plugin.json) 404 on www, api and app. Checkly instead
+  serves its security.txt from the docs host, and publishes an agent-facing set of well-known
+  documents that are not in the standard five: an MCP server manifest, an MCP server card, an Agent
+  Skills index, and RFC 9728 OAuth protected-resource metadata for its MCP endpoint.
+hosts:
+- host: www.checklyhq.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+  - path: /.well-known/mcp.json
+    status: 200
+    file: checkly-mcp.json
+    note: MCP server manifest (modelcontextprotocol.io draft server-manifest schema).
+  - path: /.well-known/mcp/server-card.json
+    status: 200
+    file: checkly-mcp-server-card.json
+    note: MCP server card, discovered from the manifest's related.serverCard pointer.
+  - path: /.well-known/agent-skills/index.json
+    status: 200
+    file: checkly-agent-skills-index.json
+    note: Provider-published Agent Skills index listing four skills.
+- host: api.checklyhq.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    file: checkly-oauth-protected-resource.json
+    note: >-
+      RFC 9728 protected-resource metadata for the MCP endpoint. Declares 14 checkly:* scopes and
+      names https://auth.checklyhq.com/ as the authorization server.
+- host: auth.checklyhq.com
+  documents:
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: checkly-oauth-authorization-server.json
+    note: RFC 8414 authorization-server metadata (Auth0-hosted), including a dynamic client registration endpoint.
+  - path: /.well-known/openid-configuration
+    status: 200
+    file: checkly-openid-configuration.json
+- host: developers.checklyhq.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    file: checkly-security.txt
+    note: >-
+      RFC 9116 security.txt with Contact, Policy, Canonical and Hiring fields. Its own Canonical
+      field points at https://checklyhq.com/.well-known/security.txt, which returned 404 on probe.
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: app.checklyhq.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+findings:
+- No A2A Agent Card is served on any Checkly host; /.well-known/agent-card.json and the legacy
+  /.well-known/agent.json returned 404 everywhere. No a2a/ artifact was written.
+- The security.txt Canonical field is stale - it names checklyhq.com, which 404s, while the document
+  is actually served from developers.checklyhq.com.

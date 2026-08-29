@@ -1,0 +1,213 @@
+generated: '2026-08-29'
+method: probed
+source: >-
+  https://www.checklyhq.com/.well-known/mcp.json (200), https://www.checklyhq.com/.well-known/mcp/server-card.json
+  (200), https://api.checklyhq.com/.well-known/oauth-protected-resource (200),
+  https://www.checklyhq.com/docs/ai/mcp-server (200) and its tools reference
+  https://www.checklyhq.com/docs/ai/mcp-server/tools (200). A live POST of tools/list to
+  https://api.checklyhq.com/mcp returned HTTP 401 with an RFC 9728 WWW-Authenticate challenge, so
+  the tool list below is transcribed from Checkly's published tools reference, not from an
+  authenticated introspection.
+name: Checkly MCP Server
+description: >-
+  Hosted, remote MCP server that lets an agent inspect Checkly checks, check results and test
+  sessions, fetch result assets, read and trigger Rocky AI root cause analyses, manage account
+  environment variables, and read status pages and manage their incidents.
+deployment:
+  mode: remote
+  endpoint: https://api.checklyhq.com/mcp
+  transport: streamable-http
+  auth: oauth
+  verified: probed
+  note: >-
+    OAuth 2.1 is the documented and recommended path, restricted to Checkly-approved MCP clients;
+    user and service API keys are supported for clients that can send custom headers. There is no
+    stdio package - repeated npm probes for @checkly/mcp-server, @checkly/mcp and checkly-mcp all
+    returned 404. Agents that need to author or deploy check code use the Checkly CLI instead; the
+    docs state the MCP server runs remotely and cannot reach a local filesystem.
+manifests:
+  server_manifest: https://www.checklyhq.com/.well-known/mcp.json
+  server_card: https://www.checklyhq.com/.well-known/mcp/server-card.json
+  documentation: https://www.checklyhq.com/docs/ai/mcp-server/
+  agent_skills_index: https://www.checklyhq.com/.well-known/agent-skills/index.json
+authentication:
+  schemes:
+  - oauth2
+  - bearer
+  protected_resource_metadata: https://api.checklyhq.com/.well-known/oauth-protected-resource
+  authorization_servers:
+  - https://auth.checklyhq.com/
+  bearer_methods_supported:
+  - header
+  account_selection_header: X-Checkly-Account
+  scopes:
+  - checkly:account:read
+  - checkly:account:invite
+  - checkly:checks:read
+  - checkly:checks:write
+  - checkly:checks:run
+  - checkly:incidents:read
+  - checkly:incidents:write
+  - checkly:environment-variables:read
+  - checkly:environment-variables:write
+  - checkly:status-pages:read
+  - checkly:rca:read
+  - checkly:rca:run
+  - checkly:test-sessions:read
+  - checkly:assets:read
+  live_probe:
+    url: https://api.checklyhq.com/mcp
+    method: POST
+    body: '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'
+    http_status: 401
+    www_authenticate: >-
+      Bearer error="invalid_token", error_description="Authentication required",
+      resource_metadata="https://api.checklyhq.com/.well-known/oauth-protected-resource/mcp"
+    note: >-
+      A textbook RFC 9728 challenge - the 401 names the protected-resource document and the full
+      required scope set, so an MCP client can complete discovery unauthenticated.
+tools:
+- name: whoami
+  category: account
+  type: read
+  description: Return the authenticated user and account memberships visible to the MCP session.
+- name: get-account-entitlements
+  category: account
+  type: read
+  description: Return the resolved account plan and feature entitlement state.
+- name: list-account-members
+  category: account
+  type: read
+  description: List account members and pending invites.
+- name: invite-account-member
+  category: account
+  type: write
+  description: >-
+    Invite a user to the resolved account. OAuth-only, requires Owner or Admin access, sends an
+    invite email, and is explicitly documented as not idempotent.
+- name: prepare-local-check-authoring
+  category: account
+  type: read
+  description: Return an account-aware runbook for creating, testing and deploying check code with the local Checkly CLI.
+- name: list-check-stats
+  category: checks
+  type: read
+  description: >-
+    Paginated, filterable list of checks with pass/fail/degraded status; includeReliability adds
+    availability, response-time percentiles and ICMP latency or packet loss.
+- name: list-check-results
+  category: checks
+  type: read
+  description: Recent compact results for one check, including response status and assertion counts.
+- name: get-check-result
+  category: checks
+  type: read
+  description: Compact detail for one check result.
+- name: get-check-performance-summary
+  category: checks
+  type: read
+  description: Average, P50, P95 and P99 response-time metrics for one check over a date range.
+- name: trigger-checks
+  category: checks
+  type: write
+  description: Run existing deployed checks on demand and record the run as a test session. Consumes check-run execution quota.
+- name: list-test-sessions
+  category: test-sessions
+  type: read
+  description: List recent test sessions with filters and cursor ordering.
+- name: get-test-session
+  category: test-sessions
+  type: read
+  description: Return one test session and compact result rows.
+- name: list-test-session-results
+  category: test-sessions
+  type: read
+  description: List compact result rows for one test session with bounded pagination.
+- name: get-test-session-result
+  category: test-sessions
+  type: read
+  description: Compact detail for one test-session result.
+- name: list-check-result-assets
+  category: assets
+  type: read
+  description: Normalized asset manifest for a check result.
+- name: fetch-check-result-asset
+  category: assets
+  type: read
+  description: Fetch one check-result asset; text inline under a byte limit, binary or large assets as a download link.
+- name: list-test-session-result-assets
+  category: assets
+  type: read
+  description: Normalized asset manifest for a test-session result.
+- name: fetch-test-session-result-asset
+  category: assets
+  type: read
+  description: Fetch one test-session-result asset.
+- name: get-error-group-root-cause-analyses
+  category: rca
+  type: read
+  description: Return a check or test-session error group and any existing root cause analyses.
+- name: get-root-cause-analysis
+  category: rca
+  type: read
+  description: Return one RCA by ID; pending analyses return compact polling status.
+- name: trigger-root-cause-analysis
+  category: rca
+  type: write
+  description: Trigger a new RCA for an error group. Requires run access and consumes RCA invocation quota.
+- name: list-account-environment-variables
+  category: environment-variables
+  type: read
+  description: List account-level variables and secrets; secret values return as null.
+- name: get-account-environment-variable
+  category: environment-variables
+  type: read
+  description: Get one account-level variable by key; secret values return as null.
+- name: create-account-environment-variable
+  category: environment-variables
+  type: write
+  description: Create an account-level variable or secret; secret values are encrypted and never echoed back.
+- name: update-account-environment-variable
+  category: environment-variables
+  type: write
+  description: Update an account-level variable or secret by key.
+- name: list-status-pages
+  category: status-pages
+  type: read
+  description: List status pages including the cards and services needed for incident targeting.
+- name: get-status-page
+  category: status-pages
+  type: read
+  description: Get one status page with cards and services.
+- name: list-status-page-incidents
+  category: incidents
+  type: read
+  description: List status page incidents, optionally filtered by page and status.
+- name: get-status-page-incident
+  category: incidents
+  type: read
+  description: Get one incident with services and incident updates.
+- name: create-status-page-incident
+  category: incidents
+  type: write
+  description: Create a new incident and optionally notify subscribers. Not idempotent.
+- name: update-status-page-incident
+  category: incidents
+  type: write
+  description: Post a progress update to an existing incident and optionally notify subscribers. Not idempotent.
+- name: resolve-status-page-incident
+  category: incidents
+  type: write
+  description: Resolve an incident by posting a final resolved update and optionally notifying subscribers. Not idempotent.
+tool_count: 32
+counts:
+  read: 24
+  write: 8
+notes:
+- >-
+  Tools are surfaced conditionally - the docs state each tool appears only when the MCP session
+  holds the matching permission, and some write tools additionally require an Admin or Read & Write
+  account role. A tool list from an authenticated session will therefore be a subset of this one.
+- >-
+  Checkly documents the division of labour explicitly - MCP for live account state and actions,
+  Agent Skills plus the CLI for authoring, testing and deploying check code.

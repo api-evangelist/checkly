@@ -1,0 +1,573 @@
+openapi: 3.2.0
+info:
+  title: Checkly Public Status Pages V3 Automation Rules API
+  version: v1
+  description: These are the docs for the newly released Checkly Public API.<br />If you have any questions, please do not hesitate to get in touch with us.
+servers:
+- url: https://api.checklyhq.com
+security:
+- Bearer: []
+tags:
+- name: Status Pages V3 Automation Rules
+paths:
+  /v3/status-pages/{statusPageId}/automation-rules:
+    get:
+      summary: List the automation rules of a v3 status page.
+      operationId: listStatusPageV3AutomationRulesPublic
+      description: List the automation rules of a v3 status page, newest first.
+      parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      - name: statusPageId
+        in: path
+        schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          default: 20
+          minimum: 1
+          maximum: 100
+      - name: nextId
+        in: query
+        schema:
+          type: string
+      tags:
+      - Status Pages V3 Automation Rules
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicStatusPageV3AutomationRulesPaginatedResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+    post:
+      summary: Create an automation rule on a v3 status page.
+      operationId: createStatusPageV3AutomationRulePublic
+      description: Create an automation rule. A failing check whose tags (or group tags) overlap with the rule tags opens one incident impacting the listed components.
+      parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      - name: statusPageId
+        in: path
+        schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
+      tags:
+      - Status Pages V3 Automation Rules
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicStatusPageV3AutomationRuleMutation'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicStatusPageV3AutomationRule'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+  /v3/status-pages/{statusPageId}/automation-rules/{ruleId}:
+    delete:
+      summary: Delete an automation rule of a v3 status page.
+      operationId: deleteStatusPageV3AutomationRulePublic
+      description: Delete an automation rule. An incident it opened stays.
+      parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      - name: statusPageId
+        in: path
+        schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
+      - name: ruleId
+        in: path
+        schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
+      tags:
+      - Status Pages V3 Automation Rules
+      responses:
+        '204':
+          description: No Content
+          content:
+            application/json:
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+    get:
+      summary: Retrieve a single automation rule of a v3 status page.
+      operationId: getStatusPageV3AutomationRulePublic
+      description: Get a single automation rule.
+      parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      - name: statusPageId
+        in: path
+        schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
+      - name: ruleId
+        in: path
+        schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
+      tags:
+      - Status Pages V3 Automation Rules
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicStatusPageV3AutomationRule'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+    put:
+      summary: Update an automation rule of a v3 status page.
+      operationId: updateStatusPageV3AutomationRulePublic
+      description: Update an automation rule. The component list is replaced as a whole.
+      parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      - name: statusPageId
+        in: path
+        schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
+      - name: ruleId
+        in: path
+        schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
+      tags:
+      - Status Pages V3 Automation Rules
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicStatusPageV3AutomationRuleMutation'
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicStatusPageV3AutomationRule'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+components:
+  schemas:
+    attributes:
+      type: object
+    PublicStatusPageV3AutomationRuleMutation:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 255
+        enabled:
+          type: boolean
+          description: A disabled rule never opens incidents.
+          default: true
+        firstUpdate:
+          type: string
+          description: Body of the status update that opens the incident.
+        lastUpdate:
+          type: string
+          description: Body of the status update that resolves the incident.
+        notifySubscribers:
+          type: boolean
+          default: true
+        coolDownWindowMinutes:
+          type: integer
+          description: Minimum minutes after an automated incident before this rule may open the next one. 0 disables it.
+          default: 5
+          minimum: 0
+          maximum: 1440
+        tags:
+          $ref: '#/components/schemas/PublicStatusPageV3AutomationRuleTags'
+        components:
+          $ref: '#/components/schemas/PublicStatusPageV3AutomationRuleComponents'
+      required:
+      - name
+      - firstUpdate
+      - lastUpdate
+      - tags
+    PublicStatusPageV3AutomationRule:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 255
+        enabled:
+          type: boolean
+          description: A disabled rule never opens incidents.
+          default: true
+        firstUpdate:
+          type: string
+          description: Body of the status update that opens the incident.
+        lastUpdate:
+          type: string
+          description: Body of the status update that resolves the incident.
+        notifySubscribers:
+          type: boolean
+          default: true
+        coolDownWindowMinutes:
+          type: integer
+          description: Minimum minutes after an automated incident before this rule may open the next one. 0 disables it.
+          default: 5
+          minimum: 0
+          maximum: 1440
+        tags:
+          $ref: '#/components/schemas/PublicStatusPageV3AutomationRuleTags'
+        id:
+          type: string
+          x-format:
+            guid: true
+        statusPageId:
+          type: string
+          x-format:
+            guid: true
+        incidentId:
+          type:
+          - string
+          - 'null'
+          x-format:
+            guid: true
+        components:
+          $ref: '#/components/schemas/PublicStatusPageV3AutomationRuleComponentsResponse'
+        created_at:
+          type: string
+          format: date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date
+      required:
+      - name
+      - firstUpdate
+      - lastUpdate
+      - tags
+      - id
+      - statusPageId
+      - components
+      - created_at
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
+    TooManyRequestsError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    UnauthorizedError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 401
+        error:
+          $ref: '#/components/schemas/error'
+        message:
+          type: string
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    PublicStatusPageV3AutomationRulesEntries:
+      type: array
+      items:
+        $ref: '#/components/schemas/PublicStatusPageV3AutomationRule'
+    PublicStatusPageV3AutomationRuleTargetImpact:
+      type: string
+      enum:
+      - UNDER_MAINTENANCE
+      - DEGRADED_PERFORMANCE
+      - PARTIAL_OUTAGE
+      - MAJOR_OUTAGE
+    PublicStatusPageV3AutomationRuleComponentsResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/PublicStatusPageV3AutomationRuleComponentResponse'
+    PublicStatusPageV3AutomationRuleTags:
+      type: array
+      description: A failing check matches when it, or its group, carries ANY of these tags.
+      minItems: 1
+      items:
+        type: string
+    ForbiddenError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 403
+        error:
+          $ref: '#/components/schemas/Model1'
+        message:
+          type: string
+          example: Forbidden
+      required:
+      - statusCode
+      - error
+    PublicStatusPageV3AutomationRulesPaginatedResponse:
+      type: object
+      properties:
+        length:
+          type: integer
+        entries:
+          $ref: '#/components/schemas/PublicStatusPageV3AutomationRulesEntries'
+        nextId:
+          type:
+          - string
+          - 'null'
+      required:
+      - length
+      - entries
+    NotFoundError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 404
+        error:
+          $ref: '#/components/schemas/Model4'
+        message:
+          type: string
+          example: Not Found
+      required:
+      - statusCode
+      - error
+    error:
+      type: string
+      enum:
+      - Unauthorized
+    Model4:
+      type: string
+      enum:
+      - Not Found
+    PublicStatusPageV3AutomationRuleComponentResponse:
+      type: object
+      properties:
+        componentId:
+          type: string
+          x-format:
+            guid: true
+        targetImpact:
+          $ref: '#/components/schemas/PublicStatusPageV3AutomationRuleTargetImpact'
+        id:
+          type: string
+          x-format:
+            guid: true
+      required:
+      - componentId
+      - targetImpact
+      - id
+    Model1:
+      type: string
+      enum:
+      - Forbidden
+    PublicStatusPageV3AutomationRuleComponent:
+      type: object
+      properties:
+        componentId:
+          type: string
+          x-format:
+            guid: true
+        targetImpact:
+          $ref: '#/components/schemas/PublicStatusPageV3AutomationRuleTargetImpact'
+      required:
+      - componentId
+      - targetImpact
+    PublicStatusPageV3AutomationRuleComponents:
+      type: array
+      items:
+        $ref: '#/components/schemas/PublicStatusPageV3AutomationRuleComponent'
+  securitySchemes:
+    Bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: Bearer
+      description: 'The Checkly Public API uses API keys to authenticate requests. You can get the API Key <a href="https://app.checklyhq.com/settings/user/api-keys" target="_blank">here</a>.</br>Your API key is like a password: <br>keep it secure!</br></br>Authentication to the API is performed using the Bearer auth method in the Authorization header and using the account ID.</br></br>For example, set <b>Authorization</b> header while using cURL: <code>curl -H "Authorization: Bearer [apiKey]" "X-Checkly-Account: [accountId]"</code></br>'

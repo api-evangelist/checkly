@@ -1,0 +1,1346 @@
+openapi: 3.2.0
+info:
+  title: Checkly Public Status Pages API
+  version: v1
+  description: These are the docs for the newly released Checkly Public API.<br />If you have any questions, please do not hesitate to get in touch with us.
+servers:
+- url: https://api.checklyhq.com
+security:
+- Bearer: []
+tags:
+- name: Status Pages
+paths:
+  /v1/status-pages:
+    get:
+      summary: Retrieve all status pages.
+      operationId: getV1Statuspages
+      description: Get all status pages for an account.
+      parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          default: 20
+          minimum: 1
+          maximum: 100
+      - name: nextId
+        in: query
+        schema:
+          type: string
+      tags:
+      - Status Pages
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusPagesV2PaginatedResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+      deprecated: true
+    post:
+      summary: Create a new status page.
+      operationId: postV1Statuspages
+      description: Create a new status page with its related services and cards.
+      parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      tags:
+      - Status Pages
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StatusPageV2PublicApiUpdate'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusPageV2WithId'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+      deprecated: true
+  /v1/status-pages/{statusPageId}:
+    delete:
+      summary: Delete a status page.
+      operationId: deleteV1StatuspagesStatuspageid
+      description: Delete a status page.
+      parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      - name: statusPageId
+        in: path
+        schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
+      tags:
+      - Status Pages
+      responses:
+        '204':
+          description: No Content
+          content:
+            application/json:
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+      deprecated: true
+    get:
+      summary: Retrieve a single status page by id.
+      operationId: getV1StatuspagesStatuspageid
+      description: <b>[DEPRECATED] This endpoint will be removed soon. Please use the <code>GET /v3/status-pages/{statusPageId}</code> endpoint instead.</b><br>Get status page data, including cards and services.
+      parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      - name: statusPageId
+        in: path
+        schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
+      tags:
+      - Status Pages
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusPageV2WithIdRead'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+      deprecated: true
+    put:
+      summary: Update an existing status page.
+      operationId: putV1StatuspagesStatuspageid
+      description: Update a status page with its related services and cards.
+      parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      - name: statusPageId
+        in: path
+        schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
+      tags:
+      - Status Pages
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StatusPageV2PublicApiUpdate'
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusPageV2WithId'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+      deprecated: true
+  /v1/status-pages/{statusPageId}/subscriptions:
+    get:
+      summary: Get all subscriptions for a specific status page
+      operationId: getV1StatuspagesStatuspageidSubscriptions
+      description: Get all subscriptions for a specific status page
+      parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      - name: statusPageId
+        in: path
+        schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
+      tags:
+      - Status Pages
+      responses:
+        '200':
+          description: The list of subscriptions for the status page.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionsList'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+      deprecated: true
+  /v1/status-pages/{statusPageId}/subscriptions/bulk:
+    post:
+      summary: Bulk create subscriptions for a specific status page
+      operationId: postV1StatuspagesStatuspageidSubscriptionsBulk
+      description: Bulk create subscriptions for a specific status page.
+      parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      - name: statusPageId
+        in: path
+        schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
+      tags:
+      - Status Pages
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkCreateSubscriptionsPayload'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkCreateSubscriptionsResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+      deprecated: true
+  /v1/status-pages/{statusPageId}/subscriptions/{subscriptionId}:
+    delete:
+      summary: Delete a subscription belonging to a specific status page
+      operationId: deleteV1StatuspagesStatuspageidSubscriptionsSubscriptionid
+      description: Delete a subscription belonging to a specific status page using the subscription id
+      parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      - name: statusPageId
+        in: path
+        schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
+      - name: subscriptionId
+        in: path
+        schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
+      tags:
+      - Status Pages
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+      deprecated: true
+components:
+  schemas:
+    attributes:
+      type: object
+    ProjectBindingReferencesV1:
+      type: array
+      description: Projects that use this resource without owning it; their deploys leave it alone. Empty when there are none.
+      items:
+        $ref: '#/components/schemas/ProjectBindingV1'
+    BulkCreateSubscriptionsPayload:
+      type: object
+      properties:
+        subscriptions:
+          $ref: '#/components/schemas/subscriptions'
+        autoVerify:
+          type: boolean
+          description: Whether to create subscriptions as verified without sending confirmation emails.
+          default: false
+      required:
+      - subscriptions
+    StatusPageThemeColors:
+      type: object
+      properties:
+        bodyBackgroundColor:
+          type: string
+          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
+        headerBackgroundColor:
+          type: string
+          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
+        headerFontColor:
+          type: string
+          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
+        titleFontColor:
+          type: string
+          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
+        bodyFontColor:
+          type: string
+          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
+        bodyFontColorMuted:
+          type: string
+          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
+        navigationFontColor:
+          type: string
+          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
+        linkFontColor:
+          type: string
+          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
+        cardBackgroundColor:
+          type: string
+          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
+        borderColor:
+          type: string
+          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
+        primaryButtonBackgroundColor:
+          type: string
+          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
+        primaryButtonFontColor:
+          type: string
+          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
+      required:
+      - bodyBackgroundColor
+      - headerBackgroundColor
+      - headerFontColor
+      - titleFontColor
+      - bodyFontColor
+      - bodyFontColorMuted
+      - navigationFontColor
+      - linkFontColor
+      - cardBackgroundColor
+      - borderColor
+      - primaryButtonBackgroundColor
+      - primaryButtonFontColor
+    Model81:
+      type: string
+      description: The status of the created subscriptions.
+      enum:
+      - PENDING
+      - VERIFIED
+    IncidentUpdates:
+      type: array
+      items:
+        $ref: '#/components/schemas/StatusPageV2IncidentUpdateWithId'
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
+    UnauthorizedError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 401
+        error:
+          $ref: '#/components/schemas/error'
+        message:
+          type: string
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    TooManyRequestsError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    StatusPageV2Card:
+      type: object
+      properties:
+        id:
+          type: string
+          x-format:
+            guid: true
+        name:
+          type: string
+        services:
+          $ref: '#/components/schemas/StatusPageV2CardServices'
+        created_at:
+          type: string
+          format: date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date
+      required:
+      - id
+      - name
+      - created_at
+    StatusPagesV2PaginatedResponse:
+      type: object
+      properties:
+        length:
+          type: integer
+        entries:
+          $ref: '#/components/schemas/StatusPagesV2Entries'
+        nextId:
+          type:
+          - string
+          - 'null'
+      required:
+      - length
+      - entries
+    Model74:
+      type: object
+      properties:
+        id:
+          type: string
+          x-format:
+            guid: true
+        maskedKey:
+          type: string
+        created_at:
+          type: string
+          format: date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date
+      required:
+      - id
+      - maskedKey
+      - created_at
+    StatusPageV2ThemeColors:
+      type:
+      - object
+      - 'null'
+      properties:
+        light:
+          $ref: '#/components/schemas/StatusPageThemeColors'
+        dark:
+          $ref: '#/components/schemas/StatusPageThemeColors'
+      required:
+      - light
+      - dark
+    StatusPageV2IncidentServices:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 255
+        severity:
+          $ref: '#/components/schemas/IncidentSeverity'
+        id:
+          type: string
+          x-format:
+            guid: true
+        services:
+          $ref: '#/components/schemas/IncidentServices'
+        incidentUpdates:
+          $ref: '#/components/schemas/IncidentUpdates'
+        lastUpdateStatus:
+          $ref: '#/components/schemas/StatusPageIncidentStatus'
+        duration:
+          type:
+          - integer
+          - 'null'
+        created_at:
+          type: string
+          format: date
+        updated_at:
+          type: string
+          format: date
+      required:
+      - name
+      - severity
+      - id
+      - services
+      - lastUpdateStatus
+      - created_at
+    BulkCreateSubscriptionsResponse:
+      type: object
+      properties:
+        created:
+          type: number
+          description: The number of subscriptions successfully created.
+        skipped:
+          type: number
+          description: The number of subscriptions skipped (already exist).
+        status:
+          $ref: '#/components/schemas/Model81'
+      required:
+      - created
+      - skipped
+      - status
+    Model80:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/Model79'
+        config:
+          type: string
+          description: The configuration details for the status page subscription. These can be very different based on the type of the subscriptions.
+      required:
+      - type
+      - config
+    StatusPageV2CardServiceRef:
+      type: object
+      properties:
+        id:
+          type: string
+          x-format:
+            guid: true
+    StatusPageV2Cards:
+      type: array
+      items:
+        $ref: '#/components/schemas/StatusPageV2Card'
+    StatusPageV2CardUpdate:
+      type: object
+      properties:
+        id:
+          type: string
+          x-format:
+            guid: true
+        statusPageId:
+          type: string
+          x-format:
+            guid: true
+        name:
+          type: string
+        services:
+          $ref: '#/components/schemas/StatusPageV2CardServiceRefs'
+      required:
+      - name
+    StatusPageV2CardUpdates:
+      type: array
+      items:
+        $ref: '#/components/schemas/StatusPageV2CardUpdate'
+    Model79:
+      type: string
+      description: The type of subscription type, i.e. EMAIL.
+      example: EMAIL
+      enum:
+      - EMAIL
+    ProjectBindingV1:
+      type: object
+      properties:
+        project:
+          $ref: '#/components/schemas/BindingProjectV1'
+        binding:
+          $ref: '#/components/schemas/ProjectBindingDetailsV1'
+      required:
+      - project
+      - binding
+    Model75:
+      type: array
+      items:
+        $ref: '#/components/schemas/Model74'
+    Model77:
+      type: string
+      description: The type of subscription.
+      enum:
+      - EMAIL
+    ForbiddenError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 403
+        error:
+          $ref: '#/components/schemas/Model1'
+        message:
+          type: string
+          example: Forbidden
+      required:
+      - statusCode
+      - error
+    StatusPageV2WithIdRead:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type:
+          - string
+          - 'null'
+          maxLength: 500
+        url:
+          type: string
+          x-convert:
+            case: lower
+        customDomain:
+          type:
+          - string
+          - 'null'
+          description: A custom user domain, e.g. "status.example.com". See the docs on updating your DNS and SSL usage.
+          x-convert:
+            case: lower
+        themeColors:
+          $ref: '#/components/schemas/StatusPageV2ThemeColors'
+        logo:
+          type:
+          - string
+          - 'null'
+          x-format:
+            uri:
+              scheme:
+              - http
+              - https
+        logoDark:
+          type:
+          - string
+          - 'null'
+          x-format:
+            uri:
+              scheme:
+              - http
+              - https
+        redirectTo:
+          type:
+          - string
+          - 'null'
+          x-format:
+            uri:
+              scheme:
+              - http
+              - https
+        favicon:
+          type:
+          - string
+          - 'null'
+          x-format:
+            uri:
+              scheme:
+              - http
+              - https
+        defaultTheme:
+          $ref: '#/components/schemas/defaultTheme'
+        cards:
+          $ref: '#/components/schemas/StatusPageV2Cards'
+        version:
+          type:
+          - number
+          - 'null'
+        id:
+          type: string
+          x-format:
+            guid: true
+        whiteLabel:
+          type: boolean
+        isPrivate:
+          type: boolean
+          default: false
+        projectBindings:
+          $ref: '#/components/schemas/ProjectBindingsV1'
+      required:
+      - name
+      - url
+      - id
+    defaultTheme:
+      type: string
+      default: AUTO
+      enum:
+      - LIGHT
+      - DARK
+      - AUTO
+    SubscriptionsList:
+      type: array
+      description: The list of subscriptions for the status page.
+      items:
+        $ref: '#/components/schemas/Subscription'
+    StatusPageV2CardServices:
+      type: array
+      items:
+        $ref: '#/components/schemas/StatusPageV2Service'
+    ProjectBindingDetailsV1:
+      type: object
+      description: The resource's side of this binding.
+      properties:
+        logicalId:
+          type: string
+          description: The resource's logical ID within this project, as declared in code.
+          example: homepage-check
+        pending:
+          type: boolean
+          description: True when the binding is reserved by an import plan that has not been deployed yet.
+      required:
+      - logicalId
+      - pending
+    ProjectBindingOwnerV1:
+      type:
+      - object
+      - 'null'
+      description: The project that owns this resource — the one whose deploy can delete it. Null when no project owns it, including when other projects merely reference it. In the rare case that several projects hold an ownership record for one resource, this reports the preferred one and the rest are omitted.
+      properties:
+        project:
+          $ref: '#/components/schemas/BindingProjectV1'
+        binding:
+          $ref: '#/components/schemas/ProjectBindingDetailsV1'
+      required:
+      - project
+      - binding
+    BindingProjectV1:
+      type: object
+      description: The project this binding is to.
+      properties:
+        id:
+          type: string
+          description: The ID of the project.
+        logicalId:
+          type: string
+          description: The logical ID of the project, as declared in code.
+        name:
+          type: string
+          description: The name of the project.
+      required:
+      - id
+      - logicalId
+      - name
+    StatusPageV2IncidentUpdateWithId:
+      type: object
+      properties:
+        description:
+          type: string
+        status:
+          $ref: '#/components/schemas/StatusPageIncidentStatus'
+        publicIncidentUpdateDate:
+          type: string
+          format: date-time
+          default: '2026-08-29T08:22:08.989Z'
+        notifySubscribers:
+          type: boolean
+          default: false
+        id:
+          type: string
+          x-format:
+            guid: true
+        created_at:
+          type: string
+          format: date
+      required:
+      - description
+      - id
+      - created_at
+    StatusPageV2Service:
+      type: object
+      properties:
+        name:
+          type: string
+        id:
+          type: string
+          x-format:
+            guid: true
+        accountId:
+          type: string
+          x-format:
+            guid: true
+        created_at:
+          type: string
+          format: date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date
+      required:
+      - name
+      - id
+      - accountId
+      - created_at
+    StatusPageV2WithId:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type:
+          - string
+          - 'null'
+          maxLength: 500
+        url:
+          type: string
+          x-convert:
+            case: lower
+        customDomain:
+          type:
+          - string
+          - 'null'
+          description: A custom user domain, e.g. "status.example.com". See the docs on updating your DNS and SSL usage.
+          x-convert:
+            case: lower
+        themeColors:
+          $ref: '#/components/schemas/StatusPageV2ThemeColors'
+        logo:
+          type:
+          - string
+          - 'null'
+          x-format:
+            uri:
+              scheme:
+              - http
+              - https
+        logoDark:
+          type:
+          - string
+          - 'null'
+          x-format:
+            uri:
+              scheme:
+              - http
+              - https
+        redirectTo:
+          type:
+          - string
+          - 'null'
+          x-format:
+            uri:
+              scheme:
+              - http
+              - https
+        favicon:
+          type:
+          - string
+          - 'null'
+          x-format:
+            uri:
+              scheme:
+              - http
+              - https
+        defaultTheme:
+          $ref: '#/components/schemas/defaultTheme'
+        cards:
+          $ref: '#/components/schemas/StatusPageV2Cards'
+        version:
+          type:
+          - number
+          - 'null'
+        id:
+          type: string
+          x-format:
+            guid: true
+        whiteLabel:
+          type: boolean
+        isPrivate:
+          type: boolean
+          default: false
+      required:
+      - name
+      - url
+      - id
+    Model78:
+      type: string
+      description: The status of the subscription.
+      enum:
+      - PENDING
+      - VERIFIED
+    StatusPageV2PublicApiUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type:
+          - string
+          - 'null'
+          maxLength: 500
+        url:
+          type: string
+          x-convert:
+            case: lower
+        customDomain:
+          type:
+          - string
+          - 'null'
+          description: A custom user domain, e.g. "status.example.com". See the docs on updating your DNS and SSL usage.
+          x-convert:
+            case: lower
+        themeColors:
+          $ref: '#/components/schemas/StatusPageV2ThemeColors'
+        logo:
+          type:
+          - string
+          - 'null'
+          x-format:
+            uri:
+              scheme:
+              - http
+              - https
+        logoDark:
+          type:
+          - string
+          - 'null'
+          x-format:
+            uri:
+              scheme:
+              - http
+              - https
+        redirectTo:
+          type:
+          - string
+          - 'null'
+          x-format:
+            uri:
+              scheme:
+              - http
+              - https
+        favicon:
+          type:
+          - string
+          - 'null'
+          x-format:
+            uri:
+              scheme:
+              - http
+              - https
+        defaultTheme:
+          $ref: '#/components/schemas/defaultTheme'
+        version:
+          type:
+          - number
+          - 'null'
+        cards:
+          $ref: '#/components/schemas/StatusPageV2CardUpdates'
+      required:
+      - name
+      - url
+      - cards
+    StatusPageV2Read:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type:
+          - string
+          - 'null'
+          maxLength: 500
+        url:
+          type: string
+          x-convert:
+            case: lower
+        customDomain:
+          type:
+          - string
+          - 'null'
+          description: A custom user domain, e.g. "status.example.com". See the docs on updating your DNS and SSL usage.
+          x-convert:
+            case: lower
+        themeColors:
+          $ref: '#/components/schemas/StatusPageV2ThemeColors'
+        logo:
+          type:
+          - string
+          - 'null'
+          x-format:
+            uri:
+              scheme:
+              - http
+              - https
+        logoDark:
+          type:
+          - string
+          - 'null'
+          x-format:
+            uri:
+              scheme:
+              - http
+              - https
+        redirectTo:
+          type:
+          - string
+          - 'null'
+          x-format:
+            uri:
+              scheme:
+              - http
+              - https
+        favicon:
+          type:
+          - string
+          - 'null'
+          x-format:
+            uri:
+              scheme:
+              - http
+              - https
+        defaultTheme:
+          $ref: '#/components/schemas/defaultTheme'
+        cards:
+          $ref: '#/components/schemas/StatusPageV2Cards'
+        version:
+          type:
+          - number
+          - 'null'
+        id:
+          type: string
+          x-format:
+            guid: true
+        accountId:
+          type: string
+          x-format:
+            guid: true
+        created_at:
+          type: string
+          format: date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date
+        incidents:
+          $ref: '#/components/schemas/StatusPageV2Incidents'
+        isPrivate:
+          type: boolean
+          default: false
+        keys:
+          $ref: '#/components/schemas/Model75'
+        projectBindings:
+          $ref: '#/components/schemas/ProjectBindingsV1'
+      required:
+      - name
+      - url
+      - id
+      - accountId
+      - created_at
+    NotFoundError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 404
+        error:
+          $ref: '#/components/schemas/Model4'
+        message:
+          type: string
+          example: Not Found
+      required:
+      - statusCode
+      - error
+    subscriptions:
+      type: array
+      description: The list of subscriptions to create (max 100).
+      minItems: 1
+      maxItems: 100
+      items:
+        $ref: '#/components/schemas/Model80'
+    error:
+      type: string
+      enum:
+      - Unauthorized
+    StatusPageV2Incidents:
+      type: array
+      items:
+        $ref: '#/components/schemas/StatusPageV2IncidentServices'
+    IncidentSeverity:
+      type: string
+      enum:
+      - CRITICAL
+      - MAJOR
+      - MEDIUM
+      - MINOR
+    StatusPageV2CardServiceRefs:
+      type: array
+      items:
+        $ref: '#/components/schemas/StatusPageV2CardServiceRef'
+    Model4:
+      type: string
+      enum:
+      - Not Found
+    Model1:
+      type: string
+      enum:
+      - Forbidden
+    ProjectBindingsV1:
+      type: object
+      description: The Checkly CLI projects that manage this resource. `owner` is null and `references` empty when the resource is not managed by code.
+      properties:
+        owner:
+          $ref: '#/components/schemas/ProjectBindingOwnerV1'
+        references:
+          $ref: '#/components/schemas/ProjectBindingReferencesV1'
+      required:
+      - owner
+      - references
+    StatusPagesV2Entries:
+      type: array
+      items:
+        $ref: '#/components/schemas/StatusPageV2Read'
+    IncidentServices:
+      type: array
+      items:
+        $ref: '#/components/schemas/StatusPageV2Service'
+    StatusPageIncidentStatus:
+      type: string
+      enum:
+      - INVESTIGATING
+      - IDENTIFIED
+      - MONITORING
+      - RESOLVED
+    Subscription:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of the subscription.
+        type:
+          $ref: '#/components/schemas/Model77'
+        address:
+          type: string
+          description: The email address to subscribe to the status page.
+          x-format:
+            email: true
+        status:
+          $ref: '#/components/schemas/Model78'
+        created_at:
+          type: string
+          format: date
+          description: The date the subscription was created.
+        updated_at:
+          type: string
+          format: date
+          description: The date the subscription was last updated.
+      required:
+      - id
+      - type
+      - address
+      - status
+      - created_at
+      - updated_at
+  securitySchemes:
+    Bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: Bearer
+      description: 'The Checkly Public API uses API keys to authenticate requests. You can get the API Key <a href="https://app.checklyhq.com/settings/user/api-keys" target="_blank">here</a>.</br>Your API key is like a password: <br>keep it secure!</br></br>Authentication to the API is performed using the Bearer auth method in the Authorization header and using the account ID.</br></br>For example, set <b>Authorization</b> header while using cURL: <code>curl -H "Authorization: Bearer [apiKey]" "X-Checkly-Account: [accountId]"</code></br>'

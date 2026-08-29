@@ -1,301 +1,3897 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Checkly Public Accounts Analytics API
+  title: Checkly Public Analytics API
   version: v1
-  description: The Checkly Public API allows you to programmatically manage your monitoring checks, alerts, and more. If you have any questions, please do not hesitate to get in touch with us.
-  contact:
-    name: Checkly Support
-    url: https://checklyhq.com/support
-  license:
-    name: MIT
+  description: These are the docs for the newly released Checkly Public API.<br />If you have any questions, please do not hesitate to get in touch with us.
 servers:
 - url: https://api.checklyhq.com
-  description: Production server
 security:
-- bearerAuth: []
-  accountId: []
+- Bearer: []
 tags:
 - name: Analytics
 paths:
   /v1/analytics/api-checks/{id}:
     get:
-      summary: Get API Check Analytics
-      description: Get analytics data for API checks
-      operationId: getApiCheckAnalytics
-      parameters:
-      - name: id
-        in: path
-        required: true
-        description: The check ID
-        schema:
-          type: string
-      responses:
-        '200':
-          description: API check analytics data
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiCheckAnalytics'
+      summary: API checks
+      operationId: getV1AnalyticsApichecksId
+      description: Fetch detailed availability metrics and aggregated or non-aggregated API Check metrics across custom time ranges. For example, you can get the p99 and p95 of all the DNS phases of your API check together with the availability percentage for any time range.<br><br><b>Rate-limiting is applied to this endpoint, you can send 30 requests / 60 seconds at most.<b>
       tags:
       - Analytics
-  /v1/analytics/browser-checks/{id}:
-    get:
-      summary: Get Browser Check Analytics
-      description: Get analytics data for browser checks
-      operationId: getBrowserCheckAnalytics
-      parameters:
-      - name: id
-        in: path
-        required: true
-        description: The check ID
-        schema:
-          type: string
       responses:
         '200':
-          description: Browser check analytics data
+          description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BrowserCheckAnalytics'
-      tags:
-      - Analytics
-  /v1/analytics/metrics/{checkType}:
-    get:
-      summary: List Analytics Metrics
-      description: Returns all the available metrics for a specific check-type (API, URL, TCP or BROWSER)
-      operationId: listAnalyticsMetrics
-      parameters:
-      - name: checkType
-        in: path
-        required: true
-        description: The check type to retrieve metrics for
-        schema:
-          type: string
-          enum:
-          - api
-          - url
-          - tcp
-          - browser
-          - heartbeat
-          - multistep
-      - name: category
-        in: query
-        description: Filter by metric category
-        schema:
-          type: string
-          enum:
-          - response_time
-          - success_rate
-          - core_web_vitals
-          - heartbeat
-          - performance
-          - volume
-      - name: includeThresholds
-        in: query
-        description: Include performance thresholds and benchmarks
-        schema:
-          type: boolean
-          default: false
-      - name: format
-        in: query
-        description: Response format
-        schema:
-          type: string
-          enum:
-          - detailed
-          - summary
-          default: detailed
-      - name: includeExamples
-        in: query
-        description: Include example values and use cases
-        schema:
-          type: boolean
-          default: false
-      - name: includeCalculations
-        in: query
-        description: Include calculation method details
-        schema:
-          type: boolean
-          default: false
-      responses:
-        '200':
-          description: List of available metrics for the specified check type
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MetricsList'
+                $ref: '#/components/schemas/AnalyticsApiCheckResponse'
         '400':
-          description: Bad Request - Invalid check type
+          description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/ApiError'
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/ApiError'
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
         '429':
           description: Too Many Requests
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: string
+          minLength: 1
+          format: uuid
+        required: true
+        name: id
+        in: path
+      - schema:
+          type: string
+          format: date
+          description: Custom start time of reporting window in unix timestamp format. Setting a custom "from" timestamp overrides the use of any "quickRange".
+        required: false
+        description: Custom start time of reporting window in unix timestamp format. Setting a custom "from" timestamp overrides the use of any "quickRange".
+        name: from
+        in: query
+      - schema:
+          type: string
+          format: date
+          description: Custom end time of reporting window in unix timestamp format. Setting a custom "to" timestamp overrides the use of any "quickRange".
+        required: false
+        description: Custom end time of reporting window in unix timestamp format. Setting a custom "to" timestamp overrides the use of any "quickRange".
+        name: to
+        in: query
+      - schema:
+          type: string
+          enum:
+          - last24Hours
+          - last7Days
+          - last30Days
+          - thisWeek
+          - thisMonth
+          - lastWeek
+          - lastMonth
+          default: last24Hours
+          description: Preset reporting windows are used for quickly generating report on commonly used windows. Can be overridden by using a custom "to" and "from" timestamp.
+        required: false
+        description: Preset reporting windows are used for quickly generating report on commonly used windows. Can be overridden by using a custom "to" and "from" timestamp.
+        name: quickRange
+        in: query
+      - schema:
+          type: number
+          minimum: 1
+          maximum: 43200
+          example: 1440
+          description: The time interval to use for aggregating metrics in minutes. For example, five minutes is 5, 24 hours is 1440.
+        required: false
+        description: The time interval to use for aggregating metrics in minutes. For example, five minutes is 5, 24 hours is 1440.
+        name: aggregationInterval
+        in: query
+      - schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - success
+            - failure
+          example:
+          - failure
+          description: Filter based on whether a check result was either failing or passing
+        required: false
+        description: Filter based on whether a check result was either failing or passing
+        name: filterByStatus
+        in: query
+      - schema:
+          type: string
+          enum:
+          - runLocation
+          - statusCode
+          description: Determines how the series data is grouped. Note that grouped queries are a bit more expensive and might take longer.
+        required: false
+        description: Determines how the series data is grouped. Note that grouped queries are a bit more expensive and might take longer.
+        name: groupBy
+        in: query
+      - schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - responseTime
+            - wait
+            - dns
+            - tcp
+            - firstByte
+            - download
+            - availability
+            - retries
+            - responseTime_avg
+            - responseTime_max
+            - responseTime_median
+            - responseTime_min
+            - responseTime_p50
+            - responseTime_p90
+            - responseTime_p95
+            - responseTime_p99
+            - responseTime_stddev
+            - responseTime_sum
+            - wait_avg
+            - wait_max
+            - wait_median
+            - wait_min
+            - wait_p50
+            - wait_p90
+            - wait_p95
+            - wait_p99
+            - wait_stddev
+            - wait_sum
+            - dns_avg
+            - dns_max
+            - dns_median
+            - dns_min
+            - dns_p50
+            - dns_p90
+            - dns_p95
+            - dns_p99
+            - dns_stddev
+            - dns_sum
+            - tcp_avg
+            - tcp_max
+            - tcp_median
+            - tcp_min
+            - tcp_p50
+            - tcp_p90
+            - tcp_p95
+            - tcp_p99
+            - tcp_stddev
+            - tcp_sum
+            - firstByte_avg
+            - firstByte_max
+            - firstByte_median
+            - firstByte_min
+            - firstByte_p50
+            - firstByte_p90
+            - firstByte_p95
+            - firstByte_p99
+            - firstByte_stddev
+            - firstByte_sum
+            - download_avg
+            - download_max
+            - download_median
+            - download_min
+            - download_p50
+            - download_p90
+            - download_p95
+            - download_p99
+            - download_stddev
+            - download_sum
+          description: Available metrics for API Checks. You can pass multiple metrics as a comma separated string.
+        required: true
+        description: Available metrics for API Checks. You can pass multiple metrics as a comma separated string.
+        name: metrics
+        in: query
+      - schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+          description: Limit the number of results
+        required: false
+        description: Limit the number of results
+        name: limit
+        in: query
+      - schema:
+          type: number
+          default: 1
+          description: Page number
+          exclusiveMinimum: 0
+        required: false
+        description: Page number
+        name: page
+        in: query
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+  /v1/analytics/browser-checks/{id}:
+    get:
+      summary: Browser checks
+      operationId: getV1AnalyticsBrowserchecksId
+      description: Fetch detailed availability metrics and aggregated or non-aggregated Browser Check metrics across custom time ranges.  For example, you can get the average amount of console errors, the p99 of your FCP and the standard deviation of your TTFB for the second page in your Browser check with one API call.<br><br><b>Rate-limiting is applied to this endpoint, you can send 30 requests / 60 seconds at most.<b>
       tags:
       - Analytics
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsBrowserCheckResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: string
+          minLength: 1
+          format: uuid
+        required: true
+        name: id
+        in: path
+      - schema:
+          type: string
+          format: date
+          description: Custom start time of reporting window in unix timestamp format. Setting a custom "from" timestamp overrides the use of any "quickRange".
+        required: false
+        description: Custom start time of reporting window in unix timestamp format. Setting a custom "from" timestamp overrides the use of any "quickRange".
+        name: from
+        in: query
+      - schema:
+          type: string
+          format: date
+          description: Custom end time of reporting window in unix timestamp format. Setting a custom "to" timestamp overrides the use of any "quickRange".
+        required: false
+        description: Custom end time of reporting window in unix timestamp format. Setting a custom "to" timestamp overrides the use of any "quickRange".
+        name: to
+        in: query
+      - schema:
+          type: string
+          enum:
+          - last24Hours
+          - last7Days
+          - last30Days
+          - thisWeek
+          - thisMonth
+          - lastWeek
+          - lastMonth
+          default: last24Hours
+          description: Preset reporting windows are used for quickly generating report on commonly used windows. Can be overridden by using a custom "to" and "from" timestamp.
+        required: false
+        description: Preset reporting windows are used for quickly generating report on commonly used windows. Can be overridden by using a custom "to" and "from" timestamp.
+        name: quickRange
+        in: query
+      - schema:
+          type: number
+          minimum: 1
+          maximum: 43200
+          example: 1440
+          description: The time interval to use for aggregating metrics in minutes. For example, five minutes is 5, 24 hours is 1440.
+        required: false
+        description: The time interval to use for aggregating metrics in minutes. For example, five minutes is 5, 24 hours is 1440.
+        name: aggregationInterval
+        in: query
+      - schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - success
+            - failure
+          example:
+          - failure
+          description: Filter based on whether a check result was either failing or passing
+        required: false
+        description: Filter based on whether a check result was either failing or passing
+        name: filterByStatus
+        in: query
+      - schema:
+          type: string
+          enum:
+          - runLocation
+          - pageIndex
+          description: Determines how the series data is grouped. Note that grouped queries are a bit more expensive and might take longer.
+        required: false
+        description: Determines how the series data is grouped. Note that grouped queries are a bit more expensive and might take longer.
+        name: groupBy
+        in: query
+      - schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - responseTime
+            - TTFB
+            - FCP
+            - LCP
+            - CLS
+            - TBT
+            - consoleErrors
+            - networkErrors
+            - userScriptErrors
+            - documentErrors
+            - availability
+            - retries
+            - responseTime_avg
+            - responseTime_max
+            - responseTime_median
+            - responseTime_min
+            - responseTime_p50
+            - responseTime_p90
+            - responseTime_p95
+            - responseTime_p99
+            - responseTime_stddev
+            - responseTime_sum
+            - TTFB_avg
+            - TTFB_max
+            - TTFB_median
+            - TTFB_min
+            - TTFB_p50
+            - TTFB_p90
+            - TTFB_p95
+            - TTFB_p99
+            - TTFB_stddev
+            - TTFB_sum
+            - FCP_avg
+            - FCP_max
+            - FCP_median
+            - FCP_min
+            - FCP_p50
+            - FCP_p90
+            - FCP_p95
+            - FCP_p99
+            - FCP_stddev
+            - FCP_sum
+            - LCP_avg
+            - LCP_max
+            - LCP_median
+            - LCP_min
+            - LCP_p50
+            - LCP_p90
+            - LCP_p95
+            - LCP_p99
+            - LCP_stddev
+            - LCP_sum
+            - CLS_avg
+            - CLS_max
+            - CLS_median
+            - CLS_min
+            - CLS_p50
+            - CLS_p90
+            - CLS_p95
+            - CLS_p99
+            - CLS_stddev
+            - CLS_sum
+            - TBT_avg
+            - TBT_max
+            - TBT_median
+            - TBT_min
+            - TBT_p50
+            - TBT_p90
+            - TBT_p95
+            - TBT_p99
+            - TBT_stddev
+            - TBT_sum
+            - consoleErrors_avg
+            - consoleErrors_max
+            - consoleErrors_median
+            - consoleErrors_min
+            - consoleErrors_p50
+            - consoleErrors_p90
+            - consoleErrors_p95
+            - consoleErrors_p99
+            - consoleErrors_stddev
+            - consoleErrors_sum
+            - networkErrors_avg
+            - networkErrors_max
+            - networkErrors_median
+            - networkErrors_min
+            - networkErrors_p50
+            - networkErrors_p90
+            - networkErrors_p95
+            - networkErrors_p99
+            - networkErrors_stddev
+            - networkErrors_sum
+            - userScriptErrors_avg
+            - userScriptErrors_max
+            - userScriptErrors_median
+            - userScriptErrors_min
+            - userScriptErrors_p50
+            - userScriptErrors_p90
+            - userScriptErrors_p95
+            - userScriptErrors_p99
+            - userScriptErrors_stddev
+            - userScriptErrors_sum
+            - documentErrors_avg
+            - documentErrors_max
+            - documentErrors_median
+            - documentErrors_min
+            - documentErrors_p50
+            - documentErrors_p90
+            - documentErrors_p95
+            - documentErrors_p99
+            - documentErrors_stddev
+            - documentErrors_sum
+          description: Available metrics for Browser Checks. You can pass multiple metrics as a comma separated string.
+        required: true
+        description: Available metrics for Browser Checks. You can pass multiple metrics as a comma separated string.
+        name: metrics
+        in: query
+      - schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+          description: Limit the number of results
+        required: false
+        description: Limit the number of results
+        name: limit
+        in: query
+      - schema:
+          type: number
+          default: 1
+          description: Page number
+          exclusiveMinimum: 0
+        required: false
+        description: Page number
+        name: page
+        in: query
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+  /v1/analytics/checks:
+    post:
+      summary: Get analytics summary for multiple checks
+      operationId: postV1AnalyticsChecks
+      description: 'Returns availability, response times, and latency metrics for the given checks. Response shape is polymorphic per check type: fields are present only when the metric applies to that type. A null value means no data in the requested time range; an absent field means the metric does not apply to that check type.<br><br>Currently only <code>quickRange</code> is supported for time filtering. Arbitrary <code>from</code>/<code>to</code> date ranges are not yet supported but may be added in a future release.<br><br><b>Rate-limiting is applied to this endpoint, you can send 30 requests / 60 seconds at most.<b>'
+      tags:
+      - Analytics
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsBatchResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: string
+          enum:
+          - last24Hours
+          - last7Days
+          - thisWeek
+          - lastWeek
+          - lastMonth
+          default: last24Hours
+          description: Time range for analytics.
+        required: false
+        description: Time range for analytics.
+        name: quickRange
+        in: query
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalyticsBatchRequest'
+  /v1/analytics/dns/{id}:
+    get:
+      summary: DNS monitors
+      operationId: getV1AnalyticsDnsId
+      description: Fetch detailed availability metrics and aggregated or non-aggregated DNS Monitor metrics across custom time ranges. For example, you can get the p99 and p95 of the total DNS query time together with the availability percentage for any time range.<br><br><b>Rate-limiting is applied to this endpoint, you can send 30 requests / 60 seconds at most.<b>
+      tags:
+      - Analytics
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsDnsMonitorResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: string
+          minLength: 1
+          format: uuid
+        required: true
+        name: id
+        in: path
+      - schema:
+          type: string
+          format: date
+          description: Custom start time of reporting window in unix timestamp format. Setting a custom "from" timestamp overrides the use of any "quickRange".
+        required: false
+        description: Custom start time of reporting window in unix timestamp format. Setting a custom "from" timestamp overrides the use of any "quickRange".
+        name: from
+        in: query
+      - schema:
+          type: string
+          format: date
+          description: Custom end time of reporting window in unix timestamp format. Setting a custom "to" timestamp overrides the use of any "quickRange".
+        required: false
+        description: Custom end time of reporting window in unix timestamp format. Setting a custom "to" timestamp overrides the use of any "quickRange".
+        name: to
+        in: query
+      - schema:
+          type: string
+          enum:
+          - last24Hours
+          - last7Days
+          - last30Days
+          - thisWeek
+          - thisMonth
+          - lastWeek
+          - lastMonth
+          default: last24Hours
+          description: Preset reporting windows are used for quickly generating report on commonly used windows. Can be overridden by using a custom "to" and "from" timestamp.
+        required: false
+        description: Preset reporting windows are used for quickly generating report on commonly used windows. Can be overridden by using a custom "to" and "from" timestamp.
+        name: quickRange
+        in: query
+      - schema:
+          type: number
+          minimum: 1
+          maximum: 43200
+          example: 1440
+          description: The time interval to use for aggregating metrics in minutes. For example, five minutes is 5, 24 hours is 1440.
+        required: false
+        description: The time interval to use for aggregating metrics in minutes. For example, five minutes is 5, 24 hours is 1440.
+        name: aggregationInterval
+        in: query
+      - schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - success
+            - failure
+          example:
+          - failure
+          description: Filter based on whether a check result was either failing or passing
+        required: false
+        description: Filter based on whether a check result was either failing or passing
+        name: filterByStatus
+        in: query
+      - schema:
+          type: string
+          enum:
+          - runLocation
+          description: Determines how the series data is grouped. Note that grouped queries are a bit more expensive and might take longer.
+        required: false
+        description: Determines how the series data is grouped. Note that grouped queries are a bit more expensive and might take longer.
+        name: groupBy
+        in: query
+      - schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - total
+            - availability
+            - retries
+            - total_avg
+            - total_max
+            - total_median
+            - total_min
+            - total_p50
+            - total_p90
+            - total_p95
+            - total_p99
+            - total_stddev
+            - total_sum
+          description: Available metrics for DNS Monitors. You can pass multiple metrics as a comma separated string.
+        required: true
+        description: Available metrics for DNS Monitors. You can pass multiple metrics as a comma separated string.
+        name: metrics
+        in: query
+      - schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+          description: Limit the number of results
+        required: false
+        description: Limit the number of results
+        name: limit
+        in: query
+      - schema:
+          type: number
+          default: 1
+          description: Page number
+          exclusiveMinimum: 0
+        required: false
+        description: Page number
+        name: page
+        in: query
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+  /v1/analytics/heartbeat-checks/{id}:
+    get:
+      summary: Heartbeat checks
+      operationId: getV1AnalyticsHeartbeatchecksId
+      description: Fetch detailed availability metrics and aggregated or non-aggregated Heartbeat Check metrics across custom time ranges. <b>Rate-limiting is applied to this endpoint, you can send 30 requests / 60 seconds at most.<b>
+      tags:
+      - Analytics
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsHeartbeatCheckResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: string
+          minLength: 1
+          format: uuid
+        required: true
+        name: id
+        in: path
+      - schema:
+          type: string
+          format: date
+          description: Custom start time of reporting window in unix timestamp format. Setting a custom "from" timestamp overrides the use of any "quickRange".
+        required: false
+        description: Custom start time of reporting window in unix timestamp format. Setting a custom "from" timestamp overrides the use of any "quickRange".
+        name: from
+        in: query
+      - schema:
+          type: string
+          format: date
+          description: Custom end time of reporting window in unix timestamp format. Setting a custom "to" timestamp overrides the use of any "quickRange".
+        required: false
+        description: Custom end time of reporting window in unix timestamp format. Setting a custom "to" timestamp overrides the use of any "quickRange".
+        name: to
+        in: query
+      - schema:
+          type: string
+          enum:
+          - last24Hours
+          - last7Days
+          - last30Days
+          - thisWeek
+          - thisMonth
+          - lastWeek
+          - lastMonth
+          default: last24Hours
+          description: Preset reporting windows are used for quickly generating report on commonly used windows. Can be overridden by using a custom "to" and "from" timestamp.
+        required: false
+        description: Preset reporting windows are used for quickly generating report on commonly used windows. Can be overridden by using a custom "to" and "from" timestamp.
+        name: quickRange
+        in: query
+      - schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - FAILING
+            - EARLY
+            - RECEIVED
+            - GRACE
+            - LATE
+          example:
+          - FAILING
+          description: Filter based on whether a heartbeat request was late, early, etc.
+        required: false
+        description: Filter based on whether a heartbeat request was late, early, etc.
+        name: filterByStatus
+        in: query
+      - schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - availability
+            - retries
+          default:
+          - availability
+          description: Available metrics for Heartbeat Checks. You can pass multiple metrics as a comma separated string.
+        required: true
+        description: Available metrics for Heartbeat Checks. You can pass multiple metrics as a comma separated string.
+        name: metrics
+        in: query
+      - schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+          description: Limit the number of results
+        required: false
+        description: Limit the number of results
+        name: limit
+        in: query
+      - schema:
+          type: number
+          default: 1
+          description: Page number
+          exclusiveMinimum: 0
+        required: false
+        description: Page number
+        name: page
+        in: query
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+  /v1/analytics/icmp/{id}:
+    get:
+      summary: ICMP monitors
+      operationId: getV1AnalyticsIcmpId
+      description: Fetch detailed availability metrics and aggregated or non-aggregated ICMP Monitor metrics across custom time ranges. For example, you can get the p99 and p95 of latency metrics together with the packet loss percentage for any time range.<br><br><b>Rate-limiting is applied to this endpoint, you can send 30 requests / 60 seconds at most.<b>
+      tags:
+      - Analytics
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsIcmpMonitorResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: string
+          minLength: 1
+          format: uuid
+        required: true
+        name: id
+        in: path
+      - schema:
+          type: string
+          format: date
+          description: Custom start time of reporting window in unix timestamp format. Setting a custom "from" timestamp overrides the use of any "quickRange".
+        required: false
+        description: Custom start time of reporting window in unix timestamp format. Setting a custom "from" timestamp overrides the use of any "quickRange".
+        name: from
+        in: query
+      - schema:
+          type: string
+          format: date
+          description: Custom end time of reporting window in unix timestamp format. Setting a custom "to" timestamp overrides the use of any "quickRange".
+        required: false
+        description: Custom end time of reporting window in unix timestamp format. Setting a custom "to" timestamp overrides the use of any "quickRange".
+        name: to
+        in: query
+      - schema:
+          type: string
+          enum:
+          - last24Hours
+          - last7Days
+          - last30Days
+          - thisWeek
+          - thisMonth
+          - lastWeek
+          - lastMonth
+          default: last24Hours
+          description: Preset reporting windows are used for quickly generating report on commonly used windows. Can be overridden by using a custom "to" and "from" timestamp.
+        required: false
+        description: Preset reporting windows are used for quickly generating report on commonly used windows. Can be overridden by using a custom "to" and "from" timestamp.
+        name: quickRange
+        in: query
+      - schema:
+          type: number
+          minimum: 1
+          maximum: 43200
+          example: 1440
+          description: The time interval to use for aggregating metrics in minutes. For example, five minutes is 5, 24 hours is 1440.
+        required: false
+        description: The time interval to use for aggregating metrics in minutes. For example, five minutes is 5, 24 hours is 1440.
+        name: aggregationInterval
+        in: query
+      - schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - success
+            - failure
+          example:
+          - failure
+          description: Filter based on whether a check result was either failing or passing
+        required: false
+        description: Filter based on whether a check result was either failing or passing
+        name: filterByStatus
+        in: query
+      - schema:
+          type: string
+          enum:
+          - runLocation
+          description: Determines how the series data is grouped. Note that grouped queries are a bit more expensive and might take longer.
+        required: false
+        description: Determines how the series data is grouped. Note that grouped queries are a bit more expensive and might take longer.
+        name: groupBy
+        in: query
+      - schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - packetLoss
+            - latencyMin
+            - latencyMax
+            - latencyAvg
+            - latencyStdDev
+            - availability
+            - retries
+            - packetLoss_avg
+            - packetLoss_max
+            - packetLoss_median
+            - packetLoss_min
+            - packetLoss_p50
+            - packetLoss_p90
+            - packetLoss_p95
+            - packetLoss_p99
+            - packetLoss_stddev
+            - packetLoss_sum
+            - latencyMin_avg
+            - latencyMin_max
+            - latencyMin_median
+            - latencyMin_min
+            - latencyMin_p50
+            - latencyMin_p90
+            - latencyMin_p95
+            - latencyMin_p99
+            - latencyMin_stddev
+            - latencyMin_sum
+            - latencyMax_avg
+            - latencyMax_max
+            - latencyMax_median
+            - latencyMax_min
+            - latencyMax_p50
+            - latencyMax_p90
+            - latencyMax_p95
+            - latencyMax_p99
+            - latencyMax_stddev
+            - latencyMax_sum
+            - latencyAvg_avg
+            - latencyAvg_max
+            - latencyAvg_median
+            - latencyAvg_min
+            - latencyAvg_p50
+            - latencyAvg_p90
+            - latencyAvg_p95
+            - latencyAvg_p99
+            - latencyAvg_stddev
+            - latencyAvg_sum
+            - latencyStdDev_avg
+            - latencyStdDev_max
+            - latencyStdDev_median
+            - latencyStdDev_min
+            - latencyStdDev_p50
+            - latencyStdDev_p90
+            - latencyStdDev_p95
+            - latencyStdDev_p99
+            - latencyStdDev_stddev
+            - latencyStdDev_sum
+          description: Available metrics for ICMP Monitors. You can pass multiple metrics as a comma separated string.
+        required: true
+        description: Available metrics for ICMP Monitors. You can pass multiple metrics as a comma separated string.
+        name: metrics
+        in: query
+      - schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+          description: Limit the number of results
+        required: false
+        description: Limit the number of results
+        name: limit
+        in: query
+      - schema:
+          type: number
+          default: 1
+          description: Page number
+          exclusiveMinimum: 0
+        required: false
+        description: Page number
+        name: page
+        in: query
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+  /v1/analytics/metrics:
+    get:
+      summary: List all available reporting metrics.
+      operationId: getV1AnalyticsMetrics
+      description: List all available reporting metrics.
+      tags:
+      - Analytics
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsMetricsResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: string
+          enum:
+          - AGENTIC
+          - API
+          - BROWSER
+          - HEARTBEAT
+          - ICMP
+          - MULTI_STEP
+          - TCP
+          - PLAYWRIGHT
+          - TRACEROUTE
+          - URL
+          - DNS
+          - SSL
+          - GRPC
+        required: true
+        name: checkType
+        in: query
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+  /v1/analytics/multistep-checks/{id}:
+    get:
+      summary: Multistep checks
+      operationId: getV1AnalyticsMultistepchecksId
+      description: Fetch detailed availability metrics and aggregated or non-aggregated Multistep Check metrics across custom time ranges. <b>Rate-limiting is applied to this endpoint, you can send 30 requests / 60 seconds at most.<b>
+      tags:
+      - Analytics
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsMultistepCheckResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: string
+          minLength: 1
+          format: uuid
+        required: true
+        name: id
+        in: path
+      - schema:
+          type: string
+          format: date
+          description: Custom start time of reporting window in unix timestamp format. Setting a custom "from" timestamp overrides the use of any "quickRange".
+        required: false
+        description: Custom start time of reporting window in unix timestamp format. Setting a custom "from" timestamp overrides the use of any "quickRange".
+        name: from
+        in: query
+      - schema:
+          type: string
+          format: date
+          description: Custom end time of reporting window in unix timestamp format. Setting a custom "to" timestamp overrides the use of any "quickRange".
+        required: false
+        description: Custom end time of reporting window in unix timestamp format. Setting a custom "to" timestamp overrides the use of any "quickRange".
+        name: to
+        in: query
+      - schema:
+          type: string
+          enum:
+          - last24Hours
+          - last7Days
+          - last30Days
+          - thisWeek
+          - thisMonth
+          - lastWeek
+          - lastMonth
+          default: last24Hours
+          description: Preset reporting windows are used for quickly generating report on commonly used windows. Can be overridden by using a custom "to" and "from" timestamp.
+        required: false
+        description: Preset reporting windows are used for quickly generating report on commonly used windows. Can be overridden by using a custom "to" and "from" timestamp.
+        name: quickRange
+        in: query
+      - schema:
+          type: number
+          minimum: 1
+          maximum: 43200
+          example: 1440
+          description: The time interval to use for aggregating metrics in minutes. For example, five minutes is 5, 24 hours is 1440.
+        required: false
+        description: The time interval to use for aggregating metrics in minutes. For example, five minutes is 5, 24 hours is 1440.
+        name: aggregationInterval
+        in: query
+      - schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - success
+            - failure
+          example:
+          - failure
+          description: Filter based on whether a check result was either failing or passing
+        required: false
+        description: Filter based on whether a check result was either failing or passing
+        name: filterByStatus
+        in: query
+      - schema:
+          type: string
+          enum:
+          - runLocation
+          description: Determines how the series data is grouped. Note that grouped queries are a bit more expensive and might take longer.
+        required: false
+        description: Determines how the series data is grouped. Note that grouped queries are a bit more expensive and might take longer.
+        name: groupBy
+        in: query
+      - schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - responseTime
+            - availability
+            - retries
+            - responseTime_avg
+            - responseTime_max
+            - responseTime_median
+            - responseTime_min
+            - responseTime_p50
+            - responseTime_p90
+            - responseTime_p95
+            - responseTime_p99
+            - responseTime_stddev
+            - responseTime_sum
+          description: Available metrics for Multistep Checks. You can pass multiple metrics as a comma separated string.
+        required: true
+        description: Available metrics for Multistep Checks. You can pass multiple metrics as a comma separated string.
+        name: metrics
+        in: query
+      - schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+          description: Limit the number of results
+        required: false
+        description: Limit the number of results
+        name: limit
+        in: query
+      - schema:
+          type: number
+          default: 1
+          description: Page number
+          exclusiveMinimum: 0
+        required: false
+        description: Page number
+        name: page
+        in: query
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+  /v1/analytics/playwright-checks/{id}:
+    get:
+      summary: Playwright checks
+      operationId: getV1AnalyticsPlaywrightchecksId
+      description: Fetch detailed availability metrics and aggregated or non-aggregated Playwright Check metrics across custom time ranges. <b>Rate-limiting is applied to this endpoint, you can send 30 requests / 60 seconds at most.<b>
+      tags:
+      - Analytics
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsPlaywrightCheckResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: string
+          minLength: 1
+          format: uuid
+        required: true
+        name: id
+        in: path
+      - schema:
+          type: string
+          format: date
+          description: Custom start time of reporting window in unix timestamp format. Setting a custom "from" timestamp overrides the use of any "quickRange".
+        required: false
+        description: Custom start time of reporting window in unix timestamp format. Setting a custom "from" timestamp overrides the use of any "quickRange".
+        name: from
+        in: query
+      - schema:
+          type: string
+          format: date
+          description: Custom end time of reporting window in unix timestamp format. Setting a custom "to" timestamp overrides the use of any "quickRange".
+        required: false
+        description: Custom end time of reporting window in unix timestamp format. Setting a custom "to" timestamp overrides the use of any "quickRange".
+        name: to
+        in: query
+      - schema:
+          type: string
+          enum:
+          - last24Hours
+          - last7Days
+          - last30Days
+          - thisWeek
+          - thisMonth
+          - lastWeek
+          - lastMonth
+          default: last24Hours
+          description: Preset reporting windows are used for quickly generating report on commonly used windows. Can be overridden by using a custom "to" and "from" timestamp.
+        required: false
+        description: Preset reporting windows are used for quickly generating report on commonly used windows. Can be overridden by using a custom "to" and "from" timestamp.
+        name: quickRange
+        in: query
+      - schema:
+          type: number
+          minimum: 1
+          maximum: 43200
+          example: 1440
+          description: The time interval to use for aggregating metrics in minutes. For example, five minutes is 5, 24 hours is 1440.
+        required: false
+        description: The time interval to use for aggregating metrics in minutes. For example, five minutes is 5, 24 hours is 1440.
+        name: aggregationInterval
+        in: query
+      - schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - success
+            - failure
+          example:
+          - failure
+          description: Filter based on whether a check result was either failing or passing
+        required: false
+        description: Filter based on whether a check result was either failing or passing
+        name: filterByStatus
+        in: query
+      - schema:
+          type: string
+          enum:
+          - runLocation
+          description: Determines how the series data is grouped. Note that grouped queries are a bit more expensive and might take longer.
+        required: false
+        description: Determines how the series data is grouped. Note that grouped queries are a bit more expensive and might take longer.
+        name: groupBy
+        in: query
+      - schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - responseTime
+            - availability
+            - retries
+            - responseTime_avg
+            - responseTime_max
+            - responseTime_median
+            - responseTime_min
+            - responseTime_p50
+            - responseTime_p90
+            - responseTime_p95
+            - responseTime_p99
+            - responseTime_stddev
+            - responseTime_sum
+          description: Available metrics for Playwright Checks. You can pass multiple metrics as a comma separated string.
+        required: true
+        description: Available metrics for Playwright Checks. You can pass multiple metrics as a comma separated string.
+        name: metrics
+        in: query
+      - schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+          description: Limit the number of results
+        required: false
+        description: Limit the number of results
+        name: limit
+        in: query
+      - schema:
+          type: number
+          default: 1
+          description: Page number
+          exclusiveMinimum: 0
+        required: false
+        description: Page number
+        name: page
+        in: query
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+  /v1/analytics/ssl/{id}:
+    get:
+      summary: SSL monitors
+      operationId: getV1AnalyticsSslId
+      description: Fetch detailed availability metrics and aggregated or non-aggregated SSL Monitor metrics across custom time ranges. For example, you can get the p99 and p95 of the TLS handshake time together with the availability percentage for any time range.<br><br><b>Rate-limiting is applied to this endpoint, you can send 30 requests / 60 seconds at most.<b>
+      tags:
+      - Analytics
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsSslMonitorResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: string
+          minLength: 1
+          format: uuid
+        required: true
+        name: id
+        in: path
+      - schema:
+          type: string
+          format: date
+          description: Custom start time of reporting window in unix timestamp format. Setting a custom "from" timestamp overrides the use of any "quickRange".
+        required: false
+        description: Custom start time of reporting window in unix timestamp format. Setting a custom "from" timestamp overrides the use of any "quickRange".
+        name: from
+        in: query
+      - schema:
+          type: string
+          format: date
+          description: Custom end time of reporting window in unix timestamp format. Setting a custom "to" timestamp overrides the use of any "quickRange".
+        required: false
+        description: Custom end time of reporting window in unix timestamp format. Setting a custom "to" timestamp overrides the use of any "quickRange".
+        name: to
+        in: query
+      - schema:
+          type: string
+          enum:
+          - last24Hours
+          - last7Days
+          - last30Days
+          - thisWeek
+          - thisMonth
+          - lastWeek
+          - lastMonth
+          default: last24Hours
+          description: Preset reporting windows are used for quickly generating report on commonly used windows. Can be overridden by using a custom "to" and "from" timestamp.
+        required: false
+        description: Preset reporting windows are used for quickly generating report on commonly used windows. Can be overridden by using a custom "to" and "from" timestamp.
+        name: quickRange
+        in: query
+      - schema:
+          type: number
+          minimum: 1
+          maximum: 43200
+          example: 1440
+          description: The time interval to use for aggregating metrics in minutes. For example, five minutes is 5, 24 hours is 1440.
+        required: false
+        description: The time interval to use for aggregating metrics in minutes. For example, five minutes is 5, 24 hours is 1440.
+        name: aggregationInterval
+        in: query
+      - schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - success
+            - failure
+          example:
+          - failure
+          description: Filter based on whether a check result was either failing or passing
+        required: false
+        description: Filter based on whether a check result was either failing or passing
+        name: filterByStatus
+        in: query
+      - schema:
+          type: string
+          enum:
+          - runLocation
+          description: Determines how the series data is grouped. Note that grouped queries are a bit more expensive and might take longer.
+        required: false
+        description: Determines how the series data is grouped. Note that grouped queries are a bit more expensive and might take longer.
+        name: groupBy
+        in: query
+      - schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - handshakeTimeMs
+            - daysUntilExpiry
+            - tlsVersion
+            - cipherSuite
+            - hostnameVerified
+            - chainTrusted
+            - ocspStapled
+            - keySizeBits
+            - baselineVerdict
+            - baselineGrade
+            - availability
+            - retries
+            - handshakeTimeMs_avg
+            - handshakeTimeMs_max
+            - handshakeTimeMs_median
+            - handshakeTimeMs_min
+            - handshakeTimeMs_p50
+            - handshakeTimeMs_p90
+            - handshakeTimeMs_p95
+            - handshakeTimeMs_p99
+            - handshakeTimeMs_stddev
+            - handshakeTimeMs_sum
+            - daysUntilExpiry_avg
+            - daysUntilExpiry_max
+            - daysUntilExpiry_median
+            - daysUntilExpiry_min
+            - daysUntilExpiry_p50
+            - daysUntilExpiry_p90
+            - daysUntilExpiry_p95
+            - daysUntilExpiry_p99
+            - daysUntilExpiry_stddev
+            - daysUntilExpiry_sum
+            - tlsVersion_avg
+            - tlsVersion_max
+            - tlsVersion_median
+            - tlsVersion_min
+            - tlsVersion_p50
+            - tlsVersion_p90
+            - tlsVersion_p95
+            - tlsVersion_p99
+            - tlsVersion_stddev
+            - tlsVersion_sum
+            - cipherSuite_avg
+            - cipherSuite_max
+            - cipherSuite_median
+            - cipherSuite_min
+            - cipherSuite_p50
+            - cipherSuite_p90
+            - cipherSuite_p95
+            - cipherSuite_p99
+            - cipherSuite_stddev
+            - cipherSuite_sum
+            - hostnameVerified_avg
+            - hostnameVerified_max
+            - hostnameVerified_median
+            - hostnameVerified_min
+            - hostnameVerified_p50
+            - hostnameVerified_p90
+            - hostnameVerified_p95
+            - hostnameVerified_p99
+            - hostnameVerified_stddev
+            - hostnameVerified_sum
+            - chainTrusted_avg
+            - chainTrusted_max
+            - chainTrusted_median
+            - chainTrusted_min
+            - chainTrusted_p50
+            - chainTrusted_p90
+            - chainTrusted_p95
+            - chainTrusted_p99
+            - chainTrusted_stddev
+            - chainTrusted_sum
+            - ocspStapled_avg
+            - ocspStapled_max
+            - ocspStapled_median
+            - ocspStapled_min
+            - ocspStapled_p50
+            - ocspStapled_p90
+            - ocspStapled_p95
+            - ocspStapled_p99
+            - ocspStapled_stddev
+            - ocspStapled_sum
+            - keySizeBits_avg
+            - keySizeBits_max
+            - keySizeBits_median
+            - keySizeBits_min
+            - keySizeBits_p50
+            - keySizeBits_p90
+            - keySizeBits_p95
+            - keySizeBits_p99
+            - keySizeBits_stddev
+            - keySizeBits_sum
+            - baselineVerdict_avg
+            - baselineVerdict_max
+            - baselineVerdict_median
+            - baselineVerdict_min
+            - baselineVerdict_p50
+            - baselineVerdict_p90
+            - baselineVerdict_p95
+            - baselineVerdict_p99
+            - baselineVerdict_stddev
+            - baselineVerdict_sum
+            - baselineGrade_avg
+            - baselineGrade_max
+            - baselineGrade_median
+            - baselineGrade_min
+            - baselineGrade_p50
+            - baselineGrade_p90
+            - baselineGrade_p95
+            - baselineGrade_p99
+            - baselineGrade_stddev
+            - baselineGrade_sum
+          description: Available metrics for SSL Monitors. You can pass multiple metrics as a comma separated string.
+        required: true
+        description: Available metrics for SSL Monitors. You can pass multiple metrics as a comma separated string.
+        name: metrics
+        in: query
+      - schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+          description: Limit the number of results
+        required: false
+        description: Limit the number of results
+        name: limit
+        in: query
+      - schema:
+          type: number
+          default: 1
+          description: Page number
+          exclusiveMinimum: 0
+        required: false
+        description: Page number
+        name: page
+        in: query
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+  /v1/analytics/tcp-checks/{id}:
+    get:
+      summary: TCP checks
+      operationId: getV1AnalyticsTcpchecksId
+      description: Fetch detailed availability metrics and aggregated or non-aggregated TCP Check metrics across custom time ranges. For example, you can get the p99 and p95 of all the check phases of your TCP check together with the availability percentage for any time range.<br><br><b>Rate-limiting is applied to this endpoint, you can send 30 requests / 60 seconds at most.<b>
+      tags:
+      - Analytics
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsTcpCheckResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: string
+          minLength: 1
+          format: uuid
+        required: true
+        name: id
+        in: path
+      - schema:
+          type: string
+          format: date
+          description: Custom start time of reporting window in unix timestamp format. Setting a custom "from" timestamp overrides the use of any "quickRange".
+        required: false
+        description: Custom start time of reporting window in unix timestamp format. Setting a custom "from" timestamp overrides the use of any "quickRange".
+        name: from
+        in: query
+      - schema:
+          type: string
+          format: date
+          description: Custom end time of reporting window in unix timestamp format. Setting a custom "to" timestamp overrides the use of any "quickRange".
+        required: false
+        description: Custom end time of reporting window in unix timestamp format. Setting a custom "to" timestamp overrides the use of any "quickRange".
+        name: to
+        in: query
+      - schema:
+          type: string
+          enum:
+          - last24Hours
+          - last7Days
+          - last30Days
+          - thisWeek
+          - thisMonth
+          - lastWeek
+          - lastMonth
+          default: last24Hours
+          description: Preset reporting windows are used for quickly generating report on commonly used windows. Can be overridden by using a custom "to" and "from" timestamp.
+        required: false
+        description: Preset reporting windows are used for quickly generating report on commonly used windows. Can be overridden by using a custom "to" and "from" timestamp.
+        name: quickRange
+        in: query
+      - schema:
+          type: number
+          minimum: 1
+          maximum: 43200
+          example: 1440
+          description: The time interval to use for aggregating metrics in minutes. For example, five minutes is 5, 24 hours is 1440.
+        required: false
+        description: The time interval to use for aggregating metrics in minutes. For example, five minutes is 5, 24 hours is 1440.
+        name: aggregationInterval
+        in: query
+      - schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - success
+            - failure
+          example:
+          - failure
+          description: Filter based on whether a check result was either failing or passing
+        required: false
+        description: Filter based on whether a check result was either failing or passing
+        name: filterByStatus
+        in: query
+      - schema:
+          type: string
+          enum:
+          - runLocation
+          description: Determines how the series data is grouped. Note that grouped queries are a bit more expensive and might take longer.
+        required: false
+        description: Determines how the series data is grouped. Note that grouped queries are a bit more expensive and might take longer.
+        name: groupBy
+        in: query
+      - schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - total
+            - dns
+            - connection
+            - data
+            - availability
+            - retries
+            - total_avg
+            - total_max
+            - total_median
+            - total_min
+            - total_p50
+            - total_p90
+            - total_p95
+            - total_p99
+            - total_stddev
+            - total_sum
+            - dns_avg
+            - dns_max
+            - dns_median
+            - dns_min
+            - dns_p50
+            - dns_p90
+            - dns_p95
+            - dns_p99
+            - dns_stddev
+            - dns_sum
+            - connection_avg
+            - connection_max
+            - connection_median
+            - connection_min
+            - connection_p50
+            - connection_p90
+            - connection_p95
+            - connection_p99
+            - connection_stddev
+            - connection_sum
+            - data_avg
+            - data_max
+            - data_median
+            - data_min
+            - data_p50
+            - data_p90
+            - data_p95
+            - data_p99
+            - data_stddev
+            - data_sum
+          description: Available metrics for TCP Checks. You can pass multiple metrics as a comma separated string.
+        required: true
+        description: Available metrics for TCP Checks. You can pass multiple metrics as a comma separated string.
+        name: metrics
+        in: query
+      - schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+          description: Limit the number of results
+        required: false
+        description: Limit the number of results
+        name: limit
+        in: query
+      - schema:
+          type: number
+          default: 1
+          description: Page number
+          exclusiveMinimum: 0
+        required: false
+        description: Page number
+        name: page
+        in: query
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+  /v1/analytics/url-monitors/{id}:
+    get:
+      summary: URL Monitors
+      operationId: getV1AnalyticsUrlmonitorsId
+      description: Fetch detailed availability metrics and aggregated or non-aggregated API Check metrics across custom time ranges. For example, you can get the p99 and p95 of all the DNS phases of your API check together with the availability percentage for any time range.<br><br><b>Rate-limiting is applied to this endpoint, you can send 30 requests / 60 seconds at most.<b>
+      tags:
+      - Analytics
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsUrlMonitorResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: string
+          minLength: 1
+          format: uuid
+        required: true
+        name: id
+        in: path
+      - schema:
+          type: string
+          format: date
+          description: Custom start time of reporting window in unix timestamp format. Setting a custom "from" timestamp overrides the use of any "quickRange".
+        required: false
+        description: Custom start time of reporting window in unix timestamp format. Setting a custom "from" timestamp overrides the use of any "quickRange".
+        name: from
+        in: query
+      - schema:
+          type: string
+          format: date
+          description: Custom end time of reporting window in unix timestamp format. Setting a custom "to" timestamp overrides the use of any "quickRange".
+        required: false
+        description: Custom end time of reporting window in unix timestamp format. Setting a custom "to" timestamp overrides the use of any "quickRange".
+        name: to
+        in: query
+      - schema:
+          type: string
+          enum:
+          - last24Hours
+          - last7Days
+          - last30Days
+          - thisWeek
+          - thisMonth
+          - lastWeek
+          - lastMonth
+          default: last24Hours
+          description: Preset reporting windows are used for quickly generating report on commonly used windows. Can be overridden by using a custom "to" and "from" timestamp.
+        required: false
+        description: Preset reporting windows are used for quickly generating report on commonly used windows. Can be overridden by using a custom "to" and "from" timestamp.
+        name: quickRange
+        in: query
+      - schema:
+          type: number
+          minimum: 1
+          maximum: 43200
+          example: 1440
+          description: The time interval to use for aggregating metrics in minutes. For example, five minutes is 5, 24 hours is 1440.
+        required: false
+        description: The time interval to use for aggregating metrics in minutes. For example, five minutes is 5, 24 hours is 1440.
+        name: aggregationInterval
+        in: query
+      - schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - success
+            - failure
+          example:
+          - failure
+          description: Filter based on whether a check result was either failing or passing
+        required: false
+        description: Filter based on whether a check result was either failing or passing
+        name: filterByStatus
+        in: query
+      - schema:
+          type: string
+          enum:
+          - runLocation
+          - statusCode
+          description: Determines how the series data is grouped. Note that grouped queries are a bit more expensive and might take longer.
+        required: false
+        description: Determines how the series data is grouped. Note that grouped queries are a bit more expensive and might take longer.
+        name: groupBy
+        in: query
+      - schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - responseTime
+            - wait
+            - dns
+            - tcp
+            - firstByte
+            - download
+            - availability
+            - retries
+            - responseTime_avg
+            - responseTime_max
+            - responseTime_median
+            - responseTime_min
+            - responseTime_p50
+            - responseTime_p90
+            - responseTime_p95
+            - responseTime_p99
+            - responseTime_stddev
+            - responseTime_sum
+            - wait_avg
+            - wait_max
+            - wait_median
+            - wait_min
+            - wait_p50
+            - wait_p90
+            - wait_p95
+            - wait_p99
+            - wait_stddev
+            - wait_sum
+            - dns_avg
+            - dns_max
+            - dns_median
+            - dns_min
+            - dns_p50
+            - dns_p90
+            - dns_p95
+            - dns_p99
+            - dns_stddev
+            - dns_sum
+            - tcp_avg
+            - tcp_max
+            - tcp_median
+            - tcp_min
+            - tcp_p50
+            - tcp_p90
+            - tcp_p95
+            - tcp_p99
+            - tcp_stddev
+            - tcp_sum
+            - firstByte_avg
+            - firstByte_max
+            - firstByte_median
+            - firstByte_min
+            - firstByte_p50
+            - firstByte_p90
+            - firstByte_p95
+            - firstByte_p99
+            - firstByte_stddev
+            - firstByte_sum
+            - download_avg
+            - download_max
+            - download_median
+            - download_min
+            - download_p50
+            - download_p90
+            - download_p95
+            - download_p99
+            - download_stddev
+            - download_sum
+          description: Available metrics for API Checks. You can pass multiple metrics as a comma separated string.
+        required: true
+        description: Available metrics for API Checks. You can pass multiple metrics as a comma separated string.
+        name: metrics
+        in: query
+      - schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+          description: Limit the number of results
+        required: false
+        description: Limit the number of results
+        name: limit
+        in: query
+      - schema:
+          type: number
+          default: 1
+          description: Page number
+          exclusiveMinimum: 0
+        required: false
+        description: Page number
+        name: page
+        in: query
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
 components:
   schemas:
-    Error:
+    AnalyticsSslMonitorMetadata:
       type: object
+      properties:
+        handshakeTimeMs:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        daysUntilExpiry:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        tlsVersion:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        cipherSuite:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        hostnameVerified:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        chainTrusted:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        ocspStapled:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        keySizeBits:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        baselineVerdict:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        baselineGrade:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        availability:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        retries:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        handshakeTimeMs_avg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        handshakeTimeMs_max:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        handshakeTimeMs_median:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        handshakeTimeMs_min:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        handshakeTimeMs_p50:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        handshakeTimeMs_p90:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        handshakeTimeMs_p95:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        handshakeTimeMs_p99:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        handshakeTimeMs_stddev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        handshakeTimeMs_sum:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        daysUntilExpiry_avg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        daysUntilExpiry_max:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        daysUntilExpiry_median:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        daysUntilExpiry_min:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        daysUntilExpiry_p50:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        daysUntilExpiry_p90:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        daysUntilExpiry_p95:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        daysUntilExpiry_p99:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        daysUntilExpiry_stddev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        daysUntilExpiry_sum:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        tlsVersion_avg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        tlsVersion_max:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        tlsVersion_median:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        tlsVersion_min:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        tlsVersion_p50:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        tlsVersion_p90:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        tlsVersion_p95:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        tlsVersion_p99:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        tlsVersion_stddev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        tlsVersion_sum:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        cipherSuite_avg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        cipherSuite_max:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        cipherSuite_median:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        cipherSuite_min:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        cipherSuite_p50:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        cipherSuite_p90:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        cipherSuite_p95:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        cipherSuite_p99:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        cipherSuite_stddev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        cipherSuite_sum:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        hostnameVerified_avg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        hostnameVerified_max:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        hostnameVerified_median:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        hostnameVerified_min:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        hostnameVerified_p50:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        hostnameVerified_p90:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        hostnameVerified_p95:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        hostnameVerified_p99:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        hostnameVerified_stddev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        hostnameVerified_sum:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        chainTrusted_avg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        chainTrusted_max:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        chainTrusted_median:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        chainTrusted_min:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        chainTrusted_p50:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        chainTrusted_p90:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        chainTrusted_p95:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        chainTrusted_p99:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        chainTrusted_stddev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        chainTrusted_sum:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        ocspStapled_avg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        ocspStapled_max:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        ocspStapled_median:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        ocspStapled_min:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        ocspStapled_p50:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        ocspStapled_p90:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        ocspStapled_p95:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        ocspStapled_p99:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        ocspStapled_stddev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        ocspStapled_sum:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        keySizeBits_avg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        keySizeBits_max:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        keySizeBits_median:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        keySizeBits_min:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        keySizeBits_p50:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        keySizeBits_p90:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        keySizeBits_p95:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        keySizeBits_p99:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        keySizeBits_stddev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        keySizeBits_sum:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        baselineVerdict_avg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        baselineVerdict_max:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        baselineVerdict_median:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        baselineVerdict_min:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        baselineVerdict_p50:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        baselineVerdict_p90:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        baselineVerdict_p95:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        baselineVerdict_p99:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        baselineVerdict_stddev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        baselineVerdict_sum:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        baselineGrade_avg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        baselineGrade_max:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        baselineGrade_median:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        baselineGrade_min:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        baselineGrade_p50:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        baselineGrade_p90:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        baselineGrade_p95:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        baselineGrade_p99:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        baselineGrade_stddev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        baselineGrade_sum:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+    AnalyticsApiCheckMetadata:
+      type: object
+      properties:
+        responseTime:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        wait:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        dns:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        tcp:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        firstByte:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        download:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        availability:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        retries:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_avg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_max:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_median:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_min:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_p50:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_p90:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_p95:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_p99:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_stddev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_sum:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        wait_avg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        wait_max:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        wait_median:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        wait_min:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        wait_p50:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        wait_p90:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        wait_p95:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        wait_p99:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        wait_stddev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        wait_sum:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        dns_avg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        dns_max:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        dns_median:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        dns_min:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        dns_p50:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        dns_p90:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        dns_p95:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        dns_p99:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        dns_stddev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        dns_sum:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        tcp_avg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        tcp_max:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        tcp_median:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        tcp_min:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        tcp_p50:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        tcp_p90:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        tcp_p95:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        tcp_p99:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        tcp_stddev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        tcp_sum:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        firstByte_avg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        firstByte_max:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        firstByte_median:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        firstByte_min:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        firstByte_p50:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        firstByte_p90:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        firstByte_p95:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        firstByte_p99:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        firstByte_stddev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        firstByte_sum:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        download_avg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        download_max:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        download_median:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        download_min:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        download_p50:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        download_p90:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        download_p95:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        download_p99:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        download_stddev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        download_sum:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+    AnalyticsMultistepCheckResponse:
+      type: object
+      properties:
+        checkId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        checkType:
+          type: string
+          enum:
+          - AGENTIC
+          - API
+          - BROWSER
+          - HEARTBEAT
+          - ICMP
+          - MULTI_STEP
+          - TCP
+          - PLAYWRIGHT
+          - TRACEROUTE
+          - URL
+          - DNS
+          - SSL
+          - GRPC
+        activated:
+          type: boolean
+        muted:
+          type: boolean
+        frequency:
+          type: number
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+        tags:
+          type: array
+          items:
+            type: string
+        series:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnalyticsSeriesEntry'
+        pagination:
+          $ref: '#/components/schemas/AnalyticsPagination'
+        metadata:
+          $ref: '#/components/schemas/AnalyticsMultistepCheckMetadata'
+    AnalyticsHeartbeatCheckMetadata:
+      type: object
+      properties:
+        availability:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        retries:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+    AnalyticsSeriesEntry:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/AnalyticsSeriesData'
       required:
-      - error
-      - message
-      properties:
-        error:
-          type: string
-          description: Error type
-        message:
-          type: string
-          description: Error message
-        statusCode:
-          type: integer
-          description: HTTP status code
-    BrowserCheckAnalytics:
+      - data
+      additionalProperties: true
+    AnalyticsSeriesData:
+      anyOf:
+      - type: array
+        items:
+          $ref: '#/components/schemas/AnalyticsSeriesRow'
+      - $ref: '#/components/schemas/AnalyticsSeriesRow'
+    AnalyticsSeriesRow:
+      type: object
+      properties: {}
+      additionalProperties: true
+    AnalyticsPlaywrightCheckResponse:
       type: object
       properties:
-        id:
+        checkId:
           type: string
-          description: Check ID
-        averageLoadTime:
+          format: uuid
+        name:
+          type: string
+        checkType:
+          type: string
+          enum:
+          - AGENTIC
+          - API
+          - BROWSER
+          - HEARTBEAT
+          - ICMP
+          - MULTI_STEP
+          - TCP
+          - PLAYWRIGHT
+          - TRACEROUTE
+          - URL
+          - DNS
+          - SSL
+          - GRPC
+        activated:
+          type: boolean
+        muted:
+          type: boolean
+        frequency:
           type: number
-          description: Average page load time in milliseconds
-        successRate:
-          type: number
-          description: Success rate percentage
-        totalRuns:
-          type: integer
-          description: Total number of runs
-    ApiCheckAnalytics:
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+        tags:
+          type: array
+          items:
+            type: string
+        series:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnalyticsSeriesEntry'
+        pagination:
+          $ref: '#/components/schemas/AnalyticsPagination'
+        metadata:
+          $ref: '#/components/schemas/AnalyticsPlaywrightCheckMetadata'
+    AnalyticsPagination:
       type: object
       properties:
-        id:
+        page:
+          type: number
+        limit:
+          type: number
+    AnalyticsUrlMonitorMetadata:
+      type: object
+      properties:
+        responseTime:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        wait:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        dns:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        tcp:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        firstByte:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        download:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        availability:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        retries:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_avg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_max:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_median:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_min:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_p50:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_p90:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_p95:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_p99:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_stddev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_sum:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        wait_avg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        wait_max:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        wait_median:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        wait_min:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        wait_p50:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        wait_p90:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        wait_p95:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        wait_p99:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        wait_stddev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        wait_sum:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        dns_avg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        dns_max:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        dns_median:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        dns_min:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        dns_p50:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        dns_p90:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        dns_p95:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        dns_p99:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        dns_stddev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        dns_sum:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        tcp_avg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        tcp_max:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        tcp_median:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        tcp_min:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        tcp_p50:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        tcp_p90:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        tcp_p95:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        tcp_p99:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        tcp_stddev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        tcp_sum:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        firstByte_avg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        firstByte_max:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        firstByte_median:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        firstByte_min:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        firstByte_p50:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        firstByte_p90:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        firstByte_p95:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        firstByte_p99:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        firstByte_stddev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        firstByte_sum:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        download_avg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        download_max:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        download_median:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        download_min:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        download_p50:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        download_p90:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        download_p95:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        download_p99:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        download_stddev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        download_sum:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+    AnalyticsApiCheckResponse:
+      type: object
+      properties:
+        checkId:
           type: string
-          description: Check ID
-        averageResponseTime:
+          format: uuid
+        name:
+          type: string
+        checkType:
+          type: string
+          enum:
+          - AGENTIC
+          - API
+          - BROWSER
+          - HEARTBEAT
+          - ICMP
+          - MULTI_STEP
+          - TCP
+          - PLAYWRIGHT
+          - TRACEROUTE
+          - URL
+          - DNS
+          - SSL
+          - GRPC
+        activated:
+          type: boolean
+        muted:
+          type: boolean
+        frequency:
           type: number
-          description: Average response time in milliseconds
-        successRate:
-          type: number
-          description: Success rate percentage
-        totalRequests:
-          type: integer
-          description: Total number of requests
-    Metric:
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+        tags:
+          type: array
+          items:
+            type: string
+        series:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnalyticsSeriesEntry'
+        pagination:
+          $ref: '#/components/schemas/AnalyticsPagination'
+        metadata:
+          $ref: '#/components/schemas/AnalyticsApiCheckMetadata'
+    AnalyticsMetricsResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/AnalyticsMetricDescriptor'
+    AnalyticsMetricDescriptor:
       type: object
       properties:
         name:
           type: string
-          description: Metric identifier name
-        displayName:
-          type: string
-          description: Human-readable metric name
-        description:
-          type: string
-          description: Detailed description of what the metric measures
         unit:
           type: string
-          description: Unit of measurement (milliseconds, percentage, count, etc.)
-        dataType:
+          enum:
+          - milliseconds
+          - score
+          - count
+          - percentage
+        label:
+          type: string
+        type:
           type: string
           enum:
-          - number
-          - integer
-          description: Data type of the metric value
-        availableFor:
+          - Array
+          - Int
+          - Integer
+          - Float
+          - String
+        aggregated:
+          type: boolean
+      required:
+      - name
+      - unit
+      - label
+      - aggregated
+    AnalyticsIcmpMonitorResponse:
+      type: object
+      properties:
+        checkId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        checkType:
+          type: string
+          enum:
+          - AGENTIC
+          - API
+          - BROWSER
+          - HEARTBEAT
+          - ICMP
+          - MULTI_STEP
+          - TCP
+          - PLAYWRIGHT
+          - TRACEROUTE
+          - URL
+          - DNS
+          - SSL
+          - GRPC
+        activated:
+          type: boolean
+        muted:
+          type: boolean
+        frequency:
+          type: number
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+        tags:
           type: array
           items:
             type: string
-          description: Check types this metric is available for
-        calculationMethod:
-          type: string
-          description: How the metric is calculated
-        precision:
-          type: integer
-          description: Number of decimal places for precision
-        category:
-          type: string
-          description: Metric category grouping
-        goodThreshold:
-          type: number
-          description: Threshold value considered good performance
-        needsImprovementThreshold:
-          type: number
-          description: Threshold value that needs improvement
-        range:
-          type: object
-          properties:
-            min:
-              type: number
-              description: Minimum possible value
-            max:
-              type: number
-              description: Maximum possible value
-    MetricsList:
+        series:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnalyticsSeriesEntry'
+        pagination:
+          $ref: '#/components/schemas/AnalyticsPagination'
+        metadata:
+          $ref: '#/components/schemas/AnalyticsIcmpMonitorMetadata'
+    AnalyticsMultistepCheckMetadata:
       type: object
       properties:
+        responseTime:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        availability:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        retries:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_avg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_max:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_median:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_min:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_p50:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_p90:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_p95:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_p99:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_stddev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_sum:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+    AnalyticsBatchRequest:
+      type: object
+      properties:
+        checkIds:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            format: uuid
+          minItems: 1
+          maxItems: 100
+          description: Array of check IDs to fetch analytics for. Each ID must be a UUIDv4.
+      required:
+      - checkIds
+      additionalProperties: false
+    AnalyticsBatchResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/AnalyticsBatchResponseItem'
+    ApiError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+        error:
+          type: string
+        message:
+          type: string
+      required:
+      - statusCode
+      - error
+      - message
+    AnalyticsMetricMetadata:
+      type: object
+      properties:
+        unit:
+          type: string
+          enum:
+          - milliseconds
+          - score
+          - count
+          - percentage
+        label:
+          type: string
+        aggregation:
+          type: string
+          enum:
+          - avg
+          - max
+          - median
+          - min
+          - p50
+          - p90
+          - p95
+          - p99
+          - stddev
+          - sum
+    AnalyticsBrowserCheckResponse:
+      type: object
+      properties:
+        checkId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        checkType:
+          type: string
+          enum:
+          - AGENTIC
+          - API
+          - BROWSER
+          - HEARTBEAT
+          - ICMP
+          - MULTI_STEP
+          - TCP
+          - PLAYWRIGHT
+          - TRACEROUTE
+          - URL
+          - DNS
+          - SSL
+          - GRPC
+        activated:
+          type: boolean
+        muted:
+          type: boolean
+        frequency:
+          type: number
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+        tags:
+          type: array
+          items:
+            type: string
+        series:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnalyticsSeriesEntry'
+        pagination:
+          $ref: '#/components/schemas/AnalyticsPagination'
+        metadata:
+          $ref: '#/components/schemas/AnalyticsBrowserCheckMetadata'
+    AnalyticsDnsMonitorResponse:
+      type: object
+      properties:
+        checkId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        checkType:
+          type: string
+          enum:
+          - AGENTIC
+          - API
+          - BROWSER
+          - HEARTBEAT
+          - ICMP
+          - MULTI_STEP
+          - TCP
+          - PLAYWRIGHT
+          - TRACEROUTE
+          - URL
+          - DNS
+          - SSL
+          - GRPC
+        activated:
+          type: boolean
+        muted:
+          type: boolean
+        frequency:
+          type: number
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+        tags:
+          type: array
+          items:
+            type: string
+        series:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnalyticsSeriesEntry'
+        pagination:
+          $ref: '#/components/schemas/AnalyticsPagination'
+        metadata:
+          $ref: '#/components/schemas/AnalyticsDnsMonitorMetadata'
+    AnalyticsUrlMonitorResponse:
+      type: object
+      properties:
+        checkId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        checkType:
+          type: string
+          enum:
+          - AGENTIC
+          - API
+          - BROWSER
+          - HEARTBEAT
+          - ICMP
+          - MULTI_STEP
+          - TCP
+          - PLAYWRIGHT
+          - TRACEROUTE
+          - URL
+          - DNS
+          - SSL
+          - GRPC
+        activated:
+          type: boolean
+        muted:
+          type: boolean
+        frequency:
+          type: number
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+        tags:
+          type: array
+          items:
+            type: string
+        series:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnalyticsSeriesEntry'
+        pagination:
+          $ref: '#/components/schemas/AnalyticsPagination'
+        metadata:
+          $ref: '#/components/schemas/AnalyticsUrlMonitorMetadata'
+    AnalyticsDnsMonitorMetadata:
+      type: object
+      properties:
+        total:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        availability:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        retries:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        total_avg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        total_max:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        total_median:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        total_min:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        total_p50:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        total_p90:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        total_p95:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        total_p99:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        total_stddev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        total_sum:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+    AnalyticsBatchResponseItem:
+      type: object
+      properties:
+        checkId:
+          type: string
+          format: uuid
+        checkType:
+          type: string
+          enum:
+          - AGENTIC
+          - API
+          - BROWSER
+          - HEARTBEAT
+          - ICMP
+          - MULTI_STEP
+          - TCP
+          - PLAYWRIGHT
+          - TRACEROUTE
+          - URL
+          - DNS
+          - SSL
+          - GRPC
+        availability:
+          type:
+          - number
+          - 'null'
+        responseTime_avg:
+          type:
+          - number
+          - 'null'
+        responseTime_p50:
+          type:
+          - number
+          - 'null'
+        responseTime_p95:
+          type:
+          - number
+          - 'null'
+        responseTime_p99:
+          type:
+          - number
+          - 'null'
+        latency_avg:
+          type:
+          - number
+          - 'null'
+        latency_p50:
+          type:
+          - number
+          - 'null'
+        latency_p95:
+          type:
+          - number
+          - 'null'
+        latency_p99:
+          type:
+          - number
+          - 'null'
+        packetLoss_avg:
+          type:
+          - number
+          - 'null'
+        packetLoss_p95:
+          type:
+          - number
+          - 'null'
+        packetLoss_p99:
+          type:
+          - number
+          - 'null'
+        hopCount_avg:
+          type:
+          - number
+          - 'null'
+      required:
+      - checkId
+      - checkType
+      additionalProperties: false
+    AnalyticsTcpCheckMetadata:
+      type: object
+      properties:
+        total:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        dns:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        connection:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
         data:
-          type: object
-          properties:
-            responseTimeMetrics:
-              type: array
-              items:
-                $ref: '#/components/schemas/Metric'
-            successMetrics:
-              type: array
-              items:
-                $ref: '#/components/schemas/Metric'
-            volumeMetrics:
-              type: array
-              items:
-                $ref: '#/components/schemas/Metric'
-            browserSpecificMetrics:
-              type: array
-              items:
-                $ref: '#/components/schemas/Metric'
-            heartbeatSpecificMetrics:
-              type: array
-              items:
-                $ref: '#/components/schemas/Metric'
-        meta:
-          type: object
-          properties:
-            totalMetrics:
-              type: integer
-              description: Total number of metrics available
-            categories:
-              type: array
-              items:
-                type: string
-              description: Available metric categories
-            checkTypes:
-              type: array
-              items:
-                type: string
-              description: Supported check types
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        availability:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        retries:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        total_avg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        total_max:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        total_median:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        total_min:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        total_p50:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        total_p90:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        total_p95:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        total_p99:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        total_stddev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        total_sum:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        dns_avg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        dns_max:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        dns_median:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        dns_min:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        dns_p50:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        dns_p90:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        dns_p95:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        dns_p99:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        dns_stddev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        dns_sum:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        connection_avg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        connection_max:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        connection_median:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        connection_min:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        connection_p50:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        connection_p90:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        connection_p95:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        connection_p99:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        connection_stddev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        connection_sum:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        data_avg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        data_max:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        data_median:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        data_min:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        data_p50:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        data_p90:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        data_p95:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        data_p99:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        data_stddev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        data_sum:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+    AnalyticsIcmpMonitorMetadata:
+      type: object
+      properties:
+        packetLoss:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        latencyMin:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        latencyMax:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        latencyAvg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        latencyStdDev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        availability:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        retries:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        packetLoss_avg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        packetLoss_max:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        packetLoss_median:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        packetLoss_min:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        packetLoss_p50:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        packetLoss_p90:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        packetLoss_p95:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        packetLoss_p99:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        packetLoss_stddev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        packetLoss_sum:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        latencyMin_avg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        latencyMin_max:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        latencyMin_median:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        latencyMin_min:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        latencyMin_p50:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        latencyMin_p90:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        latencyMin_p95:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        latencyMin_p99:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        latencyMin_stddev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        latencyMin_sum:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        latencyMax_avg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        latencyMax_max:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        latencyMax_median:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        latencyMax_min:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        latencyMax_p50:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        latencyMax_p90:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        latencyMax_p95:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        latencyMax_p99:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        latencyMax_stddev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        latencyMax_sum:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        latencyAvg_avg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        latencyAvg_max:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        latencyAvg_median:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        latencyAvg_min:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        latencyAvg_p50:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        latencyAvg_p90:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        latencyAvg_p95:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        latencyAvg_p99:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        latencyAvg_stddev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        latencyAvg_sum:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        latencyStdDev_avg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        latencyStdDev_max:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        latencyStdDev_median:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        latencyStdDev_min:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        latencyStdDev_p50:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        latencyStdDev_p90:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        latencyStdDev_p95:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        latencyStdDev_p99:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        latencyStdDev_stddev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        latencyStdDev_sum:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+    AnalyticsTcpCheckResponse:
+      type: object
+      properties:
+        checkId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        checkType:
+          type: string
+          enum:
+          - AGENTIC
+          - API
+          - BROWSER
+          - HEARTBEAT
+          - ICMP
+          - MULTI_STEP
+          - TCP
+          - PLAYWRIGHT
+          - TRACEROUTE
+          - URL
+          - DNS
+          - SSL
+          - GRPC
+        activated:
+          type: boolean
+        muted:
+          type: boolean
+        frequency:
+          type: number
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+        tags:
+          type: array
+          items:
+            type: string
+        series:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnalyticsSeriesEntry'
+        pagination:
+          $ref: '#/components/schemas/AnalyticsPagination'
+        metadata:
+          $ref: '#/components/schemas/AnalyticsTcpCheckMetadata'
+    AnalyticsHeartbeatCheckResponse:
+      type: object
+      properties:
+        checkId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        checkType:
+          type: string
+          enum:
+          - AGENTIC
+          - API
+          - BROWSER
+          - HEARTBEAT
+          - ICMP
+          - MULTI_STEP
+          - TCP
+          - PLAYWRIGHT
+          - TRACEROUTE
+          - URL
+          - DNS
+          - SSL
+          - GRPC
+        activated:
+          type: boolean
+        muted:
+          type: boolean
+        frequency:
+          type: number
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+        tags:
+          type: array
+          items:
+            type: string
+        series:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnalyticsSeriesEntry'
+        pagination:
+          $ref: '#/components/schemas/AnalyticsPagination'
+        metadata:
+          $ref: '#/components/schemas/AnalyticsHeartbeatCheckMetadata'
+    AnalyticsPlaywrightCheckMetadata:
+      type: object
+      properties:
+        responseTime:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        availability:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        retries:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_avg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_max:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_median:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_min:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_p50:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_p90:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_p95:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_p99:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_stddev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_sum:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+    AnalyticsSslMonitorResponse:
+      type: object
+      properties:
+        checkId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        checkType:
+          type: string
+          enum:
+          - AGENTIC
+          - API
+          - BROWSER
+          - HEARTBEAT
+          - ICMP
+          - MULTI_STEP
+          - TCP
+          - PLAYWRIGHT
+          - TRACEROUTE
+          - URL
+          - DNS
+          - SSL
+          - GRPC
+        activated:
+          type: boolean
+        muted:
+          type: boolean
+        frequency:
+          type: number
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+        tags:
+          type: array
+          items:
+            type: string
+        series:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnalyticsSeriesEntry'
+        pagination:
+          $ref: '#/components/schemas/AnalyticsPagination'
+        metadata:
+          $ref: '#/components/schemas/AnalyticsSslMonitorMetadata'
+    AnalyticsBrowserCheckMetadata:
+      type: object
+      properties:
+        responseTime:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        TTFB:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        FCP:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        LCP:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        CLS:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        TBT:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        consoleErrors:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        networkErrors:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        userScriptErrors:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        documentErrors:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        availability:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        retries:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_avg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_max:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_median:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_min:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_p50:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_p90:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_p95:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_p99:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_stddev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        responseTime_sum:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        TTFB_avg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        TTFB_max:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        TTFB_median:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        TTFB_min:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        TTFB_p50:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        TTFB_p90:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        TTFB_p95:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        TTFB_p99:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        TTFB_stddev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        TTFB_sum:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        FCP_avg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        FCP_max:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        FCP_median:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        FCP_min:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        FCP_p50:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        FCP_p90:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        FCP_p95:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        FCP_p99:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        FCP_stddev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        FCP_sum:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        LCP_avg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        LCP_max:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        LCP_median:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        LCP_min:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        LCP_p50:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        LCP_p90:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        LCP_p95:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        LCP_p99:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        LCP_stddev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        LCP_sum:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        CLS_avg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        CLS_max:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        CLS_median:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        CLS_min:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        CLS_p50:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        CLS_p90:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        CLS_p95:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        CLS_p99:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        CLS_stddev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        CLS_sum:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        TBT_avg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        TBT_max:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        TBT_median:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        TBT_min:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        TBT_p50:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        TBT_p90:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        TBT_p95:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        TBT_p99:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        TBT_stddev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        TBT_sum:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        consoleErrors_avg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        consoleErrors_max:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        consoleErrors_median:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        consoleErrors_min:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        consoleErrors_p50:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        consoleErrors_p90:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        consoleErrors_p95:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        consoleErrors_p99:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        consoleErrors_stddev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        consoleErrors_sum:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        networkErrors_avg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        networkErrors_max:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        networkErrors_median:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        networkErrors_min:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        networkErrors_p50:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        networkErrors_p90:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        networkErrors_p95:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        networkErrors_p99:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        networkErrors_stddev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        networkErrors_sum:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        userScriptErrors_avg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        userScriptErrors_max:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        userScriptErrors_median:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        userScriptErrors_min:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        userScriptErrors_p50:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        userScriptErrors_p90:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        userScriptErrors_p95:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        userScriptErrors_p99:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        userScriptErrors_stddev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        userScriptErrors_sum:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        documentErrors_avg:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        documentErrors_max:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        documentErrors_median:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        documentErrors_min:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        documentErrors_p50:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        documentErrors_p90:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        documentErrors_p95:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        documentErrors_p99:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        documentErrors_stddev:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
+        documentErrors_sum:
+          $ref: '#/components/schemas/AnalyticsMetricMetadata'
   securitySchemes:
-    bearerAuth:
+    Bearer:
       type: http
       scheme: bearer
-      description: API Key authentication for Checkly API. You can get your API key at https://app.checklyhq.com/settings/user/api-keys
-    accountId:
-      type: apiKey
-      in: header
-      name: X-Checkly-Account
-      description: Your Checkly account ID. You can find it at https://app.checklyhq.com/settings/account/general
+      bearerFormat: Bearer
+      description: 'The Checkly Public API uses API keys to authenticate requests. You can get the API Key <a href="https://app.checklyhq.com/settings/user/api-keys" target="_blank">here</a>.</br>Your API key is like a password: <br>keep it secure!</br></br>Authentication to the API is performed using the Bearer auth method in the Authorization header and using the account ID.</br></br>For example, set <b>Authorization</b> header while using cURL: <code>curl -H "Authorization: Bearer [apiKey]" "X-Checkly-Account: [accountId]"</code></br>'

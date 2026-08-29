@@ -1,125 +1,382 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Checkly Public Accounts Check Alerts API
+  title: Checkly Public Check alerts API
   version: v1
-  description: The Checkly Public API allows you to programmatically manage your monitoring checks, alerts, and more. If you have any questions, please do not hesitate to get in touch with us.
-  contact:
-    name: Checkly Support
-    url: https://checklyhq.com/support
-  license:
-    name: MIT
+  description: These are the docs for the newly released Checkly Public API.<br />If you have any questions, please do not hesitate to get in touch with us.
 servers:
 - url: https://api.checklyhq.com
-  description: Production server
 security:
-- bearerAuth: []
-  accountId: []
+- Bearer: []
 tags:
-- name: Check Alerts
+- name: Check alerts
 paths:
   /v1/check-alerts:
     get:
-      summary: List Check Alerts
-      description: Retrieve all alerts triggered by checks
-      operationId: listCheckAlerts
+      summary: List all alerts for your account
+      operationId: getV1Checkalerts
+      description: Lists all alerts that have been sent for your account.<br><br>Use the `to` and `from` parameters to specify a date range (UNIX timestamp in seconds). This endpoint will return data within a 6-hour timeframe. If the `from` and `to` params are set, they must be at most 6 hours apart. If none are set, we will consider the `to` param to be now and the `from` param to be 6 hours earlier. If only the `to` param is set we will set `from` to be 6 hours earlier. If only the `from` param is set we will consider the `to` param to be 6 hours later.
+      tags:
+      - Check alerts
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckAlertList'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
       parameters:
-      - name: limit
-        in: query
-        description: Limit the number of results
-        schema:
+      - schema:
           type: integer
-          default: 10
           minimum: 1
           maximum: 100
-      - name: page
+          default: 10
+          description: Limit the number of results
+        required: false
+        description: Limit the number of results
+        name: limit
         in: query
-        description: Page number
-        schema:
-          type: integer
+      - schema:
+          type: number
           default: 1
-          minimum: 1
-      responses:
-        '200':
-          description: List of check alerts
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CheckAlertList'
-      tags:
-      - Check Alerts
+          description: Page number
+          exclusiveMinimum: 0
+        required: false
+        description: Page number
+        name: page
+        in: query
+      - schema:
+          type: string
+          format: date
+          description: Select records up from this UNIX timestamp (>= date). Defaults to now - 6 hours.
+        required: false
+        description: Select records up from this UNIX timestamp (>= date). Defaults to now - 6 hours.
+        name: from
+        in: query
+      - schema:
+          type: string
+          format: date
+          description: Optional. Select records up to this UNIX timestamp (< date). Defaults to 6 hours after "from".
+        required: false
+        description: Optional. Select records up to this UNIX timestamp (< date). Defaults to 6 hours after "from".
+        name: to
+        in: query
+      - schema:
+          type: string
+          x-format:
+            guid: true
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
   /v1/check-alerts/{checkId}:
     get:
-      summary: Get Check Alerts
-      description: List all alerts for a specific check
-      operationId: getCheckAlerts
-      parameters:
-      - name: checkId
-        in: path
-        required: true
-        description: The check ID
-        schema:
-          type: string
+      summary: List alerts for a specific check
+      operationId: getV1CheckalertsCheckid
+      description: Lists all the alerts for a specific check.<br><br>Use the `to` and `from` parameters to specify a date range (UNIX timestamp in seconds). This endpoint will return data within a 6-hour timeframe. If the `from` and `to` params are set, they must be at most 6 hours apart. If none are set, we will consider the `to` param to be now and the `from` param to be 6 hours earlier. If only the `to` param is set we will set `from` to be 6 hours earlier. If only the `from` param is set we will consider the `to` param to be 6 hours later.
+      tags:
+      - Check alerts
       responses:
         '200':
-          description: Check alerts
+          description: Successful
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CheckAlertList'
-      tags:
-      - Check Alerts
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+      parameters:
+      - schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
+        name: checkId
+        in: path
+      - schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+          description: Limit the number of results
+        required: false
+        description: Limit the number of results
+        name: limit
+        in: query
+      - schema:
+          type: number
+          default: 1
+          description: Page number
+          exclusiveMinimum: 0
+        required: false
+        description: Page number
+        name: page
+        in: query
+      - schema:
+          type: string
+          format: date
+          description: Select records up from this UNIX timestamp (>= date). Defaults to now - 6 hours.
+        required: false
+        description: Select records up from this UNIX timestamp (>= date). Defaults to now - 6 hours.
+        name: from
+        in: query
+      - schema:
+          type: string
+          format: date
+          description: Optional. Select records up to this UNIX timestamp (< date). Defaults to 6 hours after "from".
+        required: false
+        description: Optional. Select records up to this UNIX timestamp (< date). Defaults to 6 hours after "from".
+        name: to
+        in: query
+      - schema:
+          type: string
+          x-format:
+            guid: true
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
 components:
   schemas:
-    CheckAlertList:
+    attributes:
+      type: object
+    error:
+      type: string
+      enum:
+      - Unauthorized
+    ForbiddenError:
       type: object
       properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/CheckAlert'
-        meta:
-          $ref: '#/components/schemas/PaginationMeta'
+        statusCode:
+          type: number
+          enum:
+          - 403
+        error:
+          $ref: '#/components/schemas/Model1'
+        message:
+          type: string
+          example: Forbidden
+      required:
+      - statusCode
+      - error
     CheckAlert:
       type: object
       properties:
         id:
           type: string
-          description: Alert ID
+          description: The unique ID of this alert.
+          example: '1'
+        name:
+          type: string
+          description: The name of the check.
+          example: API Check
         checkId:
           type: string
-          description: Check ID
-        status:
+          description: The ID of the check this alert belongs to.
+          example: db147a95-6ed6-44c9-a584-c5dca2db3aaa
+        alertType:
           type: string
           enum:
-          - triggered
-          - resolved
-          description: Alert status
-        createdAt:
+          - NO_ALERT
+          - ALERT_FAILURE
+          - ALERT_FAILURE_REMAIN
+          - ALERT_FAILURE_DEGRADED
+          - ALERT_RECOVERY
+          - ALERT_DEGRADED
+          - ALERT_DEGRADED_REMAIN
+          - ALERT_DEGRADED_FAILURE
+          - ALERT_DEGRADED_RECOVERY
+          - ALERT_SSL
+          description: The type of alert.
+          example: ALERT_FAILURE
+        checkType:
+          type: string
+          enum:
+          - AGENTIC
+          - API
+          - BROWSER
+          - HEARTBEAT
+          - ICMP
+          - MULTI_STEP
+          - TCP
+          - PLAYWRIGHT
+          - TRACEROUTE
+          - URL
+          - DNS
+          - SSL
+          - GRPC
+          description: The type of the check.
+          example: API
+        runLocation:
+          type: string
+          description: What data center location this check alert was triggered from.
+          example: us-east-1
+        responseTime:
+          type: number
+          description: Describes the time it took to execute relevant parts of this check. Any setup time or system time needed to start executing this check in the Checkly backend is not part of this.
+          example: 10
+        error:
+          type:
+          - string
+          - 'null'
+          description: Any specific error messages that were part of the failing check triggering the alert.
+          example: OK
+        statusCode:
+          type:
+          - string
+          - 'null'
+          description: The status code of the response. Only applies to API checks.
+          example: '200'
+        created_at:
           type: string
           format: date-time
-          description: Alert creation timestamp
-    PaginationMeta:
+          description: The date and time this check alert was created.
+        startedAt:
+          type: string
+          format: date-time
+          description: The date and time this check alert was started.
+      required:
+      - name
+    Model4:
+      type: string
+      enum:
+      - Not Found
+    ApiError:
       type: object
       properties:
-        currentPage:
-          type: integer
-          description: Current page number
-        totalPages:
-          type: integer
-          description: Total number of pages
-        totalItems:
-          type: integer
-          description: Total number of items
-        limit:
-          type: integer
-          description: Items per page
+        statusCode:
+          type: number
+        error:
+          type: string
+        message:
+          type: string
+      required:
+      - statusCode
+      - error
+      - message
+    TooManyRequestsError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    Model1:
+      type: string
+      enum:
+      - Forbidden
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
+    UnauthorizedError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 401
+        error:
+          $ref: '#/components/schemas/error'
+        message:
+          type: string
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    CheckAlertList:
+      type: array
+      items:
+        $ref: '#/components/schemas/CheckAlert'
+    NotFoundError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 404
+        error:
+          $ref: '#/components/schemas/Model4'
+        message:
+          type: string
+          example: Not Found
+      required:
+      - statusCode
+      - error
   securitySchemes:
-    bearerAuth:
+    Bearer:
       type: http
       scheme: bearer
-      description: API Key authentication for Checkly API. You can get your API key at https://app.checklyhq.com/settings/user/api-keys
-    accountId:
-      type: apiKey
-      in: header
-      name: X-Checkly-Account
-      description: Your Checkly account ID. You can find it at https://app.checklyhq.com/settings/account/general
+      bearerFormat: Bearer
+      description: 'The Checkly Public API uses API keys to authenticate requests. You can get the API Key <a href="https://app.checklyhq.com/settings/user/api-keys" target="_blank">here</a>.</br>Your API key is like a password: <br>keep it secure!</br></br>Authentication to the API is performed using the Bearer auth method in the Authorization header and using the account ID.</br></br>For example, set <b>Authorization</b> header while using cURL: <code>curl -H "Authorization: Bearer [apiKey]" "X-Checkly-Account: [accountId]"</code></br>'

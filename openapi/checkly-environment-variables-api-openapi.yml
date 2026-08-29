@@ -1,0 +1,438 @@
+openapi: 3.2.0
+info:
+  title: Checkly Public Environment variables API
+  version: v1
+  description: These are the docs for the newly released Checkly Public API.<br />If you have any questions, please do not hesitate to get in touch with us.
+servers:
+- url: https://api.checklyhq.com
+security:
+- Bearer: []
+tags:
+- name: Environment variables
+paths:
+  /v1/variables:
+    get:
+      summary: List all environment variables
+      operationId: getV1Variables
+      description: Lists all current environment variables in your account.
+      tags:
+      - Environment variables
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvironmentVariablesV1ListResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+          description: Limit the number of results
+        required: false
+        description: Limit the number of results
+        name: limit
+        in: query
+      - schema:
+          type: number
+          default: 1
+          description: Page number
+          exclusiveMinimum: 0
+        required: false
+        description: Page number
+        name: page
+        in: query
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+    post:
+      summary: Create an environment variable
+      operationId: postV1Variables
+      description: Creates a new environment variable.
+      tags:
+      - Environment variables
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvironmentVariablesV1MutationResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnvironmentVariablesV1CreateRequest'
+  /v1/variables/{key}:
+    delete:
+      summary: Delete an environment variable
+      operationId: deleteV1VariablesKey
+      description: Permanently removes an environment variable. Uses the "key" field as the ID for deletion.
+      tags:
+      - Environment variables
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: string
+          minLength: 1
+          description: The key of the environment variable (this value cannot be changed).
+          example: API_KEY
+        required: true
+        description: The key of the environment variable (this value cannot be changed).
+        name: key
+        in: path
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+    get:
+      summary: Retrieve an environment variable
+      operationId: getV1VariablesKey
+      description: Show details of a specific environment variable. Uses the "key" field for selection.
+      tags:
+      - Environment variables
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvironmentVariablesV1ReadResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: string
+          minLength: 1
+          description: The key of the environment variable (this value cannot be changed).
+          example: API_KEY
+        required: true
+        description: The key of the environment variable (this value cannot be changed).
+        name: key
+        in: path
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+    put:
+      summary: Update an environment variable
+      operationId: putV1VariablesKey
+      description: Updates an environment variable. Uses the "key" field as the ID for updating. Only updates value, locked, and secret properties. Once a value is set to secret, it cannot be unset.
+      tags:
+      - Environment variables
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvironmentVariablesV1MutationResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: string
+          minLength: 1
+          description: The key of the environment variable (this value cannot be changed).
+          example: API_KEY
+        required: true
+        description: The key of the environment variable (this value cannot be changed).
+        name: key
+        in: path
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnvironmentVariablesV1UpdateRequest'
+components:
+  schemas:
+    ApiError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+        error:
+          type: string
+        message:
+          type: string
+      required:
+      - statusCode
+      - error
+      - message
+    EnvironmentVariablesV1ReadResponse:
+      type: object
+      properties:
+        key:
+          type: string
+          minLength: 1
+          description: The key of the environment variable (this value cannot be changed).
+          example: API_KEY
+        value:
+          type:
+          - string
+          - 'null'
+          description: The value of the environment variable. Secret values are always returned as null.
+        locked:
+          type: boolean
+          description: Used only in the UI to hide the value like a password.
+        secret:
+          type: boolean
+          description: Whether the environment variable is stored as a secret.
+      required:
+      - key
+      - value
+      - locked
+      - secret
+    EnvironmentVariablesV1CreateRequest:
+      type: object
+      properties:
+        key:
+          type: string
+          minLength: 1
+          description: The key of the environment variable (this value cannot be changed).
+          example: API_KEY
+        value:
+          type: string
+          description: The value of the environment variable.
+        locked:
+          type: boolean
+          default: false
+          description: Used only in the UI to hide the value like a password.
+        secret:
+          type: boolean
+          default: false
+          description: Set an environment variable as secret. Once set, its value cannot be unlocked.
+      required:
+      - key
+      - value
+    EnvironmentVariablesV1ListResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/EnvironmentVariablesV1ReadResponse'
+    EnvironmentVariablesV1UpdateRequest:
+      type: object
+      properties:
+        key:
+          type: string
+          minLength: 1
+          description: The key of the environment variable (this value cannot be changed).
+          example: API_KEY
+        value:
+          type: string
+          minLength: 1
+          description: The value of the environment variable.
+        locked:
+          type: boolean
+          default: false
+          description: Used only in the UI to hide the value like a password.
+        secret:
+          type: boolean
+          default: false
+          description: Set an environment variable as secret. Once set, its value cannot be unlocked.
+      required:
+      - value
+      additionalProperties: false
+    EnvironmentVariablesV1MutationResponse:
+      type: object
+      properties:
+        key:
+          type: string
+          minLength: 1
+          description: The key of the environment variable (this value cannot be changed).
+          example: API_KEY
+        value:
+          type: string
+          description: The submitted value of the environment variable.
+        locked:
+          type: boolean
+          description: Used only in the UI to hide the value like a password.
+        secret:
+          type: boolean
+          description: Whether the environment variable is stored as a secret.
+      required:
+      - key
+      - value
+      - locked
+      - secret
+  securitySchemes:
+    Bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: Bearer
+      description: 'The Checkly Public API uses API keys to authenticate requests. You can get the API Key <a href="https://app.checklyhq.com/settings/user/api-keys" target="_blank">here</a>.</br>Your API key is like a password: <br>keep it secure!</br></br>Authentication to the API is performed using the Bearer auth method in the Authorization header and using the account ID.</br></br>For example, set <b>Authorization</b> header while using cURL: <code>curl -H "Authorization: Bearer [apiKey]" "X-Checkly-Account: [accountId]"</code></br>'

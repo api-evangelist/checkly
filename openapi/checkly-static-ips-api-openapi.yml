@@ -1,0 +1,306 @@
+openapi: 3.2.0
+info:
+  title: Checkly Public Static IPs API
+  version: v1
+  description: These are the docs for the newly released Checkly Public API.<br />If you have any questions, please do not hesitate to get in touch with us.
+servers:
+- url: https://api.checklyhq.com
+security:
+- Bearer: []
+tags:
+- name: Static IPs
+paths:
+  /v1/static-ips:
+    get:
+      summary: Lists all source IPs for check runs
+      operationId: getV1Staticips
+      description: Lists all source IPs for check runs as a single JSON array.
+      tags:
+      - Static IPs
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StaticIpv4ListResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+      parameters:
+      - schema:
+          type: string
+          x-format:
+            guid: true
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+  /v1/static-ips-by-region:
+    get:
+      summary: Lists all source IPs for check runs
+      operationId: getV1Staticipsbyregion
+      description: Lists all source IPs for check runs as object with regions as keys and an array of IPs as value.
+      tags:
+      - Static IPs
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StaticIpv4ByRegionResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+      parameters:
+      - schema:
+          type: string
+          x-format:
+            guid: true
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+  /v1/static-ips.txt:
+    get:
+      summary: Lists all source IPs for check runs as txt file
+      operationId: getV1Staticipstxt
+      description: Lists all IPs for check runs as a TXT file. Each line has one IP.
+      tags:
+      - Static IPs
+      responses:
+        '200':
+          description: Successful
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/StaticIpTextResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+      parameters:
+      - schema:
+          type: string
+          x-format:
+            guid: true
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+  /v1/static-ipv6s:
+    get:
+      summary: Lists all source IPv6s for check runs
+      operationId: getV1Staticipv6s
+      description: Lists all source IPv6s for check runs as a single JSON array.
+      tags:
+      - Static IPs
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StaticIpv6ListResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+      parameters:
+      - schema:
+          type: string
+          x-format:
+            guid: true
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+  /v1/static-ipv6s-by-region:
+    get:
+      summary: Lists all source IPv6s for check runs
+      operationId: getV1Staticipv6sbyregion
+      description: Lists all source IPs for check runs as an object with regions as keys and an Ipv6 as value.
+      tags:
+      - Static IPs
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StaticIpv6ByRegionResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+      parameters:
+      - schema:
+          type: string
+          x-format:
+            guid: true
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+  /v1/static-ipv6s.txt:
+    get:
+      summary: Lists all source IPv6s for check runs as a txt file
+      operationId: getV1Staticipv6stxt
+      description: Lists all IPv6s for check runs as a TXT file. Each line has one IP.
+      tags:
+      - Static IPs
+      responses:
+        '200':
+          description: Successful
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/StaticIpTextResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+      parameters:
+      - schema:
+          type: string
+          x-format:
+            guid: true
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+components:
+  schemas:
+    attributes:
+      type: object
+    StaticIpv4ListResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/StaticIpv4Address'
+      description: All IPv4 addresses used by Checkly check runners.
+    StaticIpv6ByRegionResponse:
+      type: object
+      additionalProperties:
+        type: array
+        items:
+          $ref: '#/components/schemas/StaticIpv6CidrRange'
+      description: IPv6 address ranges used by Checkly check runners, grouped by region.
+    StaticIpv6ListResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/StaticIpv6CidrRange'
+      description: All IPv6 address ranges used by Checkly check runners.
+    StaticIpv6CidrRange:
+      type: string
+      description: An IPv6 address range in CIDR notation used by Checkly check runners.
+    StaticIpTextResponse:
+      type: string
+      description: A newline-delimited list of IP addresses or address ranges.
+    ApiError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+        error:
+          type: string
+        message:
+          type: string
+      required:
+      - statusCode
+      - error
+      - message
+    StaticIpv4ByRegionResponse:
+      type: object
+      additionalProperties:
+        type: array
+        items:
+          $ref: '#/components/schemas/StaticIpv4Address'
+      description: IPv4 addresses used by Checkly check runners, grouped by region.
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
+    TooManyRequestsError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    StaticIpv4Address:
+      type: string
+      format: ipv4
+      description: An IPv4 address used by Checkly check runners.
+  securitySchemes:
+    Bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: Bearer
+      description: 'The Checkly Public API uses API keys to authenticate requests. You can get the API Key <a href="https://app.checklyhq.com/settings/user/api-keys" target="_blank">here</a>.</br>Your API key is like a password: <br>keep it secure!</br></br>Authentication to the API is performed using the Bearer auth method in the Authorization header and using the account ID.</br></br>For example, set <b>Authorization</b> header while using cURL: <code>curl -H "Authorization: Bearer [apiKey]" "X-Checkly-Account: [accountId]"</code></br>'

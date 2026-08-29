@@ -1,0 +1,971 @@
+generated: '2026-08-29'
+method: derived
+source: openapi/_original/checkly-public-api-openapi.json (harvested 2026-08-29 from https://api.checklyhq.com/openapi.json)
+  bound against the MCP tool list published at https://www.checklyhq.com/docs/ai/mcp-server/tools
+description: Crosswalk binding each Checkly MCP tool to the REST operation(s) that back it. The live MCP
+  endpoint is OAuth-gated (tools/list returned 401), so tools were mapped by published name, description
+  and semantics rather than by introspected inputSchema; confidence is recorded honestly per row.
+surfaces:
+  openapi:
+    url: https://api.checklyhq.com/openapi.json
+    local: openapi/_original/checkly-public-api-openapi.json
+    gated: false
+    operations: 225
+  mcp:
+    url: https://api.checklyhq.com/mcp
+    gated: true
+    gate: OAuth 2.1 / RFC 9728 - unauthenticated tools/list returns HTTP 401
+    tools: 32
+  graphql:
+    present: false
+    note: Checkly publishes no GraphQL API.
+crosswalk:
+- tool: whoami
+  category: account
+  rest:
+  - getV1AccountsMe
+  - getV1Accounts
+  binding: direct
+  confidence: high
+- tool: get-account-entitlements
+  category: account
+  rest:
+  - getV1AccountsMeEntitlements
+  - getV1AccountsAccountidEntitlements
+  binding: direct
+  confidence: high
+- tool: list-account-members
+  category: account
+  rest:
+  - getV1AccountsMeMembers
+  - getV1AccountsAccountidMembers
+  binding: direct
+  confidence: high
+- tool: list-check-stats
+  category: checks
+  rest:
+  - getV1Checkstatuses
+  - getV3Checks
+  binding: composite
+  confidence: medium
+  note: Status-only by default; includeReliability folds in the analytics metrics surface, so one tool
+    call can span two REST families.
+- tool: list-check-results
+  category: checks
+  rest:
+  - getV2CheckresultsCheckid
+  binding: direct
+  confidence: high
+  note: Maps to the v2 endpoint - the v1 equivalent getV1CheckresultsCheckid is marked deprecated in the
+    spec.
+- tool: get-check-result
+  category: checks
+  rest:
+  - getV1CheckresultsCheckidCheckresultid
+  binding: direct
+  confidence: high
+- tool: get-check-performance-summary
+  category: checks
+  rest:
+  - getV1AnalyticsMetrics
+  - getV1AnalyticsApichecksId
+  - getV1AnalyticsBrowserchecksId
+  binding: composite
+  confidence: medium
+  note: P50/P95/P99 percentiles come from the analytics family; the exact backing operation depends on
+    check type.
+- tool: trigger-checks
+  category: checks
+  rest:
+  - postV2ChecksessionsTrigger
+  - postV1TestsessionsTrigger
+  binding: direct
+  confidence: medium
+  note: Both trigger endpoints accept target filters and record a session; the deprecated v1 check-session
+    trigger is excluded.
+- tool: list-test-sessions
+  category: test-sessions
+  rest:
+  - getV1Testsessions
+  binding: direct
+  confidence: high
+- tool: get-test-session
+  category: test-sessions
+  rest:
+  - getV1TestsessionsTestsessionid
+  binding: direct
+  confidence: high
+- tool: list-test-session-results
+  category: test-sessions
+  rest:
+  - getV1TestsessionsTestsessionid
+  binding: derived
+  confidence: medium
+  note: No dedicated REST list-results operation; result rows are carried inside the test-session response
+    and the tool paginates them client-side.
+- tool: get-test-session-result
+  category: test-sessions
+  rest:
+  - getV1TestsessionsTestsessionidResultsTestsessionresultid
+  binding: direct
+  confidence: high
+- tool: list-check-result-assets
+  category: assets
+  rest:
+  - getV1CheckresultsCheckidCheckresultidAssets
+  binding: direct
+  confidence: high
+- tool: fetch-check-result-asset
+  category: assets
+  rest:
+  - getV1CheckresultsCheckidCheckresultidAssets
+  binding: derived
+  confidence: medium
+  note: The REST operation returns an asset manifest with links; the tool adds bounded inline text fetching
+    on top of it.
+- tool: list-test-session-result-assets
+  category: assets
+  rest:
+  - getV1TestsessionsTestsessionidResultsTestsessionresultidAssets
+  binding: direct
+  confidence: high
+- tool: fetch-test-session-result-asset
+  category: assets
+  rest:
+  - getV1TestsessionsTestsessionidResultsTestsessionresultidAssets
+  binding: derived
+  confidence: medium
+  note: Same pattern as fetch-check-result-asset.
+- tool: get-error-group-root-cause-analyses
+  category: rca
+  rest:
+  - getV1ErrorgroupsId
+  - getV1TestsessionerrorgroupsId
+  binding: composite
+  confidence: medium
+  note: Covers both the check error-group and test-session error-group families.
+- tool: get-root-cause-analysis
+  category: rca
+  rest:
+  - getV1RootcauseanalysesId
+  binding: direct
+  confidence: high
+- tool: trigger-root-cause-analysis
+  category: rca
+  rest:
+  - postV1RootcauseanalysesErrorgroupsErrorgroupid
+  - postV1RootcauseanalysesTestsessionerrorgroupsTestsessionerrorgroupid
+  binding: direct
+  confidence: high
+- tool: list-account-environment-variables
+  category: environment-variables
+  rest:
+  - getV1Variables
+  binding: direct
+  confidence: high
+- tool: get-account-environment-variable
+  category: environment-variables
+  rest:
+  - getV1VariablesKey
+  binding: direct
+  confidence: high
+- tool: create-account-environment-variable
+  category: environment-variables
+  rest:
+  - postV1Variables
+  binding: direct
+  confidence: high
+- tool: update-account-environment-variable
+  category: environment-variables
+  rest:
+  - putV1VariablesKey
+  binding: direct
+  confidence: high
+- tool: list-status-pages
+  category: status-pages
+  rest:
+  - listStatusPagesV3Public
+  binding: direct
+  confidence: high
+  note: Maps to v3; the v1 status-page family is deprecated across the board.
+- tool: get-status-page
+  category: status-pages
+  rest:
+  - getStatusPageV3Public
+  binding: direct
+  confidence: high
+- tool: list-status-page-incidents
+  category: incidents
+  rest:
+  - listStatusPageV3IncidentsPublic
+  binding: direct
+  confidence: high
+- tool: get-status-page-incident
+  category: incidents
+  rest:
+  - getStatusPageV3IncidentPublic
+  binding: direct
+  confidence: high
+- tool: create-status-page-incident
+  category: incidents
+  rest:
+  - createStatusPageV3IncidentPublic
+  binding: direct
+  confidence: high
+- tool: update-status-page-incident
+  category: incidents
+  rest:
+  - createStatusPageV3IncidentUpdatePublic
+  binding: direct
+  confidence: high
+  note: An incident update is a new child record, not a mutation of the incident.
+- tool: resolve-status-page-incident
+  category: incidents
+  rest:
+  - createStatusPageV3IncidentUpdatePublic
+  - updateStatusPageV3IncidentPublic
+  binding: composite
+  confidence: medium
+  note: Resolution is a final incident update plus a status transition on the incident itself.
+mcp_only:
+- tool: invite-account-member
+  reason: No public REST operation invites a member. The REST account family only lists, patches and deletes
+    existing members (getV1AccountsMeMembers, patchV1AccountsMeMembersUserid, deleteV1AccountsMeMembersUserid).
+    The tool is OAuth-only and documented as not idempotent.
+- tool: prepare-local-check-authoring
+  reason: Composite runbook generator, not an API call. It returns account-aware Checkly CLI steps because
+    the remote MCP server cannot reach a local filesystem to author check code.
+rest_only:
+- tag: Accounts
+  count: 5
+  operations:
+  - operationId: deleteV1AccountsAccountidMembersUserid
+    method: DELETE
+    path: /v1/accounts/{accountId}/members/{userId}
+  - operationId: deleteV1AccountsMeMembersUserid
+    method: DELETE
+    path: /v1/accounts/me/members/{userId}
+  - operationId: getV1AccountsAccountid
+    method: GET
+    path: /v1/accounts/{accountId}
+  - operationId: patchV1AccountsAccountidMembersUserid
+    method: PATCH
+    path: /v1/accounts/{accountId}/members/{userId}
+  - operationId: patchV1AccountsMeMembersUserid
+    method: PATCH
+    path: /v1/accounts/me/members/{userId}
+- tag: Alert channels
+  count: 6
+  operations:
+  - operationId: deleteV1AlertchannelsId
+    method: DELETE
+    path: /v1/alert-channels/{id}
+  - operationId: getV1Alertchannels
+    method: GET
+    path: /v1/alert-channels
+  - operationId: getV1AlertchannelsId
+    method: GET
+    path: /v1/alert-channels/{id}
+  - operationId: postV1Alertchannels
+    method: POST
+    path: /v1/alert-channels
+  - operationId: putV1AlertchannelsId
+    method: PUT
+    path: /v1/alert-channels/{id}
+  - operationId: putV1AlertchannelsIdSubscriptions
+    method: PUT
+    path: /v1/alert-channels/{id}/subscriptions
+- tag: Alert notifications
+  count: 1
+  operations:
+  - operationId: getV1Alertnotifications
+    method: GET
+    path: /v1/alert-notifications
+- tag: Analytics
+  count: 9
+  operations:
+  - operationId: getV1AnalyticsDnsId
+    method: GET
+    path: /v1/analytics/dns/{id}
+  - operationId: getV1AnalyticsHeartbeatchecksId
+    method: GET
+    path: /v1/analytics/heartbeat-checks/{id}
+  - operationId: getV1AnalyticsIcmpId
+    method: GET
+    path: /v1/analytics/icmp/{id}
+  - operationId: getV1AnalyticsMultistepchecksId
+    method: GET
+    path: /v1/analytics/multistep-checks/{id}
+  - operationId: getV1AnalyticsPlaywrightchecksId
+    method: GET
+    path: /v1/analytics/playwright-checks/{id}
+  - operationId: getV1AnalyticsSslId
+    method: GET
+    path: /v1/analytics/ssl/{id}
+  - operationId: getV1AnalyticsTcpchecksId
+    method: GET
+    path: /v1/analytics/tcp-checks/{id}
+  - operationId: getV1AnalyticsUrlmonitorsId
+    method: GET
+    path: /v1/analytics/url-monitors/{id}
+  - operationId: postV1AnalyticsChecks
+    method: POST
+    path: /v1/analytics/checks
+- tag: Badges
+  count: 2
+  operations:
+  - operationId: getV1BadgesChecksCheckid
+    method: GET
+    path: /v1/badges/checks/{checkId}
+  - operationId: getV1BadgesGroupsGroupid
+    method: GET
+    path: /v1/badges/groups/{groupId}
+- tag: Check alerts
+  count: 2
+  operations:
+  - operationId: getV1Checkalerts
+    method: GET
+    path: /v1/check-alerts
+  - operationId: getV1CheckalertsCheckid
+    method: GET
+    path: /v1/check-alerts/{checkId}
+- tag: Check groups
+  count: 11
+  operations:
+  - operationId: deleteV1CheckgroupsId
+    method: DELETE
+    path: /v1/check-groups/{id}
+  - operationId: getV1Checkgroups
+    method: GET
+    path: /v1/check-groups
+  - operationId: getV1CheckgroupsGroupidChecksCheckid
+    method: GET
+    path: /v1/check-groups/{groupId}/checks/{checkId}
+  - operationId: getV1CheckgroupsId
+    method: GET
+    path: /v1/check-groups/{id}
+  - operationId: getV1CheckgroupsIdChecks
+    method: GET
+    path: /v1/check-groups/{id}/checks
+  - operationId: getV2CheckgroupsGroupidChecksCheckid
+    method: GET
+    path: /v2/check-groups/{groupId}/checks/{checkId}
+  - operationId: getV2CheckgroupsIdChecks
+    method: GET
+    path: /v2/check-groups/{id}/checks
+  - operationId: postV1Checkgroups
+    method: POST
+    path: /v1/check-groups
+    deprecated: true
+  - operationId: postV2Checkgroups
+    method: POST
+    path: /v2/check-groups
+  - operationId: putV1CheckgroupsId
+    method: PUT
+    path: /v1/check-groups/{id}
+    deprecated: true
+  - operationId: putV2CheckgroupsId
+    method: PUT
+    path: /v2/check-groups/{id}
+- tag: Check results
+  count: 1
+  operations:
+  - operationId: getV1CheckresultsCheckid
+    method: GET
+    path: /v1/check-results/{checkId}
+    deprecated: true
+- tag: Check sessions
+  count: 6
+  operations:
+  - operationId: getV1ChecksessionsChecksessionid
+    method: GET
+    path: /v1/check-sessions/{checkSessionId}
+    deprecated: true
+  - operationId: getV1ChecksessionsChecksessionidCompletion
+    method: GET
+    path: /v1/check-sessions/{checkSessionId}/completion
+    deprecated: true
+  - operationId: getV2ChecksessionsChecksessionid
+    method: GET
+    path: /v2/check-sessions/{checkSessionId}
+  - operationId: getV2ChecksessionsChecksessionidCompletion
+    method: GET
+    path: /v2/check-sessions/{checkSessionId}/completion
+  - operationId: postV1ChecksessionsChecksessionidCancel
+    method: POST
+    path: /v1/check-sessions/{checkSessionId}/cancel
+  - operationId: postV1ChecksessionsTrigger
+    method: POST
+    path: /v1/check-sessions/trigger
+    deprecated: true
+- tag: Check status
+  count: 1
+  operations:
+  - operationId: getV1CheckstatusesCheckid
+    method: GET
+    path: /v1/check-statuses/{checkId}
+- tag: Checks
+  count: 17
+  operations:
+  - operationId: deleteV1ChecksId
+    method: DELETE
+    path: /v1/checks/{id}
+  - operationId: getV1Checks
+    method: GET
+    path: /v1/checks
+  - operationId: getV1ChecksId
+    method: GET
+    path: /v1/checks/{id}
+  - operationId: getV2Checks
+    method: GET
+    path: /v2/checks
+  - operationId: getV2ChecksId
+    method: GET
+    path: /v2/checks/{id}
+  - operationId: getV3ChecksId
+    method: GET
+    path: /v3/checks/{id}
+  - operationId: postV1Checks
+    method: POST
+    path: /v1/checks
+    deprecated: true
+  - operationId: postV1ChecksApi
+    method: POST
+    path: /v1/checks/api
+  - operationId: postV1ChecksBrowser
+    method: POST
+    path: /v1/checks/browser
+  - operationId: postV1ChecksDns
+    method: POST
+    path: /v1/checks/dns
+  - operationId: postV1ChecksMultistep
+    method: POST
+    path: /v1/checks/multistep
+  - operationId: postV1ChecksTcp
+    method: POST
+    path: /v1/checks/tcp
+  - operationId: putV1ChecksApiId
+    method: PUT
+    path: /v1/checks/api/{id}
+  - operationId: putV1ChecksBrowserId
+    method: PUT
+    path: /v1/checks/browser/{id}
+  - operationId: putV1ChecksId
+    method: PUT
+    path: /v1/checks/{id}
+    deprecated: true
+  - operationId: putV1ChecksMultistepId
+    method: PUT
+    path: /v1/checks/multistep/{id}
+  - operationId: putV1ChecksTcpId
+    method: PUT
+    path: /v1/checks/tcp/{id}
+- tag: Client certificates
+  count: 4
+  operations:
+  - operationId: deleteV1ClientcertificatesId
+    method: DELETE
+    path: /v1/client-certificates/{id}
+  - operationId: getV1Clientcertificates
+    method: GET
+    path: /v1/client-certificates
+  - operationId: getV1ClientcertificatesId
+    method: GET
+    path: /v1/client-certificates/{id}
+  - operationId: postV1Clientcertificates
+    method: POST
+    path: /v1/client-certificates
+- tag: Dashboards
+  count: 5
+  operations:
+  - operationId: deleteV1DashboardsDashboardid
+    method: DELETE
+    path: /v1/dashboards/{dashboardId}
+  - operationId: getV1Dashboards
+    method: GET
+    path: /v1/dashboards
+  - operationId: getV1DashboardsDashboardid
+    method: GET
+    path: /v1/dashboards/{dashboardId}
+  - operationId: postV1Dashboards
+    method: POST
+    path: /v1/dashboards
+  - operationId: putV1DashboardsDashboardid
+    method: PUT
+    path: /v1/dashboards/{dashboardId}
+- tag: Deployment Triggers
+  count: 2
+  operations:
+  - operationId: getV1Deploymenttriggers
+    method: GET
+    path: /v1/deployment-triggers
+  - operationId: postV1Deploymenttriggers
+    method: POST
+    path: /v1/deployment-triggers
+- tag: Environment variables
+  count: 1
+  operations:
+  - operationId: deleteV1VariablesKey
+    method: DELETE
+    path: /v1/variables/{key}
+- tag: Error Groups
+  count: 3
+  operations:
+  - operationId: getV1Errorgroups
+    method: GET
+    path: /v1/error-groups
+  - operationId: getV1ErrorgroupsChecksCheckid
+    method: GET
+    path: /v1/error-groups/checks/{checkId}
+  - operationId: patchV1ErrorgroupsId
+    method: PATCH
+    path: /v1/error-groups/{id}
+- tag: Heartbeats
+  count: 5
+  operations:
+  - operationId: getV1ChecksHeartbeatsCheckidAvailability
+    method: GET
+    path: /v1/checks/heartbeats/{checkId}/availability
+  - operationId: getV1ChecksHeartbeatsCheckidEvents
+    method: GET
+    path: /v1/checks/heartbeats/{checkId}/events
+  - operationId: getV1ChecksHeartbeatsCheckidEventsId
+    method: GET
+    path: /v1/checks/heartbeats/{checkId}/events/{id}
+  - operationId: postV1ChecksHeartbeat
+    method: POST
+    path: /v1/checks/heartbeat
+  - operationId: putV1ChecksHeartbeatId
+    method: PUT
+    path: /v1/checks/heartbeat/{id}
+- tag: Incident Updates
+  count: 3
+  operations:
+  - operationId: deleteV1IncidentsIncidentidUpdatesId
+    method: DELETE
+    path: /v1/incidents/{incidentId}/updates/{id}
+  - operationId: postV1IncidentsIncidentidUpdates
+    method: POST
+    path: /v1/incidents/{incidentId}/updates
+  - operationId: putV1IncidentsIncidentidUpdatesId
+    method: PUT
+    path: /v1/incidents/{incidentId}/updates/{id}
+- tag: Incidents
+  count: 4
+  operations:
+  - operationId: deleteV1IncidentsId
+    method: DELETE
+    path: /v1/incidents/{id}
+  - operationId: getV1IncidentsId
+    method: GET
+    path: /v1/incidents/{id}
+  - operationId: postV1Incidents
+    method: POST
+    path: /v1/incidents
+  - operationId: putV1IncidentsId
+    method: PUT
+    path: /v1/incidents/{id}
+- tag: Location
+  count: 1
+  operations:
+  - operationId: getV1Locations
+    method: GET
+    path: /v1/locations
+- tag: Maintenance windows
+  count: 12
+  operations:
+  - operationId: deleteV1MaintenancewindowsId
+    method: DELETE
+    path: /v1/maintenance-windows/{id}
+  - operationId: deleteV1MaintenancewindowsIdMaintenancesMaintenanceid
+    method: DELETE
+    path: /v1/maintenance-windows/{id}/maintenances/{maintenanceId}
+  - operationId: deleteV1MaintenancewindowsIdMaintenancesMaintenanceidUpdatesUpdateid
+    method: DELETE
+    path: /v1/maintenance-windows/{id}/maintenances/{maintenanceId}/updates/{updateId}
+  - operationId: getV1Maintenancewindows
+    method: GET
+    path: /v1/maintenance-windows
+  - operationId: getV1MaintenancewindowsId
+    method: GET
+    path: /v1/maintenance-windows/{id}
+  - operationId: getV1MaintenancewindowsIdMaintenances
+    method: GET
+    path: /v1/maintenance-windows/{id}/maintenances
+  - operationId: getV1MaintenancewindowsIdMaintenancesMaintenanceid
+    method: GET
+    path: /v1/maintenance-windows/{id}/maintenances/{maintenanceId}
+  - operationId: patchV1MaintenancewindowsIdMaintenancesMaintenanceid
+    method: PATCH
+    path: /v1/maintenance-windows/{id}/maintenances/{maintenanceId}
+  - operationId: postV1Maintenancewindows
+    method: POST
+    path: /v1/maintenance-windows
+  - operationId: postV1MaintenancewindowsIdMaintenancesMaintenanceidUpdates
+    method: POST
+    path: /v1/maintenance-windows/{id}/maintenances/{maintenanceId}/updates
+  - operationId: putV1MaintenancewindowsId
+    method: PUT
+    path: /v1/maintenance-windows/{id}
+  - operationId: putV1MaintenancewindowsIdMaintenancesMaintenanceidUpdatesUpdateid
+    method: PUT
+    path: /v1/maintenance-windows/{id}/maintenances/{maintenanceId}/updates/{updateId}
+- tag: Monitors
+  count: 7
+  operations:
+  - operationId: postV1ChecksIcmp
+    method: POST
+    path: /v1/checks/icmp
+  - operationId: postV1ChecksSsl
+    method: POST
+    path: /v1/checks/ssl
+  - operationId: postV1ChecksUrl
+    method: POST
+    path: /v1/checks/url
+  - operationId: putV1ChecksDnsId
+    method: PUT
+    path: /v1/checks/dns/{id}
+  - operationId: putV1ChecksIcmpId
+    method: PUT
+    path: /v1/checks/icmp/{id}
+  - operationId: putV1ChecksSslId
+    method: PUT
+    path: /v1/checks/ssl/{id}
+  - operationId: putV1ChecksUrlId
+    method: PUT
+    path: /v1/checks/url/{id}
+- tag: Private locations
+  count: 8
+  operations:
+  - operationId: deleteV1PrivatelocationsId
+    method: DELETE
+    path: /v1/private-locations/{id}
+  - operationId: deleteV1PrivatelocationsIdKeysKeyid
+    method: DELETE
+    path: /v1/private-locations/{id}/keys/{keyId}
+  - operationId: getV1Privatelocations
+    method: GET
+    path: /v1/private-locations
+  - operationId: getV1PrivatelocationsId
+    method: GET
+    path: /v1/private-locations/{id}
+  - operationId: getV1PrivatelocationsIdMetrics
+    method: GET
+    path: /v1/private-locations/{id}/metrics
+  - operationId: postV1Privatelocations
+    method: POST
+    path: /v1/private-locations
+  - operationId: postV1PrivatelocationsIdKeys
+    method: POST
+    path: /v1/private-locations/{id}/keys
+  - operationId: putV1PrivatelocationsId
+    method: PUT
+    path: /v1/private-locations/{id}
+- tag: Reporting
+  count: 1
+  operations:
+  - operationId: getV1Reporting
+    method: GET
+    path: /v1/reporting
+- tag: Runtimes
+  count: 2
+  operations:
+  - operationId: getV1Runtimes
+    method: GET
+    path: /v1/runtimes
+  - operationId: getV1RuntimesId
+    method: GET
+    path: /v1/runtimes/{id}
+- tag: Secret scans
+  count: 1
+  operations:
+  - operationId: getV1Secretscans
+    method: GET
+    path: /v1/secret-scans
+- tag: Snippets
+  count: 5
+  operations:
+  - operationId: deleteV1SnippetsId
+    method: DELETE
+    path: /v1/snippets/{id}
+  - operationId: getV1Snippets
+    method: GET
+    path: /v1/snippets
+  - operationId: getV1SnippetsId
+    method: GET
+    path: /v1/snippets/{id}
+  - operationId: postV1Snippets
+    method: POST
+    path: /v1/snippets
+  - operationId: putV1SnippetsId
+    method: PUT
+    path: /v1/snippets/{id}
+- tag: Static IPs
+  count: 6
+  operations:
+  - operationId: getV1Staticips
+    method: GET
+    path: /v1/static-ips
+  - operationId: getV1Staticipsbyregion
+    method: GET
+    path: /v1/static-ips-by-region
+  - operationId: getV1Staticipstxt
+    method: GET
+    path: /v1/static-ips.txt
+  - operationId: getV1Staticipv6s
+    method: GET
+    path: /v1/static-ipv6s
+  - operationId: getV1Staticipv6sbyregion
+    method: GET
+    path: /v1/static-ipv6s-by-region
+  - operationId: getV1Staticipv6stxt
+    method: GET
+    path: /v1/static-ipv6s.txt
+- tag: Status Page Incidents
+  count: 10
+  operations:
+  - operationId: deleteV1StatuspagesIncidentsIncidentid
+    method: DELETE
+    path: /v1/status-pages/incidents/{incidentId}
+    deprecated: true
+  - operationId: deleteV1StatuspagesIncidentsIncidentidIncidentupdatesIncidentupdateid
+    method: DELETE
+    path: /v1/status-pages/incidents/{incidentId}/incident-updates/{incidentUpdateId}
+    deprecated: true
+  - operationId: getV1StatuspagesIncidents
+    method: GET
+    path: /v1/status-pages/incidents
+    deprecated: true
+  - operationId: getV1StatuspagesIncidentsIncidentid
+    method: GET
+    path: /v1/status-pages/incidents/{incidentId}
+    deprecated: true
+  - operationId: getV1StatuspagesIncidentsIncidentidIncidentupdates
+    method: GET
+    path: /v1/status-pages/incidents/{incidentId}/incident-updates
+    deprecated: true
+  - operationId: getV1StatuspagesIncidentsIncidentidIncidentupdatesIncidentupdateid
+    method: GET
+    path: /v1/status-pages/incidents/{incidentId}/incident-updates/{incidentUpdateId}
+    deprecated: true
+  - operationId: postV1StatuspagesIncidents
+    method: POST
+    path: /v1/status-pages/incidents
+    deprecated: true
+  - operationId: postV1StatuspagesIncidentsIncidentidIncidentupdates
+    method: POST
+    path: /v1/status-pages/incidents/{incidentId}/incident-updates
+    deprecated: true
+  - operationId: putV1StatuspagesIncidentsIncidentid
+    method: PUT
+    path: /v1/status-pages/incidents/{incidentId}
+    deprecated: true
+  - operationId: putV1StatuspagesIncidentsIncidentidIncidentupdatesIncidentupdateid
+    method: PUT
+    path: /v1/status-pages/incidents/{incidentId}/incident-updates/{incidentUpdateId}
+    deprecated: true
+- tag: Status Page Services
+  count: 5
+  operations:
+  - operationId: deleteV1StatuspagesServicesServiceid
+    method: DELETE
+    path: /v1/status-pages/services/{serviceId}
+    deprecated: true
+  - operationId: getV1StatuspagesServices
+    method: GET
+    path: /v1/status-pages/services
+    deprecated: true
+  - operationId: getV1StatuspagesServicesServiceid
+    method: GET
+    path: /v1/status-pages/services/{serviceId}
+    deprecated: true
+  - operationId: postV1StatuspagesServices
+    method: POST
+    path: /v1/status-pages/services
+    deprecated: true
+  - operationId: putV1StatuspagesServicesServiceid
+    method: PUT
+    path: /v1/status-pages/services/{serviceId}
+    deprecated: true
+- tag: Status Pages
+  count: 8
+  operations:
+  - operationId: deleteV1StatuspagesStatuspageid
+    method: DELETE
+    path: /v1/status-pages/{statusPageId}
+    deprecated: true
+  - operationId: deleteV1StatuspagesStatuspageidSubscriptionsSubscriptionid
+    method: DELETE
+    path: /v1/status-pages/{statusPageId}/subscriptions/{subscriptionId}
+    deprecated: true
+  - operationId: getV1Statuspages
+    method: GET
+    path: /v1/status-pages
+    deprecated: true
+  - operationId: getV1StatuspagesStatuspageid
+    method: GET
+    path: /v1/status-pages/{statusPageId}
+    deprecated: true
+  - operationId: getV1StatuspagesStatuspageidSubscriptions
+    method: GET
+    path: /v1/status-pages/{statusPageId}/subscriptions
+    deprecated: true
+  - operationId: postV1Statuspages
+    method: POST
+    path: /v1/status-pages
+    deprecated: true
+  - operationId: postV1StatuspagesStatuspageidSubscriptionsBulk
+    method: POST
+    path: /v1/status-pages/{statusPageId}/subscriptions/bulk
+    deprecated: true
+  - operationId: putV1StatuspagesStatuspageid
+    method: PUT
+    path: /v1/status-pages/{statusPageId}
+    deprecated: true
+- tag: Status Pages V3
+  count: 5
+  operations:
+  - operationId: createStatusPageV3Public
+    method: POST
+    path: /v3/status-pages
+  - operationId: deleteStatusPageV3Public
+    method: DELETE
+    path: /v3/status-pages/{statusPageId}
+  - operationId: getStatusPageV3CustomDomainVerificationPublic
+    method: GET
+    path: /v3/status-pages/{statusPageId}/custom-domain-verifications
+  - operationId: recheckStatusPageV3CustomDomainVerificationPublic
+    method: POST
+    path: /v3/status-pages/{statusPageId}/custom-domain-verifications/recheck
+  - operationId: updateStatusPageV3Public
+    method: PUT
+    path: /v3/status-pages/{statusPageId}
+- tag: Status Pages V3 Automation Rules
+  count: 5
+  operations:
+  - operationId: createStatusPageV3AutomationRulePublic
+    method: POST
+    path: /v3/status-pages/{statusPageId}/automation-rules
+  - operationId: deleteStatusPageV3AutomationRulePublic
+    method: DELETE
+    path: /v3/status-pages/{statusPageId}/automation-rules/{ruleId}
+  - operationId: getStatusPageV3AutomationRulePublic
+    method: GET
+    path: /v3/status-pages/{statusPageId}/automation-rules/{ruleId}
+  - operationId: listStatusPageV3AutomationRulesPublic
+    method: GET
+    path: /v3/status-pages/{statusPageId}/automation-rules
+  - operationId: updateStatusPageV3AutomationRulePublic
+    method: PUT
+    path: /v3/status-pages/{statusPageId}/automation-rules/{ruleId}
+- tag: Status Pages V3 Components
+  count: 5
+  operations:
+  - operationId: createStatusPageV3ComponentPublic
+    method: POST
+    path: /v3/status-pages/{statusPageId}/components
+  - operationId: deleteStatusPageV3ComponentPublic
+    method: DELETE
+    path: /v3/status-pages/{statusPageId}/components/{componentId}
+  - operationId: getStatusPageV3ComponentPublic
+    method: GET
+    path: /v3/status-pages/{statusPageId}/components/{componentId}
+  - operationId: listStatusPageV3ComponentsPublic
+    method: GET
+    path: /v3/status-pages/{statusPageId}/components
+  - operationId: updateStatusPageV3ComponentPublic
+    method: PUT
+    path: /v3/status-pages/{statusPageId}/components/{componentId}
+- tag: Status Pages V3 Incidents
+  count: 6
+  operations:
+  - operationId: deleteStatusPageV3IncidentPublic
+    method: DELETE
+    path: /v3/status-pages/{statusPageId}/incidents/{incidentId}
+  - operationId: deleteStatusPageV3IncidentUpdatePublic
+    method: DELETE
+    path: /v3/status-pages/{statusPageId}/incidents/{incidentId}/incident-updates/{incidentUpdateId}
+  - operationId: getStatusPageV3IncidentUpdatePublic
+    method: GET
+    path: /v3/status-pages/{statusPageId}/incidents/{incidentId}/incident-updates/{incidentUpdateId}
+  - operationId: listStatusPageV3IncidentUpdatesPublic
+    method: GET
+    path: /v3/status-pages/{statusPageId}/incidents/{incidentId}/incident-updates
+  - operationId: replaceStatusPageV3IncidentComponentImpactsPublic
+    method: PUT
+    path: /v3/status-pages/{statusPageId}/incidents/{incidentId}/component-impacts
+  - operationId: updateStatusPageV3IncidentUpdatePublic
+    method: PUT
+    path: /v3/status-pages/{statusPageId}/incidents/{incidentId}/incident-updates/{incidentUpdateId}
+- tag: Status Pages V3 Subscribers
+  count: 3
+  operations:
+  - operationId: bulkCreateStatusPageV3SubscribersPublic
+    method: POST
+    path: /v3/status-pages/{statusPageId}/subscribers/bulk
+  - operationId: deleteStatusPageV3SubscriberPublic
+    method: DELETE
+    path: /v3/status-pages/{statusPageId}/subscribers/{subscriberId}
+  - operationId: listStatusPageV3SubscribersPublic
+    method: GET
+    path: /v3/status-pages/{statusPageId}/subscribers
+- tag: Test Session Error Groups
+  count: 3
+  operations:
+  - operationId: getV1Testsessionerrorgroups
+    method: GET
+    path: /v1/test-session-error-groups
+  - operationId: getV1TestsessionerrorgroupsProjectsProjectid
+    method: GET
+    path: /v1/test-session-error-groups/projects/{projectId}
+  - operationId: patchV1TestsessionerrorgroupsId
+    method: PATCH
+    path: /v1/test-session-error-groups/{id}
+- tag: Test sessions
+  count: 2
+  operations:
+  - operationId: getV1TestsessionsTestsessionidCompletion
+    method: GET
+    path: /v1/test-sessions/{testSessionId}/completion
+  - operationId: postV1TestsessionsTestsessionidCancel
+    method: POST
+    path: /v1/test-sessions/{testSessionId}/cancel
+- tag: Triggers
+  count: 6
+  operations:
+  - operationId: deleteV1TriggersCheckgroupsGroupid
+    method: DELETE
+    path: /v1/triggers/check-groups/{groupId}
+    deprecated: true
+  - operationId: deleteV1TriggersChecksCheckid
+    method: DELETE
+    path: /v1/triggers/checks/{checkId}
+    deprecated: true
+  - operationId: getV1TriggersCheckgroupsGroupid
+    method: GET
+    path: /v1/triggers/check-groups/{groupId}
+    deprecated: true
+  - operationId: getV1TriggersChecksCheckid
+    method: GET
+    path: /v1/triggers/checks/{checkId}
+    deprecated: true
+  - operationId: postV1TriggersCheckgroupsGroupid
+    method: POST
+    path: /v1/triggers/check-groups/{groupId}
+    deprecated: true
+  - operationId: postV1TriggersChecksCheckid
+    method: POST
+    path: /v1/triggers/checks/{checkId}
+    deprecated: true
+coverage:
+  mcp_tools: 32
+  tools_bound_to_rest: 30
+  tools_mcp_only: 2
+  rest_operations: 225
+  rest_operations_bound: 36
+  rest_operations_unbound: 189
+  note: 'The MCP server is deliberately a read-and-respond surface over an account: it covers checks,
+    results, sessions, assets, RCA, environment variables and status-page incidents. The whole configuration
+    surface - creating checks and monitors, alert channels, dashboards, maintenance windows, private locations,
+    snippets, client certificates - is REST- and CLI-only by design, and Checkly''s own docs route agents
+    to the CLI for authoring.'

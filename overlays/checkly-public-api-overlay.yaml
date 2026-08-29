@@ -1,0 +1,119 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enrichment overlay for the Checkly Public API
+  version: 1.0.0
+extends: ../openapi/_original/checkly-public-api-openapi.json
+x-generated: '2026-08-29'
+x-method: generated
+x-source: >-
+  Authored by API Evangelist from artifacts derived and searched in this repository on 2026-08-29:
+  authentication/checkly-authentication.yml, conventions/checkly-conventions.yml,
+  rate-limits/checkly-rate-limits.yml, lifecycle/checkly-lifecycle.yml, scopes/checkly-scopes.yml,
+  mcp/checkly-mcp.yml. Every fact restated here is traceable to Checkly's own published docs or
+  contract; nothing is invented. The original spec is never mutated.
+x-note: >-
+  The single highest-value action here is documenting X-Checkly-Account as a security scheme. It is
+  required on every REST call, it is stated in the API reference and inside the Bearer scheme's own
+  description, and it is absent from the contract's security model - so a client generated from the
+  spec alone cannot authenticate.
+actions:
+- target: $.info
+  description: Point consumers at the live contract, the docs, and the machine-readable surfaces around it.
+  update:
+    x-api-evangelist:
+      contract: https://api.checklyhq.com/openapi.json
+      docs: https://www.checklyhq.com/docs/api-reference/overview
+      llms_txt: https://www.checklyhq.com/llms.txt
+      mcp_manifest: https://www.checklyhq.com/.well-known/mcp.json
+      agent_skills: https://www.checklyhq.com/.well-known/agent-skills/index.json
+      pricing_markdown: https://www.checklyhq.com/pricing.md
+      status_page: https://is.checkly.online/
+      changelog: https://www.checklyhq.com/changelog/
+      legacy_contract:
+        url: https://api.checklyhq.com/swagger.json
+        state: frozen - the provider's own description marks it deprecated
+- target: $.components.securitySchemes
+  description: >-
+    Declare the account-selector header that the docs require and the contract omits. Adding it makes
+    the security model match the documented request.
+  update:
+    accountId:
+      type: apiKey
+      in: header
+      name: X-Checkly-Account
+      description: >-
+        REQUIRED on every request alongside the bearer API key. The id of the Checkly account the
+        request runs against, found at https://app.checklyhq.com/settings/account/general. Omitting
+        it, or sending the id of an account the key cannot see, produces 401 or 404 rather than a
+        message naming the header.
+- target: $
+  description: Require both credentials at the document level, mirroring the documented cURL example.
+  update:
+    security:
+    - Bearer: []
+      accountId: []
+- target: $
+  description: >-
+    Record the runtime semantics an agent needs and the contract does not carry - the rate limit, the
+    absence of rate-limit headers, the absence of idempotency, and the error envelope shape.
+  update:
+    x-api-evangelist-conventions:
+      rate_limit:
+        default: 600 requests per 60 seconds on most routes
+        custom_routes: documented per route; not enumerated anywhere
+        headers: none published and none observed on a live response
+        status_on_exhaustion: 429
+        source: https://www.checklyhq.com/docs/api-reference/overview
+      idempotency:
+        supported: false
+        note: >-
+          No Idempotency-Key on any of the 225 operations. Checkly's MCP tool reference labels its
+          incident and invite write tools "Not idempotent" explicitly. Read back before retrying.
+      pagination:
+        page_number: [limit, page]
+        cursor: [nextId]
+        time_window: [from, to, quickRange]
+      error_envelope:
+        rfc9457: false
+        shape: '{ statusCode, error, message, attributes? }'
+        note: No machine-readable error code below the HTTP status.
+      request_tracing:
+        header: none
+        note: No correlation or request-id header is returned; only Cloudflare edge headers.
+- target: $
+  description: >-
+    Record the deprecation posture. 37 operations carry deprecated:true but none carries a Sunset or
+    Deprecation header and no removal date is published.
+  update:
+    x-api-evangelist-lifecycle:
+      versioning: path - v1 live alongside v2 and v3 families
+      deprecated_operations: 37
+      sunset_headers: false
+      removal_dates_published: false
+      fully_deprecated_families:
+      - Status Pages v1 (use /v3/status-pages)
+      - Status Page Incidents v1 (use /v3/status-pages/{statusPageId}/incidents)
+      - Status Page Services v1 (use the v3 components model)
+      - Triggers (/v1/triggers/*) - Checkly routes users to the CLI
+      see: lifecycle/checkly-lifecycle.yml
+- target: $
+  description: Cross-reference the agent surfaces that sit beside this REST contract.
+  update:
+    x-api-evangelist-agent-surfaces:
+      mcp:
+        endpoint: https://api.checklyhq.com/mcp
+        transport: streamable-http
+        auth: oauth2 with 14 checkly:* scopes, or bearer API key
+        tools: 32
+        note: Read-and-respond over an account. Authoring is deliberately CLI-only.
+      cli:
+        package: checkly
+        install: npm install -g checkly
+        note: >-
+          Checkly's own API reference recommends the CLI over direct API writes for creating and
+          updating resources.
+      agent_skills:
+        index: https://www.checklyhq.com/.well-known/agent-skills/index.json
+        skills: [configure, investigate, communicate, manage]
+      a2a:
+        agent_card: none - /.well-known/agent-card.json and /.well-known/agent.json 404 on every host

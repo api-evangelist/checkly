@@ -1,101 +1,595 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Checkly Public Accounts Incidents API
+  title: Checkly Public Incidents API
   version: v1
-  description: The Checkly Public API allows you to programmatically manage your monitoring checks, alerts, and more. If you have any questions, please do not hesitate to get in touch with us.
-  contact:
-    name: Checkly Support
-    url: https://checklyhq.com/support
-  license:
-    name: MIT
+  description: These are the docs for the newly released Checkly Public API.<br />If you have any questions, please do not hesitate to get in touch with us.
 servers:
 - url: https://api.checklyhq.com
-  description: Production server
 security:
-- bearerAuth: []
-  accountId: []
+- Bearer: []
 tags:
 - name: Incidents
 paths:
   /v1/incidents:
-    get:
-      summary: List Incidents
-      description: Retrieve all incidents
-      operationId: listIncidents
+    post:
+      summary: Create an incident
+      operationId: postV1Incidents
+      description: Creates a new incident.
       parameters:
-      - name: limit
-        in: query
-        description: Limit the number of results
+      - name: x-checkly-account
+        in: header
         schema:
-          type: integer
-          default: 10
-          minimum: 1
-          maximum: 100
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      tags:
+      - Incidents
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Model43'
       responses:
         '200':
-          description: List of incidents
+          description: Successful
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IncidentList'
+                $ref: '#/components/schemas/Model47'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+  /v1/incidents/{id}:
+    delete:
+      summary: Delete an incident
+      operationId: deleteV1IncidentsId
+      description: Permanently removes an incident and all its updates.
+      parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      - name: id
+        in: path
+        schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
       tags:
       - Incidents
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+    get:
+      summary: Retrieve an incident
+      operationId: getV1IncidentsId
+      description: Shows details of a specific incident. Uses the "includeAllIncidentUpdates" query parameter to obtain all updates.
+      parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      - name: id
+        in: path
+        schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
+      - name: includeAllIncidentUpdates
+        in: query
+        schema:
+          type: boolean
+          description: You use it to include all the incident updates.
+          example: true
+          default: false
+        description: You use it to include all the incident updates.
+      tags:
+      - Incidents
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Model47'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+    put:
+      summary: Update an incident
+      operationId: putV1IncidentsId
+      description: Updates an incident.
+      parameters:
+      - name: x-checkly-account
+        in: header
+        schema:
+          type: string
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+          x-format:
+            guid: true
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+      - name: id
+        in: path
+        schema:
+          type: string
+          x-format:
+            guid: true
+        required: true
+      - name: probe
+        in: query
+        schema:
+          type: boolean
+      tags:
+      - Incidents
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Model48'
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Model49'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
 components:
   schemas:
-    IncidentList:
+    attributes:
+      type: object
+    incidentUpdates:
+      type: array
+      description: The first incident update with the status and description. It must be only one element.
+      example:
+      - status: INVESTIGATING
+        description: The service is down and affects all the regions.
+      x-constraint:
+        length: 1
+      items:
+        $ref: '#/components/schemas/Model42'
+    Model46:
+      type: array
+      description: The first incident update with the status and description. It must be only one element.
+      example:
+      - id: 01f477f8-4293-4e1c-82bd-99797720434c
+        status: RESOLVED
+        description: The service is up and all is recovered.
+        incidentId: 3abcfdfe-ae2d-4632-8dd1-18dd871e18fc
+        created_at: '2022-09-08T20:56:48.425Z'
+        updated_at: null
+      - id: 1f0640f8-1910-4137-b91d-ed152faa92e6
+        status: INVESTIGATING
+        description: The service is down and affects all the regions.
+        incidentId: 3abcfdfe-ae2d-4632-8dd1-18dd871e18fc
+        created_at: '2022-09-08T18:56:48.425Z'
+        updated_at: null
+      minItems: 1
+      items:
+        $ref: '#/components/schemas/Model45'
+    Model49:
       type: object
       properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Incident'
-        meta:
-          $ref: '#/components/schemas/PaginationMeta'
-    Incident:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Incident ID
         name:
           type: string
-          description: Incident name
-        status:
-          type: string
-          enum:
-          - open
-          - resolved
-          description: Incident status
+          description: A name used to describe the incident.
+          example: Service outage
+        impact:
+          $ref: '#/components/schemas/impact'
         startedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: Used to indicate when incident starts to be active.
+          example: '2022-11-25T12:34:56.000Z'
+        stoppedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: Used to indicate when incident turns to inactive.
+          example: '2022-11-25T13:34:56.000Z'
+        dashboardId:
+          type: number
+          description: The dashboard ID where the incident will be shown.
+          example: 1234
+        id:
+          type: string
+          description: The incident universal and unique identificator.
+          example: e50ad839-1b90-4955-b716-1c6edbda57cb
+          x-format:
+            guid: true
+        created_at:
           type: string
           format: date-time
-          description: Incident start timestamp
-        resolvedAt:
-          type: string
+          description: The timestamp when the incident was created.
+          example: '2022-09-08T19:41:28.658Z'
+        updated_at:
+          type:
+          - string
+          - 'null'
           format: date-time
-          description: Incident resolution timestamp
-    PaginationMeta:
+          description: The timestamp when the incident was last updated.
+          example: '2022-09-08T20:41:28.658Z'
+        incidentUpdates:
+          type:
+          - string
+          - 'null'
+      required:
+      - name
+      - impact
+      - dashboardId
+      - id
+      - created_at
+      - updated_at
+    Model41:
+      type: string
+      description: The incident update status. Must be one of INVESTIGATING,IDENTIFIED,MONITORING,RESOLVED,MAINTENANCE
+      example: INVESTIGATING
+      enum:
+      - INVESTIGATING
+      - IDENTIFIED
+      - MONITORING
+      - RESOLVED
+      - MAINTENANCE
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
+    Model47:
       type: object
       properties:
-        currentPage:
-          type: integer
-          description: Current page number
-        totalPages:
-          type: integer
-          description: Total number of pages
-        totalItems:
-          type: integer
-          description: Total number of items
-        limit:
-          type: integer
-          description: Items per page
+        name:
+          type: string
+          description: A name used to describe the incident.
+          example: Service outage
+        impact:
+          $ref: '#/components/schemas/impact'
+        startedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: Used to indicate when incident starts to be active.
+          example: '2022-11-25T12:34:56.000Z'
+        stoppedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: Used to indicate when incident turns to inactive.
+          example: '2022-11-25T13:34:56.000Z'
+        dashboardId:
+          type: number
+          description: The dashboard ID where the incident will be shown.
+          example: 1234
+        id:
+          type: string
+          description: The incident universal and unique identificator.
+          example: e50ad839-1b90-4955-b716-1c6edbda57cb
+          x-format:
+            guid: true
+        created_at:
+          type: string
+          format: date-time
+          description: The timestamp when the incident was created.
+          example: '2022-09-08T19:41:28.658Z'
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The timestamp when the incident was last updated.
+          example: '2022-09-08T20:41:28.658Z'
+        incidentUpdates:
+          $ref: '#/components/schemas/Model46'
+      required:
+      - name
+      - impact
+      - dashboardId
+      - id
+      - created_at
+      - updated_at
+      - incidentUpdates
+    TooManyRequestsError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    UnauthorizedError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 401
+        error:
+          $ref: '#/components/schemas/error'
+        message:
+          type: string
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    Model43:
+      type: object
+      properties:
+        name:
+          type: string
+          description: A name used to describe the incident.
+          example: Service outage
+        impact:
+          $ref: '#/components/schemas/impact'
+        startedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: Used to indicate when incident starts to be active.
+          example: '2022-11-25T12:34:56.000Z'
+        stoppedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: Used to indicate when incident turns to inactive.
+          example: '2022-11-25T13:34:56.000Z'
+        dashboardId:
+          type: number
+          description: The dashboard ID where the incident will be shown.
+          example: 1234
+        incidentUpdates:
+          $ref: '#/components/schemas/incidentUpdates'
+      required:
+      - name
+      - impact
+      - dashboardId
+      - incidentUpdates
+    ForbiddenError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 403
+        error:
+          $ref: '#/components/schemas/Model1'
+        message:
+          type: string
+          example: Forbidden
+      required:
+      - statusCode
+      - error
+    Model42:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/Model41'
+        description:
+          type: string
+          description: A description about the status update.
+          example: We found the issue and we are working on it.
+      required:
+      - status
+      - description
+    NotFoundError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 404
+        error:
+          $ref: '#/components/schemas/Model4'
+        message:
+          type: string
+          example: Not Found
+      required:
+      - statusCode
+      - error
+    error:
+      type: string
+      enum:
+      - Unauthorized
+    impact:
+      type: string
+      description: Used to indicate the impact or severity.
+      example: MINOR
+      default: MINOR
+      enum:
+      - MAINTENANCE
+      - MAJOR
+      - MINOR
+    Model44:
+      type: string
+      description: The incident update status. Must be one of INVESTIGATING,IDENTIFIED,MONITORING,RESOLVED,MAINTENANCE
+      example: INVESTIGATING
+      enum:
+      - INVESTIGATING
+      - IDENTIFIED
+      - MONITORING
+      - RESOLVED
+      - MAINTENANCE
+    Model45:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/Model44'
+        description:
+          type: string
+          description: A description about the status update.
+          example: We found the issue and we are working on it.
+        id:
+          type: string
+          description: The incident update universal and unique identificator.
+          example: e50ad839-1b90-4955-b716-1c6edbda57cb
+          x-format:
+            guid: true
+        created_at:
+          type: string
+          format: date-time
+          description: The timestamp when the incident update was created.
+          example: '2022-09-08T19:41:28.658Z'
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The timestamp when last the update.
+          example: '2022-09-08T20:41:28.658Z'
+      required:
+      - status
+      - description
+      - id
+      - created_at
+      - updated_at
+    Model4:
+      type: string
+      enum:
+      - Not Found
+    Model1:
+      type: string
+      enum:
+      - Forbidden
+    Model48:
+      type: object
+      properties:
+        name:
+          type: string
+          description: A name used to describe the incident.
+          example: Service outage
+        impact:
+          $ref: '#/components/schemas/impact'
+        startedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: Used to indicate when incident starts to be active.
+          example: '2022-11-25T12:34:56.000Z'
+        stoppedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: Used to indicate when incident turns to inactive.
+          example: '2022-11-25T13:34:56.000Z'
+      required:
+      - name
+      - impact
   securitySchemes:
-    bearerAuth:
+    Bearer:
       type: http
       scheme: bearer
-      description: API Key authentication for Checkly API. You can get your API key at https://app.checklyhq.com/settings/user/api-keys
-    accountId:
-      type: apiKey
-      in: header
-      name: X-Checkly-Account
-      description: Your Checkly account ID. You can find it at https://app.checklyhq.com/settings/account/general
+      bearerFormat: Bearer
+      description: 'The Checkly Public API uses API keys to authenticate requests. You can get the API Key <a href="https://app.checklyhq.com/settings/user/api-keys" target="_blank">here</a>.</br>Your API key is like a password: <br>keep it secure!</br></br>Authentication to the API is performed using the Bearer auth method in the Authorization header and using the account ID.</br></br>For example, set <b>Authorization</b> header while using cURL: <code>curl -H "Authorization: Bearer [apiKey]" "X-Checkly-Account: [accountId]"</code></br>'

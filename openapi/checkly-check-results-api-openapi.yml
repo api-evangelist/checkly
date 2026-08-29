@@ -1,70 +1,539 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Checkly Public Accounts Check Results API
+  title: Checkly Public Check results API
   version: v1
-  description: The Checkly Public API allows you to programmatically manage your monitoring checks, alerts, and more. If you have any questions, please do not hesitate to get in touch with us.
-  contact:
-    name: Checkly Support
-    url: https://checklyhq.com/support
-  license:
-    name: MIT
+  description: These are the docs for the newly released Checkly Public API.<br />If you have any questions, please do not hesitate to get in touch with us.
 servers:
 - url: https://api.checklyhq.com
-  description: Production server
 security:
-- bearerAuth: []
-  accountId: []
+- Bearer: []
 tags:
-- name: Check Results
+- name: Check results
 paths:
   /v1/check-results/{checkId}:
     get:
-      summary: List Check Results
-      description: Retrieve all execution results for a specific check
-      operationId: listCheckResults
-      parameters:
-      - name: checkId
-        in: path
-        required: true
-        description: The check ID
-        schema:
-          type: string
+      summary: Lists all check results
+      operationId: getV1CheckresultsCheckid
+      description: <b>[DEPRECATED] This endpoint will be removed soon. Please use the <code>GET /v2/check-results/{checkId}</code> endpoint instead.</b><br>Lists the full, raw check results for a specific check. We keep raw results for 30 days. After 30 days they are erased. However, we keep the rolled up results for an indefinite period.<br><br>You can filter by check type and result type to narrow down the list. Use the `to` and `from` parameters to specify a date range (UNIX timestamp in seconds). Depending on the check type, some fields might be null.<br><br>This endpoint will return data within a 6-hour timeframe. If the `from` and `to` params are set, they must be at most six hours apart. If none are set, we will consider the `to` param to be now and the `from` param to be six hours earlier. If only the `to` param is set we will set `from` to be six hours earlier. On the contrary, if only the `from` param is set we will consider the `to` param to be six hours later.<br><br><b>Rate-limiting is applied to this endpoint, you can send 60 requests / 60 seconds at most.<b>
+      tags:
+      - Check results
       responses:
         '200':
-          description: List of check results
+          description: Successful
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CheckResultList'
-      tags:
-      - Check Results
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '402':
+          description: Payment Required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      deprecated: true
+      parameters:
+      - schema:
+          type: string
+          minLength: 1
+          format: uuid
+        required: true
+        name: checkId
+        in: path
+      - schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+          description: Limit the number of results to fetch (default 10)
+        required: false
+        description: Limit the number of results to fetch (default 10)
+        name: limit
+        in: query
+      - schema:
+          type: string
+          enum:
+          - us-east-1
+          - us-east-2
+          - us-west-1
+          - us-west-2
+          - ca-central-1
+          - sa-east-1
+          - eu-west-1
+          - eu-central-1
+          - eu-west-2
+          - eu-west-3
+          - eu-north-1
+          - eu-south-1
+          - me-south-1
+          - ap-southeast-1
+          - ap-northeast-1
+          - ap-east-1
+          - ap-southeast-2
+          - ap-southeast-3
+          - ap-northeast-2
+          - ap-northeast-3
+          - ap-south-1
+          - af-south-1
+          description: Provide a data center location, e.g. "eu-west-1" to filter by location
+        required: false
+        description: Provide a data center location, e.g. "eu-west-1" to filter by location
+        name: location
+        in: query
+      - schema:
+          type: string
+          enum:
+          - AGENTIC
+          - API
+          - BROWSER
+          - HEARTBEAT
+          - ICMP
+          - MULTI_STEP
+          - TCP
+          - PLAYWRIGHT
+          - TRACEROUTE
+          - URL
+          - DNS
+          - SSL
+          - GRPC
+          description: The type of the check
+        required: false
+        description: The type of the check
+        name: checkType
+        in: query
+      - schema:
+          type: boolean
+          description: Check result has one or more failures
+        required: false
+        description: Check result has one or more failures
+        name: hasFailures
+        in: query
+      - schema:
+          type: string
+          enum:
+          - FINAL
+          - ATTEMPT
+          - ALL
+          default: FINAL
+          description: The check result type (FINAL,ATTEMPT,ALL)
+        required: false
+        description: The check result type (FINAL,ATTEMPT,ALL)
+        name: resultType
+        in: query
+      - schema:
+          type: number
+          description: Select records up from this UNIX timestamp (>= date). Defaults to now - 6 hours.
+        required: false
+        description: Select records up from this UNIX timestamp (>= date). Defaults to now - 6 hours.
+        name: from
+        in: query
+      - schema:
+          type: number
+          description: Optional. Select records up to this UNIX timestamp (< date). Defaults to 6 hours after "from".
+        required: false
+        description: Optional. Select records up to this UNIX timestamp (< date). Defaults to 6 hours after "from".
+        name: to
+        in: query
+      - schema:
+          type: number
+          default: 1
+          description: Page number
+          exclusiveMinimum: 0
+        required: false
+        description: Page number
+        name: page
+        in: query
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
   /v1/check-results/{checkId}/{checkResultId}:
     get:
-      summary: Get Check Result
-      description: Retrieve detailed information about a specific check execution result
-      operationId: getCheckResult
-      parameters:
-      - name: checkId
-        in: path
-        required: true
-        description: The check ID
-        schema:
-          type: string
-      - name: checkResultId
-        in: path
-        required: true
-        description: The check result ID
-        schema:
-          type: string
+      summary: Retrieve a check result
+      operationId: getV1CheckresultsCheckidCheckresultid
+      description: Show details of a specific check result.
+      tags:
+      - Check results
       responses:
         '200':
-          description: Check result details
+          description: Successful
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CheckResult'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: string
+          minLength: 1
+          format: uuid
+        required: true
+        name: checkId
+        in: path
+      - schema:
+          type: string
+          minLength: 1
+          format: uuid
+        required: true
+        name: checkResultId
+        in: path
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+  /v1/check-results/{checkId}/{checkResultId}/assets:
+    get:
+      summary: Retrieve a normalized asset manifest for a check result
+      operationId: getV1CheckresultsCheckidCheckresultidAssets
+      description: Returns a normalized manifest of downloadable assets for the check result.
       tags:
-      - Check Results
+      - Check results
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssetManifest'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: string
+          format: uuid
+          description: Check ID.
+        required: true
+        description: Check ID.
+        name: checkId
+        in: path
+      - schema:
+          type: string
+          format: uuid
+          description: Check result ID.
+        required: true
+        description: Check result ID.
+        name: checkResultId
+        in: path
+      - schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - log
+            - trace
+            - video
+            - screenshot
+            - pcap
+            - report
+            - file
+          description: Filter assets by normalized asset type. Repeat the query parameter to include multiple types.
+        required: false
+        description: Filter assets by normalized asset type. Repeat the query parameter to include multiple types.
+        name: type
+        in: query
+      - schema:
+          type: string
+          maxLength: 200
+          description: Glob pattern matched case-insensitively against the asset name and archive entry path. Empty patterns are ignored.
+        required: false
+        description: Glob pattern matched case-insensitively against the asset name and archive entry path. Empty patterns are ignored.
+        name: name
+        in: query
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
+  /v2/check-results/{checkId}:
+    get:
+      summary: Lists all check results
+      operationId: getV2CheckresultsCheckid
+      description: Lists the full, raw check results for a specific check. We keep raw results for 30 days. After 30 days they are erased. However, we keep the rolled up results for an indefinite period.<br><br>You can filter by check type and result type to narrow down the list. Use the `to` and `from` parameters to specify a date range (UNIX timestamp in seconds). Depending on the check type, some fields might be null.<br><br><b>Rate-limiting is applied to this endpoint, you can send 60 requests / 60 seconds at most.<b>
+      tags:
+      - Check results
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckResultListV2'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '402':
+          description: Payment Required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      parameters:
+      - schema:
+          type: string
+          minLength: 1
+          format: uuid
+        required: true
+        name: checkId
+        in: path
+      - schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+          description: Limit the number of results to fetch (default 10)
+        required: false
+        description: Limit the number of results to fetch (default 10)
+        name: limit
+        in: query
+      - schema:
+          type: string
+          enum:
+          - us-east-1
+          - us-east-2
+          - us-west-1
+          - us-west-2
+          - ca-central-1
+          - sa-east-1
+          - eu-west-1
+          - eu-central-1
+          - eu-west-2
+          - eu-west-3
+          - eu-north-1
+          - eu-south-1
+          - me-south-1
+          - ap-southeast-1
+          - ap-northeast-1
+          - ap-east-1
+          - ap-southeast-2
+          - ap-southeast-3
+          - ap-northeast-2
+          - ap-northeast-3
+          - ap-south-1
+          - af-south-1
+          description: Provide a data center location, e.g. "eu-west-1" to filter by location
+        required: false
+        description: Provide a data center location, e.g. "eu-west-1" to filter by location
+        name: location
+        in: query
+      - schema:
+          type: string
+          enum:
+          - AGENTIC
+          - API
+          - BROWSER
+          - HEARTBEAT
+          - ICMP
+          - MULTI_STEP
+          - TCP
+          - PLAYWRIGHT
+          - TRACEROUTE
+          - URL
+          - DNS
+          - SSL
+          - GRPC
+          description: The type of the check
+        required: false
+        description: The type of the check
+        name: checkType
+        in: query
+      - schema:
+          type: boolean
+          description: Check result has one or more failures
+        required: false
+        description: Check result has one or more failures
+        name: hasFailures
+        in: query
+      - schema:
+          type: string
+          enum:
+          - FINAL
+          - ATTEMPT
+          - ALL
+          default: FINAL
+          description: The check result type (FINAL,ATTEMPT,ALL)
+        required: false
+        description: The check result type (FINAL,ATTEMPT,ALL)
+        name: resultType
+        in: query
+      - schema:
+          type: number
+          description: Select records up from this UNIX timestamp (>= date).
+        required: false
+        description: Select records up from this UNIX timestamp (>= date).
+        name: from
+        in: query
+      - schema:
+          type: number
+          description: Optional. Select records up to this UNIX timestamp (< date).
+        required: false
+        description: Optional. Select records up to this UNIX timestamp (< date).
+        name: to
+        in: query
+      - schema:
+          type: string
+          description: Cursor parameter to fetch the next page of results. The "nextId" parameter is returned in the response of the previous request. If a response includes a "nextId" parameter set to "null", there are no more results to fetch.
+        required: false
+        description: Cursor parameter to fetch the next page of results. The "nextId" parameter is returned in the response of the previous request. If a response includes a "nextId" parameter set to "null", there are no more results to fetch.
+        name: nextId
+        in: query
+      - schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - id
+            - name
+            - checkId
+            - hasFailures
+            - hasErrors
+            - isDegraded
+            - isCancelled
+            - overMaxResponseTime
+            - runLocation
+            - startedAt
+            - stoppedAt
+            - created_at
+            - createdAt
+            - responseTime
+            - apiCheckResult
+            - browserCheckResult
+            - multiStepCheckResult
+            - agenticCheckResult
+            - playwrightCheckResult
+            - tracerouteCheckResult
+            - grpcCheckResult
+            - sslCheckResult
+            - checkRunId
+            - attempts
+            - resultType
+            - sequenceId
+            - traceId
+            - errorGroupIds
+          description: Comma-separated list of check result fields to include in each entry.
+        required: false
+        description: Comma-separated list of check result fields to include in each entry.
+        name: fields
+        in: query
+      - schema:
+          type: string
+          format: uuid
+          description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        required: false
+        description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
+        name: x-checkly-account
+        in: header
 components:
   schemas:
     CheckResult:
@@ -72,58 +541,970 @@ components:
       properties:
         id:
           type: string
-          description: Check result ID
+          description: The unique ID of this result.
+        name:
+          type: string
+          description: The name of the check.
         checkId:
           type: string
-          description: Check ID
+          description: The ID of the check.
         hasFailures:
           type: boolean
-          description: Whether the check had failures
-        responseTime:
-          type: number
-          description: Response time in milliseconds
+          description: Describes if any failure occurred during this check run.
+        hasErrors:
+          type: boolean
+          description: Describes if an internal error occurred in Checkly's backend.
+        isDegraded:
+          type:
+          - boolean
+          - 'null'
+          description: Whether the check is over its degradation limit.
+        isCancelled:
+          type: boolean
+          description: Whether the run was cancelled before completion.
+        overMaxResponseTime:
+          type:
+          - boolean
+          - 'null'
+          description: Whether the response time exceeded its limit.
         runLocation:
           type: string
-          description: Location where the check was run
+          description: What data center location this check result originated from.
         startedAt:
-          type: string
+          type:
+          - string
+          - 'null'
           format: date-time
-          description: Check start timestamp
         stoppedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        created_at:
           type: string
           format: date-time
-          description: Check stop timestamp
-    CheckResultList:
+        responseTime:
+          type: number
+          description: Time the check spent producing its result, in milliseconds. For protocol checks this is the measured operation time; for browser, multi-step, Playwright and agentic checks it is the run wall-clock duration.
+        apiCheckResult:
+          $ref: '#/components/schemas/CheckResultAPI'
+        browserCheckResult:
+          $ref: '#/components/schemas/CheckResultBrowser'
+        multiStepCheckResult:
+          $ref: '#/components/schemas/MultiStepResultBrowser'
+        agenticCheckResult:
+          $ref: '#/components/schemas/CheckResultAgentic'
+        playwrightCheckResult:
+          $ref: '#/components/schemas/CheckResultPlaywright'
+        tracerouteCheckResult:
+          $ref: '#/components/schemas/CheckResultTraceroute'
+        grpcCheckResult:
+          $ref: '#/components/schemas/CheckResultGrpc'
+        sslCheckResult:
+          $ref: '#/components/schemas/CheckResultSsl'
+        checkRunId:
+          type: number
+          description: The id of the specific check run that created this result.
+        attempts:
+          type: number
+          description: How often this check was retried.
+        resultType:
+          type: string
+          enum:
+          - FINAL
+          - ATTEMPT
+          - ALL
+          description: The type of result.
+        sequenceId:
+          type:
+          - string
+          - 'null'
+          format: uuid
+          description: The sequence ID of the check run.
+        traceId:
+          type:
+          - string
+          - 'null'
+          description: OpenTelemetry trace ID associated with this check result.
+        errorGroupIds:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+            format: uuid
+          default: []
+          description: IDs of error groups associated with this check result.
+      required:
+      - resultType
+      - traceId
+    CheckResultPlaywright:
+      type:
+      - object
+      - 'null'
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/CheckResultFreeformObject'
+          default: []
+          description: Per-test Playwright errors recorded during the run.
+        playwrightTraceFiles:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/CheckResultPlaywrightTraceFile'
+          default: []
+          description: Trace file metadata recorded by the runner.
+        jobLog:
+          type:
+          - array
+          - 'null'
+          items: {}
+          description: Check run log results.
+        jobAssets:
+          type:
+          - array
+          - 'null'
+          items: {}
+          description: Assets generated from the check run.
+        playwrightTestVideos:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: Signed URLs for Playwright test videos.
+        playwrightTestTraces:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: Signed URLs for Playwright test traces.
+        playwrightTestJsonReportFile:
+          type:
+          - string
+          - 'null'
+          description: Signed URL for the Playwright JSON report.
+      description: The response data for a Playwright check.
+    CheckResultProjection:
       type: object
       properties:
-        data:
+        id:
+          type: string
+          description: The unique ID of this result.
+        name:
+          type: string
+          description: The name of the check.
+        checkId:
+          type: string
+          description: The ID of the check.
+        hasFailures:
+          type: boolean
+          description: Describes if any failure occurred during this check run.
+        hasErrors:
+          type: boolean
+          description: Describes if an internal error occurred in Checkly's backend.
+        isDegraded:
+          type:
+          - boolean
+          - 'null'
+          description: Whether the check is over its degradation limit.
+        isCancelled:
+          type: boolean
+          description: Whether the run was cancelled before completion.
+        overMaxResponseTime:
+          type:
+          - boolean
+          - 'null'
+          description: Whether the response time exceeded its limit.
+        runLocation:
+          type: string
+          description: What data center location this check result originated from.
+        startedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        stoppedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        responseTime:
+          type: number
+          description: Time the check spent producing its result, in milliseconds. For protocol checks this is the measured operation time; for browser, multi-step, Playwright and agentic checks it is the run wall-clock duration.
+        apiCheckResult:
+          $ref: '#/components/schemas/CheckResultAPI'
+        browserCheckResult:
+          $ref: '#/components/schemas/CheckResultBrowser'
+        multiStepCheckResult:
+          $ref: '#/components/schemas/MultiStepResultBrowser'
+        agenticCheckResult:
+          $ref: '#/components/schemas/CheckResultAgentic'
+        playwrightCheckResult:
+          $ref: '#/components/schemas/CheckResultPlaywright'
+        tracerouteCheckResult:
+          $ref: '#/components/schemas/CheckResultTraceroute'
+        grpcCheckResult:
+          $ref: '#/components/schemas/CheckResultGrpc'
+        sslCheckResult:
+          $ref: '#/components/schemas/CheckResultSsl'
+        checkRunId:
+          type: number
+          description: The id of the specific check run that created this result.
+        attempts:
+          type: number
+          description: How often this check was retried.
+        resultType:
+          type: string
+          enum:
+          - FINAL
+          - ATTEMPT
+          - ALL
+          description: The type of result.
+        sequenceId:
+          type:
+          - string
+          - 'null'
+          format: uuid
+          description: The sequence ID of the check run.
+        traceId:
+          type:
+          - string
+          - 'null'
+          description: OpenTelemetry trace ID associated with this check result.
+        errorGroupIds:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+            format: uuid
+          default: []
+          description: IDs of error groups associated with this check result.
+        createdAt:
+          type: string
+          format: date-time
+    CheckResultBrowser:
+      type:
+      - object
+      - 'null'
+      properties:
+        type:
+          type: string
+          description: The type of framework the check is using.
+        traceSummary:
+          type: object
+          properties: {}
+          additionalProperties: {}
+          description: The summary of errors in the check run.
+        pages:
           type: array
           items:
-            $ref: '#/components/schemas/CheckResult'
-        meta:
-          $ref: '#/components/schemas/PaginationMeta'
-    PaginationMeta:
+            $ref: '#/components/schemas/CheckResultFreeformObject'
+          description: List of pages used on the check run.
+        playwrightTestVideos:
+          type: array
+          items:
+            type: string
+          description: List of Playwright Test videos.
+        errors:
+          type: array
+          items: {}
+          description: List of errors on the check run.
+        endTime:
+          type: number
+          description: End time of the check run.
+        startTime:
+          type: number
+          description: Start time of the check run.
+        runtimeVersion:
+          type: string
+          description: Active runtime version.
+        jobLog:
+          type:
+          - array
+          - 'null'
+          items: {}
+          description: Check run log results.
+        jobAssets:
+          type:
+          - array
+          - 'null'
+          items: {}
+          description: Assets generated from the check run.
+        playwrightTestTraces:
+          type: array
+          items:
+            type: string
+          description: List of Playwright Test traces.
+        playwrightTestJsonReportFile:
+          type: string
+          description: Playwright Test JSON report.
+      description: The response data for a browser check.
+    CheckResultListV2:
       type: object
       properties:
-        currentPage:
+        length:
+          type: number
+        entries:
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckResultListEntry'
+        nextId:
+          type:
+          - string
+          - 'null'
+      required:
+      - length
+    CheckResultGrpc:
+      type:
+      - object
+      - 'null'
+      properties:
+        grpcStatusCode:
+          type: number
+          description: The gRPC status code of the call.
+        healthStatus:
+          type:
+          - number
+          - 'null'
+          description: The numeric serving status returned by the gRPC health probe.
+        timingPhases:
+          type:
+          - object
+          - 'null'
+          properties: {}
+          additionalProperties: {}
+          description: Timing phases for the run.
+        requestError:
+          type:
+          - string
+          - 'null'
+          description: Describes if an error occurred on the request.
+        request:
+          type:
+          - object
+          - 'null'
+          properties: {}
+          additionalProperties: {}
+          description: The gRPC request that was executed.
+        assertions:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/CheckResultFreeformObject'
+          description: Assertions evaluated for the run.
+        response:
+          type:
+          - object
+          - 'null'
+          properties:
+            grpcMode:
+              type: string
+            host:
+              type: string
+            resolvedIp:
+              type: string
+            port:
+              type: number
+            grpcMethod:
+              type: string
+            responseMessage:
+              type: string
+            grpcStatusCode:
+              type: number
+            grpcStatusMessage:
+              type: string
+            healthStatus:
+              type:
+              - number
+              - 'null'
+            healthStatusLabel:
+              type: string
+            metadata:
+              type:
+              - array
+              - 'null'
+              items:
+                $ref: '#/components/schemas/CheckResultFreeformObject'
+            discoveredMethods:
+              type:
+              - array
+              - 'null'
+              items:
+                type: string
+            requestError:
+              type:
+              - string
+              - 'null'
+            timingPhases:
+              allOf:
+              - $ref: '#/components/schemas/CheckResultFreeformObject'
+              - {}
+          description: The detailed gRPC response artifact.
+      description: Failure-debug diagnostics for a gRPC check.
+    CheckResultFreeformObject:
+      type: object
+      properties: {}
+      additionalProperties: {}
+    AgenticSuggestion:
+      type: object
+      properties:
+        summary:
+          type: string
+          description: Human-readable summary of the agent's suggestion.
+        prompt:
+          type: string
+          description: Prompt fragment the user can append to extend the check.
+        promptReplacement:
+          type: string
+          description: Full replacement prompt the user can apply when the suggestion is a correction.
+        secrets:
+          type: array
+          items:
+            type: string
+          description: Environment variable names the suggestion would require.
+        category:
+          type: string
+          enum:
+          - credentials
+          - endpoint
+          - configuration
+          description: Category of the suggestion.
+    CheckResultList:
+      type: array
+      items:
+        $ref: '#/components/schemas/CheckResult'
+    CheckResultAPI:
+      type:
+      - object
+      - 'null'
+      properties:
+        assertions:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/CheckResultFreeformObject'
+          default: []
+          description: List of API check assertions.
+        request:
+          type: object
+          properties:
+            method:
+              type: string
+            url:
+              type: string
+            data:
+              type: string
+            headers:
+              $ref: '#/components/schemas/CheckResultFreeformObject'
+            params:
+              $ref: '#/components/schemas/CheckResultFreeformObject'
+          description: The request for the API.
+        response:
+          type: object
+          properties:
+            status:
+              type: number
+            statusText:
+              type: string
+            body:
+              type: string
+            bodyEncoding:
+              type: string
+              enum:
+              - base64
+              description: Encoding of `body`. Set to `base64` when the body holds base64-encoded raw bytes (raster image responses); absent for plain text bodies.
+            headers:
+              allOf:
+              - $ref: '#/components/schemas/CheckResultFreeformObject'
+              - {}
+            timings:
+              allOf:
+              - $ref: '#/components/schemas/CheckResultFreeformObject'
+              - {}
+            timingPhases:
+              allOf:
+              - $ref: '#/components/schemas/CheckResultFreeformObject'
+              - {}
+          description: The API response.
+        requestError:
+          type:
+          - string
+          - 'null'
+          description: Describes if an error occurred on the request.
+        jobLog:
+          type:
+          - object
+          - 'null'
+          properties: {}
+          additionalProperties: {}
+          description: Check run log results.
+        jobAssets:
+          type:
+          - array
+          - 'null'
+          items: {}
+          description: Assets generated from the check run.
+        pcapDataUrl:
+          type:
+          - string
+          - 'null'
+          description: Packet capture data if available as redirect/download URL.
+      description: The response data for an API check.
+    ApiError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+        error:
+          type: string
+        message:
+          type: string
+      required:
+      - statusCode
+      - error
+      - message
+    MultiStepResultBrowser:
+      type:
+      - object
+      - 'null'
+      properties:
+        errors:
+          type: array
+          items: {}
+          description: List of errors on the check run.
+        endTime:
+          type: number
+          description: End time of the check run.
+        startTime:
+          type: number
+          description: Start time of the check run.
+        runtimeVersion:
+          type: string
+          description: Active runtime version.
+        jobLog:
+          type:
+          - array
+          - 'null'
+          items: {}
+          description: Check run log results.
+        jobAssets:
+          type:
+          - array
+          - 'null'
+          items: {}
+          description: Assets generated from the check run.
+        playwrightTestTraces:
+          type: array
+          items:
+            type: string
+          description: List of Playwright Test traces.
+        playwrightTestJsonReportFile:
+          type: string
+          description: Playwright Test JSON report.
+      description: The response data for a multi-step check.
+    CheckResultAgentic:
+      type:
+      - object
+      - 'null'
+      properties:
+        summary:
+          type:
+          - string
+          - 'null'
+          description: Human-readable recap of the agent run.
+        prompt:
+          type:
+          - string
+          - 'null'
+          description: The prompt that was executed for this run.
+        assertions:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/AgenticAssertion'
+          default: []
+          description: List of assertions evaluated by the agent.
+        suggestions:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/AgenticSuggestion'
+          default: []
+          description: Suggestions produced by the agent.
+        steps:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/AgenticStep'
+          default: []
+          description: Sequence of tool calls and messages.
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/CheckResultFreeformObject'
+          default: []
+          description: Errors recorded during the run.
+        artifactManifest:
+          type:
+          - object
+          - 'null'
+          properties: {}
+          additionalProperties: {}
+          description: Map of artifact file paths to descriptions.
+      description: The response data for an agentic check.
+    CheckResultSsl:
+      type:
+      - object
+      - 'null'
+      properties:
+        tlsVersion:
+          type: string
+          description: Negotiated TLS protocol version.
+        cipherSuite:
+          type: string
+          description: Negotiated cipher suite.
+        daysUntilExpiry:
+          type: number
+          description: Days until the leaf certificate expires.
+        handshakeTimeMs:
+          type: number
+          description: TLS handshake duration in milliseconds.
+        chainTrusted:
+          type: boolean
+          description: Whether the certificate chain was trusted.
+        hostnameVerified:
+          type: boolean
+          description: Whether the hostname matched the certificate.
+        baselineVerdict:
+          type: string
+          description: Overall security-baseline verdict.
+        baselineGrade:
+          type: string
+          description: Overall security-baseline grade.
+        failureCategory:
+          type:
+          - string
+          - 'null'
+          description: Categorised reason the check failed.
+        requestError:
+          type:
+          - string
+          - 'null'
+          description: Describes if an error occurred on the request.
+        request:
+          type:
+          - object
+          - 'null'
+          properties: {}
+          additionalProperties: {}
+          description: The SSL request that was executed.
+        assertions:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/CheckResultFreeformObject'
+          description: Assertions evaluated for the run.
+        response:
+          type:
+          - object
+          - 'null'
+          properties:
+            resolvedIp:
+              type: string
+            protocol:
+              type: string
+              description: Negotiated TLS version.
+            cipherSuite:
+              type: string
+            handshakeTimeMs:
+              type: number
+            hostnameVerified:
+              type: boolean
+            chainTrusted:
+              type: boolean
+            daysUntilExpiry:
+              type: number
+            ocspStapled:
+              type: boolean
+            ocspStatus:
+              type: string
+              description: Decoded stapled OCSP status.
+            chainTrustReason:
+              type: string
+              description: Typed reason the chain is untrusted.
+            chainTrustDetail:
+              type: string
+              description: Human-readable explanation of why the chain is untrusted.
+            incompleteChain:
+              type: boolean
+              description: Whether the server omitted an intermediate certificate.
+            missingIntermediate:
+              type: string
+              description: Issuer of the missing intermediate certificate.
+            securityBaseline:
+              allOf:
+              - $ref: '#/components/schemas/CheckResultFreeformObject'
+              - {}
+            certificate:
+              allOf:
+              - $ref: '#/components/schemas/CheckResultFreeformObject'
+              - {}
+            chain:
+              type:
+              - array
+              - 'null'
+              items:
+                $ref: '#/components/schemas/CheckResultFreeformObject'
+          description: The detailed SSL/TLS response artifact.
+      description: Failure-debug diagnostics for an SSL check.
+    AssetManifestEntry:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - log
+          - trace
+          - video
+          - screenshot
+          - pcap
+          - report
+          - file
+          description: Normalized asset type.
+        name:
+          type: string
+          minLength: 1
+          description: Display/download name for the asset.
+        url:
+          type: string
+          format: uri
+          description: Authenticated API URL for downloading or redirecting to the asset.
+        contentType:
+          type: string
+          minLength: 1
+          description: Best-effort content type inferred from the asset metadata.
+        source:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+              - check-result
+              - test-session-result
+              description: Result endpoint scope that produced this asset entry.
+            checkId:
+              type: string
+              format: uuid
+              description: Check ID associated with this asset.
+            checkName:
+              type: string
+              minLength: 1
+              description: Check name associated with this asset.
+            checkType:
+              type: string
+              minLength: 1
+              description: Check type associated with this asset.
+            resultId:
+              type: string
+              format: uuid
+              description: Result ID associated with this asset.
+            testSessionId:
+              type: string
+              format: uuid
+              description: Test session ID associated with this asset.
+          required:
+          - type
+          description: Stable source identifiers for correlating the asset to checks and results.
+        archive:
+          type: object
+          properties:
+            entryName:
+              type: string
+              minLength: 1
+              description: File path inside the downloadable archive.
+          required:
+          - entryName
+          description: Present when the asset is an entry inside a ZIP archive.
+      required:
+      - type
+      - name
+      - url
+      - source
+    AgenticStep:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - tool_call
+          - tool_result
+          - message
+          description: Kind of step emitted by the agent.
+        name:
+          type: string
+          description: Name of the tool invoked.
+        input:
+          type: object
+          properties: {}
+          additionalProperties: {}
+          description: Input passed to the tool, when applicable.
+        output:
+          type: string
+          description: Output text or message body.
+        timestamp:
+          type: string
+          description: ISO timestamp when the step was emitted.
+        sequenceNumber:
           type: integer
-          description: Current page number
-        totalPages:
+          description: Monotonic sequence number within a run.
+    CheckResultListEntry:
+      anyOf:
+      - $ref: '#/components/schemas/CheckResult'
+      - $ref: '#/components/schemas/CheckResultProjection'
+    AssetManifest:
+      type: object
+      properties:
+        assets:
+          type: array
+          items:
+            $ref: '#/components/schemas/AssetManifestEntry'
+          description: Normalized assets for the result.
+        truncated:
+          type: boolean
+          description: Whether the manifest omitted entries because the stored archive entry list exceeded the endpoint cap.
+        entriesReturned:
           type: integer
-          description: Total number of pages
-        totalItems:
+          minimum: 0
+          description: Number of archive entries represented in the response when the manifest is truncated.
+        entriesTotal:
           type: integer
-          description: Total number of items
-        limit:
-          type: integer
-          description: Items per page
+          minimum: 0
+          description: Total number of manifestable archive entries found in storage when the manifest is truncated.
+      required:
+      - assets
+    CheckResultTraceroute:
+      type:
+      - object
+      - 'null'
+      properties:
+        totalHops:
+          type: number
+          description: Number of hops recorded on the route.
+        destinationReached:
+          type: boolean
+          description: Whether the traceroute reached the destination host.
+        finalHopLatency:
+          type:
+          - object
+          - 'null'
+          properties: {}
+          additionalProperties: {}
+          description: Latency statistics for the final reached hop.
+        timingPhases:
+          type:
+          - object
+          - 'null'
+          properties: {}
+          additionalProperties: {}
+          description: Timing phases for the run.
+        requestError:
+          type:
+          - string
+          - 'null'
+          description: Describes if an error occurred on the request.
+        request:
+          type:
+          - object
+          - 'null'
+          properties: {}
+          additionalProperties: {}
+          description: The traceroute request that was executed.
+        assertions:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/CheckResultFreeformObject'
+          description: Assertions evaluated for the run.
+        response:
+          type:
+          - object
+          - 'null'
+          properties:
+            hostname:
+              type: string
+            resolvedIp:
+              type: string
+            totalHops:
+              type: number
+            destinationReached:
+              type: boolean
+            truncationReason:
+              type: string
+              description: Why the route was truncated, if it was.
+            finalHopLatency:
+              allOf:
+              - $ref: '#/components/schemas/CheckResultFreeformObject'
+              - {}
+            hops:
+              type:
+              - array
+              - 'null'
+              items:
+                $ref: '#/components/schemas/CheckResultFreeformObject'
+            protocol:
+              type: string
+            probeProtocol:
+              type: string
+          description: The detailed traceroute response artifact.
+      description: Failure-debug diagnostics for a traceroute check.
+    CheckResultPlaywrightTraceFile:
+      type: object
+      properties:
+        url:
+          type: string
+        name:
+          type: string
+        filename:
+          type: string
+      additionalProperties: {}
+    AgenticAssertion:
+      type: object
+      properties:
+        condition:
+          type: string
+          description: Human-readable condition the agent evaluated.
+        passed:
+          type: boolean
+          description: Whether the assertion passed.
+        actual:
+          type: string
+          description: What the agent actually observed.
+        expected:
+          type: string
+          description: What the assertion required.
   securitySchemes:
-    bearerAuth:
+    Bearer:
       type: http
       scheme: bearer
-      description: API Key authentication for Checkly API. You can get your API key at https://app.checklyhq.com/settings/user/api-keys
-    accountId:
-      type: apiKey
-      in: header
-      name: X-Checkly-Account
-      description: Your Checkly account ID. You can find it at https://app.checklyhq.com/settings/account/general
+      bearerFormat: Bearer
+      description: 'The Checkly Public API uses API keys to authenticate requests. You can get the API Key <a href="https://app.checklyhq.com/settings/user/api-keys" target="_blank">here</a>.</br>Your API key is like a password: <br>keep it secure!</br></br>Authentication to the API is performed using the Bearer auth method in the Authorization header and using the account ID.</br></br>For example, set <b>Authorization</b> header while using cURL: <code>curl -H "Authorization: Bearer [apiKey]" "X-Checkly-Account: [accountId]"</code></br>'
