@@ -235,6 +235,8 @@ apis:
   humanURL: https://www.checklyhq.com
   baseURL: https://api.checklyhq.com
   tags:
+  - Clientcertificates
+  tags_raw:
   - Client certificates
   properties:
   - type: OpenAPI
@@ -255,6 +257,8 @@ apis:
   humanURL: https://www.checklyhq.com
   baseURL: https://api.checklyhq.com
   tags:
+  - Environment Variables
+  tags_raw:
   - Environment variables
   properties:
   - type: OpenAPI
@@ -450,6 +454,8 @@ apis:
   humanURL: https://www.checklyhq.com
   baseURL: https://api.checklyhq.com
   tags:
+  - Subscription
+  tags_raw:
   - Subscriptions
   properties:
   - type: OpenAPI
