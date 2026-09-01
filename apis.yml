@@ -492,6 +492,9 @@ apis:
   - type: OpenAPI
     url: openapi/checkly-triggers-api-openapi.yml
 common:
+  - type: License
+    name: Apache-2.0
+    url: https://github.com/checkly/checkly-cli/blob/main/LICENSE
   - type: AgenticAccess
     url: agentic-access/checkly-agentic-access.yml
   - type: TrustCenter
