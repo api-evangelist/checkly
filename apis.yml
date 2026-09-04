@@ -492,6 +492,9 @@ apis:
   - type: OpenAPI
     url: openapi/checkly-triggers-api-openapi.yml
 common:
+  - type: CapabilityMap
+    url: capabilities/checkly-capability-edges.yml
+    name: Checkly Business Capability Map
   - type: License
     name: Apache-2.0
     url: https://github.com/checkly/checkly-cli/blob/main/LICENSE
