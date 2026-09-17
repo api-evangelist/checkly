@@ -229,18 +229,6 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/checkly-check-status-api-openapi.yml
-- aid: checkly:checkly-client-certificates-api
-  name: Checkly Client certificates API
-  description: The Client certificates API from Checkly — 4 operation(s) for client certificates.
-  humanURL: https://www.checklyhq.com
-  baseURL: https://api.checklyhq.com
-  tags:
-  - Clientcertificates
-  tags_raw:
-  - Client certificates
-  properties:
-  - type: OpenAPI
-    url: openapi/checkly-client-certificates-api-openapi.yml
 - aid: checkly:checkly-deployment-triggers-api
   name: Checkly Deployment Triggers API
   description: The Deployment Triggers API from Checkly — 2 operation(s) for deployment triggers.
@@ -491,6 +479,16 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/checkly-triggers-api-openapi.yml
+- aid: checkly:checkly-clientcertificates-api
+  name: Checkly Clientcertificates API
+  description: The Clientcertificates API from Checkly — 2 operation(s) for clientcertificates.
+  humanURL: https://www.checklyhq.com
+  baseURL: https://api.checklyhq.com
+  tags:
+  - Clientcertificates
+  properties:
+  - type: OpenAPI
+    url: openapi/checkly-clientcertificates-api-openapi.yml
 common:
   - type: CapabilityMap
     url: capabilities/checkly-capability-edges.yml
