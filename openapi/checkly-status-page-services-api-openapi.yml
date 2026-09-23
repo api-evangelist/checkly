@@ -2,7 +2,9 @@ openapi: 3.2.0
 info:
   title: Checkly Public Status Page Services API
   version: v1
-  description: These are the docs for the newly released Checkly Public API.<br />If you have any questions, please do not hesitate to get in touch with us.
+  description: 'These are the docs for the newly released Checkly Public API.
+
+    If you have any questions, please do not hesitate to get in touch with us.'
 servers:
 - url: https://api.checklyhq.com
 security:
@@ -287,16 +289,6 @@ paths:
       deprecated: true
 components:
   schemas:
-    attributes:
-      type: object
-    error:
-      type: string
-      enum:
-      - Unauthorized
-    ServiceList:
-      type: array
-      items:
-        $ref: '#/components/schemas/StatusPageV2Service'
     ForbiddenError:
       type: object
       properties:
@@ -312,24 +304,35 @@ components:
       required:
       - statusCode
       - error
-    ServicesPaginatedResponse:
-      type: object
-      properties:
-        length:
-          type: integer
-        entries:
-          $ref: '#/components/schemas/ServiceList'
-        nextId:
-          type:
-          - string
-          - 'null'
-      required:
-      - length
-      - entries
-    Model4:
+    Model2:
       type: string
       enum:
-      - Not Found
+      - Too Many Requests
+    ServiceList:
+      type: array
+      items:
+        $ref: '#/components/schemas/StatusPageV2Service'
+    UnauthorizedError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 401
+        error:
+          $ref: '#/components/schemas/error'
+        message:
+          type: string
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    error:
+      type: string
+      enum:
+      - Unauthorized
     CreateOrUpdateService:
       type: object
       properties:
@@ -354,14 +357,23 @@ components:
       required:
       - statusCode
       - error
-    Model1:
-      type: string
-      enum:
-      - Forbidden
-    Model2:
-      type: string
-      enum:
-      - Too Many Requests
+    attributes:
+      type: object
+    NotFoundError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 404
+        error:
+          $ref: '#/components/schemas/Model4'
+        message:
+          type: string
+          example: Not Found
+      required:
+      - statusCode
+      - error
     StatusPageV2Service:
       type: object
       properties:
@@ -388,38 +400,28 @@ components:
       - id
       - accountId
       - created_at
-    UnauthorizedError:
+    Model4:
+      type: string
+      enum:
+      - Not Found
+    Model1:
+      type: string
+      enum:
+      - Forbidden
+    ServicesPaginatedResponse:
       type: object
       properties:
-        statusCode:
-          type: number
-          enum:
-          - 401
-        error:
-          $ref: '#/components/schemas/error'
-        message:
-          type: string
-          example: Bad Token
-        attributes:
-          $ref: '#/components/schemas/attributes'
+        length:
+          type: integer
+        entries:
+          $ref: '#/components/schemas/ServiceList'
+        nextId:
+          type:
+          - string
+          - 'null'
       required:
-      - statusCode
-      - error
-    NotFoundError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 404
-        error:
-          $ref: '#/components/schemas/Model4'
-        message:
-          type: string
-          example: Not Found
-      required:
-      - statusCode
-      - error
+      - length
+      - entries
   securitySchemes:
     Bearer:
       type: http

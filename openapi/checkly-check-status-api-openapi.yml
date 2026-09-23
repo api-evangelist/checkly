@@ -2,7 +2,9 @@ openapi: 3.2.0
 info:
   title: Checkly Public Check status API
   version: v1
-  description: These are the docs for the newly released Checkly Public API.<br />If you have any questions, please do not hesitate to get in touch with us.
+  description: 'These are the docs for the newly released Checkly Public API.
+
+    If you have any questions, please do not hesitate to get in touch with us.'
 servers:
 - url: https://api.checklyhq.com
 security:
@@ -115,12 +117,6 @@ paths:
         in: header
 components:
   schemas:
-    attributes:
-      type: object
-    error:
-      type: string
-      enum:
-      - Unauthorized
     ForbiddenError:
       type: object
       properties:
@@ -136,10 +132,6 @@ components:
       required:
       - statusCode
       - error
-    Model4:
-      type: string
-      enum:
-      - Not Found
     CheckStatus:
       type:
       - object
@@ -205,31 +197,6 @@ components:
           format: date-time
       required:
       - name
-    CheckStatusList:
-      type: array
-      items:
-        $ref: '#/components/schemas/CheckStatus'
-    TooManyRequestsError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 429
-        error:
-          $ref: '#/components/schemas/Model2'
-        message:
-          type: string
-          example: Too Many Requests
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    Model1:
-      type: string
-      enum:
-      - Forbidden
     Model2:
       type: string
       enum:
@@ -251,6 +218,29 @@ components:
       required:
       - statusCode
       - error
+    error:
+      type: string
+      enum:
+      - Unauthorized
+    TooManyRequestsError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    attributes:
+      type: object
     NotFoundError:
       type: object
       properties:
@@ -266,6 +256,18 @@ components:
       required:
       - statusCode
       - error
+    Model4:
+      type: string
+      enum:
+      - Not Found
+    Model1:
+      type: string
+      enum:
+      - Forbidden
+    CheckStatusList:
+      type: array
+      items:
+        $ref: '#/components/schemas/CheckStatus'
   securitySchemes:
     Bearer:
       type: http

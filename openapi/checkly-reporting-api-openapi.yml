@@ -2,7 +2,9 @@ openapi: 3.2.0
 info:
   title: Checkly Public Reporting API
   version: v1
-  description: These are the docs for the newly released Checkly Public API.<br />If you have any questions, please do not hesitate to get in touch with us.
+  description: 'These are the docs for the newly released Checkly Public API.
+
+    If you have any questions, please do not hesitate to get in touch with us.'
 servers:
 - url: https://api.checklyhq.com
 security:
@@ -12,7 +14,7 @@ tags:
 paths:
   /v1/reporting:
     get:
-      summary: Generates a report with aggregate statistics for checks and check groups.
+      summary: Generates a report with aggregate statistics for checks and check groups
       operationId: getV1Reporting
       description: Generates a report with aggregated statistics for all checks or a filtered set of checks over a specified time window.
       parameters:
@@ -122,19 +124,6 @@ paths:
                 $ref: '#/components/schemas/TooManyRequestsError'
 components:
   schemas:
-    attributes:
-      type: object
-    error:
-      type: string
-      enum:
-      - Unauthorized
-    ReportingTagList:
-      type: array
-      description: Check tags.
-      example:
-      - production
-      items:
-        type: string
     ForbiddenError:
       type: object
       properties:
@@ -150,41 +139,17 @@ components:
       required:
       - statusCode
       - error
-    Reporting:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Check name.
-          example: API Check
-        checkId:
-          type: string
-          description: Check ID.
-          example: d2881e09-411b-4c8d-84b8-fe05fbca80b6
-        checkType:
-          type: string
-          description: Check type.
-          example: API
-        deactivated:
-          type: boolean
-          description: Check deactivated.
-          default: false
-        tags:
-          $ref: '#/components/schemas/ReportingTagList'
-        aggregate:
-          $ref: '#/components/schemas/ReportingAggregate'
-        aggregates:
-          $ref: '#/components/schemas/ReportingBucketAggregateList'
-      required:
-      - name
-      - checkId
-      - checkType
-      - deactivated
-      - tags
-    ReportingList:
+    ReportingTagList:
       type: array
+      description: Check tags.
+      example:
+      - production
       items:
-        $ref: '#/components/schemas/Reporting'
+        type: string
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
     UnauthorizedError:
       type: object
       properties:
@@ -202,14 +167,10 @@ components:
       required:
       - statusCode
       - error
-    Model1:
+    error:
       type: string
       enum:
-      - Forbidden
-    Model2:
-      type: string
-      enum:
-      - Too Many Requests
+      - Unauthorized
     ReportingAggregate:
       type: object
       description: Whole-window aggregate. Absent when "granularity" is used.
@@ -239,11 +200,27 @@ components:
       - avg
       - p95
       - p99
-    ReportingBucketAggregateList:
+    ReportingList:
       type: array
-      description: Per-bucket aggregates, ascending by bucket start. Only present when "granularity" is used. Buckets without any check runs are omitted.
       items:
-        $ref: '#/components/schemas/ReportingBucketAggregate'
+        $ref: '#/components/schemas/Reporting'
+    TooManyRequestsError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
     ReportingBucketAggregate:
       type: object
       properties:
@@ -286,23 +263,48 @@ components:
       - p99
       - from
       - to
-    TooManyRequestsError:
+    attributes:
+      type: object
+    Reporting:
       type: object
       properties:
-        statusCode:
-          type: number
-          enum:
-          - 429
-        error:
-          $ref: '#/components/schemas/Model2'
-        message:
+        name:
           type: string
-          example: Too Many Requests
-        attributes:
-          $ref: '#/components/schemas/attributes'
+          description: Check name.
+          example: API Check
+        checkId:
+          type: string
+          description: Check ID.
+          example: d2881e09-411b-4c8d-84b8-fe05fbca80b6
+        checkType:
+          type: string
+          description: Check type.
+          example: API
+        deactivated:
+          type: boolean
+          description: Check deactivated.
+          default: false
+        tags:
+          $ref: '#/components/schemas/ReportingTagList'
+        aggregate:
+          $ref: '#/components/schemas/ReportingAggregate'
+        aggregates:
+          $ref: '#/components/schemas/ReportingBucketAggregateList'
       required:
-      - statusCode
-      - error
+      - name
+      - checkId
+      - checkType
+      - deactivated
+      - tags
+    ReportingBucketAggregateList:
+      type: array
+      description: Per-bucket aggregates, ascending by bucket start. Only present when "granularity" is used. Buckets without any check runs are omitted.
+      items:
+        $ref: '#/components/schemas/ReportingBucketAggregate'
+    Model1:
+      type: string
+      enum:
+      - Forbidden
   securitySchemes:
     Bearer:
       type: http

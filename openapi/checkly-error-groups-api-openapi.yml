@@ -2,7 +2,9 @@ openapi: 3.2.0
 info:
   title: Checkly Public Error Groups API
   version: v1
-  description: These are the docs for the newly released Checkly Public API.<br />If you have any questions, please do not hesitate to get in touch with us.
+  description: 'These are the docs for the newly released Checkly Public API.
+
+    If you have any questions, please do not hesitate to get in touch with us.'
 servers:
 - url: https://api.checklyhq.com
 security:
@@ -12,7 +14,7 @@ tags:
 paths:
   /v1/error-groups:
     get:
-      summary: List all error groups in your account.
+      summary: List all error groups in your account
       operationId: getV1Errorgroups
       description: List all error groups in your account.
       parameters:
@@ -71,7 +73,7 @@ paths:
                 $ref: '#/components/schemas/TooManyRequestsError'
   /v1/error-groups/checks/{checkId}:
     get:
-      summary: List all error groups for a specific check.
+      summary: List all error groups for a specific check
       operationId: getV1ErrorgroupsChecksCheckid
       description: List all error groups for a specific check.
       parameters:
@@ -137,7 +139,7 @@ paths:
                 $ref: '#/components/schemas/TooManyRequestsError'
   /v1/error-groups/{id}:
     get:
-      summary: Retrieve one error group.
+      summary: Retrieve one error group
       operationId: getV1ErrorgroupsId
       description: Retrieve one error group.
       parameters:
@@ -190,7 +192,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/TooManyRequestsError'
     patch:
-      summary: Update an error group. Mainly used for archiving error groups.
+      summary: Update an error group. Mainly used for archiving error groups
       operationId: patchV1ErrorgroupsId
       description: Update an error group. Mainly used for archiving error groups.
       parameters:
@@ -249,8 +251,42 @@ paths:
                 $ref: '#/components/schemas/TooManyRequestsError'
 components:
   schemas:
-    attributes:
+    ForbiddenError:
       type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 403
+        error:
+          $ref: '#/components/schemas/Model1'
+        message:
+          type: string
+          example: Forbidden
+      required:
+      - statusCode
+      - error
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
+    UnauthorizedError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 401
+        error:
+          $ref: '#/components/schemas/error'
+        message:
+          type: string
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
     error:
       type: string
       enum:
@@ -292,33 +328,6 @@ components:
       - firstSeen
       - lastSeen
       - archivedUntilNextEvent
-    ErrorGroupsList:
-      type: array
-      items:
-        $ref: '#/components/schemas/Model40'
-    ForbiddenError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 403
-        error:
-          $ref: '#/components/schemas/Model1'
-        message:
-          type: string
-          example: Forbidden
-      required:
-      - statusCode
-      - error
-    Model4:
-      type: string
-      enum:
-      - Not Found
-    rootCauseAnalyses:
-      type: array
-      items:
-        $ref: '#/components/schemas/attributes'
     TooManyRequestsError:
       type: object
       properties:
@@ -333,6 +342,34 @@ components:
           example: Too Many Requests
         attributes:
           $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    ErrorGroupPatch:
+      type: object
+      properties:
+        archiveForEver:
+          type: boolean
+        archivedUntilNextEvent:
+          type: boolean
+    attributes:
+      type: object
+    rootCauseAnalyses:
+      type: array
+      items:
+        $ref: '#/components/schemas/attributes'
+    NotFoundError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 404
+        error:
+          $ref: '#/components/schemas/Model4'
+        message:
+          type: string
+          example: Not Found
       required:
       - statusCode
       - error
@@ -373,53 +410,18 @@ components:
       - firstSeen
       - lastSeen
       - archivedUntilNextEvent
+    Model4:
+      type: string
+      enum:
+      - Not Found
     Model1:
       type: string
       enum:
       - Forbidden
-    Model2:
-      type: string
-      enum:
-      - Too Many Requests
-    UnauthorizedError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 401
-        error:
-          $ref: '#/components/schemas/error'
-        message:
-          type: string
-          example: Bad Token
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    ErrorGroupPatch:
-      type: object
-      properties:
-        archiveForEver:
-          type: boolean
-        archivedUntilNextEvent:
-          type: boolean
-    NotFoundError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 404
-        error:
-          $ref: '#/components/schemas/Model4'
-        message:
-          type: string
-          example: Not Found
-      required:
-      - statusCode
-      - error
+    ErrorGroupsList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Model40'
   securitySchemes:
     Bearer:
       type: http

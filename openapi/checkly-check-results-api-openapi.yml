@@ -2,7 +2,9 @@ openapi: 3.2.0
 info:
   title: Checkly Public Check results API
   version: v1
-  description: These are the docs for the newly released Checkly Public API.<br />If you have any questions, please do not hesitate to get in touch with us.
+  description: 'These are the docs for the newly released Checkly Public API.
+
+    If you have any questions, please do not hesitate to get in touch with us.'
 servers:
 - url: https://api.checklyhq.com
 security:
@@ -14,7 +16,18 @@ paths:
     get:
       summary: Lists all check results
       operationId: getV1CheckresultsCheckid
-      description: <b>[DEPRECATED] This endpoint will be removed soon. Please use the <code>GET /v2/check-results/{checkId}</code> endpoint instead.</b><br>Lists the full, raw check results for a specific check. We keep raw results for 30 days. After 30 days they are erased. However, we keep the rolled up results for an indefinite period.<br><br>You can filter by check type and result type to narrow down the list. Use the `to` and `from` parameters to specify a date range (UNIX timestamp in seconds). Depending on the check type, some fields might be null.<br><br>This endpoint will return data within a 6-hour timeframe. If the `from` and `to` params are set, they must be at most six hours apart. If none are set, we will consider the `to` param to be now and the `from` param to be six hours earlier. If only the `to` param is set we will set `from` to be six hours earlier. On the contrary, if only the `from` param is set we will consider the `to` param to be six hours later.<br><br><b>Rate-limiting is applied to this endpoint, you can send 60 requests / 60 seconds at most.<b>
+      description: '[DEPRECATED] This endpoint will be removed soon. Please use the GET /v2/check-results/{checkId} endpoint instead.
+
+        Lists the full, raw check results for a specific check. We keep raw results for 30 days. After 30 days they are erased. However, we keep the rolled up results for an indefinite period.
+
+
+        You can filter by check type and result type to narrow down the list. Use the `to` and `from` parameters to specify a date range (UNIX timestamp in seconds). Depending on the check type, some fields might be null.
+
+
+        This endpoint will return data within a 6-hour timeframe. If the `from` and `to` params are set, they must be at most six hours apart. If none are set, we will consider the `to` param to be now and the `from` param to be six hours earlier. If only the `to` param is set we will set `from` to be six hours earlier. On the contrary, if only the `from` param is set we will consider the `to` param to be six hours later.
+
+
+        Rate-limiting is applied to this endpoint, you can send 60 requests / 60 seconds at most.'
       tags:
       - Check results
       responses:
@@ -339,7 +352,13 @@ paths:
     get:
       summary: Lists all check results
       operationId: getV2CheckresultsCheckid
-      description: Lists the full, raw check results for a specific check. We keep raw results for 30 days. After 30 days they are erased. However, we keep the rolled up results for an indefinite period.<br><br>You can filter by check type and result type to narrow down the list. Use the `to` and `from` parameters to specify a date range (UNIX timestamp in seconds). Depending on the check type, some fields might be null.<br><br><b>Rate-limiting is applied to this endpoint, you can send 60 requests / 60 seconds at most.<b>
+      description: 'Lists the full, raw check results for a specific check. We keep raw results for 30 days. After 30 days they are erased. However, we keep the rolled up results for an indefinite period.
+
+
+        You can filter by check type and result type to narrow down the list. Use the `to` and `from` parameters to specify a date range (UNIX timestamp in seconds). Depending on the check type, some fields might be null.
+
+
+        Rate-limiting is applied to this endpoint, you can send 60 requests / 60 seconds at most.'
       tags:
       - Check results
       responses:
@@ -536,6 +555,201 @@ paths:
         in: header
 components:
   schemas:
+    AgenticAssertion:
+      type: object
+      properties:
+        condition:
+          type: string
+          description: Human-readable condition the agent evaluated.
+        passed:
+          type: boolean
+          description: Whether the assertion passed.
+        actual:
+          type: string
+          description: What the agent actually observed.
+        expected:
+          type: string
+          description: What the assertion required.
+    ApiError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+        error:
+          type: string
+        message:
+          type: string
+      required:
+      - statusCode
+      - error
+      - message
+    CheckResultFreeformObject:
+      type: object
+      properties: {}
+      additionalProperties: {}
+    CheckResultListEntry:
+      anyOf:
+      - $ref: '#/components/schemas/CheckResult'
+      - $ref: '#/components/schemas/CheckResultProjection'
+    CheckResultPlaywrightTraceFile:
+      type: object
+      properties:
+        url:
+          type: string
+        name:
+          type: string
+        filename:
+          type: string
+      additionalProperties: {}
+    CheckResultGrpc:
+      type:
+      - object
+      - 'null'
+      properties:
+        grpcStatusCode:
+          type: number
+          description: The gRPC status code of the call.
+        healthStatus:
+          type:
+          - number
+          - 'null'
+          description: The numeric serving status returned by the gRPC health probe.
+        timingPhases:
+          type:
+          - object
+          - 'null'
+          properties: {}
+          additionalProperties: {}
+          description: Timing phases for the run.
+        requestError:
+          type:
+          - string
+          - 'null'
+          description: Describes if an error occurred on the request.
+        request:
+          type:
+          - object
+          - 'null'
+          properties: {}
+          additionalProperties: {}
+          description: The gRPC request that was executed.
+        assertions:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/CheckResultFreeformObject'
+          description: Assertions evaluated for the run.
+        response:
+          type:
+          - object
+          - 'null'
+          properties:
+            grpcMode:
+              type: string
+            host:
+              type: string
+            resolvedIp:
+              type: string
+            port:
+              type: number
+            grpcMethod:
+              type: string
+            responseMessage:
+              type: string
+            grpcStatusCode:
+              type: number
+            grpcStatusMessage:
+              type: string
+            healthStatus:
+              type:
+              - number
+              - 'null'
+            healthStatusLabel:
+              type: string
+            metadata:
+              type:
+              - array
+              - 'null'
+              items:
+                $ref: '#/components/schemas/CheckResultFreeformObject'
+            discoveredMethods:
+              type:
+              - array
+              - 'null'
+              items:
+                type: string
+            requestError:
+              type:
+              - string
+              - 'null'
+            timingPhases:
+              allOf:
+              - $ref: '#/components/schemas/CheckResultFreeformObject'
+              - {}
+          description: The detailed gRPC response artifact.
+      description: Failure-debug diagnostics for a gRPC check.
+    CheckResultList:
+      type: array
+      items:
+        $ref: '#/components/schemas/CheckResult'
+    CheckResultBrowser:
+      type:
+      - object
+      - 'null'
+      properties:
+        type:
+          type: string
+          description: The type of framework the check is using.
+        traceSummary:
+          type: object
+          properties: {}
+          additionalProperties: {}
+          description: The summary of errors in the check run.
+        pages:
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckResultFreeformObject'
+          description: List of pages used on the check run.
+        playwrightTestVideos:
+          type: array
+          items:
+            type: string
+          description: List of Playwright Test videos.
+        errors:
+          type: array
+          items: {}
+          description: List of errors on the check run.
+        endTime:
+          type: number
+          description: End time of the check run.
+        startTime:
+          type: number
+          description: Start time of the check run.
+        runtimeVersion:
+          type: string
+          description: Active runtime version.
+        jobLog:
+          type:
+          - array
+          - 'null'
+          items: {}
+          description: Check run log results.
+        jobAssets:
+          type:
+          - array
+          - 'null'
+          items: {}
+          description: Assets generated from the check run.
+        playwrightTestTraces:
+          type: array
+          items:
+            type: string
+          description: List of Playwright Test traces.
+        playwrightTestJsonReportFile:
+          type: string
+          description: Playwright Test JSON report.
+      description: The response data for a browser check.
     CheckResult:
       type: object
       properties:
@@ -638,59 +852,6 @@ components:
       required:
       - resultType
       - traceId
-    CheckResultPlaywright:
-      type:
-      - object
-      - 'null'
-      properties:
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/CheckResultFreeformObject'
-          default: []
-          description: Per-test Playwright errors recorded during the run.
-        playwrightTraceFiles:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/CheckResultPlaywrightTraceFile'
-          default: []
-          description: Trace file metadata recorded by the runner.
-        jobLog:
-          type:
-          - array
-          - 'null'
-          items: {}
-          description: Check run log results.
-        jobAssets:
-          type:
-          - array
-          - 'null'
-          items: {}
-          description: Assets generated from the check run.
-        playwrightTestVideos:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          description: Signed URLs for Playwright test videos.
-        playwrightTestTraces:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          description: Signed URLs for Playwright test traces.
-        playwrightTestJsonReportFile:
-          type:
-          - string
-          - 'null'
-          description: Signed URL for the Playwright JSON report.
-      description: The response data for a Playwright check.
     CheckResultProjection:
       type: object
       properties:
@@ -793,29 +954,11 @@ components:
         createdAt:
           type: string
           format: date-time
-    CheckResultBrowser:
+    MultiStepResultBrowser:
       type:
       - object
       - 'null'
       properties:
-        type:
-          type: string
-          description: The type of framework the check is using.
-        traceSummary:
-          type: object
-          properties: {}
-          additionalProperties: {}
-          description: The summary of errors in the check run.
-        pages:
-          type: array
-          items:
-            $ref: '#/components/schemas/CheckResultFreeformObject'
-          description: List of pages used on the check run.
-        playwrightTestVideos:
-          type: array
-          items:
-            type: string
-          description: List of Playwright Test videos.
         errors:
           type: array
           items: {}
@@ -849,114 +992,80 @@ components:
         playwrightTestJsonReportFile:
           type: string
           description: Playwright Test JSON report.
-      description: The response data for a browser check.
-    CheckResultListV2:
+      description: The response data for a multi-step check.
+    AssetManifestEntry:
       type: object
       properties:
-        length:
-          type: number
-        entries:
-          type: array
-          items:
-            $ref: '#/components/schemas/CheckResultListEntry'
-        nextId:
-          type:
-          - string
-          - 'null'
-      required:
-      - length
-    CheckResultGrpc:
-      type:
-      - object
-      - 'null'
-      properties:
-        grpcStatusCode:
-          type: number
-          description: The gRPC status code of the call.
-        healthStatus:
-          type:
-          - number
-          - 'null'
-          description: The numeric serving status returned by the gRPC health probe.
-        timingPhases:
-          type:
-          - object
-          - 'null'
-          properties: {}
-          additionalProperties: {}
-          description: Timing phases for the run.
-        requestError:
-          type:
-          - string
-          - 'null'
-          description: Describes if an error occurred on the request.
-        request:
-          type:
-          - object
-          - 'null'
-          properties: {}
-          additionalProperties: {}
-          description: The gRPC request that was executed.
-        assertions:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/CheckResultFreeformObject'
-          description: Assertions evaluated for the run.
-        response:
-          type:
-          - object
-          - 'null'
+        type:
+          type: string
+          enum:
+          - log
+          - trace
+          - video
+          - screenshot
+          - pcap
+          - report
+          - file
+          description: Normalized asset type.
+        name:
+          type: string
+          minLength: 1
+          description: Display/download name for the asset.
+        url:
+          type: string
+          format: uri
+          description: Authenticated API URL for downloading or redirecting to the asset.
+        contentType:
+          type: string
+          minLength: 1
+          description: Best-effort content type inferred from the asset metadata.
+        source:
+          type: object
           properties:
-            grpcMode:
+            type:
               type: string
-            host:
+              enum:
+              - check-result
+              - test-session-result
+              description: Result endpoint scope that produced this asset entry.
+            checkId:
               type: string
-            resolvedIp:
+              format: uuid
+              description: Check ID associated with this asset.
+            checkName:
               type: string
-            port:
-              type: number
-            grpcMethod:
+              minLength: 1
+              description: Check name associated with this asset.
+            checkType:
               type: string
-            responseMessage:
+              minLength: 1
+              description: Check type associated with this asset.
+            resultId:
               type: string
-            grpcStatusCode:
-              type: number
-            grpcStatusMessage:
+              format: uuid
+              description: Result ID associated with this asset.
+            testSessionId:
               type: string
-            healthStatus:
-              type:
-              - number
-              - 'null'
-            healthStatusLabel:
+              format: uuid
+              description: Test session ID associated with this asset.
+          required:
+          - type
+          description: Stable source identifiers for correlating the asset to checks and results.
+        archive:
+          type: object
+          properties:
+            entryName:
               type: string
-            metadata:
-              type:
-              - array
-              - 'null'
-              items:
-                $ref: '#/components/schemas/CheckResultFreeformObject'
-            discoveredMethods:
-              type:
-              - array
-              - 'null'
-              items:
-                type: string
-            requestError:
-              type:
-              - string
-              - 'null'
-            timingPhases:
-              allOf:
-              - $ref: '#/components/schemas/CheckResultFreeformObject'
-              - {}
-          description: The detailed gRPC response artifact.
-      description: Failure-debug diagnostics for a gRPC check.
-    CheckResultFreeformObject:
-      type: object
-      properties: {}
-      additionalProperties: {}
+              minLength: 1
+              description: File path inside the downloadable archive.
+          required:
+          - entryName
+          description: Present when the asset is an entry inside a ZIP archive.
+      required:
+      - type
+      - name
+      - url
+      - source
     AgenticSuggestion:
       type: object
       properties:
@@ -981,10 +1090,6 @@ components:
           - endpoint
           - configuration
           description: Category of the suggestion.
-    CheckResultList:
-      type: array
-      items:
-        $ref: '#/components/schemas/CheckResult'
     CheckResultAPI:
       type:
       - object
@@ -1063,58 +1168,6 @@ components:
           - 'null'
           description: Packet capture data if available as redirect/download URL.
       description: The response data for an API check.
-    ApiError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-        error:
-          type: string
-        message:
-          type: string
-      required:
-      - statusCode
-      - error
-      - message
-    MultiStepResultBrowser:
-      type:
-      - object
-      - 'null'
-      properties:
-        errors:
-          type: array
-          items: {}
-          description: List of errors on the check run.
-        endTime:
-          type: number
-          description: End time of the check run.
-        startTime:
-          type: number
-          description: Start time of the check run.
-        runtimeVersion:
-          type: string
-          description: Active runtime version.
-        jobLog:
-          type:
-          - array
-          - 'null'
-          items: {}
-          description: Check run log results.
-        jobAssets:
-          type:
-          - array
-          - 'null'
-          items: {}
-          description: Assets generated from the check run.
-        playwrightTestTraces:
-          type: array
-          items:
-            type: string
-          description: List of Playwright Test traces.
-        playwrightTestJsonReportFile:
-          type: string
-          description: Playwright Test JSON report.
-      description: The response data for a multi-step check.
     CheckResultAgentic:
       type:
       - object
@@ -1170,6 +1223,198 @@ components:
           additionalProperties: {}
           description: Map of artifact file paths to descriptions.
       description: The response data for an agentic check.
+    AgenticStep:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - tool_call
+          - tool_result
+          - message
+          description: Kind of step emitted by the agent.
+        name:
+          type: string
+          description: Name of the tool invoked.
+        input:
+          type: object
+          properties: {}
+          additionalProperties: {}
+          description: Input passed to the tool, when applicable.
+        output:
+          type: string
+          description: Output text or message body.
+        timestamp:
+          type: string
+          description: ISO timestamp when the step was emitted.
+        sequenceNumber:
+          type: integer
+          description: Monotonic sequence number within a run.
+    CheckResultPlaywright:
+      type:
+      - object
+      - 'null'
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/CheckResultFreeformObject'
+          default: []
+          description: Per-test Playwright errors recorded during the run.
+        playwrightTraceFiles:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/CheckResultPlaywrightTraceFile'
+          default: []
+          description: Trace file metadata recorded by the runner.
+        jobLog:
+          type:
+          - array
+          - 'null'
+          items: {}
+          description: Check run log results.
+        jobAssets:
+          type:
+          - array
+          - 'null'
+          items: {}
+          description: Assets generated from the check run.
+        playwrightTestVideos:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: Signed URLs for Playwright test videos.
+        playwrightTestTraces:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: Signed URLs for Playwright test traces.
+        playwrightTestJsonReportFile:
+          type:
+          - string
+          - 'null'
+          description: Signed URL for the Playwright JSON report.
+      description: The response data for a Playwright check.
+    CheckResultTraceroute:
+      type:
+      - object
+      - 'null'
+      properties:
+        totalHops:
+          type: number
+          description: Number of hops recorded on the route.
+        destinationReached:
+          type: boolean
+          description: Whether the traceroute reached the destination host.
+        finalHopLatency:
+          type:
+          - object
+          - 'null'
+          properties: {}
+          additionalProperties: {}
+          description: Latency statistics for the final reached hop.
+        timingPhases:
+          type:
+          - object
+          - 'null'
+          properties: {}
+          additionalProperties: {}
+          description: Timing phases for the run.
+        requestError:
+          type:
+          - string
+          - 'null'
+          description: Describes if an error occurred on the request.
+        request:
+          type:
+          - object
+          - 'null'
+          properties: {}
+          additionalProperties: {}
+          description: The traceroute request that was executed.
+        assertions:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/CheckResultFreeformObject'
+          description: Assertions evaluated for the run.
+        response:
+          type:
+          - object
+          - 'null'
+          properties:
+            hostname:
+              type: string
+            resolvedIp:
+              type: string
+            totalHops:
+              type: number
+            destinationReached:
+              type: boolean
+            truncationReason:
+              type: string
+              description: Why the route was truncated, if it was.
+            finalHopLatency:
+              allOf:
+              - $ref: '#/components/schemas/CheckResultFreeformObject'
+              - {}
+            hops:
+              type:
+              - array
+              - 'null'
+              items:
+                $ref: '#/components/schemas/CheckResultFreeformObject'
+            protocol:
+              type: string
+            probeProtocol:
+              type: string
+          description: The detailed traceroute response artifact.
+      description: Failure-debug diagnostics for a traceroute check.
+    AssetManifest:
+      type: object
+      properties:
+        assets:
+          type: array
+          items:
+            $ref: '#/components/schemas/AssetManifestEntry'
+          description: Normalized assets for the result.
+        truncated:
+          type: boolean
+          description: Whether the manifest omitted entries because the stored archive entry list exceeded the endpoint cap.
+        entriesReturned:
+          type: integer
+          minimum: 0
+          description: Number of archive entries represented in the response when the manifest is truncated.
+        entriesTotal:
+          type: integer
+          minimum: 0
+          description: Total number of manifestable archive entries found in storage when the manifest is truncated.
+      required:
+      - assets
+    CheckResultListV2:
+      type: object
+      properties:
+        length:
+          type: number
+        entries:
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckResultListEntry'
+        nextId:
+          type:
+          - string
+          - 'null'
+      required:
+      - length
     CheckResultSsl:
       type:
       - object
@@ -1276,232 +1521,6 @@ components:
                 $ref: '#/components/schemas/CheckResultFreeformObject'
           description: The detailed SSL/TLS response artifact.
       description: Failure-debug diagnostics for an SSL check.
-    AssetManifestEntry:
-      type: object
-      properties:
-        type:
-          type: string
-          enum:
-          - log
-          - trace
-          - video
-          - screenshot
-          - pcap
-          - report
-          - file
-          description: Normalized asset type.
-        name:
-          type: string
-          minLength: 1
-          description: Display/download name for the asset.
-        url:
-          type: string
-          format: uri
-          description: Authenticated API URL for downloading or redirecting to the asset.
-        contentType:
-          type: string
-          minLength: 1
-          description: Best-effort content type inferred from the asset metadata.
-        source:
-          type: object
-          properties:
-            type:
-              type: string
-              enum:
-              - check-result
-              - test-session-result
-              description: Result endpoint scope that produced this asset entry.
-            checkId:
-              type: string
-              format: uuid
-              description: Check ID associated with this asset.
-            checkName:
-              type: string
-              minLength: 1
-              description: Check name associated with this asset.
-            checkType:
-              type: string
-              minLength: 1
-              description: Check type associated with this asset.
-            resultId:
-              type: string
-              format: uuid
-              description: Result ID associated with this asset.
-            testSessionId:
-              type: string
-              format: uuid
-              description: Test session ID associated with this asset.
-          required:
-          - type
-          description: Stable source identifiers for correlating the asset to checks and results.
-        archive:
-          type: object
-          properties:
-            entryName:
-              type: string
-              minLength: 1
-              description: File path inside the downloadable archive.
-          required:
-          - entryName
-          description: Present when the asset is an entry inside a ZIP archive.
-      required:
-      - type
-      - name
-      - url
-      - source
-    AgenticStep:
-      type: object
-      properties:
-        type:
-          type: string
-          enum:
-          - tool_call
-          - tool_result
-          - message
-          description: Kind of step emitted by the agent.
-        name:
-          type: string
-          description: Name of the tool invoked.
-        input:
-          type: object
-          properties: {}
-          additionalProperties: {}
-          description: Input passed to the tool, when applicable.
-        output:
-          type: string
-          description: Output text or message body.
-        timestamp:
-          type: string
-          description: ISO timestamp when the step was emitted.
-        sequenceNumber:
-          type: integer
-          description: Monotonic sequence number within a run.
-    CheckResultListEntry:
-      anyOf:
-      - $ref: '#/components/schemas/CheckResult'
-      - $ref: '#/components/schemas/CheckResultProjection'
-    AssetManifest:
-      type: object
-      properties:
-        assets:
-          type: array
-          items:
-            $ref: '#/components/schemas/AssetManifestEntry'
-          description: Normalized assets for the result.
-        truncated:
-          type: boolean
-          description: Whether the manifest omitted entries because the stored archive entry list exceeded the endpoint cap.
-        entriesReturned:
-          type: integer
-          minimum: 0
-          description: Number of archive entries represented in the response when the manifest is truncated.
-        entriesTotal:
-          type: integer
-          minimum: 0
-          description: Total number of manifestable archive entries found in storage when the manifest is truncated.
-      required:
-      - assets
-    CheckResultTraceroute:
-      type:
-      - object
-      - 'null'
-      properties:
-        totalHops:
-          type: number
-          description: Number of hops recorded on the route.
-        destinationReached:
-          type: boolean
-          description: Whether the traceroute reached the destination host.
-        finalHopLatency:
-          type:
-          - object
-          - 'null'
-          properties: {}
-          additionalProperties: {}
-          description: Latency statistics for the final reached hop.
-        timingPhases:
-          type:
-          - object
-          - 'null'
-          properties: {}
-          additionalProperties: {}
-          description: Timing phases for the run.
-        requestError:
-          type:
-          - string
-          - 'null'
-          description: Describes if an error occurred on the request.
-        request:
-          type:
-          - object
-          - 'null'
-          properties: {}
-          additionalProperties: {}
-          description: The traceroute request that was executed.
-        assertions:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/CheckResultFreeformObject'
-          description: Assertions evaluated for the run.
-        response:
-          type:
-          - object
-          - 'null'
-          properties:
-            hostname:
-              type: string
-            resolvedIp:
-              type: string
-            totalHops:
-              type: number
-            destinationReached:
-              type: boolean
-            truncationReason:
-              type: string
-              description: Why the route was truncated, if it was.
-            finalHopLatency:
-              allOf:
-              - $ref: '#/components/schemas/CheckResultFreeformObject'
-              - {}
-            hops:
-              type:
-              - array
-              - 'null'
-              items:
-                $ref: '#/components/schemas/CheckResultFreeformObject'
-            protocol:
-              type: string
-            probeProtocol:
-              type: string
-          description: The detailed traceroute response artifact.
-      description: Failure-debug diagnostics for a traceroute check.
-    CheckResultPlaywrightTraceFile:
-      type: object
-      properties:
-        url:
-          type: string
-        name:
-          type: string
-        filename:
-          type: string
-      additionalProperties: {}
-    AgenticAssertion:
-      type: object
-      properties:
-        condition:
-          type: string
-          description: Human-readable condition the agent evaluated.
-        passed:
-          type: boolean
-          description: Whether the assertion passed.
-        actual:
-          type: string
-          description: What the agent actually observed.
-        expected:
-          type: string
-          description: What the assertion required.
   securitySchemes:
     Bearer:
       type: http

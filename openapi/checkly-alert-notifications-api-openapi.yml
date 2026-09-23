@@ -2,7 +2,9 @@ openapi: 3.2.0
 info:
   title: Checkly Public Alert notifications API
   version: v1
-  description: These are the docs for the newly released Checkly Public API.<br />If you have any questions, please do not hesitate to get in touch with us.
+  description: 'These are the docs for the newly released Checkly Public API.
+
+    If you have any questions, please do not hesitate to get in touch with us.'
 servers:
 - url: https://api.checklyhq.com
 security:
@@ -14,7 +16,13 @@ paths:
     get:
       summary: Lists all alert notifications
       operationId: getV1Alertnotifications
-      description: Lists the alert notifications that have been sent for your account. You can filter by alert channel ID or limit to only failing notifications.<br><br>Use the `to` and `from` parameters to specify a date range (UNIX timestamp in seconds). This endpoint will return data within a 24-hour timeframe. If the `from` and `to` params are set, they must be at most 24 hours apart. If none are set, we will consider the `to` param to be now and the `from` param to be 24 hours earlier. If only the `to` param is set we will set `from` to be 24 hours earlier. If only the `from` param is set we will consider the `to` param to be 24 hours later.<br><br><b>Rate-limiting is applied to this endpoint, you can send 5 requests / 10 seconds at most.<b>
+      description: 'Lists the alert notifications that have been sent for your account. You can filter by alert channel ID or limit to only failing notifications.
+
+
+        Use the `to` and `from` parameters to specify a date range (UNIX timestamp in seconds). This endpoint will return data within a 24-hour timeframe. If the `from` and `to` params are set, they must be at most 24 hours apart. If none are set, we will consider the `to` param to be now and the `from` param to be 24 hours earlier. If only the `to` param is set we will set `from` to be 24 hours earlier. If only the `from` param is set we will consider the `to` param to be 24 hours later.
+
+
+        Rate-limiting is applied to this endpoint, you can send 5 requests / 10 seconds at most.'
       parameters:
       - name: x-checkly-account
         in: header
@@ -105,16 +113,18 @@ paths:
                 $ref: '#/components/schemas/TooManyRequestsError'
 components:
   schemas:
-    attributes:
-      type: object
-    error:
+    Model5:
       type: string
+      description: The type of alert channel (SMS, Slack, Webhook, etc).
       enum:
-      - Unauthorized
-    AlertNotificationList:
-      type: array
-      items:
-        $ref: '#/components/schemas/AlertNotification'
+      - EMAIL
+      - SLACK
+      - SLACK_APP
+      - WEBHOOK
+      - SMS
+      - PAGERDUTY
+      - OPSGENIE
+      - CALL
     ForbiddenError:
       type: object
       properties:
@@ -147,75 +157,10 @@ components:
       required:
       - statusCode
       - error
-    UnauthorizedError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 401
-        error:
-          $ref: '#/components/schemas/error'
-        message:
-          type: string
-          example: Bad Token
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    Model1:
-      type: string
-      enum:
-      - Forbidden
-    alertConfig:
-      type: object
-      description: The configuration which was used to send the alert.
     Model2:
       type: string
       enum:
       - Too Many Requests
-    status:
-      type: string
-      description: The status of the alert.
-      enum:
-      - IN_PROGRESS
-      - SUCCESS
-      - FAILURE
-      - RATE_LIMITED
-    Model5:
-      type: string
-      description: The type of alert channel (SMS, Slack, Webhook, etc).
-      enum:
-      - EMAIL
-      - SLACK
-      - SLACK_APP
-      - WEBHOOK
-      - SMS
-      - PAGERDUTY
-      - OPSGENIE
-      - CALL
-    TooManyRequestsError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 429
-        error:
-          $ref: '#/components/schemas/Model2'
-        message:
-          type: string
-          example: Too Many Requests
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    Model3:
-      type: string
-      enum:
-      - Payment Required
     checkType:
       type: string
       description: The type of the check.
@@ -233,6 +178,57 @@ components:
       - DNS
       - SSL
       - GRPC
+    UnauthorizedError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 401
+        error:
+          $ref: '#/components/schemas/error'
+        message:
+          type: string
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    AlertNotificationList:
+      type: array
+      items:
+        $ref: '#/components/schemas/AlertNotification'
+    error:
+      type: string
+      enum:
+      - Unauthorized
+    Model3:
+      type: string
+      enum:
+      - Payment Required
+    alertConfig:
+      type: object
+      description: The configuration which was used to send the alert.
+    TooManyRequestsError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    attributes:
+      type: object
     AlertNotification:
       type: object
       properties:
@@ -270,6 +266,18 @@ components:
         checkResultId:
           type: string
           description: The ID of the corresponding check result.
+    status:
+      type: string
+      description: The status of the alert.
+      enum:
+      - IN_PROGRESS
+      - SUCCESS
+      - FAILURE
+      - RATE_LIMITED
+    Model1:
+      type: string
+      enum:
+      - Forbidden
   securitySchemes:
     Bearer:
       type: http

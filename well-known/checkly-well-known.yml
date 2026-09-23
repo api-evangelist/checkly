@@ -1,12 +1,11 @@
-generated: '2026-08-29'
+generated: '2026-09-19'
 method: probed
 source: live HTTP probes of every Checkly host named in apis.yml and in the OpenAPI servers[] block
-description: >-
-  Well-known document probe for Checkly. The five standard paths (security.txt, openid-configuration,
-  oauth-authorization-server, api-catalog, ai-plugin.json) 404 on www, api and app. Checkly instead
-  serves its security.txt from the docs host, and publishes an agent-facing set of well-known
-  documents that are not in the standard five: an MCP server manifest, an MCP server card, an Agent
-  Skills index, and RFC 9728 OAuth protected-resource metadata for its MCP endpoint.
+description: 'Well-known document probe for Checkly. The five standard paths (security.txt, openid-configuration,
+  oauth-authorization-server, api-catalog, ai-plugin.json) 404 on www, api and app. Checkly instead serves
+  its security.txt from the docs host, and publishes an agent-facing set of well-known documents that
+  are not in the standard five: an MCP server manifest, an MCP server card, an Agent Skills index, and
+  RFC 9728 OAuth protected-resource metadata for its MCP endpoint.'
 hosts:
 - host: www.checklyhq.com
   documents:
@@ -55,26 +54,35 @@ hosts:
   - path: /.well-known/oauth-protected-resource
     status: 200
     file: checkly-oauth-protected-resource.json
-    note: >-
-      RFC 9728 protected-resource metadata for the MCP endpoint. Declares 14 checkly:* scopes and
+    note: RFC 9728 protected-resource metadata for the MCP endpoint. Declares 14 checkly:* scopes and
       names https://auth.checklyhq.com/ as the authorization server.
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    file: checkly-api-oauth-protected-resource.json
+    bytes: 595
+  path_echo_control: passed
 - host: auth.checklyhq.com
   documents:
   - path: /.well-known/oauth-authorization-server
     status: 200
     file: checkly-oauth-authorization-server.json
-    note: RFC 8414 authorization-server metadata (Auth0-hosted), including a dynamic client registration endpoint.
+    note: RFC 8414 authorization-server metadata (Auth0-hosted), including a dynamic client registration
+      endpoint.
   - path: /.well-known/openid-configuration
     status: 200
     file: checkly-openid-configuration.json
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: checkly-auth-oauth-authorization-server.json
+    bytes: 2680
+  path_echo_control: passed
 - host: developers.checklyhq.com
   documents:
   - path: /.well-known/security.txt
     status: 200
     file: checkly-security.txt
-    note: >-
-      RFC 9116 security.txt with Contact, Policy, Canonical and Hiring fields. Its own Canonical
-      field points at https://checklyhq.com/.well-known/security.txt, which returned 404 on probe.
+    note: RFC 9116 security.txt with Contact, Policy, Canonical and Hiring fields. Its own Canonical field
+      points at https://checklyhq.com/.well-known/security.txt, which returned 404 on probe.
   - path: /.well-known/openid-configuration
     status: 404
   - path: /.well-known/oauth-authorization-server
@@ -104,7 +112,23 @@ hosts:
   - path: /.well-known/agent.json
     status: 404
 findings:
-- No A2A Agent Card is served on any Checkly host; /.well-known/agent-card.json and the legacy
-  /.well-known/agent.json returned 404 everywhere. No a2a/ artifact was written.
-- The security.txt Canonical field is stale - it names checklyhq.com, which 404s, while the document
-  is actually served from developers.checklyhq.com.
+- No A2A Agent Card is served on any Checkly host; /.well-known/agent-card.json and the legacy /.well-known/agent.json
+  returned 404 everywhere. No a2a/ artifact was written.
+- The security.txt Canonical field is stale - it names checklyhq.com, which 404s, while the document is
+  actually served from developers.checklyhq.com.
+x-mcp-probe:
+  probed: '2026-09-19'
+  issue: roadmap#321, roadmap#337
+  documents:
+  - host: https://api.checklyhq.com
+    path: /.well-known/oauth-protected-resource
+    file: checkly-api-oauth-protected-resource.json
+  - host: https://auth.checklyhq.com
+    path: /.well-known/oauth-authorization-server
+    file: checkly-auth-oauth-authorization-server.json
+  validated_on: resource (RFC 9728) / issuer (RFC 8414, OIDC)
+  negative_control: one per host; a 2xx JSON object at an impossible path discards the host
+note: 'MCP-host OAuth discovery added 2026-09-19 (roadmap#321/#337): the harvest visits a provider''s
+  primary hosts, and RFC 9728 protected-resource metadata lives on the MCP host, so these documents existed
+  and were invisible to the scorer. Fetched live and validated on `resource`/`issuer`; one negative control
+  per host.'

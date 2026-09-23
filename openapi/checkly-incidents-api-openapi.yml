@@ -2,7 +2,9 @@ openapi: 3.2.0
 info:
   title: Checkly Public Incidents API
   version: v1
-  description: These are the docs for the newly released Checkly Public API.<br />If you have any questions, please do not hesitate to get in touch with us.
+  description: 'These are the docs for the newly released Checkly Public API.
+
+    If you have any questions, please do not hesitate to get in touch with us.'
 servers:
 - url: https://api.checklyhq.com
 security:
@@ -231,37 +233,139 @@ paths:
                 $ref: '#/components/schemas/TooManyRequestsError'
 components:
   schemas:
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
+    error:
+      type: string
+      enum:
+      - Unauthorized
+    NotFoundError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 404
+        error:
+          $ref: '#/components/schemas/Model4'
+        message:
+          type: string
+          example: Not Found
+      required:
+      - statusCode
+      - error
+    Model44:
+      type: string
+      description: The incident update status. Must be one of INVESTIGATING,IDENTIFIED,MONITORING,RESOLVED,MAINTENANCE
+      example: INVESTIGATING
+      enum:
+      - INVESTIGATING
+      - IDENTIFIED
+      - MONITORING
+      - RESOLVED
+      - MAINTENANCE
+    Model48:
+      type: object
+      properties:
+        name:
+          type: string
+          description: A name used to describe the incident.
+          example: Service outage
+        impact:
+          $ref: '#/components/schemas/impact'
+        startedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: Used to indicate when incident starts to be active.
+          example: '2022-11-25T12:34:56.000Z'
+        stoppedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: Used to indicate when incident turns to inactive.
+          example: '2022-11-25T13:34:56.000Z'
+      required:
+      - name
+      - impact
+    UnauthorizedError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 401
+        error:
+          $ref: '#/components/schemas/error'
+        message:
+          type: string
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    impact:
+      type: string
+      description: Used to indicate the impact or severity.
+      example: MINOR
+      default: MINOR
+      enum:
+      - MAINTENANCE
+      - MAJOR
+      - MINOR
+    TooManyRequestsError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
     attributes:
       type: object
-    incidentUpdates:
-      type: array
-      description: The first incident update with the status and description. It must be only one element.
-      example:
-      - status: INVESTIGATING
-        description: The service is down and affects all the regions.
-      x-constraint:
-        length: 1
-      items:
-        $ref: '#/components/schemas/Model42'
-    Model46:
-      type: array
-      description: The first incident update with the status and description. It must be only one element.
-      example:
-      - id: 01f477f8-4293-4e1c-82bd-99797720434c
-        status: RESOLVED
-        description: The service is up and all is recovered.
-        incidentId: 3abcfdfe-ae2d-4632-8dd1-18dd871e18fc
-        created_at: '2022-09-08T20:56:48.425Z'
-        updated_at: null
-      - id: 1f0640f8-1910-4137-b91d-ed152faa92e6
-        status: INVESTIGATING
-        description: The service is down and affects all the regions.
-        incidentId: 3abcfdfe-ae2d-4632-8dd1-18dd871e18fc
-        created_at: '2022-09-08T18:56:48.425Z'
-        updated_at: null
-      minItems: 1
-      items:
-        $ref: '#/components/schemas/Model45'
+    Model1:
+      type: string
+      enum:
+      - Forbidden
+    ForbiddenError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 403
+        error:
+          $ref: '#/components/schemas/Model1'
+        message:
+          type: string
+          example: Forbidden
+      required:
+      - statusCode
+      - error
+    Model41:
+      type: string
+      description: The incident update status. Must be one of INVESTIGATING,IDENTIFIED,MONITORING,RESOLVED,MAINTENANCE
+      example: INVESTIGATING
+      enum:
+      - INVESTIGATING
+      - IDENTIFIED
+      - MONITORING
+      - RESOLVED
+      - MAINTENANCE
     Model49:
       type: object
       properties:
@@ -318,20 +422,84 @@ components:
       - id
       - created_at
       - updated_at
-    Model41:
+    Model46:
+      type: array
+      description: The first incident update with the status and description. It must be only one element.
+      example:
+      - id: 01f477f8-4293-4e1c-82bd-99797720434c
+        status: RESOLVED
+        description: The service is up and all is recovered.
+        incidentId: 3abcfdfe-ae2d-4632-8dd1-18dd871e18fc
+        created_at: '2022-09-08T20:56:48.425Z'
+        updated_at: null
+      - id: 1f0640f8-1910-4137-b91d-ed152faa92e6
+        status: INVESTIGATING
+        description: The service is down and affects all the regions.
+        incidentId: 3abcfdfe-ae2d-4632-8dd1-18dd871e18fc
+        created_at: '2022-09-08T18:56:48.425Z'
+        updated_at: null
+      minItems: 1
+      items:
+        $ref: '#/components/schemas/Model45'
+    Model4:
       type: string
-      description: The incident update status. Must be one of INVESTIGATING,IDENTIFIED,MONITORING,RESOLVED,MAINTENANCE
-      example: INVESTIGATING
       enum:
-      - INVESTIGATING
-      - IDENTIFIED
-      - MONITORING
-      - RESOLVED
-      - MAINTENANCE
-    Model2:
-      type: string
-      enum:
-      - Too Many Requests
+      - Not Found
+    incidentUpdates:
+      type: array
+      description: The first incident update with the status and description. It must be only one element.
+      example:
+      - status: INVESTIGATING
+        description: The service is down and affects all the regions.
+      x-constraint:
+        length: 1
+      items:
+        $ref: '#/components/schemas/Model42'
+    Model45:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/Model44'
+        description:
+          type: string
+          description: A description about the status update.
+          example: We found the issue and we are working on it.
+        id:
+          type: string
+          description: The incident update universal and unique identificator.
+          example: e50ad839-1b90-4955-b716-1c6edbda57cb
+          x-format:
+            guid: true
+        created_at:
+          type: string
+          format: date-time
+          description: The timestamp when the incident update was created.
+          example: '2022-09-08T19:41:28.658Z'
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The timestamp when last the update.
+          example: '2022-09-08T20:41:28.658Z'
+      required:
+      - status
+      - description
+      - id
+      - created_at
+      - updated_at
+    Model42:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/Model41'
+        description:
+          type: string
+          description: A description about the status update.
+          example: We found the issue and we are working on it.
+      required:
+      - status
+      - description
     Model47:
       type: object
       properties:
@@ -387,40 +555,6 @@ components:
       - created_at
       - updated_at
       - incidentUpdates
-    TooManyRequestsError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 429
-        error:
-          $ref: '#/components/schemas/Model2'
-        message:
-          type: string
-          example: Too Many Requests
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    UnauthorizedError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 401
-        error:
-          $ref: '#/components/schemas/error'
-        message:
-          type: string
-          example: Bad Token
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
     Model43:
       type: object
       properties:
@@ -455,138 +589,6 @@ components:
       - impact
       - dashboardId
       - incidentUpdates
-    ForbiddenError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 403
-        error:
-          $ref: '#/components/schemas/Model1'
-        message:
-          type: string
-          example: Forbidden
-      required:
-      - statusCode
-      - error
-    Model42:
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/Model41'
-        description:
-          type: string
-          description: A description about the status update.
-          example: We found the issue and we are working on it.
-      required:
-      - status
-      - description
-    NotFoundError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 404
-        error:
-          $ref: '#/components/schemas/Model4'
-        message:
-          type: string
-          example: Not Found
-      required:
-      - statusCode
-      - error
-    error:
-      type: string
-      enum:
-      - Unauthorized
-    impact:
-      type: string
-      description: Used to indicate the impact or severity.
-      example: MINOR
-      default: MINOR
-      enum:
-      - MAINTENANCE
-      - MAJOR
-      - MINOR
-    Model44:
-      type: string
-      description: The incident update status. Must be one of INVESTIGATING,IDENTIFIED,MONITORING,RESOLVED,MAINTENANCE
-      example: INVESTIGATING
-      enum:
-      - INVESTIGATING
-      - IDENTIFIED
-      - MONITORING
-      - RESOLVED
-      - MAINTENANCE
-    Model45:
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/Model44'
-        description:
-          type: string
-          description: A description about the status update.
-          example: We found the issue and we are working on it.
-        id:
-          type: string
-          description: The incident update universal and unique identificator.
-          example: e50ad839-1b90-4955-b716-1c6edbda57cb
-          x-format:
-            guid: true
-        created_at:
-          type: string
-          format: date-time
-          description: The timestamp when the incident update was created.
-          example: '2022-09-08T19:41:28.658Z'
-        updated_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: The timestamp when last the update.
-          example: '2022-09-08T20:41:28.658Z'
-      required:
-      - status
-      - description
-      - id
-      - created_at
-      - updated_at
-    Model4:
-      type: string
-      enum:
-      - Not Found
-    Model1:
-      type: string
-      enum:
-      - Forbidden
-    Model48:
-      type: object
-      properties:
-        name:
-          type: string
-          description: A name used to describe the incident.
-          example: Service outage
-        impact:
-          $ref: '#/components/schemas/impact'
-        startedAt:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: Used to indicate when incident starts to be active.
-          example: '2022-11-25T12:34:56.000Z'
-        stoppedAt:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: Used to indicate when incident turns to inactive.
-          example: '2022-11-25T13:34:56.000Z'
-      required:
-      - name
-      - impact
   securitySchemes:
     Bearer:
       type: http

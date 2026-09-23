@@ -2,7 +2,9 @@ openapi: 3.2.0
 info:
   title: Checkly Public Deployment Triggers API
   version: v1
-  description: These are the docs for the newly released Checkly Public API.<br />If you have any questions, please do not hesitate to get in touch with us.
+  description: 'These are the docs for the newly released Checkly Public API.
+
+    If you have any questions, please do not hesitate to get in touch with us.'
 servers:
 - url: https://api.checklyhq.com
 security:
@@ -98,12 +100,21 @@ paths:
                 $ref: '#/components/schemas/NotFoundError'
 components:
   schemas:
-    attributes:
+    ForbiddenError:
       type: object
-    error:
-      type: string
-      enum:
-      - Unauthorized
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 403
+        error:
+          $ref: '#/components/schemas/Model1'
+        message:
+          type: string
+          example: Forbidden
+      required:
+      - statusCode
+      - error
     CreateDeploymentTrigger:
       type: object
       properties:
@@ -162,24 +173,24 @@ components:
       required:
       - repoId
       - repoName
-    provider:
-      type: string
-      description: The deployment provider. Only `GITHUB` is supported.
-      default: GITHUB
-      enum:
-      - GITHUB
-    ForbiddenError:
+    DeploymentTriggers:
+      type: array
+      items:
+        $ref: '#/components/schemas/DeploymentTrigger'
+    UnauthorizedError:
       type: object
       properties:
         statusCode:
           type: number
           enum:
-          - 403
+          - 401
         error:
-          $ref: '#/components/schemas/Model1'
+          $ref: '#/components/schemas/error'
         message:
           type: string
-          example: Forbidden
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
       required:
       - statusCode
       - error
@@ -210,18 +221,12 @@ components:
       - ap-northeast-3
       - ap-south-1
       - af-south-1
-    Model4:
+    error:
       type: string
       enum:
-      - Not Found
-    Model1:
-      type: string
-      enum:
-      - Forbidden
-    DeploymentTriggers:
-      type: array
-      items:
-        $ref: '#/components/schemas/DeploymentTrigger'
+      - Unauthorized
+    attributes:
+      type: object
     NotFoundError:
       type: object
       properties:
@@ -237,23 +242,20 @@ components:
       required:
       - statusCode
       - error
-    UnauthorizedError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 401
-        error:
-          $ref: '#/components/schemas/error'
-        message:
-          type: string
-          example: Bad Token
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
+    provider:
+      type: string
+      description: The deployment provider. Only `GITHUB` is supported.
+      default: GITHUB
+      enum:
+      - GITHUB
+    Model4:
+      type: string
+      enum:
+      - Not Found
+    Model1:
+      type: string
+      enum:
+      - Forbidden
     DeploymentTrigger:
       type: object
       properties:

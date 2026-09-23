@@ -2,7 +2,9 @@ openapi: 3.2.0
 info:
   title: Checkly Public Location API
   version: v1
-  description: These are the docs for the newly released Checkly Public API.<br />If you have any questions, please do not hesitate to get in touch with us.
+  description: 'These are the docs for the newly released Checkly Public API.
+
+    If you have any questions, please do not hesitate to get in touch with us.'
 servers:
 - url: https://api.checklyhq.com
 security:
@@ -42,16 +44,28 @@ paths:
         in: header
 components:
   schemas:
-    attributes:
+    PublicLocation:
       type: object
-    Model2:
-      type: string
-      enum:
-      - Too Many Requests
+      properties:
+        region:
+          type: string
+          example: us-east-1
+          description: The unique identifier of this location.
+        name:
+          type: string
+          example: N. Virginia
+          description: Friendly name of this location.
+      required:
+      - region
+      - name
     LocationList:
       type: array
       items:
         $ref: '#/components/schemas/PublicLocation'
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
     TooManyRequestsError:
       type: object
       properties:
@@ -69,20 +83,8 @@ components:
       required:
       - statusCode
       - error
-    PublicLocation:
+    attributes:
       type: object
-      properties:
-        region:
-          type: string
-          example: us-east-1
-          description: The unique identifier of this location.
-        name:
-          type: string
-          example: N. Virginia
-          description: Friendly name of this location.
-      required:
-      - region
-      - name
   securitySchemes:
     Bearer:
       type: http

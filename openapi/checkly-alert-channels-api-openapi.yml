@@ -2,7 +2,9 @@ openapi: 3.2.0
 info:
   title: Checkly Public Alert channels API
   version: v1
-  description: These are the docs for the newly released Checkly Public API.<br />If you have any questions, please do not hesitate to get in touch with us.
+  description: 'These are the docs for the newly released Checkly Public API.
+
+    If you have any questions, please do not hesitate to get in touch with us.'
 servers:
 - url: https://api.checklyhq.com
 security:
@@ -220,7 +222,6 @@ paths:
     put:
       summary: Update an alert channel
       operationId: putV1AlertchannelsId
-      description: Update an alert channel
       parameters:
       - name: x-checkly-account
         in: header
@@ -336,83 +337,9 @@ paths:
                 $ref: '#/components/schemas/TooManyRequestsError'
 components:
   schemas:
-    attributes:
+    AlertChannelConfig:
       type: object
-    ProjectBindingReferencesV1:
-      type: array
-      description: Projects that use this resource without owning it; their deploys leave it alone. Empty when there are none.
-      items:
-        $ref: '#/components/schemas/ProjectBindingV1'
-    Model2:
-      type: string
-      enum:
-      - Too Many Requests
-    TooManyRequestsError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 429
-        error:
-          $ref: '#/components/schemas/Model2'
-        message:
-          type: string
-          example: Too Many Requests
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    UnauthorizedError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 401
-        error:
-          $ref: '#/components/schemas/error'
-        message:
-          type: string
-          example: Bad Token
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    AlertChannelCreate:
-      type: object
-      properties:
-        subscriptions:
-          $ref: '#/components/schemas/AlertChanelSubscriptionList'
-        type:
-          $ref: '#/components/schemas/type'
-        config:
-          $ref: '#/components/schemas/AlertChannelCreateConfig'
-        sendRecovery:
-          type: boolean
-        sendFailure:
-          type: boolean
-        sendDegraded:
-          type: boolean
-        sslExpiry:
-          type: boolean
-          description: Determines if an alert should be sent for expiring SSL certificates.
-          default: false
-        sslExpiryThreshold:
-          type: integer
-          description: At what moment in time to start alerting on SSL certificates.
-          default: 30
-          minimum: 1
-          maximum: 30
-        autoSubscribe:
-          type: boolean
-          description: Automatically subscribe newly created checks to this alert channel.
-          default: false
-      required:
-      - type
-      - config
+      description: The configuration details for this alert channel. These can be very different based on the type of the channel.
     AlertChannelSubscriptionCreate:
       type: object
       properties:
@@ -436,20 +363,31 @@ components:
           type: boolean
       required:
       - activated
-    PaymentRequiredError:
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
+    error:
+      type: string
+      enum:
+      - Unauthorized
+    ProjectBindingReferencesV1:
+      type: array
+      description: Projects that use this resource without owning it; their deploys leave it alone. Empty when there are none.
+      items:
+        $ref: '#/components/schemas/ProjectBindingV1'
+    NotFoundError:
       type: object
       properties:
         statusCode:
           type: number
           enum:
-          - 402
+          - 404
         error:
-          $ref: '#/components/schemas/Model3'
+          $ref: '#/components/schemas/Model4'
         message:
           type: string
-          example: Payment Required
-        attributes:
-          $ref: '#/components/schemas/attributes'
+          example: Not Found
       required:
       - statusCode
       - error
@@ -499,32 +437,20 @@ components:
       - id
       - type
       - config
-    ProjectBindingV1:
-      type: object
-      properties:
-        project:
-          $ref: '#/components/schemas/BindingProjectV1'
-        binding:
-          $ref: '#/components/schemas/ProjectBindingDetailsV1'
-      required:
-      - project
-      - binding
-    AlertChannelList:
-      type: array
-      items:
-        $ref: '#/components/schemas/AlertChannelRead'
-    ForbiddenError:
+    UnauthorizedError:
       type: object
       properties:
         statusCode:
           type: number
           enum:
-          - 403
+          - 401
         error:
-          $ref: '#/components/schemas/Model1'
+          $ref: '#/components/schemas/error'
         message:
           type: string
-          example: Forbidden
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
       required:
       - statusCode
       - error
@@ -542,119 +468,48 @@ components:
       required:
       - logicalId
       - pending
-    AlertChanelSubscription:
-      type: object
-      properties:
-        id:
-          type: number
-          example: 1
-        checkId:
-          type:
-          - string
-          - 'null'
-          example: 47ccf418-6224-429c-a096-637364249882
-          x-format:
-            guid: true
-        groupId:
-          type:
-          - number
-          - 'null'
-          example: null
-          x-constraint:
-            sign: positive
-        activated:
-          type: boolean
-      required:
-      - activated
-    ProjectBindingOwnerV1:
-      type:
-      - object
-      - 'null'
-      description: The project that owns this resource — the one whose deploy can delete it. Null when no project owns it, including when other projects merely reference it. In the rare case that several projects hold an ownership record for one resource, this reports the preferred one and the rest are omitted.
-      properties:
-        project:
-          $ref: '#/components/schemas/BindingProjectV1'
-        binding:
-          $ref: '#/components/schemas/ProjectBindingDetailsV1'
-      required:
-      - project
-      - binding
-    BindingProjectV1:
-      type: object
-      description: The project this binding is to.
-      properties:
-        id:
-          type: string
-          description: The ID of the project.
-        logicalId:
-          type: string
-          description: The logical ID of the project, as declared in code.
-        name:
-          type: string
-          description: The name of the project.
-      required:
-      - id
-      - logicalId
-      - name
     Model3:
       type: string
       enum:
       - Payment Required
-    NotFoundError:
+    TooManyRequestsError:
       type: object
       properties:
         statusCode:
           type: number
           enum:
-          - 404
+          - 429
         error:
-          $ref: '#/components/schemas/Model4'
+          $ref: '#/components/schemas/Model2'
         message:
           type: string
-          example: Not Found
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
       required:
       - statusCode
       - error
-    error:
-      type: string
-      enum:
-      - Unauthorized
-    type:
-      type: string
-      example: SMS
-      enum:
-      - EMAIL
-      - SLACK
-      - SLACK_APP
-      - WEBHOOK
-      - SMS
-      - PAGERDUTY
-      - OPSGENIE
-      - CALL
-    Model4:
-      type: string
-      enum:
-      - Not Found
-    AlertChannelConfig:
+    attributes:
       type: object
-      description: The configuration details for this alert channel. These can be very different based on the type of the channel.
     Model1:
       type: string
       enum:
       - Forbidden
-    ProjectBindingsV1:
+    ForbiddenError:
       type: object
-      description: The Checkly CLI projects that manage this resource. `owner` is null and `references` empty when the resource is not managed by code.
       properties:
-        owner:
-          $ref: '#/components/schemas/ProjectBindingOwnerV1'
-        references:
-          $ref: '#/components/schemas/ProjectBindingReferencesV1'
+        statusCode:
+          type: number
+          enum:
+          - 403
+        error:
+          $ref: '#/components/schemas/Model1'
+        message:
+          type: string
+          example: Forbidden
       required:
-      - owner
-      - references
-    AlertChannelCreateConfig:
-      type: object
+      - statusCode
+      - error
     AlertChannelRead:
       type: object
       properties:
@@ -703,12 +558,158 @@ components:
       - id
       - type
       - config
+    PaymentRequiredError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 402
+        error:
+          $ref: '#/components/schemas/Model3'
+        message:
+          type: string
+          example: Payment Required
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    BindingProjectV1:
+      type: object
+      description: The project this binding is to.
+      properties:
+        id:
+          type: string
+          description: The ID of the project.
+        logicalId:
+          type: string
+          description: The logical ID of the project, as declared in code.
+        name:
+          type: string
+          description: The name of the project.
+      required:
+      - id
+      - logicalId
+      - name
+    ProjectBindingsV1:
+      type: object
+      description: The Checkly CLI projects that manage this resource. `owner` is null and `references` empty when the resource is not managed by code.
+      properties:
+        owner:
+          $ref: '#/components/schemas/ProjectBindingOwnerV1'
+        references:
+          $ref: '#/components/schemas/ProjectBindingReferencesV1'
+      required:
+      - owner
+      - references
+    type:
+      type: string
+      example: SMS
+      enum:
+      - EMAIL
+      - SLACK
+      - SLACK_APP
+      - WEBHOOK
+      - SMS
+      - PAGERDUTY
+      - OPSGENIE
+      - CALL
+    AlertChannelCreate:
+      type: object
+      properties:
+        subscriptions:
+          $ref: '#/components/schemas/AlertChanelSubscriptionList'
+        type:
+          $ref: '#/components/schemas/type'
+        config:
+          $ref: '#/components/schemas/AlertChannelCreateConfig'
+        sendRecovery:
+          type: boolean
+        sendFailure:
+          type: boolean
+        sendDegraded:
+          type: boolean
+        sslExpiry:
+          type: boolean
+          description: Determines if an alert should be sent for expiring SSL certificates.
+          default: false
+        sslExpiryThreshold:
+          type: integer
+          description: At what moment in time to start alerting on SSL certificates.
+          default: 30
+          minimum: 1
+          maximum: 30
+        autoSubscribe:
+          type: boolean
+          description: Automatically subscribe newly created checks to this alert channel.
+          default: false
+      required:
+      - type
+      - config
+    AlertChannelCreateConfig:
+      type: object
+    Model4:
+      type: string
+      enum:
+      - Not Found
+    AlertChanelSubscription:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        checkId:
+          type:
+          - string
+          - 'null'
+          example: 47ccf418-6224-429c-a096-637364249882
+          x-format:
+            guid: true
+        groupId:
+          type:
+          - number
+          - 'null'
+          example: null
+          x-constraint:
+            sign: positive
+        activated:
+          type: boolean
+      required:
+      - activated
     AlertChanelSubscriptionList:
       type: array
       description: All checks subscribed to this channel.
       example: []
       items:
         $ref: '#/components/schemas/AlertChanelSubscription'
+    AlertChannelList:
+      type: array
+      items:
+        $ref: '#/components/schemas/AlertChannelRead'
+    ProjectBindingV1:
+      type: object
+      properties:
+        project:
+          $ref: '#/components/schemas/BindingProjectV1'
+        binding:
+          $ref: '#/components/schemas/ProjectBindingDetailsV1'
+      required:
+      - project
+      - binding
+    ProjectBindingOwnerV1:
+      type:
+      - object
+      - 'null'
+      description: The project that owns this resource — the one whose deploy can delete it. Null when no project owns it, including when other projects merely reference it. In the rare case that several projects hold an ownership record for one resource, this reports the preferred one and the rest are omitted.
+      properties:
+        project:
+          $ref: '#/components/schemas/BindingProjectV1'
+        binding:
+          $ref: '#/components/schemas/ProjectBindingDetailsV1'
+      required:
+      - project
+      - binding
   securitySchemes:
     Bearer:
       type: http

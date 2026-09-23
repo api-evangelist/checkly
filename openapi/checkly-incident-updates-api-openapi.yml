@@ -2,7 +2,9 @@ openapi: 3.2.0
 info:
   title: Checkly Public Incident Updates API
   version: v1
-  description: These are the docs for the newly released Checkly Public API.<br />If you have any questions, please do not hesitate to get in touch with us.
+  description: 'These are the docs for the newly released Checkly Public API.
+
+    If you have any questions, please do not hesitate to get in touch with us.'
 servers:
 - url: https://api.checklyhq.com
 security:
@@ -214,12 +216,21 @@ paths:
               $ref: '#/components/schemas/IncidentUpdateV1UpdateRequest'
 components:
   schemas:
-    attributes:
+    ForbiddenError:
       type: object
-    error:
-      type: string
-      enum:
-      - Unauthorized
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 403
+        error:
+          $ref: '#/components/schemas/Model1'
+        message:
+          type: string
+          example: Forbidden
+      required:
+      - statusCode
+      - error
     IncidentUpdateV1CreateRequest:
       type: object
       properties:
@@ -240,113 +251,6 @@ components:
       required:
       - status
       - description
-    ForbiddenError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 403
-        error:
-          $ref: '#/components/schemas/Model1'
-        message:
-          type: string
-          example: Forbidden
-      required:
-      - statusCode
-      - error
-    Model4:
-      type: string
-      enum:
-      - Not Found
-    ApiError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-        error:
-          type: string
-        message:
-          type: string
-      required:
-      - statusCode
-      - error
-      - message
-    IncidentUpdateV1UpdateRequest:
-      type: object
-      properties:
-        description:
-          type: string
-          description: A description about the status update.
-          example: We found the issue and we are working on it.
-      required:
-      - description
-    TooManyRequestsError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 429
-        error:
-          $ref: '#/components/schemas/Model2'
-        message:
-          type: string
-          example: Too Many Requests
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    IncidentUpdateV1Response:
-      type: object
-      properties:
-        status:
-          type: string
-          enum:
-          - INVESTIGATING
-          - IDENTIFIED
-          - MONITORING
-          - RESOLVED
-          - MAINTENANCE
-          description: The incident update status. Must be one of INVESTIGATING,IDENTIFIED,MONITORING,RESOLVED,MAINTENANCE
-          example: INVESTIGATING
-        description:
-          type: string
-          description: A description about the status update.
-          example: We found the issue and we are working on it.
-        id:
-          type: string
-          x-format:
-            guid: true
-          description: The incident update universal and unique identificator.
-          example: e50ad839-1b90-4955-b716-1c6edbda57cb
-        created_at:
-          type: string
-          format: date-time
-          description: The timestamp when the incident update was created.
-          example: '2022-09-08T19:41:28.658Z'
-        updated_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: The timestamp when last the update.
-          example: '2022-09-08T20:41:28.658Z'
-      required:
-      - status
-      - description
-      - id
-      - created_at
-      - updated_at
-    Model1:
-      type: string
-      enum:
-      - Forbidden
-    Model2:
-      type: string
-      enum:
-      - Too Many Requests
     IncidentUpdateV1CreateResponse:
       type: object
       properties:
@@ -390,6 +294,10 @@ components:
       - id
       - created_at
       - incidentId
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
     UnauthorizedError:
       type: object
       properties:
@@ -407,6 +315,83 @@ components:
       required:
       - statusCode
       - error
+    error:
+      type: string
+      enum:
+      - Unauthorized
+    TooManyRequestsError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    ApiError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+        error:
+          type: string
+        message:
+          type: string
+      required:
+      - statusCode
+      - error
+      - message
+    attributes:
+      type: object
+    IncidentUpdateV1Response:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+          - INVESTIGATING
+          - IDENTIFIED
+          - MONITORING
+          - RESOLVED
+          - MAINTENANCE
+          description: The incident update status. Must be one of INVESTIGATING,IDENTIFIED,MONITORING,RESOLVED,MAINTENANCE
+          example: INVESTIGATING
+        description:
+          type: string
+          description: A description about the status update.
+          example: We found the issue and we are working on it.
+        id:
+          type: string
+          x-format:
+            guid: true
+          description: The incident update universal and unique identificator.
+          example: e50ad839-1b90-4955-b716-1c6edbda57cb
+        created_at:
+          type: string
+          format: date-time
+          description: The timestamp when the incident update was created.
+          example: '2022-09-08T19:41:28.658Z'
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The timestamp when last the update.
+          example: '2022-09-08T20:41:28.658Z'
+      required:
+      - status
+      - description
+      - id
+      - created_at
+      - updated_at
     NotFoundError:
       type: object
       properties:
@@ -422,6 +407,23 @@ components:
       required:
       - statusCode
       - error
+    Model4:
+      type: string
+      enum:
+      - Not Found
+    Model1:
+      type: string
+      enum:
+      - Forbidden
+    IncidentUpdateV1UpdateRequest:
+      type: object
+      properties:
+        description:
+          type: string
+          description: A description about the status update.
+          example: We found the issue and we are working on it.
+      required:
+      - description
   securitySchemes:
     Bearer:
       type: http

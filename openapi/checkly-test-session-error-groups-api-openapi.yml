@@ -2,7 +2,9 @@ openapi: 3.2.0
 info:
   title: Checkly Public Test Session Error Groups API
   version: v1
-  description: These are the docs for the newly released Checkly Public API.<br />If you have any questions, please do not hesitate to get in touch with us.
+  description: 'These are the docs for the newly released Checkly Public API.
+
+    If you have any questions, please do not hesitate to get in touch with us.'
 servers:
 - url: https://api.checklyhq.com
 security:
@@ -12,7 +14,7 @@ tags:
 paths:
   /v1/test-session-error-groups:
     get:
-      summary: List all test session error groups in your account.
+      summary: List all test session error groups in your account
       operationId: getV1Testsessionerrorgroups
       description: List all test session error groups in your account.
       tags:
@@ -78,7 +80,7 @@ paths:
         in: header
   /v1/test-session-error-groups/projects/{projectId}:
     get:
-      summary: List all test session error groups for a specific project.
+      summary: List all test session error groups for a specific project
       operationId: getV1TestsessionerrorgroupsProjectsProjectid
       description: List all test session error groups for a specific project.
       tags:
@@ -131,7 +133,7 @@ paths:
         in: header
   /v1/test-session-error-groups/{id}:
     get:
-      summary: Retrieve one test session error group.
+      summary: Retrieve one test session error group
       operationId: getV1TestsessionerrorgroupsId
       description: Retrieve one test session error group.
       tags:
@@ -189,7 +191,7 @@ paths:
         name: x-checkly-account
         in: header
     patch:
-      summary: Update a test session error group. Mainly used for archiving test session error groups.
+      summary: Update a test session error group.
       operationId: patchV1TestsessionerrorgroupsId
       description: Update a test session error group. Mainly used for archiving test session error groups.
       tags:
@@ -254,6 +256,13 @@ paths:
               $ref: '#/components/schemas/PatchTestSessionErrorGroupRequest'
 components:
   schemas:
+    PatchTestSessionErrorGroupRequest:
+      type: object
+      properties:
+        archiveForEver:
+          type: boolean
+        archivedUntilNextEvent:
+          type: boolean
     TestSessionErrorGroupPlaywrightMetadata:
       type: object
       properties:
@@ -275,23 +284,6 @@ components:
       - testFile
       - testTitle
       - suitePath
-    ApiError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-        error:
-          type: string
-        message:
-          type: string
-      required:
-      - statusCode
-      - error
-      - message
-    TestSessionErrorGroupsList:
-      type: array
-      items:
-        $ref: '#/components/schemas/TestSessionErrorGroup'
     TestSessionErrorGroup:
       type: object
       properties:
@@ -350,13 +342,23 @@ components:
       - lastSeen
       - archivedUntilNextEvent
       - pwtMetadata
-    PatchTestSessionErrorGroupRequest:
+    ApiError:
       type: object
       properties:
-        archiveForEver:
-          type: boolean
-        archivedUntilNextEvent:
-          type: boolean
+        statusCode:
+          type: number
+        error:
+          type: string
+        message:
+          type: string
+      required:
+      - statusCode
+      - error
+      - message
+    TestSessionErrorGroupsList:
+      type: array
+      items:
+        $ref: '#/components/schemas/TestSessionErrorGroup'
     TestSessionErrorGroupRootCauseAnalysis:
       type: object
       properties:

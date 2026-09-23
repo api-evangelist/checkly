@@ -2,13 +2,15 @@ openapi: 3.2.0
 info:
   title: Checkly Public Maintenance windows API
   version: v1
-  description: These are the docs for the newly released Checkly Public API.<br />If you have any questions, please do not hesitate to get in touch with us.
+  description: 'These are the docs for the newly released Checkly Public API.
+
+    If you have any questions, please do not hesitate to get in touch with us.'
 servers:
 - url: https://api.checklyhq.com
 security:
 - Bearer: []
 tags:
-- name: Maintenance windows
+- name: Maintenance Windows
 paths:
   /v1/maintenance-windows:
     get:
@@ -111,7 +113,7 @@ paths:
             - lte
         description: Filter for items which endsAt field matches the constraint
       tags:
-      - Maintenance windows
+      - Maintenance Windows
       responses:
         '200':
           description: Successful
@@ -151,7 +153,7 @@ paths:
             guid: true
         description: Your Checkly account ID, you can find it at https://app.checklyhq.com/settings/account/general
       tags:
-      - Maintenance windows
+      - Maintenance Windows
       requestBody:
         content:
           application/json:
@@ -204,7 +206,7 @@ paths:
             sign: positive
         required: true
       tags:
-      - Maintenance windows
+      - Maintenance Windows
       responses:
         '204':
           description: No Content
@@ -253,7 +255,7 @@ paths:
             sign: positive
         required: true
       tags:
-      - Maintenance windows
+      - Maintenance Windows
       responses:
         '200':
           description: Successful
@@ -306,7 +308,7 @@ paths:
             sign: positive
         required: true
       tags:
-      - Maintenance windows
+      - Maintenance Windows
       requestBody:
         content:
           application/json:
@@ -377,7 +379,7 @@ paths:
           minimum: 1
           maximum: 50
       tags:
-      - Maintenance windows
+      - Maintenance Windows
       responses:
         '200':
           description: Successful
@@ -437,7 +439,7 @@ paths:
             guid: true
         required: true
       tags:
-      - Maintenance windows
+      - Maintenance Windows
       responses:
         '204':
           description: No Content
@@ -492,7 +494,7 @@ paths:
             guid: true
         required: true
       tags:
-      - Maintenance windows
+      - Maintenance Windows
       responses:
         '200':
           description: Successful
@@ -551,7 +553,7 @@ paths:
             guid: true
         required: true
       tags:
-      - Maintenance windows
+      - Maintenance Windows
       requestBody:
         content:
           application/json:
@@ -617,7 +619,7 @@ paths:
             guid: true
         required: true
       tags:
-      - Maintenance windows
+      - Maintenance Windows
       requestBody:
         content:
           application/json:
@@ -690,7 +692,7 @@ paths:
             guid: true
         required: true
       tags:
-      - Maintenance windows
+      - Maintenance Windows
       responses:
         '204':
           description: No Content
@@ -753,7 +755,7 @@ paths:
             guid: true
         required: true
       tags:
-      - Maintenance windows
+      - Maintenance Windows
       requestBody:
         content:
           application/json:
@@ -792,41 +794,14 @@ paths:
                 $ref: '#/components/schemas/TooManyRequestsError'
 components:
   schemas:
-    attributes:
-      type: object
-    MaintenanceWindowTagList:
+    Model60:
       type: array
-      description: The names of the checks and groups maintenance window should apply to.
-      example:
-      - production
+      description: 'Status page service IDs affected by this maintenance window. Each service must belong to one of the linked status pages. Only takes effect when `enabled: true`.'
       items:
         type: string
-    repeatUnit:
-      type:
-      - string
-      - 'null'
-      enum:
-      - DAY
-      - WEEK
-      - MONTH
-    updates:
-      type: array
-      items:
-        $ref: '#/components/schemas/Model62'
-    ProjectBindingReferencesV1:
-      type: array
-      description: Projects that use this resource without owning it; their deploys leave it alone. Empty when there are none.
-      items:
-        $ref: '#/components/schemas/ProjectBindingV1'
-    silenceAlertsTags:
-      type: array
-      items:
-        type: string
-    MaintenanceWindowMaintenanceList:
-      type: array
-      items:
-        $ref: '#/components/schemas/MaintenanceWindowMaintenance'
-    Model58:
+        x-format:
+          guid: true
+    Model53:
       type: array
       description: 'Minutes before maintenance to send reminder notifications. Only takes effect when `enabled: true`.'
       maxItems: 3
@@ -834,17 +809,221 @@ components:
         type: integer
         minimum: 60
         maximum: 10080
-    Model54:
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
+    error:
+      type: string
+      enum:
+      - Unauthorized
+    ProjectBindingReferencesV1:
+      type: array
+      description: Projects that use this resource without owning it; their deploys leave it alone. Empty when there are none.
+      items:
+        $ref: '#/components/schemas/ProjectBindingV1'
+    NotFoundError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 404
+        error:
+          $ref: '#/components/schemas/Model4'
+        message:
+          type: string
+          example: Not Found
+      required:
+      - statusCode
+      - error
+    Model65:
+      type: string
+      description: The lifecycle status of this update. Optional. When omitted, the stored status is preserved.
+      enum:
+      - SCHEDULED
+      - IN_PROGRESS
+      - VERIFYING
+      - COMPLETED
+      - CANCELLED
+    serviceIds:
+      type: array
+      items:
+        type: string
+        x-format:
+          guid: true
+    Model62:
+      type: object
+      properties:
+        id:
+          type: string
+          x-format:
+            guid: true
+        maintenanceWindowId:
+          type: number
+        maintenanceId:
+          type: string
+          x-format:
+            guid: true
+        status:
+          type: string
+        description:
+          type: string
+        notifySubscribers:
+          type: boolean
+        created_at:
+          type: string
+          format: date
+        previousStatus:
+          type:
+          - string
+          - 'null'
+        previousStartsAt:
+          type:
+          - string
+          - 'null'
+          format: date
+        previousEndsAt:
+          type:
+          - string
+          - 'null'
+          format: date
+        dateAdjustments:
+          $ref: '#/components/schemas/dateAdjustments'
+      required:
+      - id
+      - maintenanceWindowId
+      - maintenanceId
+      - status
+      - description
+      - notifySubscribers
+      - created_at
+    Model59:
       type: array
       description: 'Status page IDs to link this maintenance window to. Requires `serviceIds` or `affectAllServices: true`. On PUT, send `[]` together with `serviceIds: []` to fully unlink. Only takes effect when `enabled: true`.'
       items:
         type: string
         x-format:
           guid: true
-    dateAdjustments:
-      type:
-      - object
-      - 'null'
+    UnauthorizedError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 401
+        error:
+          $ref: '#/components/schemas/error'
+        message:
+          type: string
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    ProjectBindingDetailsV1:
+      type: object
+      description: The resource's side of this binding.
+      properties:
+        logicalId:
+          type: string
+          description: The resource's logical ID within this project, as declared in code.
+          example: homepage-check
+        pending:
+          type: boolean
+          description: True when the binding is reserved by an import plan that has not been deployed yet.
+      required:
+      - logicalId
+      - pending
+    MaintenanceWindow:
+      type: object
+      properties:
+        id:
+          type: number
+          description: The id of the maintenance window.
+          example: 1
+        name:
+          type: string
+        tags:
+          $ref: '#/components/schemas/MaintenanceWindowTagList'
+        startsAt:
+          type: string
+          format: date
+        endsAt:
+          type: string
+          format: date
+        repeatInterval:
+          type:
+          - number
+          - 'null'
+        repeatUnit:
+          $ref: '#/components/schemas/repeatUnit'
+        repeatEndsAt:
+          type:
+          - string
+          - 'null'
+          format: date
+        timezone:
+          type:
+          - string
+          - 'null'
+        description:
+          type:
+          - string
+          - 'null'
+        statusPageVisibility:
+          $ref: '#/components/schemas/MaintenanceWindowStatusPageVisibilityResponse'
+        pauseAllChecks:
+          type: boolean
+        silenceAlertsTags:
+          $ref: '#/components/schemas/silenceAlertsTags'
+        silenceAllAlerts:
+          type: boolean
+        created_at:
+          type: string
+          format: date
+          description: The creation date of the maintenance window.
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date
+          description: The last date that the maintenance window was updated.
+        projectBindings:
+          $ref: '#/components/schemas/ProjectBindingsV1'
+      required:
+      - id
+      - name
+      - startsAt
+      - endsAt
+      - created_at
+      - updated_at
+    TooManyRequestsError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    attributes:
+      type: object
+    silenceAlertsTags:
+      type: array
+      items:
+        type: string
+    Model63:
+      type: object
       properties:
         startsAt:
           type: string
@@ -852,20 +1031,73 @@ components:
         endsAt:
           type: string
           format: date
-    Model2:
+    Model1:
       type: string
       enum:
-      - Too Many Requests
-    Model57:
-      type:
-      - string
-      - 'null'
-      description: 'The severity level displayed on the status page. Only takes effect when `enabled: true`.'
-      enum:
-      - MINOR
-      - MEDIUM
-      - MAJOR
-      - CRITICAL
+      - Forbidden
+    MaintenanceWindowUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The maintenance window name.
+          example: Maintenance Window
+          maxLength: 200
+        tags:
+          $ref: '#/components/schemas/MaintenanceWindowTagList'
+        startsAt:
+          type: string
+          format: date
+          description: The start date of the maintenance window.
+          example: '2022-08-24'
+        endsAt:
+          type: string
+          format: date
+          description: The end date of the maintenance window.
+          example: '2022-08-25'
+        repeatInterval:
+          type:
+          - integer
+          - 'null'
+          description: The repeat interval of the maintenance window from the first occurrence.
+          example: null
+          default: null
+          minimum: 1
+          maximum: 365
+        repeatEndsAt:
+          type:
+          - string
+          - 'null'
+          format: date
+          description: An inclusive calendar date in the configured timezone (UTC when unset) on which occurrences may start. Prefer YYYY-MM-DD. For backward compatibility, other accepted date-time values are normalized to the UTC calendar date of the parsed instant. The final occurrence runs for its full configured duration.
+          example: null
+        timezone:
+          type:
+          - string
+          - 'null'
+          description: Named IANA time zone used for recurring maintenance scheduling. UTC offset identifiers such as "+05:00" are not accepted. On create, omission or null uses UTC. On update, omission preserves the existing value; null or UTC resets scheduling to UTC. Changing only this field keeps startsAt and endsAt as the same absolute instants; include recalculated anchors to preserve the existing local date and time.
+          example: America/New_York
+        pauseAllChecks:
+          type: boolean
+          description: Whether to pause all checks in the account (overrides tag scope).
+          default: false
+        silenceAlertsTags:
+          $ref: '#/components/schemas/Model56'
+        silenceAllAlerts:
+          type: boolean
+          description: Whether to silence alerts for all checks (overrides silenceAlertsTags scope).
+          default: false
+        description:
+          type:
+          - string
+          - 'null'
+          description: A description of the maintenance window. When the window is visible on status pages, this description is shown there too.
+          default: null
+          maxLength: 2000
+        statusPageVisibility:
+          $ref: '#/components/schemas/Model61'
+        repeatUnit:
+          $ref: '#/components/schemas/repeatUnit'
     MaintenanceWindowStatusPageVisibility:
       type: object
       description: Status page visibility and subscriber-facing maintenance settings.
@@ -911,58 +1143,112 @@ components:
           $ref: '#/components/schemas/Model54'
         serviceIds:
           $ref: '#/components/schemas/Model55'
-    UnauthorizedError:
+    ForbiddenError:
       type: object
       properties:
         statusCode:
           type: number
           enum:
-          - 401
+          - 403
         error:
-          $ref: '#/components/schemas/error'
+          $ref: '#/components/schemas/Model1'
         message:
           type: string
-          example: Bad Token
-        attributes:
-          $ref: '#/components/schemas/attributes'
+          example: Forbidden
       required:
       - statusCode
       - error
-    TooManyRequestsError:
+    MaintenanceWindowTagList:
+      type: array
+      description: The names of the checks and groups maintenance window should apply to.
+      example:
+      - production
+      items:
+        type: string
+    MaintenanceWindowMaintenance:
       type: object
       properties:
-        statusCode:
-          type: number
-          enum:
-          - 429
-        error:
-          $ref: '#/components/schemas/Model2'
-        message:
+        id:
           type: string
-          example: Too Many Requests
-        attributes:
-          $ref: '#/components/schemas/attributes'
+          x-format:
+            guid: true
+        maintenanceWindowId:
+          type: number
+        startsAt:
+          type: string
+          format: date
+        endsAt:
+          type: string
+          format: date
+        status:
+          type: string
+        created_at:
+          type: string
+          format: date
+        updated_at:
+          type: string
+          format: date
+        updates:
+          $ref: '#/components/schemas/updates'
       required:
-      - statusCode
-      - error
-    Model50:
-      type:
-      - string
-      - 'null'
-      enum:
-      - MINOR
-      - MEDIUM
-      - MAJOR
-      - CRITICAL
-    Model64:
-      type: string
-      description: The lifecycle status of this update.
-      enum:
-      - SCHEDULED
-      - IN_PROGRESS
-      - VERIFYING
-      - COMPLETED
-      - CANCELLED
+      - id
+      - maintenanceWindowId
+      - startsAt
+      - endsAt
+      - status
+      - created_at
+      - updated_at
+    Model56:
+      type: array
+      description: Tags defining which checks have alerts silenced (when silenceAllAlerts is false).
+      items:
+        type: string
+    BindingProjectV1:
+      type: object
+      description: The project this binding is to.
+      properties:
+        id:
+          type: string
+          description: The ID of the project.
+        logicalId:
+          type: string
+          description: The logical ID of the project, as declared in code.
+        name:
+          type: string
+          description: The name of the project.
+      required:
+      - id
+      - logicalId
+      - name
+    Model54:
+      type: array
+      description: 'Status page IDs to link this maintenance window to. Requires `serviceIds` or `affectAllServices: true`. On PUT, send `[]` together with `serviceIds: []` to fully unlink. Only takes effect when `enabled: true`.'
+      items:
+        type: string
+        x-format:
+          guid: true
+    reminderMinutesBefore:
+      type: array
+      items:
+        type: integer
+    ProjectBindingsV1:
+      type: object
+      description: The Checkly CLI projects that manage this resource. `owner` is null and `references` empty when the resource is not managed by code.
+      properties:
+        owner:
+          $ref: '#/components/schemas/ProjectBindingOwnerV1'
+        references:
+          $ref: '#/components/schemas/ProjectBindingReferencesV1'
+      required:
+      - owner
+      - references
+    Model55:
+      type: array
+      description: 'Status page service IDs affected by this maintenance window. Each service must belong to one of the linked status pages. Only takes effect when `enabled: true`.'
+      items:
+        type: string
+        x-format:
+          guid: true
     MaintenanceWindowUpdatePayload:
       type: object
       properties:
@@ -979,19 +1265,113 @@ components:
       required:
       - status
       - description
-    serviceIds:
+    MaintenanceWindowUpdateEditPublicPayload:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/Model65'
+        description:
+          type: string
+          description: A description of the update.
+          maxLength: 2000
+      required:
+      - description
+    Model64:
+      type: string
+      description: The lifecycle status of this update.
+      enum:
+      - SCHEDULED
+      - IN_PROGRESS
+      - VERIFYING
+      - COMPLETED
+      - CANCELLED
+    Model51:
+      type: array
+      description: Tags defining which checks have alerts silenced (when silenceAllAlerts is false).
+      items:
+        type: string
+    statusPageIds:
       type: array
       items:
         type: string
         x-format:
           guid: true
-    Model60:
+    MaintenanceWindowList:
       type: array
-      description: 'Status page service IDs affected by this maintenance window. Each service must belong to one of the linked status pages. Only takes effect when `enabled: true`.'
       items:
-        type: string
-        x-format:
-          guid: true
+        $ref: '#/components/schemas/MaintenanceWindow'
+    Model50:
+      type:
+      - string
+      - 'null'
+      enum:
+      - MINOR
+      - MEDIUM
+      - MAJOR
+      - CRITICAL
+    Model4:
+      type: string
+      enum:
+      - Not Found
+    Model61:
+      type: object
+      description: Status page visibility and subscriber-facing maintenance settings.
+      default: {}
+      properties:
+        enabled:
+          type: boolean
+          description: Whether this maintenance window appears on linked status pages. This is the master gate for every other status-page visibility field.
+          default: false
+        severity:
+          $ref: '#/components/schemas/Model57'
+        affectAllServices:
+          type: boolean
+          description: 'Whether all services on the linked status pages are affected. Mutually exclusive with a non-empty `serviceIds` array. Only takes effect when `enabled: true`.'
+          default: false
+        notifyOnStart:
+          type: boolean
+          description: 'Whether to email subscribers when maintenance starts. Only takes effect when `enabled: true`.'
+          default: false
+        notifyOnEnd:
+          type: boolean
+          description: 'Whether to email subscribers when maintenance ends. Only takes effect when `enabled: true`.'
+          default: false
+        suppressAutoIncidents:
+          type: boolean
+          description: 'Whether to suppress auto-created incidents for linked services during maintenance. Only takes effect when `enabled: true`.'
+          default: false
+        reminderMinutesBefore:
+          $ref: '#/components/schemas/Model58'
+        autoStart:
+          type: boolean
+          description: 'Automatically start the maintenance at the scheduled time. Only honored when `enabled: true`; on hidden windows the system always auto-starts regardless of this value.'
+          default: true
+        autoEnd:
+          type: boolean
+          description: 'Automatically complete the maintenance at the scheduled end time. Only honored when `enabled: true`; on hidden windows the system always auto-ends regardless of this value.'
+          default: true
+        showAffectedServices:
+          type: boolean
+          description: 'Whether the public status page shows which services this maintenance window affects. When false, the window is still shown as a general event but without its affected services, and its maintenance period is not excluded from service uptime: downtime during the window counts as regular downtime. Only takes effect when `enabled: true`.'
+          default: true
+        statusPageIds:
+          $ref: '#/components/schemas/Model59'
+        serviceIds:
+          $ref: '#/components/schemas/Model60'
+    updates:
+      type: array
+      items:
+        $ref: '#/components/schemas/Model62'
+    ProjectBindingV1:
+      type: object
+      properties:
+        project:
+          $ref: '#/components/schemas/BindingProjectV1'
+        binding:
+          $ref: '#/components/schemas/ProjectBindingDetailsV1'
+      required:
+      - project
+      - binding
     MaintenanceWindowCreate:
       type: object
       properties:
@@ -1062,448 +1442,6 @@ components:
       - startsAt
       - endsAt
       - repeatUnit
-    Model56:
-      type: array
-      description: Tags defining which checks have alerts silenced (when silenceAllAlerts is false).
-      items:
-        type: string
-    Model52:
-      type:
-      - string
-      - 'null'
-      description: 'The severity level displayed on the status page. Only takes effect when `enabled: true`.'
-      enum:
-      - MINOR
-      - MEDIUM
-      - MAJOR
-      - CRITICAL
-    MaintenanceWindowList:
-      type: array
-      items:
-        $ref: '#/components/schemas/MaintenanceWindow'
-    Model62:
-      type: object
-      properties:
-        id:
-          type: string
-          x-format:
-            guid: true
-        maintenanceWindowId:
-          type: number
-        maintenanceId:
-          type: string
-          x-format:
-            guid: true
-        status:
-          type: string
-        description:
-          type: string
-        notifySubscribers:
-          type: boolean
-        created_at:
-          type: string
-          format: date
-        previousStatus:
-          type:
-          - string
-          - 'null'
-        previousStartsAt:
-          type:
-          - string
-          - 'null'
-          format: date
-        previousEndsAt:
-          type:
-          - string
-          - 'null'
-          format: date
-        dateAdjustments:
-          $ref: '#/components/schemas/dateAdjustments'
-      required:
-      - id
-      - maintenanceWindowId
-      - maintenanceId
-      - status
-      - description
-      - notifySubscribers
-      - created_at
-    MaintenanceWindowMaintenance:
-      type: object
-      properties:
-        id:
-          type: string
-          x-format:
-            guid: true
-        maintenanceWindowId:
-          type: number
-        startsAt:
-          type: string
-          format: date
-        endsAt:
-          type: string
-          format: date
-        status:
-          type: string
-        created_at:
-          type: string
-          format: date
-        updated_at:
-          type: string
-          format: date
-        updates:
-          $ref: '#/components/schemas/updates'
-      required:
-      - id
-      - maintenanceWindowId
-      - startsAt
-      - endsAt
-      - status
-      - created_at
-      - updated_at
-    Model51:
-      type: array
-      description: Tags defining which checks have alerts silenced (when silenceAllAlerts is false).
-      items:
-        type: string
-    statusPageIds:
-      type: array
-      items:
-        type: string
-        x-format:
-          guid: true
-    MaintenanceWindow:
-      type: object
-      properties:
-        id:
-          type: number
-          description: The id of the maintenance window.
-          example: 1
-        name:
-          type: string
-        tags:
-          $ref: '#/components/schemas/MaintenanceWindowTagList'
-        startsAt:
-          type: string
-          format: date
-        endsAt:
-          type: string
-          format: date
-        repeatInterval:
-          type:
-          - number
-          - 'null'
-        repeatUnit:
-          $ref: '#/components/schemas/repeatUnit'
-        repeatEndsAt:
-          type:
-          - string
-          - 'null'
-          format: date
-        timezone:
-          type:
-          - string
-          - 'null'
-        description:
-          type:
-          - string
-          - 'null'
-        statusPageVisibility:
-          $ref: '#/components/schemas/MaintenanceWindowStatusPageVisibilityResponse'
-        pauseAllChecks:
-          type: boolean
-        silenceAlertsTags:
-          $ref: '#/components/schemas/silenceAlertsTags'
-        silenceAllAlerts:
-          type: boolean
-        created_at:
-          type: string
-          format: date
-          description: The creation date of the maintenance window.
-        updated_at:
-          type:
-          - string
-          - 'null'
-          format: date
-          description: The last date that the maintenance window was updated.
-        projectBindings:
-          $ref: '#/components/schemas/ProjectBindingsV1'
-      required:
-      - id
-      - name
-      - startsAt
-      - endsAt
-      - created_at
-      - updated_at
-    Model65:
-      type: string
-      description: The lifecycle status of this update. Optional. When omitted, the stored status is preserved.
-      enum:
-      - SCHEDULED
-      - IN_PROGRESS
-      - VERIFYING
-      - COMPLETED
-      - CANCELLED
-    ProjectBindingV1:
-      type: object
-      properties:
-        project:
-          $ref: '#/components/schemas/BindingProjectV1'
-        binding:
-          $ref: '#/components/schemas/ProjectBindingDetailsV1'
-      required:
-      - project
-      - binding
-    MaintenanceWindowUpdate:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The maintenance window name.
-          example: Maintenance Window
-          maxLength: 200
-        tags:
-          $ref: '#/components/schemas/MaintenanceWindowTagList'
-        startsAt:
-          type: string
-          format: date
-          description: The start date of the maintenance window.
-          example: '2022-08-24'
-        endsAt:
-          type: string
-          format: date
-          description: The end date of the maintenance window.
-          example: '2022-08-25'
-        repeatInterval:
-          type:
-          - integer
-          - 'null'
-          description: The repeat interval of the maintenance window from the first occurrence.
-          example: null
-          default: null
-          minimum: 1
-          maximum: 365
-        repeatEndsAt:
-          type:
-          - string
-          - 'null'
-          format: date
-          description: An inclusive calendar date in the configured timezone (UTC when unset) on which occurrences may start. Prefer YYYY-MM-DD. For backward compatibility, other accepted date-time values are normalized to the UTC calendar date of the parsed instant. The final occurrence runs for its full configured duration.
-          example: null
-        timezone:
-          type:
-          - string
-          - 'null'
-          description: Named IANA time zone used for recurring maintenance scheduling. UTC offset identifiers such as "+05:00" are not accepted. On create, omission or null uses UTC. On update, omission preserves the existing value; null or UTC resets scheduling to UTC. Changing only this field keeps startsAt and endsAt as the same absolute instants; include recalculated anchors to preserve the existing local date and time.
-          example: America/New_York
-        pauseAllChecks:
-          type: boolean
-          description: Whether to pause all checks in the account (overrides tag scope).
-          default: false
-        silenceAlertsTags:
-          $ref: '#/components/schemas/Model56'
-        silenceAllAlerts:
-          type: boolean
-          description: Whether to silence alerts for all checks (overrides silenceAlertsTags scope).
-          default: false
-        description:
-          type:
-          - string
-          - 'null'
-          description: A description of the maintenance window. When the window is visible on status pages, this description is shown there too.
-          default: null
-          maxLength: 2000
-        statusPageVisibility:
-          $ref: '#/components/schemas/Model61'
-        repeatUnit:
-          $ref: '#/components/schemas/repeatUnit'
-    ForbiddenError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 403
-        error:
-          $ref: '#/components/schemas/Model1'
-        message:
-          type: string
-          example: Forbidden
-      required:
-      - statusCode
-      - error
-    MaintenanceWindowUpdateEditPublicPayload:
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/Model65'
-        description:
-          type: string
-          description: A description of the update.
-          maxLength: 2000
-      required:
-      - description
-    Model63:
-      type: object
-      properties:
-        startsAt:
-          type: string
-          format: date
-        endsAt:
-          type: string
-          format: date
-    Model61:
-      type: object
-      description: Status page visibility and subscriber-facing maintenance settings.
-      default: {}
-      properties:
-        enabled:
-          type: boolean
-          description: Whether this maintenance window appears on linked status pages. This is the master gate for every other status-page visibility field.
-          default: false
-        severity:
-          $ref: '#/components/schemas/Model57'
-        affectAllServices:
-          type: boolean
-          description: 'Whether all services on the linked status pages are affected. Mutually exclusive with a non-empty `serviceIds` array. Only takes effect when `enabled: true`.'
-          default: false
-        notifyOnStart:
-          type: boolean
-          description: 'Whether to email subscribers when maintenance starts. Only takes effect when `enabled: true`.'
-          default: false
-        notifyOnEnd:
-          type: boolean
-          description: 'Whether to email subscribers when maintenance ends. Only takes effect when `enabled: true`.'
-          default: false
-        suppressAutoIncidents:
-          type: boolean
-          description: 'Whether to suppress auto-created incidents for linked services during maintenance. Only takes effect when `enabled: true`.'
-          default: false
-        reminderMinutesBefore:
-          $ref: '#/components/schemas/Model58'
-        autoStart:
-          type: boolean
-          description: 'Automatically start the maintenance at the scheduled time. Only honored when `enabled: true`; on hidden windows the system always auto-starts regardless of this value.'
-          default: true
-        autoEnd:
-          type: boolean
-          description: 'Automatically complete the maintenance at the scheduled end time. Only honored when `enabled: true`; on hidden windows the system always auto-ends regardless of this value.'
-          default: true
-        showAffectedServices:
-          type: boolean
-          description: 'Whether the public status page shows which services this maintenance window affects. When false, the window is still shown as a general event but without its affected services, and its maintenance period is not excluded from service uptime: downtime during the window counts as regular downtime. Only takes effect when `enabled: true`.'
-          default: true
-        statusPageIds:
-          $ref: '#/components/schemas/Model59'
-        serviceIds:
-          $ref: '#/components/schemas/Model60'
-    ProjectBindingDetailsV1:
-      type: object
-      description: The resource's side of this binding.
-      properties:
-        logicalId:
-          type: string
-          description: The resource's logical ID within this project, as declared in code.
-          example: homepage-check
-        pending:
-          type: boolean
-          description: True when the binding is reserved by an import plan that has not been deployed yet.
-      required:
-      - logicalId
-      - pending
-    ProjectBindingOwnerV1:
-      type:
-      - object
-      - 'null'
-      description: The project that owns this resource — the one whose deploy can delete it. Null when no project owns it, including when other projects merely reference it. In the rare case that several projects hold an ownership record for one resource, this reports the preferred one and the rest are omitted.
-      properties:
-        project:
-          $ref: '#/components/schemas/BindingProjectV1'
-        binding:
-          $ref: '#/components/schemas/ProjectBindingDetailsV1'
-      required:
-      - project
-      - binding
-    BindingProjectV1:
-      type: object
-      description: The project this binding is to.
-      properties:
-        id:
-          type: string
-          description: The ID of the project.
-        logicalId:
-          type: string
-          description: The logical ID of the project, as declared in code.
-        name:
-          type: string
-          description: The name of the project.
-      required:
-      - id
-      - logicalId
-      - name
-    Model55:
-      type: array
-      description: 'Status page service IDs affected by this maintenance window. Each service must belong to one of the linked status pages. Only takes effect when `enabled: true`.'
-      items:
-        type: string
-        x-format:
-          guid: true
-    NotFoundError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 404
-        error:
-          $ref: '#/components/schemas/Model4'
-        message:
-          type: string
-          example: Not Found
-      required:
-      - statusCode
-      - error
-    error:
-      type: string
-      enum:
-      - Unauthorized
-    reminderMinutesBefore:
-      type: array
-      items:
-        type: integer
-    Model4:
-      type: string
-      enum:
-      - Not Found
-    Model53:
-      type: array
-      description: 'Minutes before maintenance to send reminder notifications. Only takes effect when `enabled: true`.'
-      maxItems: 3
-      items:
-        type: integer
-        minimum: 60
-        maximum: 10080
-    Model1:
-      type: string
-      enum:
-      - Forbidden
-    ProjectBindingsV1:
-      type: object
-      description: The Checkly CLI projects that manage this resource. `owner` is null and `references` empty when the resource is not managed by code.
-      properties:
-        owner:
-          $ref: '#/components/schemas/ProjectBindingOwnerV1'
-        references:
-          $ref: '#/components/schemas/ProjectBindingReferencesV1'
-      required:
-      - owner
-      - references
-    Model59:
-      type: array
-      description: 'Status page IDs to link this maintenance window to. Requires `serviceIds` or `affectAllServices: true`. On PUT, send `[]` together with `serviceIds: []` to fully unlink. Only takes effect when `enabled: true`.'
-      items:
-        type: string
-        x-format:
-          guid: true
     MaintenanceWindowStatusPageVisibilityResponse:
       type: object
       properties:
@@ -1531,6 +1469,70 @@ components:
           $ref: '#/components/schemas/statusPageIds'
         serviceIds:
           $ref: '#/components/schemas/serviceIds'
+    repeatUnit:
+      type:
+      - string
+      - 'null'
+      enum:
+      - DAY
+      - WEEK
+      - MONTH
+    ProjectBindingOwnerV1:
+      type:
+      - object
+      - 'null'
+      description: The project that owns this resource — the one whose deploy can delete it. Null when no project owns it, including when other projects merely reference it. In the rare case that several projects hold an ownership record for one resource, this reports the preferred one and the rest are omitted.
+      properties:
+        project:
+          $ref: '#/components/schemas/BindingProjectV1'
+        binding:
+          $ref: '#/components/schemas/ProjectBindingDetailsV1'
+      required:
+      - project
+      - binding
+    Model52:
+      type:
+      - string
+      - 'null'
+      description: 'The severity level displayed on the status page. Only takes effect when `enabled: true`.'
+      enum:
+      - MINOR
+      - MEDIUM
+      - MAJOR
+      - CRITICAL
+    Model57:
+      type:
+      - string
+      - 'null'
+      description: 'The severity level displayed on the status page. Only takes effect when `enabled: true`.'
+      enum:
+      - MINOR
+      - MEDIUM
+      - MAJOR
+      - CRITICAL
+    dateAdjustments:
+      type:
+      - object
+      - 'null'
+      properties:
+        startsAt:
+          type: string
+          format: date
+        endsAt:
+          type: string
+          format: date
+    Model58:
+      type: array
+      description: 'Minutes before maintenance to send reminder notifications. Only takes effect when `enabled: true`.'
+      maxItems: 3
+      items:
+        type: integer
+        minimum: 60
+        maximum: 10080
+    MaintenanceWindowMaintenanceList:
+      type: array
+      items:
+        $ref: '#/components/schemas/MaintenanceWindowMaintenance'
   securitySchemes:
     Bearer:
       type: http

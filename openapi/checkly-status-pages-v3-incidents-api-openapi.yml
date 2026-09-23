@@ -2,7 +2,9 @@ openapi: 3.2.0
 info:
   title: Checkly Public Status Pages V3 Incidents API
   version: v1
-  description: These are the docs for the newly released Checkly Public API.<br />If you have any questions, please do not hesitate to get in touch with us.
+  description: 'These are the docs for the newly released Checkly Public API.
+
+    If you have any questions, please do not hesitate to get in touch with us.'
 servers:
 - url: https://api.checklyhq.com
 security:
@@ -12,7 +14,7 @@ tags:
 paths:
   /v3/status-pages/{statusPageId}/incidents:
     get:
-      summary: List the incidents of a v3 status page.
+      summary: List the incidents of a v3 status page
       operationId: listStatusPageV3IncidentsPublic
       description: List the incidents of a v3 status page, most recently updated first.
       parameters:
@@ -76,7 +78,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/TooManyRequestsError'
     post:
-      summary: Open an incident on a v3 status page.
+      summary: Open an incident on a v3 status page
       operationId: createStatusPageV3IncidentPublic
       description: Open an incident on a v3 status page with its first update and the current status of the impacted components.
       parameters:
@@ -135,7 +137,7 @@ paths:
                 $ref: '#/components/schemas/TooManyRequestsError'
   /v3/status-pages/{statusPageId}/incidents/{incidentId}:
     delete:
-      summary: Delete an incident of a v3 status page.
+      summary: Delete an incident of a v3 status page
       operationId: deleteStatusPageV3IncidentPublic
       description: Permanently remove an incident and all its updates.
       parameters:
@@ -195,7 +197,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/TooManyRequestsError'
     get:
-      summary: Retrieve an incident of a v3 status page.
+      summary: Retrieve an incident of a v3 status page
       operationId: getStatusPageV3IncidentPublic
       description: Get an incident of a v3 status page, including its updates and component impacts.
       parameters:
@@ -255,7 +257,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/TooManyRequestsError'
     put:
-      summary: Update an incident of a v3 status page.
+      summary: Update an incident of a v3 status page
       operationId: updateStatusPageV3IncidentPublic
       description: Rename an incident and/or reconcile the current status of its components. Post progress through the incident-updates endpoints.
       parameters:
@@ -321,7 +323,7 @@ paths:
                 $ref: '#/components/schemas/TooManyRequestsError'
   /v3/status-pages/{statusPageId}/incidents/{incidentId}/component-impacts:
     put:
-      summary: Replace an incident's component impact timeline.
+      summary: Replace an incident's component impact timeline
       operationId: replaceStatusPageV3IncidentComponentImpactsPublic
       description: Replace the full impact timeline of an incident with explicit per-component windows (retroactive editing).
       parameters:
@@ -387,7 +389,7 @@ paths:
                 $ref: '#/components/schemas/TooManyRequestsError'
   /v3/status-pages/{statusPageId}/incidents/{incidentId}/incident-updates:
     get:
-      summary: List the updates of an incident.
+      summary: List the updates of an incident
       operationId: listStatusPageV3IncidentUpdatesPublic
       description: List the updates of an incident, newest first (at most 100).
       parameters:
@@ -447,7 +449,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/TooManyRequestsError'
     post:
-      summary: Post an update to an incident.
+      summary: Post an update to an incident
       operationId: createStatusPageV3IncidentUpdatePublic
       description: Post an update to an incident. A RESOLVED update closes the incident.
       parameters:
@@ -513,7 +515,7 @@ paths:
                 $ref: '#/components/schemas/TooManyRequestsError'
   /v3/status-pages/{statusPageId}/incidents/{incidentId}/incident-updates/{incidentUpdateId}:
     delete:
-      summary: Delete an incident update.
+      summary: Delete an incident update
       operationId: deleteStatusPageV3IncidentUpdatePublic
       description: Delete an incident update. The last remaining update cannot be deleted.
       parameters:
@@ -580,7 +582,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/TooManyRequestsError'
     get:
-      summary: Retrieve an incident update.
+      summary: Retrieve an incident update
       operationId: getStatusPageV3IncidentUpdatePublic
       description: Get a single incident update.
       parameters:
@@ -647,7 +649,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/TooManyRequestsError'
     put:
-      summary: Edit an incident update.
+      summary: Edit an incident update
       operationId: updateStatusPageV3IncidentUpdatePublic
       description: Edit an incident update.
       parameters:
@@ -720,35 +722,6 @@ paths:
                 $ref: '#/components/schemas/TooManyRequestsError'
 components:
   schemas:
-    attributes:
-      type: object
-    PublicStatusPageV3IncidentUpdate:
-      type: object
-      properties:
-        description:
-          type: string
-        status:
-          $ref: '#/components/schemas/PublicStatusPageV3IncidentStatus'
-        publicIncidentUpdateDate:
-          type: string
-          format: date-time
-          description: When the update is shown as posted. Defaults to now; cannot predate the incident.
-          default: '2026-08-29T08:22:09.939Z'
-        notifySubscribers:
-          type: boolean
-          default: false
-        id:
-          type: string
-          x-format:
-            guid: true
-        created_at:
-          type: string
-          format: date
-      required:
-      - description
-      - status
-      - id
-      - created_at
     PublicStatusPageV3Incident:
       type: object
       properties:
@@ -788,56 +761,51 @@ components:
       - lastUpdateStatus
       - created_at
       - incidentUpdates
+    Model92:
+      type: string
+      enum:
+      - OPERATIONAL
+      - UNDER_MAINTENANCE
+      - DEGRADED_PERFORMANCE
+      - PARTIAL_OUTAGE
+      - MAJOR_OUTAGE
     Model2:
       type: string
       enum:
       - Too Many Requests
-    UnauthorizedError:
+    error:
+      type: string
+      enum:
+      - Unauthorized
+    PublicStatusPageV3IncidentCreateUpdates:
+      type: array
+      description: 'Exactly one update: the one that opens the incident.'
+      x-constraint:
+        length: 1
+      items:
+        $ref: '#/components/schemas/PublicStatusPageV3IncidentUpdateMutation'
+    Model94:
+      type: string
+      enum:
+      - UNDER_MAINTENANCE
+      - DEGRADED_PERFORMANCE
+      - PARTIAL_OUTAGE
+      - MAJOR_OUTAGE
+    NotFoundError:
       type: object
       properties:
         statusCode:
           type: number
           enum:
-          - 401
+          - 404
         error:
-          $ref: '#/components/schemas/error'
+          $ref: '#/components/schemas/Model4'
         message:
           type: string
-          example: Bad Token
-        attributes:
-          $ref: '#/components/schemas/attributes'
+          example: Not Found
       required:
       - statusCode
       - error
-    TooManyRequestsError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 429
-        error:
-          $ref: '#/components/schemas/Model2'
-        message:
-          type: string
-          example: Too Many Requests
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    PublicStatusPageV3ComponentImpact:
-      type: object
-      properties:
-        componentId:
-          type: string
-          x-format:
-            guid: true
-        status:
-          $ref: '#/components/schemas/Model93'
-      required:
-      - componentId
-      - status
     PublicStatusPageV3IncidentListItem:
       type: object
       properties:
@@ -874,21 +842,60 @@ components:
       - name
       - lastUpdateStatus
       - created_at
-    Model93:
-      type: string
-      enum:
-      - OPERATIONAL
-      - UNDER_MAINTENANCE
-      - DEGRADED_PERFORMANCE
-      - PARTIAL_OUTAGE
-      - MAJOR_OUTAGE
-    PublicStatusPageV3ReplaceComponentImpacts:
+    PublicStatusPageV3IncidentUpdates:
+      type: array
+      items:
+        $ref: '#/components/schemas/PublicStatusPageV3IncidentUpdate'
+    UnauthorizedError:
       type: object
       properties:
-        componentImpacts:
-          $ref: '#/components/schemas/PublicStatusPageV3ComponentImpactWindows'
+        statusCode:
+          type: number
+          enum:
+          - 401
+        error:
+          $ref: '#/components/schemas/error'
+        message:
+          type: string
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
       required:
-      - componentImpacts
+      - statusCode
+      - error
+    PublicStatusPageV3IncidentsPaginatedResponse:
+      type: object
+      properties:
+        length:
+          type: integer
+        entries:
+          $ref: '#/components/schemas/PublicStatusPageV3IncidentsEntries'
+        nextId:
+          type:
+          - string
+          - 'null'
+      required:
+      - length
+      - entries
+    TooManyRequestsError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    attributes:
+      type: object
     PublicStatusPageV3ComponentImpactWindow:
       type: object
       properties:
@@ -912,27 +919,10 @@ components:
       - status
       - startedAt
       - endedAt
-    PublicStatusPageV3ComponentImpactWindows:
-      type: array
-      items:
-        $ref: '#/components/schemas/PublicStatusPageV3ComponentImpactWindow'
-    PublicStatusPageV3IncidentsEntries:
-      type: array
-      items:
-        $ref: '#/components/schemas/PublicStatusPageV3IncidentListItem'
-    PublicStatusPageV3IncidentCreate:
-      type: object
-      properties:
-        name:
-          type: string
-          maxLength: 255
-        componentImpacts:
-          $ref: '#/components/schemas/PublicStatusPageV3ComponentImpacts'
-        incidentUpdates:
-          $ref: '#/components/schemas/PublicStatusPageV3IncidentCreateUpdates'
-      required:
-      - name
-      - incidentUpdates
+    Model1:
+      type: string
+      enum:
+      - Forbidden
     PublicStatusPageV3IncidentMutation:
       type: object
       properties:
@@ -943,10 +933,22 @@ components:
           $ref: '#/components/schemas/PublicStatusPageV3ComponentImpacts'
       required:
       - name
-    PublicStatusPageV3IncidentUpdatesResponse:
+    PublicStatusPageV3ComponentImpactWindows:
       type: array
       items:
-        $ref: '#/components/schemas/PublicStatusPageV3IncidentUpdate'
+        $ref: '#/components/schemas/PublicStatusPageV3ComponentImpactWindow'
+    PublicStatusPageV3ComponentImpact:
+      type: object
+      properties:
+        componentId:
+          type: string
+          x-format:
+            guid: true
+        status:
+          $ref: '#/components/schemas/Model93'
+      required:
+      - componentId
+      - status
     ForbiddenError:
       type: object
       properties:
@@ -962,11 +964,99 @@ components:
       required:
       - statusCode
       - error
+    PublicStatusPageV3IncidentCreate:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 255
+        componentImpacts:
+          $ref: '#/components/schemas/PublicStatusPageV3ComponentImpacts'
+        incidentUpdates:
+          $ref: '#/components/schemas/PublicStatusPageV3IncidentCreateUpdates'
+      required:
+      - name
+      - incidentUpdates
+    PublicStatusPageV3IncidentStatus:
+      type: string
+      enum:
+      - INVESTIGATING
+      - IDENTIFIED
+      - MONITORING
+      - RESOLVED
     PublicStatusPageV3ComponentImpacts:
       type: array
       description: The current status of each impacted component. Omitted components are OPERATIONAL.
       items:
         $ref: '#/components/schemas/PublicStatusPageV3ComponentImpact'
+    Model4:
+      type: string
+      enum:
+      - Not Found
+    PublicStatusPageV3IncidentUpdateMutation:
+      type: object
+      properties:
+        description:
+          type: string
+        status:
+          $ref: '#/components/schemas/PublicStatusPageV3IncidentStatus'
+        publicIncidentUpdateDate:
+          type: string
+          format: date-time
+          description: When the update is shown as posted. Defaults to now; cannot predate the incident.
+          default: '2026-08-29T08:22:09.928Z'
+        notifySubscribers:
+          type: boolean
+          default: false
+      required:
+      - description
+      - status
+    PublicStatusPageV3ComponentImpactsResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/PublicStatusPageV3ComponentImpactResponse'
+    Model93:
+      type: string
+      enum:
+      - OPERATIONAL
+      - UNDER_MAINTENANCE
+      - DEGRADED_PERFORMANCE
+      - PARTIAL_OUTAGE
+      - MAJOR_OUTAGE
+    PublicStatusPageV3IncidentUpdate:
+      type: object
+      properties:
+        description:
+          type: string
+        status:
+          $ref: '#/components/schemas/PublicStatusPageV3IncidentStatus'
+        publicIncidentUpdateDate:
+          type: string
+          format: date-time
+          description: When the update is shown as posted. Defaults to now; cannot predate the incident.
+          default: '2026-08-29T08:22:09.939Z'
+        notifySubscribers:
+          type: boolean
+          default: false
+        id:
+          type: string
+          x-format:
+            guid: true
+        created_at:
+          type: string
+          format: date
+      required:
+      - description
+      - status
+      - id
+      - created_at
+    PublicStatusPageV3ReplaceComponentImpacts:
+      type: object
+      properties:
+        componentImpacts:
+          $ref: '#/components/schemas/PublicStatusPageV3ComponentImpactWindows'
+      required:
+      - componentImpacts
     PublicStatusPageV3ComponentImpactResponse:
       type: object
       properties:
@@ -988,99 +1078,11 @@ components:
       - componentId
       - status
       - startedAt
-    PublicStatusPageV3IncidentUpdateMutation:
-      type: object
-      properties:
-        description:
-          type: string
-        status:
-          $ref: '#/components/schemas/PublicStatusPageV3IncidentStatus'
-        publicIncidentUpdateDate:
-          type: string
-          format: date-time
-          description: When the update is shown as posted. Defaults to now; cannot predate the incident.
-          default: '2026-08-29T08:22:09.928Z'
-        notifySubscribers:
-          type: boolean
-          default: false
-      required:
-      - description
-      - status
-    Model94:
-      type: string
-      enum:
-      - UNDER_MAINTENANCE
-      - DEGRADED_PERFORMANCE
-      - PARTIAL_OUTAGE
-      - MAJOR_OUTAGE
-    NotFoundError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 404
-        error:
-          $ref: '#/components/schemas/Model4'
-        message:
-          type: string
-          example: Not Found
-      required:
-      - statusCode
-      - error
-    error:
-      type: string
-      enum:
-      - Unauthorized
-    PublicStatusPageV3IncidentsPaginatedResponse:
-      type: object
-      properties:
-        length:
-          type: integer
-        entries:
-          $ref: '#/components/schemas/PublicStatusPageV3IncidentsEntries'
-        nextId:
-          type:
-          - string
-          - 'null'
-      required:
-      - length
-      - entries
-    PublicStatusPageV3ComponentImpactsResponse:
+    PublicStatusPageV3IncidentsEntries:
       type: array
       items:
-        $ref: '#/components/schemas/PublicStatusPageV3ComponentImpactResponse'
-    Model4:
-      type: string
-      enum:
-      - Not Found
-    Model1:
-      type: string
-      enum:
-      - Forbidden
-    PublicStatusPageV3IncidentStatus:
-      type: string
-      enum:
-      - INVESTIGATING
-      - IDENTIFIED
-      - MONITORING
-      - RESOLVED
-    Model92:
-      type: string
-      enum:
-      - OPERATIONAL
-      - UNDER_MAINTENANCE
-      - DEGRADED_PERFORMANCE
-      - PARTIAL_OUTAGE
-      - MAJOR_OUTAGE
-    PublicStatusPageV3IncidentCreateUpdates:
-      type: array
-      description: 'Exactly one update: the one that opens the incident.'
-      x-constraint:
-        length: 1
-      items:
-        $ref: '#/components/schemas/PublicStatusPageV3IncidentUpdateMutation'
-    PublicStatusPageV3IncidentUpdates:
+        $ref: '#/components/schemas/PublicStatusPageV3IncidentListItem'
+    PublicStatusPageV3IncidentUpdatesResponse:
       type: array
       items:
         $ref: '#/components/schemas/PublicStatusPageV3IncidentUpdate'

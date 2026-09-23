@@ -2,7 +2,9 @@ openapi: 3.2.0
 info:
   title: Checkly Public Check groups API
   version: v1
-  description: These are the docs for the newly released Checkly Public API.<br />If you have any questions, please do not hesitate to get in touch with us.
+  description: 'These are the docs for the newly released Checkly Public API.
+
+    If you have any questions, please do not hesitate to get in touch with us.'
 servers:
 - url: https://api.checklyhq.com
 security:
@@ -215,7 +217,7 @@ paths:
                 $ref: '#/components/schemas/TooManyRequestsError'
   /v1/check-groups/{id}:
     delete:
-      summary: Delete a check group.
+      summary: Delete a check group
       operationId: deleteV1CheckgroupsId
       description: Permanently removes a check group. You cannot delete a check group if it still contains checks.
       parameters:
@@ -726,12 +728,6 @@ paths:
                 $ref: '#/components/schemas/TooManyRequestsError'
 components:
   schemas:
-    attributes:
-      type: object
-    Model2:
-      type: string
-      enum:
-      - Too Many Requests
     Assertion:
       type: object
       properties:
@@ -750,108 +746,20 @@ components:
           - string
           - 'null'
           default: ''
-    PaymentRequiredError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 402
-        error:
-          $ref: '#/components/schemas/Model3'
-        message:
-          type: string
-          example: Payment Required
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    EnvironmentVariableGet:
-      type: object
-      properties:
-        key:
-          type: string
-          description: The key of the environment variable (this value cannot be changed).
-          example: API_KEY
-        value:
-          type: string
-        locked:
-          type: boolean
-          description: Used only in the UI to hide the value like a password.
-          default: false
-        secret:
-          type: boolean
-          description: Set an environment variable as secret. Once set, its value cannot be unlocked.
-          default: false
-      required:
-      - key
-      - value
-    Model22:
-      type: array
+    FallbackRetryStrategy:
+      type: string
+      enum:
+      - FALLBACK
+    Model86:
+      type:
+      - array
+      - 'null'
+      description: An array of one or more private locations where to run the checks.
+      example:
+      - data-center-eu
       items:
-        $ref: '#/components/schemas/CheckGroupCheck'
-    ForbiddenError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 403
-        error:
-          $ref: '#/components/schemas/Model1'
-        message:
-          type: string
-          example: Forbidden
-      required:
-      - statusCode
-      - error
-    AssertionSource:
-      type: string
-      enum:
-      - STATUS_CODE
-      - JSON_BODY
-      - HEADERS
-      - TEXT_BODY
-      - RESPONSE_TIME
-    AlertSettingsRunBasedEscalation:
-      type: object
-      properties:
-        failedRunThreshold:
-          type: number
-          description: After how many failed consecutive check runs an alert notification should be send.
-          enum:
-          - 1
-          - 2
-          - 3
-          - 4
-          - 5
-    KeyValue:
-      type: object
-      properties:
-        key:
-          type: string
-        value:
-          type: string
-          default: ''
-        locked:
-          type: boolean
-          default: false
-      required:
-      - key
-      - value
-    Model3:
-      type: string
-      enum:
-      - Payment Required
-    AlertSettingsEscalationType:
-      type: string
-      description: Determines what type of escalation to use
-      default: RUN_BASED
-      enum:
-      - RUN_BASED
-      - TIME_BASED
-    Model7:
+        type: string
+    Model14:
       type: string
       enum:
       - us-east-1
@@ -876,137 +784,156 @@ components:
       - ap-northeast-3
       - ap-south-1
       - af-south-1
-    Model86:
-      type:
-      - array
-      - 'null'
-      description: An array of one or more private locations where to run the checks.
-      example:
-      - data-center-eu
+    RetryOnlyOn:
+      type: array
+      x-constraint:
+        length: 1
+        unique: true
+        single: true
       items:
-        type: string
-    Model85:
+        $ref: '#/components/schemas/RetryOnlyOnValue'
+    Model3:
+      type: string
+      enum:
+      - Payment Required
+    AlertSettingsEscalationType:
+      type: string
+      description: Determines what type of escalation to use
+      default: RUN_BASED
+      enum:
+      - RUN_BASED
+      - TIME_BASED
+    attributes:
+      type: object
+    AlertSettingsRunBasedEscalation:
+      type: object
+      properties:
+        failedRunThreshold:
+          type: number
+          description: After how many failed consecutive check runs an alert notification should be send.
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+    AlertChannelSubscriptionCreateList:
       type: array
       description: List of alert channel subscriptions.
-      example: []
       items:
         $ref: '#/components/schemas/Model8'
-    runtimeId:
-      type:
-      - string
-      - 'null'
-      description: The runtime version, i.e. fixed set of runtime dependencies, used to execute checks in this group.
-      example: null
+    Model82:
+      type: string
       enum:
-      - '2026.04'
-      - '2025.04'
-      - '2024.09'
-      - '2024.02'
-      - '2023.09'
-      - '2023.02'
-      - '2022.10'
-    CheckGroupAlertSettings:
-      type: object
-      description: Alert settings.
-      default:
-        escalationType: RUN_BASED
-        runBasedEscalation:
-          failedRunThreshold: 1
-        reminders:
-          amount: 0
-          interval: 5
-        parallelRunFailureThreshold:
-          enabled: false
-          percentage: 10
-      properties:
-        escalationType:
-          $ref: '#/components/schemas/escalationType'
-        reminders:
-          $ref: '#/components/schemas/AlertSettingsReminders'
-        sslCertificates:
-          $ref: '#/components/schemas/AlertSettingsSSLCertificates'
-        runBasedEscalation:
-          $ref: '#/components/schemas/AlertSettingsRunBasedEscalation'
-        timeBasedEscalation:
-          $ref: '#/components/schemas/AlertSettingsTimeBasedEscalation'
-        parallelRunFailureThreshold:
-          $ref: '#/components/schemas/parallelRunFailureThreshold'
-    AlertSettingsParallelRunFailureThreshold:
+      - us-east-1
+      - us-east-2
+      - us-west-1
+      - us-west-2
+      - ca-central-1
+      - sa-east-1
+      - eu-west-1
+      - eu-central-1
+      - eu-west-2
+      - eu-west-3
+      - eu-north-1
+      - eu-south-1
+      - me-south-1
+      - ap-southeast-1
+      - ap-northeast-1
+      - ap-east-1
+      - ap-southeast-2
+      - ap-southeast-3
+      - ap-northeast-2
+      - ap-northeast-3
+      - ap-south-1
+      - af-south-1
+    CheckGroupCreate:
       type: object
       properties:
-        enabled:
+        name:
+          type: string
+          description: The name of the check group.
+          example: Check group
+        activated:
           type: boolean
-          description: Determines if parallel run threshold is enabled
+          description: Determines if the checks in the group are running or not.
+          default: true
+        muted:
+          type: boolean
+          description: Determines if any notifications will be send out when a check in this group fails and/or recovers.
           default: false
-        percentage:
+        tags:
+          $ref: '#/components/schemas/CheckGroupTagList'
+        locations:
+          $ref: '#/components/schemas/Model10'
+        concurrency:
           type: number
-          description: The percentage of parallel runs that should fail before an alert is triggered
-          default: 10
-          enum:
-          - 10
-          - 20
-          - 30
-          - 40
-          - 50
-          - 60
-          - 70
-          - 80
-          - 90
-          - 100
-    Model89:
-      type: object
-      properties:
-        amount:
-          type: number
-          description: How many reminders to send out after the initial alert notification
-          default: 0
-          enum:
-          - 0
-          - 1
-          - 2
-          - 3
-          - 4
-          - 5
-          - 100000
-        interval:
-          type: number
-          description: At what interval the reminders should be send
-          default: 5
-          enum:
-          - 1
-          - 2
-          - 3
-          - 4
-          - 5
-          - 10
-          - 15
-          - 30
-    AlertSettings:
-      type: object
-      description: Alert settings.
-      default:
-        escalationType: RUN_BASED
-        runBasedEscalation:
-          failedRunThreshold: 1
-        reminders:
-          amount: 0
-          interval: 5
-        parallelRunFailureThreshold:
-          enabled: false
-          percentage: 10
-      properties:
-        escalationType:
-          $ref: '#/components/schemas/escalationType'
-        reminders:
-          $ref: '#/components/schemas/AlertSettingsReminders'
-        sslCertificates:
-          $ref: '#/components/schemas/AlertSettingsSSLCertificates'
-        runBasedEscalation:
-          $ref: '#/components/schemas/AlertSettingsRunBasedEscalation'
-        timeBasedEscalation:
-          $ref: '#/components/schemas/AlertSettingsTimeBasedEscalation'
-        parallelRunFailureThreshold:
-          $ref: '#/components/schemas/parallelRunFailureThreshold'
+          description: Determines how many checks are invoked concurrently when triggering a check group from CI/CD or through the API.
+          default: 3
+          minimum: 1
+          x-constraint:
+            sign: positive
+        apiCheckDefaults:
+          $ref: '#/components/schemas/CheckGroupCreateAPICheckDefaults'
+        browserCheckDefaults:
+          type: string
+        runtimeId:
+          $ref: '#/components/schemas/Model11'
+        environmentVariables:
+          $ref: '#/components/schemas/environmentVariables'
+        doubleCheck:
+          type: boolean
+          description: '[Deprecated] Retry failed check runs. This property is deprecated, and `retryStrategy` can be used instead.'
+          default: true
+        useGlobalAlertSettings:
+          type: boolean
+          description: When true, the account level alert setting will be used, not the alert setting defined on this check group.
+          default: true
+        alertSettings:
+          $ref: '#/components/schemas/AlertSettings'
+        alertChannelSubscriptions:
+          $ref: '#/components/schemas/Model12'
+        setupSnippetId:
+          type:
+          - number
+          - 'null'
+          description: An ID reference to a snippet to use in the setup phase of an API check in this group.
+          example: null
+          default: null
+        tearDownSnippetId:
+          type:
+          - number
+          - 'null'
+          description: An ID reference to a snippet to use in the teardown phase of an API check in this group.
+          example: null
+          default: null
+        localSetupScript:
+          type:
+          - string
+          - 'null'
+          description: A valid piece of Node.js code to run in the setup phase of an API check in this group.
+          example: null
+          default: null
+        localTearDownScript:
+          type:
+          - string
+          - 'null'
+          description: A valid piece of Node.js code to run in the teardown phase of an API check in this group.
+          example: null
+          default: null
+        privateLocations:
+          $ref: '#/components/schemas/Model13'
+        runParallel:
+          type: boolean
+          description: When true, the checks in the group will run in parallel in all selected locations.
+          default: false
+        retryStrategy:
+          description: Either a retry strategy object or the literal string "FALLBACK".
+          anyOf:
+          - $ref: '#/components/schemas/RetryStrategy'
+          - $ref: '#/components/schemas/FallbackRetryStrategy'
+      required:
+      - name
     CheckGroupRead:
       type: object
       properties:
@@ -1106,20 +1033,135 @@ components:
       - activated
       - concurrency
       - apiCheckDefaults
-    Model19:
-      type:
-      - string
-      - 'null'
-      description: The runtime version, i.e. fixed set of runtime dependencies, used to execute checks in this group.
-      default: null
+    AssertionComparison:
+      type: string
       enum:
-      - '2026.04'
-      - '2025.04'
-      - '2024.09'
-      - '2024.02'
-      - '2023.09'
-      - '2023.02'
-      - '2022.10'
+      - EQUALS
+      - NOT_EQUALS
+      - HAS_KEY
+      - NOT_HAS_KEY
+      - HAS_VALUE
+      - NOT_HAS_VALUE
+      - IS_EMPTY
+      - NOT_EMPTY
+      - GREATER_THAN
+      - LESS_THAN
+      - CONTAINS
+      - NOT_CONTAINS
+      - IS_NULL
+      - NOT_NULL
+    ProjectBindingV1:
+      type: object
+      properties:
+        project:
+          $ref: '#/components/schemas/BindingProjectV1'
+        binding:
+          $ref: '#/components/schemas/ProjectBindingDetailsV1'
+      required:
+      - project
+      - binding
+    CheckGroupAlertSettings:
+      type: object
+      description: Alert settings.
+      default:
+        escalationType: RUN_BASED
+        runBasedEscalation:
+          failedRunThreshold: 1
+        reminders:
+          amount: 0
+          interval: 5
+        parallelRunFailureThreshold:
+          enabled: false
+          percentage: 10
+      properties:
+        escalationType:
+          $ref: '#/components/schemas/escalationType'
+        reminders:
+          $ref: '#/components/schemas/AlertSettingsReminders'
+        sslCertificates:
+          $ref: '#/components/schemas/AlertSettingsSSLCertificates'
+        runBasedEscalation:
+          $ref: '#/components/schemas/AlertSettingsRunBasedEscalation'
+        timeBasedEscalation:
+          $ref: '#/components/schemas/AlertSettingsTimeBasedEscalation'
+        parallelRunFailureThreshold:
+          $ref: '#/components/schemas/parallelRunFailureThreshold'
+    ProjectBindingOwnerV1:
+      type:
+      - object
+      - 'null'
+      description: The project that owns this resource — the one whose deploy can delete it. Null when no project owns it, including when other projects merely reference it. In the rare case that several projects hold an ownership record for one resource, this reports the preferred one and the rest are omitted.
+      properties:
+        project:
+          $ref: '#/components/schemas/BindingProjectV1'
+        binding:
+          $ref: '#/components/schemas/ProjectBindingDetailsV1'
+      required:
+      - project
+      - binding
+    environmentVariables:
+      type:
+      - array
+      - 'null'
+      maxItems: 200
+      items:
+        $ref: '#/components/schemas/EnvironmentVariableUpdate'
+    CheckGroupAPICheckDefaults:
+      type: object
+      properties:
+        url:
+          type:
+          - string
+          - 'null'
+          description: The base url for this group which you can reference with the {{GROUP_BASE_URL}} variable in all group checks.
+          example: https://api.example.com/v1
+          default: ''
+        headers:
+          $ref: '#/components/schemas/HeaderList'
+        queryParameters:
+          $ref: '#/components/schemas/QueryParameterList'
+        assertions:
+          $ref: '#/components/schemas/AssertionList'
+        basicAuth:
+          $ref: '#/components/schemas/BasicAuth'
+    Model20:
+      type: array
+      description: List of alert channel subscriptions.
+      example: []
+      items:
+        $ref: '#/components/schemas/Model8'
+    CheckGroupList:
+      type: array
+      items:
+        $ref: '#/components/schemas/CheckGroupRead'
+    Model89:
+      type: object
+      properties:
+        amount:
+          type: number
+          description: How many reminders to send out after the initial alert notification
+          default: 0
+          enum:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 100000
+        interval:
+          type: number
+          description: At what interval the reminders should be send
+          default: 5
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 10
+          - 15
+          - 30
     UnauthorizedError:
       type: object
       properties:
@@ -1137,12 +1179,22 @@ components:
       required:
       - statusCode
       - error
-    Model12:
-      type: array
-      description: List of alert channel subscriptions.
-      example: []
-      items:
-        $ref: '#/components/schemas/Model8'
+    InternalAlertSettingsCreate:
+      type:
+      - object
+      - 'null'
+      default: null
+      properties:
+        escalationType:
+          $ref: '#/components/schemas/AlertSettingsEscalationType'
+        runBasedEscalation:
+          $ref: '#/components/schemas/Model87'
+        timeBasedEscalation:
+          $ref: '#/components/schemas/Model88'
+        reminders:
+          $ref: '#/components/schemas/Model89'
+        parallelRunFailureThreshold:
+          $ref: '#/components/schemas/AlertSettingsParallelRunFailureThreshold'
     TooManyRequestsError:
       type: object
       properties:
@@ -1160,6 +1212,23 @@ components:
       required:
       - statusCode
       - error
+    BindingProjectV1:
+      type: object
+      description: The project this binding is to.
+      properties:
+        id:
+          type: string
+          description: The ID of the project.
+        logicalId:
+          type: string
+          description: The logical ID of the project, as declared in code.
+        name:
+          type: string
+          description: The name of the project.
+      required:
+      - id
+      - logicalId
+      - name
     CheckGroupCreateOrUpdateV2:
       type: object
       properties:
@@ -1251,12 +1320,59 @@ components:
           default: false
       required:
       - name
-    AlertChannelSubscriptionCreateList:
+    Model18:
       type: array
-      description: List of alert channel subscriptions.
+      description: An array of one or more data center locations where to run the checks.
+      example:
+      - us-east-1
+      - eu-central-1
       items:
-        $ref: '#/components/schemas/Model8'
-    CheckGroupCheckV2:
+        $ref: '#/components/schemas/Model17'
+    Model4:
+      type: string
+      enum:
+      - Not Found
+    EnvironmentVariableList:
+      type:
+      - array
+      - 'null'
+      items:
+        $ref: '#/components/schemas/EnvironmentVariableGet'
+    Model17:
+      type: string
+      enum:
+      - us-east-1
+      - us-east-2
+      - us-west-1
+      - us-west-2
+      - ca-central-1
+      - sa-east-1
+      - eu-west-1
+      - eu-central-1
+      - eu-west-2
+      - eu-west-3
+      - eu-north-1
+      - eu-south-1
+      - me-south-1
+      - ap-southeast-1
+      - ap-northeast-1
+      - ap-east-1
+      - ap-southeast-2
+      - ap-southeast-3
+      - ap-northeast-2
+      - ap-northeast-3
+      - ap-south-1
+      - af-south-1
+    Model21:
+      type:
+      - array
+      - 'null'
+      description: An array of one or more private locations where to run the checks.
+      example:
+      - data-center-eu
+      items:
+        type: string
+    CheckGroupCheck:
       type: object
       properties:
         id:
@@ -1265,8 +1381,148 @@ components:
           $ref: '#/components/schemas/checkType'
       required:
       - checkType
-    CheckGroupAPICheckDefaults:
+    RetryStrategyType:
+      type: string
+      description: Determines which type of retry strategy to use.
+      enum:
+      - FIXED
+      - LINEAR
+      - EXPONENTIAL
+      - SINGLE_RETRY
+    AlertSettingsParallelRunFailureThreshold:
       type: object
+      properties:
+        enabled:
+          type: boolean
+          description: Determines if parallel run threshold is enabled
+          default: false
+        percentage:
+          type: number
+          description: The percentage of parallel runs that should fail before an alert is triggered
+          default: 10
+          enum:
+          - 10
+          - 20
+          - 30
+          - 40
+          - 50
+          - 60
+          - 70
+          - 80
+          - 90
+          - 100
+    Model87:
+      type: object
+      properties:
+        failedRunThreshold:
+          type: number
+          description: After how many failed consecutive check runs an alert notification should be send
+          default: 1
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+    escalationType:
+      type: string
+      description: Determines what type of escalation to use.
+      default: RUN_BASED
+      enum:
+      - RUN_BASED
+      - TIME_BASED
+    RetryOnlyOnValue:
+      type: string
+      description: 'The HTTP request could not be completed due to a network error: no response status code was received'
+      enum:
+      - NETWORK_ERROR
+    QueryParameterList:
+      type: array
+      example:
+      - key: Page
+        value: '1'
+      items:
+        $ref: '#/components/schemas/KeyValue'
+    Model83:
+      type: array
+      description: An array of one or more data center locations where to run the checks.
+      example:
+      - us-east-1
+      - eu-central-1
+      items:
+        $ref: '#/components/schemas/Model82'
+    BasicAuth:
+      type:
+      - object
+      - 'null'
+      properties:
+        username:
+          type: string
+          example: admin
+          default: ''
+        password:
+          type: string
+          example: abc12345
+          default: ''
+      required:
+      - username
+      - password
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
+    error:
+      type: string
+      enum:
+      - Unauthorized
+    ProjectBindingReferencesV1:
+      type: array
+      description: Projects that use this resource without owning it; their deploys leave it alone. Empty when there are none.
+      items:
+        $ref: '#/components/schemas/ProjectBindingV1'
+    Model9:
+      type: string
+      enum:
+      - us-east-1
+      - us-east-2
+      - us-west-1
+      - us-west-2
+      - ca-central-1
+      - sa-east-1
+      - eu-west-1
+      - eu-central-1
+      - eu-west-2
+      - eu-west-3
+      - eu-north-1
+      - eu-south-1
+      - me-south-1
+      - ap-southeast-1
+      - ap-northeast-1
+      - ap-east-1
+      - ap-southeast-2
+      - ap-southeast-3
+      - ap-northeast-2
+      - ap-northeast-3
+      - ap-south-1
+      - af-south-1
+    CheckGroupCreateAPICheckDefaults:
+      type: object
+      example:
+        url: https://api.example.com/v1
+        headers:
+        - key: Cache-Control
+          value: no-store
+        queryParameters:
+        - key: Page
+          value: '1'
+        assertions:
+        - source: STATUS_CODE
+          comparison: NOT_EMPTY
+          target: '200'
+        basicAuth:
+          username: admin
+          password: abc12345
+      default: {}
       properties:
         url:
           type:
@@ -1283,14 +1539,91 @@ components:
           $ref: '#/components/schemas/AssertionList'
         basicAuth:
           $ref: '#/components/schemas/BasicAuth'
-    RetryOnlyOn:
-      type: array
-      x-constraint:
-        length: 1
-        unique: true
-        single: true
-      items:
-        $ref: '#/components/schemas/RetryOnlyOnValue'
+    CheckGroupUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the check group.
+          example: Check group
+        activated:
+          type: boolean
+          description: Determines if the checks in the group are running or not.
+          default: true
+        muted:
+          type: boolean
+          description: Determines if any notifications will be send out when a check in this group fails and/or recovers.
+          default: false
+        tags:
+          $ref: '#/components/schemas/CheckGroupTagList'
+        locations:
+          $ref: '#/components/schemas/Model18'
+        concurrency:
+          type: number
+          description: Determines how many checks are invoked concurrently when triggering a check group from CI/CD or through the API.
+          default: 3
+          minimum: 1
+          x-constraint:
+            sign: positive
+        apiCheckDefaults:
+          $ref: '#/components/schemas/CheckGroupCreateAPICheckDefaults'
+        browserCheckDefaults:
+          type: string
+        runtimeId:
+          $ref: '#/components/schemas/Model19'
+        environmentVariables:
+          $ref: '#/components/schemas/environmentVariables'
+        doubleCheck:
+          type: boolean
+          description: '[Deprecated] Retry failed check runs. This property is deprecated, and `retryStrategy` can be used instead.'
+          default: true
+        useGlobalAlertSettings:
+          type: boolean
+          description: When true, the account level alert setting will be used, not the alert setting defined on this check group.
+          default: true
+        alertSettings:
+          $ref: '#/components/schemas/AlertSettings'
+        alertChannelSubscriptions:
+          $ref: '#/components/schemas/Model20'
+        setupSnippetId:
+          type:
+          - number
+          - 'null'
+          description: An ID reference to a snippet to use in the setup phase of an API check in this group.
+          example: null
+          default: null
+        tearDownSnippetId:
+          type:
+          - number
+          - 'null'
+          description: An ID reference to a snippet to use in the teardown phase of an API check in this group.
+          example: null
+          default: null
+        localSetupScript:
+          type:
+          - string
+          - 'null'
+          description: A valid piece of Node.js code to run in the setup phase of an API check in this group.
+          example: null
+          default: null
+        localTearDownScript:
+          type:
+          - string
+          - 'null'
+          description: A valid piece of Node.js code to run in the teardown phase of an API check in this group.
+          example: null
+          default: null
+        privateLocations:
+          $ref: '#/components/schemas/Model21'
+        runParallel:
+          type: boolean
+          description: When true, the checks in the group will run in parallel in all selected locations.
+          default: false
+        retryStrategy:
+          description: Either a retry strategy object or the literal string "FALLBACK".
+          anyOf:
+          - $ref: '#/components/schemas/RetryStrategy'
+          - $ref: '#/components/schemas/FallbackRetryStrategy'
     CheckGroup:
       type: object
       properties:
@@ -1388,120 +1721,6 @@ components:
       - activated
       - concurrency
       - apiCheckDefaults
-    Model88:
-      type: object
-      properties:
-        minutesFailingThreshold:
-          type: number
-          description: After how many minutes after a check starts failing an alert should be send
-          default: 5
-          enum:
-          - 5
-          - 10
-          - 15
-          - 30
-    ProjectBindingV1:
-      type: object
-      properties:
-        project:
-          $ref: '#/components/schemas/BindingProjectV1'
-        binding:
-          $ref: '#/components/schemas/ProjectBindingDetailsV1'
-      required:
-      - project
-      - binding
-    Model14:
-      type: string
-      enum:
-      - us-east-1
-      - us-east-2
-      - us-west-1
-      - us-west-2
-      - ca-central-1
-      - sa-east-1
-      - eu-west-1
-      - eu-central-1
-      - eu-west-2
-      - eu-west-3
-      - eu-north-1
-      - eu-south-1
-      - me-south-1
-      - ap-southeast-1
-      - ap-northeast-1
-      - ap-east-1
-      - ap-southeast-2
-      - ap-southeast-3
-      - ap-northeast-2
-      - ap-northeast-3
-      - ap-south-1
-      - af-south-1
-    HeaderList:
-      type: array
-      example:
-      - key: Cache-Control
-        value: no-store
-      items:
-        $ref: '#/components/schemas/KeyValue'
-    QueryParameterList:
-      type: array
-      example:
-      - key: Page
-        value: '1'
-      items:
-        $ref: '#/components/schemas/KeyValue'
-    checkType:
-      type: string
-      description: The type of the check.
-      enum:
-      - AGENTIC
-      - API
-      - BROWSER
-      - HEARTBEAT
-      - ICMP
-      - MULTI_STEP
-      - TCP
-      - PLAYWRIGHT
-      - TRACEROUTE
-      - URL
-      - DNS
-      - SSL
-      - GRPC
-    CheckGroupLocationList:
-      type: array
-      description: An array of one or more data center locations where to run the checks.
-      example:
-      - us-east-1
-      - eu-central-1
-      items:
-        $ref: '#/components/schemas/Model7'
-    AlertSettingsTimeBasedEscalation:
-      type: object
-      properties:
-        minutesFailingThreshold:
-          type: number
-          description: After how many minutes after a check starts failing an alert should be send.
-          enum:
-          - 5
-          - 10
-          - 15
-          - 30
-    escalationType:
-      type: string
-      description: Determines what type of escalation to use.
-      default: RUN_BASED
-      enum:
-      - RUN_BASED
-      - TIME_BASED
-    CheckGroupCheckListV2:
-      type: array
-      items:
-        $ref: '#/components/schemas/CheckGroupCheckV2'
-    Model20:
-      type: array
-      description: List of alert channel subscriptions.
-      example: []
-      items:
-        $ref: '#/components/schemas/Model8'
     privateLocations:
       type:
       - array
@@ -1509,466 +1728,6 @@ components:
       description: An array of one or more private locations where to run the check.
       example:
       - data-center-eu
-      items:
-        type: string
-    AssertionComparison:
-      type: string
-      enum:
-      - EQUALS
-      - NOT_EQUALS
-      - HAS_KEY
-      - NOT_HAS_KEY
-      - HAS_VALUE
-      - NOT_HAS_VALUE
-      - IS_EMPTY
-      - NOT_EMPTY
-      - GREATER_THAN
-      - LESS_THAN
-      - CONTAINS
-      - NOT_CONTAINS
-      - IS_NULL
-      - NOT_NULL
-    AlertSettingsSSLCertificates:
-      type: object
-      description: '[DEPRECATED] `sslCertificates` is deprecated and is not longer used. Please ignore it, will be removed in a future version.'
-      properties:
-        enabled:
-          type: boolean
-          description: Determines if alert notifications should be send for expiring SSL certificates.
-        alertThreshold:
-          type: integer
-          description: At what moment in time to start alerting on SSL certificates.
-    ProjectBindingReferencesV1:
-      type: array
-      description: Projects that use this resource without owning it; their deploys leave it alone. Empty when there are none.
-      items:
-        $ref: '#/components/schemas/ProjectBindingV1'
-    Model83:
-      type: array
-      description: An array of one or more data center locations where to run the checks.
-      example:
-      - us-east-1
-      - eu-central-1
-      items:
-        $ref: '#/components/schemas/Model82'
-    Model16:
-      type: string
-      enum:
-      - Conflict
-    InternalAlertSettingsCreate:
-      type:
-      - object
-      - 'null'
-      default: null
-      properties:
-        escalationType:
-          $ref: '#/components/schemas/AlertSettingsEscalationType'
-        runBasedEscalation:
-          $ref: '#/components/schemas/Model87'
-        timeBasedEscalation:
-          $ref: '#/components/schemas/Model88'
-        reminders:
-          $ref: '#/components/schemas/Model89'
-        parallelRunFailureThreshold:
-          $ref: '#/components/schemas/AlertSettingsParallelRunFailureThreshold'
-    RetryStrategyType:
-      type: string
-      description: Determines which type of retry strategy to use.
-      enum:
-      - FIXED
-      - LINEAR
-      - EXPONENTIAL
-      - SINGLE_RETRY
-    ConflictError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 409
-        error:
-          $ref: '#/components/schemas/Model16'
-        message:
-          type: string
-          example: Conflict
-      required:
-      - statusCode
-      - error
-    Model11:
-      type:
-      - string
-      - 'null'
-      description: The runtime version, i.e. fixed set of runtime dependencies, used to execute checks in this group.
-      default: null
-      enum:
-      - '2026.04'
-      - '2025.04'
-      - '2024.09'
-      - '2024.02'
-      - '2023.09'
-      - '2023.02'
-      - '2022.10'
-    CheckGroupUpdate:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the check group.
-          example: Check group
-        activated:
-          type: boolean
-          description: Determines if the checks in the group are running or not.
-          default: true
-        muted:
-          type: boolean
-          description: Determines if any notifications will be send out when a check in this group fails and/or recovers.
-          default: false
-        tags:
-          $ref: '#/components/schemas/CheckGroupTagList'
-        locations:
-          $ref: '#/components/schemas/Model18'
-        concurrency:
-          type: number
-          description: Determines how many checks are invoked concurrently when triggering a check group from CI/CD or through the API.
-          default: 3
-          minimum: 1
-          x-constraint:
-            sign: positive
-        apiCheckDefaults:
-          $ref: '#/components/schemas/CheckGroupCreateAPICheckDefaults'
-        browserCheckDefaults:
-          type: string
-        runtimeId:
-          $ref: '#/components/schemas/Model19'
-        environmentVariables:
-          $ref: '#/components/schemas/environmentVariables'
-        doubleCheck:
-          type: boolean
-          description: '[Deprecated] Retry failed check runs. This property is deprecated, and `retryStrategy` can be used instead.'
-          default: true
-        useGlobalAlertSettings:
-          type: boolean
-          description: When true, the account level alert setting will be used, not the alert setting defined on this check group.
-          default: true
-        alertSettings:
-          $ref: '#/components/schemas/AlertSettings'
-        alertChannelSubscriptions:
-          $ref: '#/components/schemas/Model20'
-        setupSnippetId:
-          type:
-          - number
-          - 'null'
-          description: An ID reference to a snippet to use in the setup phase of an API check in this group.
-          example: null
-          default: null
-        tearDownSnippetId:
-          type:
-          - number
-          - 'null'
-          description: An ID reference to a snippet to use in the teardown phase of an API check in this group.
-          example: null
-          default: null
-        localSetupScript:
-          type:
-          - string
-          - 'null'
-          description: A valid piece of Node.js code to run in the setup phase of an API check in this group.
-          example: null
-          default: null
-        localTearDownScript:
-          type:
-          - string
-          - 'null'
-          description: A valid piece of Node.js code to run in the teardown phase of an API check in this group.
-          example: null
-          default: null
-        privateLocations:
-          $ref: '#/components/schemas/Model21'
-        runParallel:
-          type: boolean
-          description: When true, the checks in the group will run in parallel in all selected locations.
-          default: false
-        retryStrategy:
-          description: Either a retry strategy object or the literal string "FALLBACK".
-          anyOf:
-          - $ref: '#/components/schemas/RetryStrategy'
-          - $ref: '#/components/schemas/FallbackRetryStrategy'
-    RetryStrategy:
-      type:
-      - object
-      - 'null'
-      description: The strategy to determine how failed checks are retried.
-      properties:
-        type:
-          $ref: '#/components/schemas/RetryStrategyType'
-        baseBackoffSeconds:
-          type: number
-          description: The number of seconds to wait before the first retry attempt.
-          default: 60
-        sameRegion:
-          type: boolean
-          description: Whether retries should be run in the same region as the initial check run.
-          default: true
-        maxRetries:
-          type: number
-          description: The maximum number of attempts to retry the check. Not supported for SINGLE_RETRY
-          minimum: 1
-          maximum: 10
-        maxDurationSeconds:
-          type: number
-          description: The total amount of time to continue retrying the check. Not supported for SINGLE_RETRY
-          minimum: 0
-          maximum: 600
-        onlyOn:
-          $ref: '#/components/schemas/RetryOnlyOn'
-      required:
-      - type
-    ProjectBindingDetailsV1:
-      type: object
-      description: The resource's side of this binding.
-      properties:
-        logicalId:
-          type: string
-          description: The resource's logical ID within this project, as declared in code.
-          example: homepage-check
-        pending:
-          type: boolean
-          description: True when the binding is reserved by an import plan that has not been deployed yet.
-      required:
-      - logicalId
-      - pending
-    Model87:
-      type: object
-      properties:
-        failedRunThreshold:
-          type: number
-          description: After how many failed consecutive check runs an alert notification should be send
-          default: 1
-          enum:
-          - 1
-          - 2
-          - 3
-          - 4
-          - 5
-    BindingProjectV1:
-      type: object
-      description: The project this binding is to.
-      properties:
-        id:
-          type: string
-          description: The ID of the project.
-        logicalId:
-          type: string
-          description: The logical ID of the project, as declared in code.
-        name:
-          type: string
-          description: The name of the project.
-      required:
-      - id
-      - logicalId
-      - name
-    CheckGroupCreateAPICheckDefaults:
-      type: object
-      example:
-        url: https://api.example.com/v1
-        headers:
-        - key: Cache-Control
-          value: no-store
-        queryParameters:
-        - key: Page
-          value: '1'
-        assertions:
-        - source: STATUS_CODE
-          comparison: NOT_EMPTY
-          target: '200'
-        basicAuth:
-          username: admin
-          password: abc12345
-      default: {}
-      properties:
-        url:
-          type:
-          - string
-          - 'null'
-          description: The base url for this group which you can reference with the {{GROUP_BASE_URL}} variable in all group checks.
-          example: https://api.example.com/v1
-          default: ''
-        headers:
-          $ref: '#/components/schemas/HeaderList'
-        queryParameters:
-          $ref: '#/components/schemas/QueryParameterList'
-        assertions:
-          $ref: '#/components/schemas/AssertionList'
-        basicAuth:
-          $ref: '#/components/schemas/BasicAuth'
-    Model15:
-      type: array
-      description: An array of one or more data center locations where to run the checks.
-      example:
-      - us-east-1
-      - eu-central-1
-      items:
-        $ref: '#/components/schemas/Model14'
-    Model82:
-      type: string
-      enum:
-      - us-east-1
-      - us-east-2
-      - us-west-1
-      - us-west-2
-      - ca-central-1
-      - sa-east-1
-      - eu-west-1
-      - eu-central-1
-      - eu-west-2
-      - eu-west-3
-      - eu-north-1
-      - eu-south-1
-      - me-south-1
-      - ap-southeast-1
-      - ap-northeast-1
-      - ap-east-1
-      - ap-southeast-2
-      - ap-southeast-3
-      - ap-northeast-2
-      - ap-northeast-3
-      - ap-south-1
-      - af-south-1
-    Model84:
-      type:
-      - string
-      - 'null'
-      description: The runtime version, i.e. fixed set of runtime dependencies, used to execute checks in this group.
-      default: null
-      enum:
-      - '2026.04'
-      - '2025.04'
-      - '2024.09'
-      - '2024.02'
-      - '2023.09'
-      - '2023.02'
-      - '2022.10'
-    Model4:
-      type: string
-      enum:
-      - Not Found
-    Model9:
-      type: string
-      enum:
-      - us-east-1
-      - us-east-2
-      - us-west-1
-      - us-west-2
-      - ca-central-1
-      - sa-east-1
-      - eu-west-1
-      - eu-central-1
-      - eu-west-2
-      - eu-west-3
-      - eu-north-1
-      - eu-south-1
-      - me-south-1
-      - ap-southeast-1
-      - ap-northeast-1
-      - ap-east-1
-      - ap-southeast-2
-      - ap-southeast-3
-      - ap-northeast-2
-      - ap-northeast-3
-      - ap-south-1
-      - af-south-1
-    Model10:
-      type: array
-      description: An array of one or more data center locations where to run the checks.
-      example:
-      - us-east-1
-      - eu-central-1
-      items:
-        $ref: '#/components/schemas/Model9'
-    Model1:
-      type: string
-      enum:
-      - Forbidden
-    ProjectBindingsV1:
-      type: object
-      description: The Checkly CLI projects that manage this resource. `owner` is null and `references` empty when the resource is not managed by code.
-      properties:
-        owner:
-          $ref: '#/components/schemas/ProjectBindingOwnerV1'
-        references:
-          $ref: '#/components/schemas/ProjectBindingReferencesV1'
-      required:
-      - owner
-      - references
-    EnvironmentVariableUpdate:
-      type: object
-      properties:
-        key:
-          type: string
-          description: The key of the environment variable (this value cannot be changed).
-          example: API_KEY
-        value:
-          type: string
-          description: The value of the environment variable.
-          example: bAxD7biGCZL6K60Q
-        locked:
-          type: boolean
-          description: Used only in the UI to hide the value like a password.
-          default: false
-        secret:
-          type: boolean
-          description: Set an environment variable as secret. Once set, its value cannot be unlocked.
-          default: false
-      required:
-      - value
-    CheckGroupCheck:
-      type: object
-      properties:
-        id:
-          type: string
-        checkType:
-          $ref: '#/components/schemas/checkType'
-      required:
-      - checkType
-    parallelRunFailureThreshold:
-      type: object
-      properties:
-        enabled:
-          type: boolean
-          description: Determines if parallel run threshold is enabled
-          default: false
-        percentage:
-          type: number
-          description: The percentage of parallel runs that should fail before an alert is triggered
-          default: 10
-          enum:
-          - 10
-          - 20
-          - 30
-          - 40
-          - 50
-          - 60
-          - 70
-          - 80
-          - 90
-          - 100
-    Model8:
-      type: object
-      description: Alert channel subscription.
-      properties:
-        alertChannelId:
-          type: number
-        activated:
-          type: boolean
-          default: true
-      required:
-      - alertChannelId
-      - activated
-    CheckGroupTagList:
-      type: array
-      description: Tags for organizing and filtering checks.
-      example:
-      - production
       items:
         type: string
     AlertSettingsReminders:
@@ -1999,25 +1758,21 @@ components:
           - 10
           - 15
           - 30
-    EnvironmentVariableList:
+    runtimeId:
       type:
-      - array
+      - string
       - 'null'
-      items:
-        $ref: '#/components/schemas/EnvironmentVariableGet'
-    Model18:
-      type: array
-      description: An array of one or more data center locations where to run the checks.
-      example:
-      - us-east-1
-      - eu-central-1
-      items:
-        $ref: '#/components/schemas/Model17'
-    CheckGroupList:
-      type: array
-      items:
-        $ref: '#/components/schemas/CheckGroupRead'
-    Model17:
+      description: The runtime version, i.e. fixed set of runtime dependencies, used to execute checks in this group.
+      example: null
+      enum:
+      - '2026.04'
+      - '2025.04'
+      - '2024.09'
+      - '2024.02'
+      - '2023.09'
+      - '2023.02'
+      - '2022.10'
+    Model7:
       type: string
       enum:
       - us-east-1
@@ -2042,15 +1797,32 @@ components:
       - ap-northeast-3
       - ap-south-1
       - af-south-1
-    FallbackRetryStrategy:
+    ProjectBindingDetailsV1:
+      type: object
+      description: The resource's side of this binding.
+      properties:
+        logicalId:
+          type: string
+          description: The resource's logical ID within this project, as declared in code.
+          example: homepage-check
+        pending:
+          type: boolean
+          description: True when the binding is reserved by an import plan that has not been deployed yet.
+      required:
+      - logicalId
+      - pending
+    AssertionSource:
       type: string
       enum:
-      - FALLBACK
-    RetryOnlyOnValue:
+      - STATUS_CODE
+      - JSON_BODY
+      - HEADERS
+      - TEXT_BODY
+      - RESPONSE_TIME
+    Model1:
       type: string
-      description: 'The HTTP request could not be completed due to a network error: no response status code was received'
       enum:
-      - NETWORK_ERROR
+      - Forbidden
     Model13:
       type:
       - array
@@ -2060,44 +1832,134 @@ components:
       - data-center-eu
       items:
         type: string
-    BasicAuth:
-      type:
-      - object
-      - 'null'
-      properties:
-        username:
-          type: string
-          example: admin
-          default: ''
-        password:
-          type: string
-          example: abc12345
-          default: ''
-      required:
-      - username
-      - password
-    ProjectBindingOwnerV1:
-      type:
-      - object
-      - 'null'
-      description: The project that owns this resource — the one whose deploy can delete it. Null when no project owns it, including when other projects merely reference it. In the rare case that several projects hold an ownership record for one resource, this reports the preferred one and the rest are omitted.
-      properties:
-        project:
-          $ref: '#/components/schemas/BindingProjectV1'
-        binding:
-          $ref: '#/components/schemas/ProjectBindingDetailsV1'
-      required:
-      - project
-      - binding
-    Model21:
-      type:
-      - array
-      - 'null'
-      description: An array of one or more private locations where to run the checks.
-      example:
-      - data-center-eu
+    Model22:
+      type: array
       items:
-        type: string
+        $ref: '#/components/schemas/CheckGroupCheck'
+    AlertSettingsTimeBasedEscalation:
+      type: object
+      properties:
+        minutesFailingThreshold:
+          type: number
+          description: After how many minutes after a check starts failing an alert should be send.
+          enum:
+          - 5
+          - 10
+          - 15
+          - 30
+    Model11:
+      type:
+      - string
+      - 'null'
+      description: The runtime version, i.e. fixed set of runtime dependencies, used to execute checks in this group.
+      default: null
+      enum:
+      - '2026.04'
+      - '2025.04'
+      - '2024.09'
+      - '2024.02'
+      - '2023.09'
+      - '2023.02'
+      - '2022.10'
+    Model85:
+      type: array
+      description: List of alert channel subscriptions.
+      example: []
+      items:
+        $ref: '#/components/schemas/Model8'
+    AlertSettingsSSLCertificates:
+      type: object
+      description: '[DEPRECATED] `sslCertificates` is deprecated and is not longer used. Please ignore it, will be removed in a future version.'
+      properties:
+        enabled:
+          type: boolean
+          description: Determines if alert notifications should be send for expiring SSL certificates.
+        alertThreshold:
+          type: integer
+          description: At what moment in time to start alerting on SSL certificates.
+    Model12:
+      type: array
+      description: List of alert channel subscriptions.
+      example: []
+      items:
+        $ref: '#/components/schemas/Model8'
+    checkType:
+      type: string
+      description: The type of the check.
+      enum:
+      - AGENTIC
+      - API
+      - BROWSER
+      - HEARTBEAT
+      - ICMP
+      - MULTI_STEP
+      - TCP
+      - PLAYWRIGHT
+      - TRACEROUTE
+      - URL
+      - DNS
+      - SSL
+      - GRPC
+    Model8:
+      type: object
+      description: Alert channel subscription.
+      properties:
+        alertChannelId:
+          type: number
+        activated:
+          type: boolean
+          default: true
+      required:
+      - alertChannelId
+      - activated
+    Model10:
+      type: array
+      description: An array of one or more data center locations where to run the checks.
+      example:
+      - us-east-1
+      - eu-central-1
+      items:
+        $ref: '#/components/schemas/Model9'
+    Model88:
+      type: object
+      properties:
+        minutesFailingThreshold:
+          type: number
+          description: After how many minutes after a check starts failing an alert should be send
+          default: 5
+          enum:
+          - 5
+          - 10
+          - 15
+          - 30
+    EnvironmentVariableUpdate:
+      type: object
+      properties:
+        key:
+          type: string
+          description: The key of the environment variable (this value cannot be changed).
+          example: API_KEY
+        value:
+          type: string
+          description: The value of the environment variable.
+          example: bAxD7biGCZL6K60Q
+        locked:
+          type: boolean
+          description: Used only in the UI to hide the value like a password.
+          default: false
+        secret:
+          type: boolean
+          description: Set an environment variable as secret. Once set, its value cannot be unlocked.
+          default: false
+      required:
+      - value
+    HeaderList:
+      type: array
+      example:
+      - key: Cache-Control
+        value: no-store
+      items:
+        $ref: '#/components/schemas/KeyValue'
     NotFoundError:
       type: object
       properties:
@@ -2113,10 +1975,130 @@ components:
       required:
       - statusCode
       - error
-    error:
-      type: string
+    CheckGroupCheckListV2:
+      type: array
+      items:
+        $ref: '#/components/schemas/CheckGroupCheckV2'
+    Model19:
+      type:
+      - string
+      - 'null'
+      description: The runtime version, i.e. fixed set of runtime dependencies, used to execute checks in this group.
+      default: null
       enum:
-      - Unauthorized
+      - '2026.04'
+      - '2025.04'
+      - '2024.09'
+      - '2024.02'
+      - '2023.09'
+      - '2023.02'
+      - '2022.10'
+    EnvironmentVariableGet:
+      type: object
+      properties:
+        key:
+          type: string
+          description: The key of the environment variable (this value cannot be changed).
+          example: API_KEY
+        value:
+          type: string
+        locked:
+          type: boolean
+          description: Used only in the UI to hide the value like a password.
+          default: false
+        secret:
+          type: boolean
+          description: Set an environment variable as secret. Once set, its value cannot be unlocked.
+          default: false
+      required:
+      - key
+      - value
+    ConflictError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 409
+        error:
+          $ref: '#/components/schemas/Model16'
+        message:
+          type: string
+          example: Conflict
+      required:
+      - statusCode
+      - error
+    CheckGroupLocationList:
+      type: array
+      description: An array of one or more data center locations where to run the checks.
+      example:
+      - us-east-1
+      - eu-central-1
+      items:
+        $ref: '#/components/schemas/Model7'
+    parallelRunFailureThreshold:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+          description: Determines if parallel run threshold is enabled
+          default: false
+        percentage:
+          type: number
+          description: The percentage of parallel runs that should fail before an alert is triggered
+          default: 10
+          enum:
+          - 10
+          - 20
+          - 30
+          - 40
+          - 50
+          - 60
+          - 70
+          - 80
+          - 90
+          - 100
+    CheckGroupCheckV2:
+      type: object
+      properties:
+        id:
+          type: string
+        checkType:
+          $ref: '#/components/schemas/checkType'
+      required:
+      - checkType
+    ForbiddenError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 403
+        error:
+          $ref: '#/components/schemas/Model1'
+        message:
+          type: string
+          example: Forbidden
+      required:
+      - statusCode
+      - error
+    PaymentRequiredError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 402
+        error:
+          $ref: '#/components/schemas/Model3'
+        message:
+          type: string
+          example: Payment Required
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
     AssertionList:
       type: array
       description: Check the main Checkly documentation on assertions for specific values like regular expressions and JSON path descriptors you can use in the "property" field.
@@ -2126,100 +2108,120 @@ components:
         target: '200'
       items:
         $ref: '#/components/schemas/Assertion'
-    environmentVariables:
-      type:
-      - array
-      - 'null'
-      maxItems: 200
+    AlertSettings:
+      type: object
+      description: Alert settings.
+      default:
+        escalationType: RUN_BASED
+        runBasedEscalation:
+          failedRunThreshold: 1
+        reminders:
+          amount: 0
+          interval: 5
+        parallelRunFailureThreshold:
+          enabled: false
+          percentage: 10
+      properties:
+        escalationType:
+          $ref: '#/components/schemas/escalationType'
+        reminders:
+          $ref: '#/components/schemas/AlertSettingsReminders'
+        sslCertificates:
+          $ref: '#/components/schemas/AlertSettingsSSLCertificates'
+        runBasedEscalation:
+          $ref: '#/components/schemas/AlertSettingsRunBasedEscalation'
+        timeBasedEscalation:
+          $ref: '#/components/schemas/AlertSettingsTimeBasedEscalation'
+        parallelRunFailureThreshold:
+          $ref: '#/components/schemas/parallelRunFailureThreshold'
+    Model15:
+      type: array
+      description: An array of one or more data center locations where to run the checks.
+      example:
+      - us-east-1
+      - eu-central-1
       items:
-        $ref: '#/components/schemas/EnvironmentVariableUpdate'
-    CheckGroupCreate:
+        $ref: '#/components/schemas/Model14'
+    ProjectBindingsV1:
+      type: object
+      description: The Checkly CLI projects that manage this resource. `owner` is null and `references` empty when the resource is not managed by code.
+      properties:
+        owner:
+          $ref: '#/components/schemas/ProjectBindingOwnerV1'
+        references:
+          $ref: '#/components/schemas/ProjectBindingReferencesV1'
+      required:
+      - owner
+      - references
+    CheckGroupTagList:
+      type: array
+      description: Tags for organizing and filtering checks.
+      example:
+      - production
+      items:
+        type: string
+    KeyValue:
       type: object
       properties:
-        name:
+        key:
           type: string
-          description: The name of the check group.
-          example: Check group
-        activated:
-          type: boolean
-          description: Determines if the checks in the group are running or not.
-          default: true
-        muted:
-          type: boolean
-          description: Determines if any notifications will be send out when a check in this group fails and/or recovers.
-          default: false
-        tags:
-          $ref: '#/components/schemas/CheckGroupTagList'
-        locations:
-          $ref: '#/components/schemas/Model10'
-        concurrency:
-          type: number
-          description: Determines how many checks are invoked concurrently when triggering a check group from CI/CD or through the API.
-          default: 3
-          minimum: 1
-          x-constraint:
-            sign: positive
-        apiCheckDefaults:
-          $ref: '#/components/schemas/CheckGroupCreateAPICheckDefaults'
-        browserCheckDefaults:
+        value:
           type: string
-        runtimeId:
-          $ref: '#/components/schemas/Model11'
-        environmentVariables:
-          $ref: '#/components/schemas/environmentVariables'
-        doubleCheck:
+          default: ''
+        locked:
           type: boolean
-          description: '[Deprecated] Retry failed check runs. This property is deprecated, and `retryStrategy` can be used instead.'
-          default: true
-        useGlobalAlertSettings:
-          type: boolean
-          description: When true, the account level alert setting will be used, not the alert setting defined on this check group.
-          default: true
-        alertSettings:
-          $ref: '#/components/schemas/AlertSettings'
-        alertChannelSubscriptions:
-          $ref: '#/components/schemas/Model12'
-        setupSnippetId:
-          type:
-          - number
-          - 'null'
-          description: An ID reference to a snippet to use in the setup phase of an API check in this group.
-          example: null
-          default: null
-        tearDownSnippetId:
-          type:
-          - number
-          - 'null'
-          description: An ID reference to a snippet to use in the teardown phase of an API check in this group.
-          example: null
-          default: null
-        localSetupScript:
-          type:
-          - string
-          - 'null'
-          description: A valid piece of Node.js code to run in the setup phase of an API check in this group.
-          example: null
-          default: null
-        localTearDownScript:
-          type:
-          - string
-          - 'null'
-          description: A valid piece of Node.js code to run in the teardown phase of an API check in this group.
-          example: null
-          default: null
-        privateLocations:
-          $ref: '#/components/schemas/Model13'
-        runParallel:
-          type: boolean
-          description: When true, the checks in the group will run in parallel in all selected locations.
           default: false
-        retryStrategy:
-          description: Either a retry strategy object or the literal string "FALLBACK".
-          anyOf:
-          - $ref: '#/components/schemas/RetryStrategy'
-          - $ref: '#/components/schemas/FallbackRetryStrategy'
       required:
-      - name
+      - key
+      - value
+    Model16:
+      type: string
+      enum:
+      - Conflict
+    RetryStrategy:
+      type:
+      - object
+      - 'null'
+      description: The strategy to determine how failed checks are retried.
+      properties:
+        type:
+          $ref: '#/components/schemas/RetryStrategyType'
+        baseBackoffSeconds:
+          type: number
+          description: The number of seconds to wait before the first retry attempt.
+          default: 60
+        sameRegion:
+          type: boolean
+          description: Whether retries should be run in the same region as the initial check run.
+          default: true
+        maxRetries:
+          type: number
+          description: The maximum number of attempts to retry the check. Not supported for SINGLE_RETRY
+          minimum: 1
+          maximum: 10
+        maxDurationSeconds:
+          type: number
+          description: The total amount of time to continue retrying the check. Not supported for SINGLE_RETRY
+          minimum: 0
+          maximum: 600
+        onlyOn:
+          $ref: '#/components/schemas/RetryOnlyOn'
+      required:
+      - type
+    Model84:
+      type:
+      - string
+      - 'null'
+      description: The runtime version, i.e. fixed set of runtime dependencies, used to execute checks in this group.
+      default: null
+      enum:
+      - '2026.04'
+      - '2025.04'
+      - '2024.09'
+      - '2024.02'
+      - '2023.09'
+      - '2023.02'
+      - '2022.10'
   securitySchemes:
     Bearer:
       type: http

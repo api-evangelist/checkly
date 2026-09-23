@@ -2,7 +2,9 @@ openapi: 3.2.0
 info:
   title: Checkly Public Runtimes API
   version: v1
-  description: These are the docs for the newly released Checkly Public API.<br />If you have any questions, please do not hesitate to get in touch with us.
+  description: 'These are the docs for the newly released Checkly Public API.
+
+    If you have any questions, please do not hesitate to get in touch with us.'
 servers:
 - url: https://api.checklyhq.com
 security:
@@ -96,18 +98,37 @@ paths:
         in: header
 components:
   schemas:
-    attributes:
-      type: object
     RuntimeDependencies:
       type: object
       additionalProperties:
         type: string
         minLength: 1
       description: An object with all dependency package names and versions as in a standard package.json.
-    Model4:
+    Model2:
       type: string
       enum:
-      - Not Found
+      - Too Many Requests
+    TooManyRequestsError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    RuntimeList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Runtime'
     ApiError:
       type: object
       properties:
@@ -121,6 +142,27 @@ components:
       - statusCode
       - error
       - message
+    attributes:
+      type: object
+    NotFoundError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 404
+        error:
+          $ref: '#/components/schemas/Model4'
+        message:
+          type: string
+          example: Not Found
+      required:
+      - statusCode
+      - error
+    Model4:
+      type: string
+      enum:
+      - Not Found
     Runtime:
       type: object
       properties:
@@ -165,46 +207,6 @@ components:
       - STABLE
       description: Current life stage of a runtime.
       example: STABLE
-    Model2:
-      type: string
-      enum:
-      - Too Many Requests
-    TooManyRequestsError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 429
-        error:
-          $ref: '#/components/schemas/Model2'
-        message:
-          type: string
-          example: Too Many Requests
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    NotFoundError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 404
-        error:
-          $ref: '#/components/schemas/Model4'
-        message:
-          type: string
-          example: Not Found
-      required:
-      - statusCode
-      - error
-    RuntimeList:
-      type: array
-      items:
-        $ref: '#/components/schemas/Runtime'
   securitySchemes:
     Bearer:
       type: http

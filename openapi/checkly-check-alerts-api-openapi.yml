@@ -2,7 +2,9 @@ openapi: 3.2.0
 info:
   title: Checkly Public Check alerts API
   version: v1
-  description: These are the docs for the newly released Checkly Public API.<br />If you have any questions, please do not hesitate to get in touch with us.
+  description: 'These are the docs for the newly released Checkly Public API.
+
+    If you have any questions, please do not hesitate to get in touch with us.'
 servers:
 - url: https://api.checklyhq.com
 security:
@@ -14,7 +16,10 @@ paths:
     get:
       summary: List all alerts for your account
       operationId: getV1Checkalerts
-      description: Lists all alerts that have been sent for your account.<br><br>Use the `to` and `from` parameters to specify a date range (UNIX timestamp in seconds). This endpoint will return data within a 6-hour timeframe. If the `from` and `to` params are set, they must be at most 6 hours apart. If none are set, we will consider the `to` param to be now and the `from` param to be 6 hours earlier. If only the `to` param is set we will set `from` to be 6 hours earlier. If only the `from` param is set we will consider the `to` param to be 6 hours later.
+      description: 'Lists all alerts that have been sent for your account.
+
+
+        Use the `to` and `from` parameters to specify a date range (UNIX timestamp in seconds). This endpoint will return data within a 6-hour timeframe. If the `from` and `to` params are set, they must be at most 6 hours apart. If none are set, we will consider the `to` param to be now and the `from` param to be 6 hours earlier. If only the `to` param is set we will set `from` to be 6 hours earlier. If only the `from` param is set we will consider the `to` param to be 6 hours later.'
       tags:
       - Check alerts
       responses:
@@ -103,7 +108,10 @@ paths:
     get:
       summary: List alerts for a specific check
       operationId: getV1CheckalertsCheckid
-      description: Lists all the alerts for a specific check.<br><br>Use the `to` and `from` parameters to specify a date range (UNIX timestamp in seconds). This endpoint will return data within a 6-hour timeframe. If the `from` and `to` params are set, they must be at most 6 hours apart. If none are set, we will consider the `to` param to be now and the `from` param to be 6 hours earlier. If only the `to` param is set we will set `from` to be 6 hours earlier. If only the `from` param is set we will consider the `to` param to be 6 hours later.
+      description: 'Lists all the alerts for a specific check.
+
+
+        Use the `to` and `from` parameters to specify a date range (UNIX timestamp in seconds). This endpoint will return data within a 6-hour timeframe. If the `from` and `to` params are set, they must be at most 6 hours apart. If none are set, we will consider the `to` param to be now and the `from` param to be 6 hours earlier. If only the `to` param is set we will set `from` to be 6 hours earlier. If only the `from` param is set we will consider the `to` param to be 6 hours later.'
       tags:
       - Check alerts
       responses:
@@ -197,12 +205,6 @@ paths:
         in: header
 components:
   schemas:
-    attributes:
-      type: object
-    error:
-      type: string
-      enum:
-      - Unauthorized
     ForbiddenError:
       type: object
       properties:
@@ -215,6 +217,80 @@ components:
         message:
           type: string
           example: Forbidden
+      required:
+      - statusCode
+      - error
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
+    UnauthorizedError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 401
+        error:
+          $ref: '#/components/schemas/error'
+        message:
+          type: string
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    error:
+      type: string
+      enum:
+      - Unauthorized
+    TooManyRequestsError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    ApiError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+        error:
+          type: string
+        message:
+          type: string
+      required:
+      - statusCode
+      - error
+      - message
+    CheckAlertList:
+      type: array
+      items:
+        $ref: '#/components/schemas/CheckAlert'
+    NotFoundError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 404
+        error:
+          $ref: '#/components/schemas/Model4'
+        message:
+          type: string
+          example: Not Found
       required:
       - statusCode
       - error
@@ -296,84 +372,16 @@ components:
           description: The date and time this check alert was started.
       required:
       - name
+    attributes:
+      type: object
     Model4:
       type: string
       enum:
       - Not Found
-    ApiError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-        error:
-          type: string
-        message:
-          type: string
-      required:
-      - statusCode
-      - error
-      - message
-    TooManyRequestsError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 429
-        error:
-          $ref: '#/components/schemas/Model2'
-        message:
-          type: string
-          example: Too Many Requests
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
     Model1:
       type: string
       enum:
       - Forbidden
-    Model2:
-      type: string
-      enum:
-      - Too Many Requests
-    UnauthorizedError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 401
-        error:
-          $ref: '#/components/schemas/error'
-        message:
-          type: string
-          example: Bad Token
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    CheckAlertList:
-      type: array
-      items:
-        $ref: '#/components/schemas/CheckAlert'
-    NotFoundError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 404
-        error:
-          $ref: '#/components/schemas/Model4'
-        message:
-          type: string
-          example: Not Found
-      required:
-      - statusCode
-      - error
   securitySchemes:
     Bearer:
       type: http

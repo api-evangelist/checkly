@@ -2,7 +2,9 @@ openapi: 3.2.0
 info:
   title: Checkly Public Status Page Incidents API
   version: v1
-  description: These are the docs for the newly released Checkly Public API.<br />If you have any questions, please do not hesitate to get in touch with us.
+  description: 'These are the docs for the newly released Checkly Public API.
+
+    If you have any questions, please do not hesitate to get in touch with us.'
 servers:
 - url: https://api.checklyhq.com
 security:
@@ -12,7 +14,7 @@ tags:
 paths:
   /v1/status-pages/incidents:
     get:
-      summary: Retrieve the latest incidents with pagination.
+      summary: Retrieve the latest incidents with pagination
       operationId: getV1StatuspagesIncidents
       description: Get the latest 100 incidents for all services.
       parameters:
@@ -70,7 +72,7 @@ paths:
                 $ref: '#/components/schemas/TooManyRequestsError'
       deprecated: true
     post:
-      summary: Create a new incident.
+      summary: Create a new incident
       operationId: postV1StatuspagesIncidents
       description: Creates a new incident.
       parameters:
@@ -123,7 +125,7 @@ paths:
       deprecated: true
   /v1/status-pages/incidents/{incidentId}:
     delete:
-      summary: Delete an incident.
+      summary: Delete an incident
       operationId: deleteV1StatuspagesIncidentsIncidentid
       description: Permanently removes an incident and all its updates.
       parameters:
@@ -177,7 +179,7 @@ paths:
                 $ref: '#/components/schemas/TooManyRequestsError'
       deprecated: true
     get:
-      summary: Retrieve an incident by id.
+      summary: Retrieve an incident by id
       operationId: getV1StatuspagesIncidentsIncidentid
       description: Get incident details including incident history and affected services.
       parameters:
@@ -231,7 +233,7 @@ paths:
                 $ref: '#/components/schemas/TooManyRequestsError'
       deprecated: true
     put:
-      summary: Update an existing incident.
+      summary: Update an existing incident
       operationId: putV1StatuspagesIncidentsIncidentid
       description: Updates an incident.
       parameters:
@@ -291,7 +293,7 @@ paths:
       deprecated: true
   /v1/status-pages/incidents/{incidentId}/incident-updates:
     get:
-      summary: Retrieve the 100 latest incident updates of a specific incident.
+      summary: Retrieve the 100 latest incident updates of a specific incident
       operationId: getV1StatuspagesIncidentsIncidentidIncidentupdates
       description: Lists all updates for a specific incident.
       parameters:
@@ -345,7 +347,7 @@ paths:
                 $ref: '#/components/schemas/TooManyRequestsError'
       deprecated: true
     post:
-      summary: Add a new incident update to a specific incident.
+      summary: Add a new incident update to a specific incident
       operationId: postV1StatuspagesIncidentsIncidentidIncidentupdates
       description: Creates a new update for an incident.
       parameters:
@@ -405,7 +407,7 @@ paths:
       deprecated: true
   /v1/status-pages/incidents/{incidentId}/incident-updates/{incidentUpdateId}:
     delete:
-      summary: Delete an incident update.
+      summary: Delete an incident update
       operationId: deleteV1StatuspagesIncidentsIncidentidIncidentupdatesIncidentupdateid
       description: Permanently removes an incident update.
       parameters:
@@ -466,7 +468,7 @@ paths:
                 $ref: '#/components/schemas/TooManyRequestsError'
       deprecated: true
     get:
-      summary: Retrieve an incident update by id.
+      summary: Retrieve an incident update by id
       operationId: getV1StatuspagesIncidentsIncidentidIncidentupdatesIncidentupdateid
       description: Shows details of a specific incident update.
       parameters:
@@ -527,7 +529,7 @@ paths:
                 $ref: '#/components/schemas/TooManyRequestsError'
       deprecated: true
     put:
-      summary: Update an existing incident update.
+      summary: Update an existing incident update
       operationId: putV1StatuspagesIncidentsIncidentidIncidentupdatesIncidentupdateid
       description: Modifies an incident update.
       parameters:
@@ -594,77 +596,14 @@ paths:
       deprecated: true
 components:
   schemas:
-    attributes:
-      type: object
-    StatusPageV2IncidentUpdate:
-      type: object
-      properties:
-        id:
-          type: string
-          x-format:
-            guid: true
-        description:
-          type: string
-        status:
-          $ref: '#/components/schemas/StatusPageIncidentStatus'
-        publicIncidentUpdateDate:
-          type: string
-          format: date-time
-          default: '2026-08-29T08:22:09.076Z'
-        created_at:
-          type: string
-          format: date
-        notifySubscribers:
-          type: boolean
-          default: false
-      required:
-      - description
-    IncidentUpdates:
-      type: array
-      items:
-        $ref: '#/components/schemas/StatusPageV2IncidentUpdateWithId'
     Model2:
       type: string
       enum:
       - Too Many Requests
-    UnauthorizedError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 401
-        error:
-          $ref: '#/components/schemas/error'
-        message:
-          type: string
-          example: Bad Token
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    Model76:
-      type: array
-      items:
-        $ref: '#/components/schemas/StatusPageV2IncidentUpdate'
-    TooManyRequestsError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 429
-        error:
-          $ref: '#/components/schemas/Model2'
-        message:
-          type: string
-          example: Too Many Requests
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
+    error:
+      type: string
+      enum:
+      - Unauthorized
     StatusPageV2IncidentCommon:
       type: object
       properties:
@@ -695,6 +634,85 @@ components:
       - name
       - severity
       - services
+    NotFoundError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 404
+        error:
+          $ref: '#/components/schemas/Model4'
+        message:
+          type: string
+          example: Not Found
+      required:
+      - statusCode
+      - error
+    IncidentSeverity:
+      type: string
+      enum:
+      - CRITICAL
+      - MAJOR
+      - MEDIUM
+      - MINOR
+    IncidentServices:
+      type: array
+      items:
+        $ref: '#/components/schemas/StatusPageV2Service'
+    StatusPageIncidentStatus:
+      type: string
+      enum:
+      - INVESTIGATING
+      - IDENTIFIED
+      - MONITORING
+      - RESOLVED
+    IncidentsPaginatedEntries:
+      type: array
+      items:
+        $ref: '#/components/schemas/StatusPageV2Incident'
+    UnauthorizedError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 401
+        error:
+          $ref: '#/components/schemas/error'
+        message:
+          type: string
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    StatusPageV2IncidentUpdateWithId:
+      type: object
+      properties:
+        description:
+          type: string
+        status:
+          $ref: '#/components/schemas/StatusPageIncidentStatus'
+        publicIncidentUpdateDate:
+          type: string
+          format: date-time
+          default: '2026-08-29T08:22:08.989Z'
+        notifySubscribers:
+          type: boolean
+          default: false
+        id:
+          type: string
+          x-format:
+            guid: true
+        created_at:
+          type: string
+          format: date
+      required:
+      - description
+      - id
+      - created_at
     StatusPageV2Incident:
       type: object
       properties:
@@ -731,70 +749,25 @@ components:
       - incidentUpdates
       - lastUpdateStatus
       - created_at
-    IncidentsPaginatedResponse:
-      type: object
-      properties:
-        length:
-          type: integer
-        entries:
-          $ref: '#/components/schemas/IncidentsPaginatedEntries'
-        nextId:
-          type:
-          - string
-          - 'null'
-      required:
-      - length
-      - entries
-    IncidentsPaginatedEntries:
-      type: array
-      items:
-        $ref: '#/components/schemas/StatusPageV2Incident'
-    ForbiddenError:
+    TooManyRequestsError:
       type: object
       properties:
         statusCode:
           type: number
           enum:
-          - 403
+          - 429
         error:
-          $ref: '#/components/schemas/Model1'
+          $ref: '#/components/schemas/Model2'
         message:
           type: string
-          example: Forbidden
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
       required:
       - statusCode
       - error
-    StatusPageV2IncidentUpdateWithId:
+    attributes:
       type: object
-      properties:
-        description:
-          type: string
-        status:
-          $ref: '#/components/schemas/StatusPageIncidentStatus'
-        publicIncidentUpdateDate:
-          type: string
-          format: date-time
-          default: '2026-08-29T08:22:08.989Z'
-        notifySubscribers:
-          type: boolean
-          default: false
-        id:
-          type: string
-          x-format:
-            guid: true
-        created_at:
-          type: string
-          format: date
-      required:
-      - description
-      - id
-      - created_at
-    CreateIncidentUpdates:
-      type: array
-      x-constraint:
-        length: 1
-      items:
-        $ref: '#/components/schemas/StatusPageV2IncidentUpdate'
     StatusPageV2Service:
       type: object
       properties:
@@ -821,36 +794,25 @@ components:
       - id
       - accountId
       - created_at
-    NotFoundError:
+    Model1:
+      type: string
+      enum:
+      - Forbidden
+    ForbiddenError:
       type: object
       properties:
         statusCode:
           type: number
           enum:
-          - 404
+          - 403
         error:
-          $ref: '#/components/schemas/Model4'
+          $ref: '#/components/schemas/Model1'
         message:
           type: string
-          example: Not Found
+          example: Forbidden
       required:
       - statusCode
       - error
-    error:
-      type: string
-      enum:
-      - Unauthorized
-    IncidentSeverity:
-      type: string
-      enum:
-      - CRITICAL
-      - MAJOR
-      - MEDIUM
-      - MINOR
-    Model4:
-      type: string
-      enum:
-      - Not Found
     IncidentService:
       type: object
       properties:
@@ -876,26 +838,66 @@ components:
       - name
       - id
       - accountId
-    Model1:
+    StatusPageV2IncidentUpdate:
+      type: object
+      properties:
+        id:
+          type: string
+          x-format:
+            guid: true
+        description:
+          type: string
+        status:
+          $ref: '#/components/schemas/StatusPageIncidentStatus'
+        publicIncidentUpdateDate:
+          type: string
+          format: date-time
+          default: '2026-08-29T08:22:09.076Z'
+        created_at:
+          type: string
+          format: date
+        notifySubscribers:
+          type: boolean
+          default: false
+      required:
+      - description
+    Model76:
+      type: array
+      items:
+        $ref: '#/components/schemas/StatusPageV2IncidentUpdate'
+    Model4:
       type: string
       enum:
-      - Forbidden
+      - Not Found
+    IncidentUpdates:
+      type: array
+      items:
+        $ref: '#/components/schemas/StatusPageV2IncidentUpdateWithId'
+    IncidentsPaginatedResponse:
+      type: object
+      properties:
+        length:
+          type: integer
+        entries:
+          $ref: '#/components/schemas/IncidentsPaginatedEntries'
+        nextId:
+          type:
+          - string
+          - 'null'
+      required:
+      - length
+      - entries
     IncidentCommonServices:
       type: array
       minItems: 1
       items:
         $ref: '#/components/schemas/IncidentService'
-    IncidentServices:
+    CreateIncidentUpdates:
       type: array
+      x-constraint:
+        length: 1
       items:
-        $ref: '#/components/schemas/StatusPageV2Service'
-    StatusPageIncidentStatus:
-      type: string
-      enum:
-      - INVESTIGATING
-      - IDENTIFIED
-      - MONITORING
-      - RESOLVED
+        $ref: '#/components/schemas/StatusPageV2IncidentUpdate'
     CreateStatusPageV2Incident:
       type: object
       properties:

@@ -2,7 +2,9 @@ openapi: 3.2.0
 info:
   title: Checkly Public Heartbeats API
   version: v1
-  description: These are the docs for the newly released Checkly Public API.<br />If you have any questions, please do not hesitate to get in touch with us.
+  description: 'These are the docs for the newly released Checkly Public API.
+
+    If you have any questions, please do not hesitate to get in touch with us.'
 servers:
 - url: https://api.checklyhq.com
 security:
@@ -14,7 +16,9 @@ paths:
     post:
       summary: Create a heartbeat check
       operationId: postV1ChecksHeartbeat
-      description: "Creates a new Heartbeat check. Will return a `402` when you are over the limit of your plan.\n    When using the `globalAlertSetting`, the `alertSetting` can be `null`"
+      description: 'Creates a new Heartbeat check. Will return a `402` when you are over the limit of your plan.
+
+        When using the `globalAlertSetting`, the `alertSetting` can be `null`'
       tags:
       - Heartbeats
       responses:
@@ -382,64 +386,111 @@ paths:
         in: header
 components:
   schemas:
-    attributes:
-      type: object
-    ChecksV1HeartbeatRequest:
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
+    error:
+      type: string
+      enum:
+      - Unauthorized
+    ChecksV1HeartbeatResponseAlertChannelSubscription:
       type: object
       properties:
-        period:
+        alertChannelId:
           type: number
-          description: Interval expected between pings.
-        periodUnit:
-          type: string
-          enum:
-          - seconds
-          - minutes
-          - hours
-          - days
-        grace:
-          type: number
-          description: Grace added to the period.
-        graceUnit:
-          type: string
-          enum:
-          - seconds
-          - minutes
-          - hours
-          - days
-        pingToken:
-          type:
-          - string
-          - 'null'
-          x-format:
-            guid: true
-          description: UUID token used to build a unique ping URL.
+        activated:
+          type: boolean
+          default: true
       required:
-      - period
-      - periodUnit
-      - grace
-      - graceUnit
-    ChecksV1HeartbeatResponseAlertChannels:
+      - alertChannelId
+      - activated
+    ApiError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+        error:
+          type: string
+        message:
+          type: string
+      required:
+      - statusCode
+      - error
+      - message
+    HeartbeatsV1EventStats:
+      type: object
+      properties:
+        last24Hours:
+          $ref: '#/components/schemas/HeartbeatsV1AvailabilityResponse'
+        last7Days:
+          $ref: '#/components/schemas/HeartbeatsV1AvailabilityResponse'
+    NotFoundError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 404
+        error:
+          $ref: '#/components/schemas/Model4'
+        message:
+          type: string
+          example: Not Found
+      required:
+      - statusCode
+      - error
+    ChecksV1HeartbeatResponseTriggerIncident:
       type:
       - object
       - 'null'
       properties:
-        email:
-          type: array
-          items:
-            $ref: '#/components/schemas/ChecksV1HeartbeatResponseAlertEmail'
-        webhook:
-          type: array
-          items:
-            $ref: '#/components/schemas/ChecksV1HeartbeatResponseAlertWebhook'
-        slack:
-          type: array
-          items:
-            $ref: '#/components/schemas/ChecksV1HeartbeatResponseAlertSlack'
-        sms:
-          type: array
-          items:
-            $ref: '#/components/schemas/ChecksV1HeartbeatResponseAlertSms'
+        serviceId:
+          type: string
+          minLength: 1
+          format: uuid
+          description: The status page service that the incident will be associated with.
+        severity:
+          type: string
+          enum:
+          - CRITICAL
+          - MAJOR
+          - MEDIUM
+          - MINOR
+          description: The severity level of the incident.
+        name:
+          type: string
+          description: The name of the incident.
+        description:
+          type: string
+          description: A detailed description of the incident.
+        notifySubscribers:
+          type: boolean
+          description: Whether to notify subscribers when the incident is triggered.
+      required:
+      - serviceId
+      - severity
+      - name
+      - description
+      - notifySubscribers
+      description: Determines whether the check or monitor should create and resolve an incident based on its alert configuration. Useful for status page automation.
+    UnauthorizedError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 401
+        error:
+          $ref: '#/components/schemas/error'
+        message:
+          type: string
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
     ChecksV1HeartbeatResponseAlertSlack:
       type: object
       properties:
@@ -448,17 +499,37 @@ components:
           default: ''
       required:
       - url
-    HeartbeatsV1EventStats:
+    ChecksV1HeartbeatResponseAlertWebhook:
       type: object
       properties:
-        last24Hours:
-          $ref: '#/components/schemas/HeartbeatsV1AvailabilityResponse'
-        last7Days:
-          $ref: '#/components/schemas/HeartbeatsV1AvailabilityResponse'
-    Model2:
-      type: string
-      enum:
-      - Too Many Requests
+        name:
+          type: string
+          default: ''
+        url:
+          type: string
+          default: ''
+        method:
+          type:
+          - string
+          - 'null'
+          enum:
+          - GET
+          - POST
+          - PUT
+          - HEAD
+          - DELETE
+          - PATCH
+          default: POST
+        headers:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChecksV1HeartbeatResponseKeyValue'
+        queryParameters:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChecksV1HeartbeatResponseKeyValue'
+      required:
+      - url
     ChecksV1Heartbeat:
       type: object
       properties:
@@ -496,54 +567,41 @@ components:
       - periodUnit
       - grace
       - graceUnit
-    UnauthorizedError:
+    TooManyRequestsError:
       type: object
       properties:
         statusCode:
           type: number
           enum:
-          - 401
+          - 429
         error:
-          $ref: '#/components/schemas/error'
+          $ref: '#/components/schemas/Model2'
         message:
           type: string
-          example: Bad Token
+          example: Too Many Requests
         attributes:
           $ref: '#/components/schemas/attributes'
       required:
       - statusCode
       - error
-    ChecksV1CheckIntent:
+    attributes:
+      type: object
+    HeartbeatsV1EventResponse:
+      type: object
+      properties:
+        event:
+          $ref: '#/components/schemas/HeartbeatsV1Event'
+        stats:
+          $ref: '#/components/schemas/HeartbeatsV1EventStats'
+    HeartbeatsV1AvailabilityResponse:
       type:
       - object
       - 'null'
       properties:
-        goal:
-          type: string
-          minLength: 1
-          maxLength: 2000
-          description: The user or system outcome this check protects.
-        requiredOutcomes:
-          type: array
-          items:
-            type: string
-            minLength: 1
-            maxLength: 1000
-          maxItems: 20
-          default: []
-          description: Observable outcomes the check must continue to prove.
-        mustPreserve:
-          type: array
-          items:
-            type: string
-            minLength: 1
-            maxLength: 1000
-          maxItems: 20
-          default: []
-          description: Guardrails an AI repair must not weaken or bypass.
-      required:
-      - goal
-      additionalProperties: false
+        successRatio:
+          $ref: '#/components/schemas/HeartbeatsV1AvailabilitySuccessRatio'
+        totalEntitiesCurrentPeriod:
+          type: number
     ChecksV1HeartbeatCheckUpdate:
       type: object
       properties:
@@ -894,324 +952,6 @@ components:
           minimum: 0
           maximum: 300000
           description: The response time in milliseconds where a check should be considered failing.
-    TooManyRequestsError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 429
-        error:
-          $ref: '#/components/schemas/Model2'
-        message:
-          type: string
-          example: Too Many Requests
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    ChecksV1HeartbeatCheckMutationResponse:
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-          description: The name of the check.
-        activated:
-          type: boolean
-          default: true
-          description: Determines if the check is running or not.
-        muted:
-          type: boolean
-          default: false
-          description: Determines if any notifications will be send out when a check fails and/or recovers.
-        tags:
-          type: array
-          items:
-            type: string
-          description: Tags for organizing and filtering checks.
-        alertSettings:
-          $ref: '#/components/schemas/ChecksV1HeartbeatResponseAlertSettings'
-        useGlobalAlertSettings:
-          type: boolean
-          default: true
-          description: When true, the account level alert setting will be used, not the alert setting defined on this check.
-        alertChannelSubscriptions:
-          type: array
-          items:
-            $ref: '#/components/schemas/ChecksV1HeartbeatResponseAlertChannelSubscription'
-        triggerIncident:
-          $ref: '#/components/schemas/ChecksV1HeartbeatResponseTriggerIncident'
-        runParallel:
-          type: boolean
-          default: false
-          description: When true, the check will run in parallel in all selected locations.
-        description:
-          type:
-          - string
-          - 'null'
-          maxLength: 500
-          default: null
-          description: A description of the check.
-        intent:
-          type:
-          - object
-          - 'null'
-          properties:
-            goal:
-              type: string
-              minLength: 1
-              maxLength: 2000
-              description: The user or system outcome this check protects.
-            requiredOutcomes:
-              type: array
-              items:
-                type: string
-                minLength: 1
-                maxLength: 1000
-              maxItems: 20
-              default: []
-              description: Observable outcomes the check must continue to prove.
-            mustPreserve:
-              type: array
-              items:
-                type: string
-                minLength: 1
-                maxLength: 1000
-              maxItems: 20
-              default: []
-              description: Guardrails an AI repair must not weaken or bypass.
-          default: null
-          required:
-          - goal
-          additionalProperties: false
-        aiAutoRepairEnabled:
-          type:
-          - boolean
-          - 'null'
-          default: null
-        checkType:
-          type: string
-          enum:
-          - HEARTBEAT
-        heartbeat:
-          $ref: '#/components/schemas/ChecksV1Heartbeat'
-        alertChannels:
-          $ref: '#/components/schemas/ChecksV1HeartbeatResponseAlertChannels'
-        created_at:
-          type: string
-          format: date-time
-        updated_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-      required:
-      - name
-    HeartbeatsV1Event:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        state:
-          type: string
-          enum:
-          - FAILING
-          - EARLY
-          - RECEIVED
-          - GRACE
-          - LATE
-          description: Describe the event state, if the ping was received or not.
-        timestamp:
-          type: string
-          format: date
-          description: UTC timestamp on which we received the event.
-        source:
-          type:
-          - string
-          - 'null'
-          description: Source which triggered the event.
-        userAgent:
-          type:
-          - string
-          - 'null'
-          description: User agent from the ping.
-      required:
-      - id
-    ChecksV1HeartbeatResponseTriggerIncident:
-      type:
-      - object
-      - 'null'
-      properties:
-        serviceId:
-          type: string
-          minLength: 1
-          format: uuid
-          description: The status page service that the incident will be associated with.
-        severity:
-          type: string
-          enum:
-          - CRITICAL
-          - MAJOR
-          - MEDIUM
-          - MINOR
-          description: The severity level of the incident.
-        name:
-          type: string
-          description: The name of the incident.
-        description:
-          type: string
-          description: A detailed description of the incident.
-        notifySubscribers:
-          type: boolean
-          description: Whether to notify subscribers when the incident is triggered.
-      required:
-      - serviceId
-      - severity
-      - name
-      - description
-      - notifySubscribers
-      description: Determines whether the check or monitor should create and resolve an incident based on its alert configuration. Useful for status page automation.
-    HeartbeatsV1AvailabilityResponse:
-      type:
-      - object
-      - 'null'
-      properties:
-        successRatio:
-          $ref: '#/components/schemas/HeartbeatsV1AvailabilitySuccessRatio'
-        totalEntitiesCurrentPeriod:
-          type: number
-    ChecksV1HeartbeatResponseAlertSms:
-      type: object
-      properties:
-        number:
-          type: string
-          default: ''
-          example: '+549110000000'
-        name:
-          type: string
-          example: SMS Alert
-      required:
-      - number
-      - name
-    HeartbeatsV1EventsForCheck:
-      type: object
-      properties:
-        events:
-          type: array
-          items:
-            $ref: '#/components/schemas/HeartbeatsV1Event'
-        stats:
-          $ref: '#/components/schemas/HeartbeatsV1EventStats'
-    ChecksV1HeartbeatResponseAlertSettings:
-      type:
-      - object
-      - 'null'
-      properties:
-        escalationType:
-          type: string
-          enum:
-          - RUN_BASED
-          - TIME_BASED
-          default: RUN_BASED
-          description: Determines what type of escalation to use.
-        reminders:
-          type: object
-          properties:
-            amount:
-              type: integer
-              enum:
-              - 0
-              - 1
-              - 2
-              - 3
-              - 4
-              - 5
-              - 100000
-              default: 0
-              description: How many reminders to send out after the initial alert notification.
-            interval:
-              type: integer
-              enum:
-              - 1
-              - 2
-              - 3
-              - 4
-              - 5
-              - 10
-              - 15
-              - 30
-              default: 5
-              description: At what interval the reminders should be send.
-        sslCertificates:
-          type: object
-          properties:
-            enabled:
-              type: boolean
-              description: Determines if alert notifications should be send for expiring SSL certificates.
-            alertThreshold:
-              type: integer
-              description: At what moment in time to start alerting on SSL certificates.
-          description: '[DEPRECATED] `sslCertificates` is deprecated and is not longer used. Please ignore it, will be removed in a future version.'
-        runBasedEscalation:
-          type: object
-          properties:
-            failedRunThreshold:
-              type: integer
-              enum:
-              - 1
-              - 2
-              - 3
-              - 4
-              - 5
-              description: After how many failed consecutive check runs an alert notification should be send.
-        timeBasedEscalation:
-          type: object
-          properties:
-            minutesFailingThreshold:
-              type: integer
-              enum:
-              - 5
-              - 10
-              - 15
-              - 30
-              description: After how many minutes after a check starts failing an alert should be send.
-        parallelRunFailureThreshold:
-          type: object
-          properties:
-            enabled:
-              type: boolean
-              default: false
-              description: Determines if parallel run threshold is enabled
-            percentage:
-              type: integer
-              enum:
-              - 10
-              - 20
-              - 30
-              - 40
-              - 50
-              - 60
-              - 70
-              - 80
-              - 90
-              - 100
-              default: 10
-              description: The percentage of parallel runs that should fail before an alert is triggered
-      default:
-        escalationType: RUN_BASED
-        runBasedEscalation:
-          failedRunThreshold: 1
-        reminders:
-          amount: 0
-          interval: 5
-        parallelRunFailureThreshold:
-          enabled: false
-          percentage: 10
-      description: Alert settings.
     ChecksV1HeartbeatCheckCreate:
       type: object
       properties:
@@ -1633,6 +1373,116 @@ components:
       required:
       - name
       - heartbeat
+    Model1:
+      type: string
+      enum:
+      - Forbidden
+    ChecksV1HeartbeatResponseAlertSettings:
+      type:
+      - object
+      - 'null'
+      properties:
+        escalationType:
+          type: string
+          enum:
+          - RUN_BASED
+          - TIME_BASED
+          default: RUN_BASED
+          description: Determines what type of escalation to use.
+        reminders:
+          type: object
+          properties:
+            amount:
+              type: integer
+              enum:
+              - 0
+              - 1
+              - 2
+              - 3
+              - 4
+              - 5
+              - 100000
+              default: 0
+              description: How many reminders to send out after the initial alert notification.
+            interval:
+              type: integer
+              enum:
+              - 1
+              - 2
+              - 3
+              - 4
+              - 5
+              - 10
+              - 15
+              - 30
+              default: 5
+              description: At what interval the reminders should be send.
+        sslCertificates:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              description: Determines if alert notifications should be send for expiring SSL certificates.
+            alertThreshold:
+              type: integer
+              description: At what moment in time to start alerting on SSL certificates.
+          description: '[DEPRECATED] `sslCertificates` is deprecated and is not longer used. Please ignore it, will be removed in a future version.'
+        runBasedEscalation:
+          type: object
+          properties:
+            failedRunThreshold:
+              type: integer
+              enum:
+              - 1
+              - 2
+              - 3
+              - 4
+              - 5
+              description: After how many failed consecutive check runs an alert notification should be send.
+        timeBasedEscalation:
+          type: object
+          properties:
+            minutesFailingThreshold:
+              type: integer
+              enum:
+              - 5
+              - 10
+              - 15
+              - 30
+              description: After how many minutes after a check starts failing an alert should be send.
+        parallelRunFailureThreshold:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              default: false
+              description: Determines if parallel run threshold is enabled
+            percentage:
+              type: integer
+              enum:
+              - 10
+              - 20
+              - 30
+              - 40
+              - 50
+              - 60
+              - 70
+              - 80
+              - 90
+              - 100
+              default: 10
+              description: The percentage of parallel runs that should fail before an alert is triggered
+      default:
+        escalationType: RUN_BASED
+        runBasedEscalation:
+          failedRunThreshold: 1
+        reminders:
+          amount: 0
+          interval: 5
+        parallelRunFailureThreshold:
+          enabled: false
+          percentage: 10
+      description: Alert settings.
     ForbiddenError:
       type: object
       properties:
@@ -1648,99 +1498,50 @@ components:
       required:
       - statusCode
       - error
-    ApiError:
+    ChecksV1HeartbeatResponseAlertSms:
       type: object
       properties:
-        statusCode:
-          type: number
-        error:
-          type: string
-        message:
-          type: string
-      required:
-      - statusCode
-      - error
-      - message
-    ChecksV1HeartbeatResponseAlertEmail:
-      type: object
-      properties:
-        address:
+        number:
           type: string
           default: ''
-      required:
-      - address
-    NotFoundError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 404
-        error:
-          $ref: '#/components/schemas/Model4'
-        message:
-          type: string
-          example: Not Found
-      required:
-      - statusCode
-      - error
-    HeartbeatsV1EventResponse:
-      type: object
-      properties:
-        event:
-          $ref: '#/components/schemas/HeartbeatsV1Event'
-        stats:
-          $ref: '#/components/schemas/HeartbeatsV1EventStats'
-    error:
-      type: string
-      enum:
-      - Unauthorized
-    HeartbeatsV1AvailabilitySuccessRatio:
-      type: object
-      properties:
-        previousPeriod:
-          type: number
-        currentPeriod:
-          type: number
-    Model4:
-      type: string
-      enum:
-      - Not Found
-    ChecksV1HeartbeatResponseAlertWebhook:
-      type: object
-      properties:
+          example: '+549110000000'
         name:
           type: string
-          default: ''
-        url:
-          type: string
-          default: ''
-        method:
-          type:
-          - string
-          - 'null'
-          enum:
-          - GET
-          - POST
-          - PUT
-          - HEAD
-          - DELETE
-          - PATCH
-          default: POST
-        headers:
-          type: array
-          items:
-            $ref: '#/components/schemas/ChecksV1HeartbeatResponseKeyValue'
-        queryParameters:
-          type: array
-          items:
-            $ref: '#/components/schemas/ChecksV1HeartbeatResponseKeyValue'
+          example: SMS Alert
       required:
-      - url
-    Model1:
-      type: string
-      enum:
-      - Forbidden
+      - number
+      - name
+    ChecksV1CheckIntent:
+      type:
+      - object
+      - 'null'
+      properties:
+        goal:
+          type: string
+          minLength: 1
+          maxLength: 2000
+          description: The user or system outcome this check protects.
+        requiredOutcomes:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 1000
+          maxItems: 20
+          default: []
+          description: Observable outcomes the check must continue to prove.
+        mustPreserve:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 1000
+          maxItems: 20
+          default: []
+          description: Guardrails an AI repair must not weaken or bypass.
+      required:
+      - goal
+      additionalProperties: false
     ChecksV1HeartbeatResponseKeyValue:
       type: object
       properties:
@@ -1755,21 +1556,224 @@ components:
       required:
       - key
       - value
+    Model4:
+      type: string
+      enum:
+      - Not Found
+    HeartbeatsV1AvailabilitySuccessRatio:
+      type: object
+      properties:
+        previousPeriod:
+          type: number
+        currentPeriod:
+          type: number
+    ChecksV1HeartbeatResponseAlertChannels:
+      type:
+      - object
+      - 'null'
+      properties:
+        email:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChecksV1HeartbeatResponseAlertEmail'
+        webhook:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChecksV1HeartbeatResponseAlertWebhook'
+        slack:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChecksV1HeartbeatResponseAlertSlack'
+        sms:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChecksV1HeartbeatResponseAlertSms'
+    ChecksV1HeartbeatCheckMutationResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+          description: The name of the check.
+        activated:
+          type: boolean
+          default: true
+          description: Determines if the check is running or not.
+        muted:
+          type: boolean
+          default: false
+          description: Determines if any notifications will be send out when a check fails and/or recovers.
+        tags:
+          type: array
+          items:
+            type: string
+          description: Tags for organizing and filtering checks.
+        alertSettings:
+          $ref: '#/components/schemas/ChecksV1HeartbeatResponseAlertSettings'
+        useGlobalAlertSettings:
+          type: boolean
+          default: true
+          description: When true, the account level alert setting will be used, not the alert setting defined on this check.
+        alertChannelSubscriptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChecksV1HeartbeatResponseAlertChannelSubscription'
+        triggerIncident:
+          $ref: '#/components/schemas/ChecksV1HeartbeatResponseTriggerIncident'
+        runParallel:
+          type: boolean
+          default: false
+          description: When true, the check will run in parallel in all selected locations.
+        description:
+          type:
+          - string
+          - 'null'
+          maxLength: 500
+          default: null
+          description: A description of the check.
+        intent:
+          type:
+          - object
+          - 'null'
+          properties:
+            goal:
+              type: string
+              minLength: 1
+              maxLength: 2000
+              description: The user or system outcome this check protects.
+            requiredOutcomes:
+              type: array
+              items:
+                type: string
+                minLength: 1
+                maxLength: 1000
+              maxItems: 20
+              default: []
+              description: Observable outcomes the check must continue to prove.
+            mustPreserve:
+              type: array
+              items:
+                type: string
+                minLength: 1
+                maxLength: 1000
+              maxItems: 20
+              default: []
+              description: Guardrails an AI repair must not weaken or bypass.
+          default: null
+          required:
+          - goal
+          additionalProperties: false
+        aiAutoRepairEnabled:
+          type:
+          - boolean
+          - 'null'
+          default: null
+        checkType:
+          type: string
+          enum:
+          - HEARTBEAT
+        heartbeat:
+          $ref: '#/components/schemas/ChecksV1Heartbeat'
+        alertChannels:
+          $ref: '#/components/schemas/ChecksV1HeartbeatResponseAlertChannels'
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+      required:
+      - name
+    ChecksV1HeartbeatResponseAlertEmail:
+      type: object
+      properties:
+        address:
+          type: string
+          default: ''
+      required:
+      - address
     HeartbeatsV1EventsResponse:
       type: array
       items:
         $ref: '#/components/schemas/HeartbeatsV1EventsForCheck'
-    ChecksV1HeartbeatResponseAlertChannelSubscription:
+    ChecksV1HeartbeatRequest:
       type: object
       properties:
-        alertChannelId:
+        period:
           type: number
-        activated:
-          type: boolean
-          default: true
+          description: Interval expected between pings.
+        periodUnit:
+          type: string
+          enum:
+          - seconds
+          - minutes
+          - hours
+          - days
+        grace:
+          type: number
+          description: Grace added to the period.
+        graceUnit:
+          type: string
+          enum:
+          - seconds
+          - minutes
+          - hours
+          - days
+        pingToken:
+          type:
+          - string
+          - 'null'
+          x-format:
+            guid: true
+          description: UUID token used to build a unique ping URL.
       required:
-      - alertChannelId
-      - activated
+      - period
+      - periodUnit
+      - grace
+      - graceUnit
+    HeartbeatsV1EventsForCheck:
+      type: object
+      properties:
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/HeartbeatsV1Event'
+        stats:
+          $ref: '#/components/schemas/HeartbeatsV1EventStats'
+    HeartbeatsV1Event:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        state:
+          type: string
+          enum:
+          - FAILING
+          - EARLY
+          - RECEIVED
+          - GRACE
+          - LATE
+          description: Describe the event state, if the ping was received or not.
+        timestamp:
+          type: string
+          format: date
+          description: UTC timestamp on which we received the event.
+        source:
+          type:
+          - string
+          - 'null'
+          description: Source which triggered the event.
+        userAgent:
+          type:
+          - string
+          - 'null'
+          description: User agent from the ping.
+      required:
+      - id
   securitySchemes:
     Bearer:
       type: http

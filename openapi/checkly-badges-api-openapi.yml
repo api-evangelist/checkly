@@ -2,7 +2,9 @@ openapi: 3.2.0
 info:
   title: Checkly Public Badges API
   version: v1
-  description: These are the docs for the newly released Checkly Public API.<br />If you have any questions, please do not hesitate to get in touch with us.
+  description: 'These are the docs for the newly released Checkly Public API.
+
+    If you have any questions, please do not hesitate to get in touch with us.'
 servers:
 - url: https://api.checklyhq.com
 security:
@@ -13,7 +15,7 @@ paths:
   /v1/badges/checks/{checkId}:
     get:
       operationId: getV1BadgesChecksCheckid
-      description: Get check status badge. You can enable the badges feature in <a href="https://app.checklyhq.com/settings/account/general">account settings</a>
+      description: Get check status badge. You can enable the badges feature in account settings
       tags:
       - Badges
       responses:
@@ -59,10 +61,12 @@ paths:
         required: false
         name: responseTime
         in: query
+      summary: Get V1 badges checks checkid
+      x-summary-source: derived
   /v1/badges/groups/{groupId}:
     get:
       operationId: getV1BadgesGroupsGroupid
-      description: Get group status badge. You can enable the badges feature in <a href="https://app.checklyhq.com/settings/account/general">account settings</a>
+      description: Get group status badge. You can enable the badges feature in account settings
       tags:
       - Badges
       responses:
@@ -107,17 +111,14 @@ paths:
         required: false
         name: responseTime
         in: query
+      summary: Get V1 badges groups groupid
+      x-summary-source: derived
 components:
   schemas:
-    attributes:
-      type: object
-    BadgeTheme:
+    Model2:
       type: string
       enum:
-      - light
-      - dark
-      - default
-      default: default
+      - Too Many Requests
     BadgeStyle:
       type: string
       enum:
@@ -127,27 +128,6 @@ components:
       - for-the-badge
       - social
       default: flat
-    ApiError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-        error:
-          type: string
-        message:
-          type: string
-      required:
-      - statusCode
-      - error
-      - message
-    Model2:
-      type: string
-      enum:
-      - Too Many Requests
-    BadgeSvgResponse:
-      type: string
-      pattern: (<svg)([^<]*|[^>]*)
-      description: An SVG image containing the current Checkly check or group status.
     TooManyRequestsError:
       type: object
       properties:
@@ -165,6 +145,32 @@ components:
       required:
       - statusCode
       - error
+    BadgeTheme:
+      type: string
+      enum:
+      - light
+      - dark
+      - default
+      default: default
+    attributes:
+      type: object
+    ApiError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+        error:
+          type: string
+        message:
+          type: string
+      required:
+      - statusCode
+      - error
+      - message
+    BadgeSvgResponse:
+      type: string
+      pattern: (<svg)([^<]*|[^>]*)
+      description: An SVG image containing the current Checkly check or group status.
   securitySchemes:
     Bearer:
       type: http
