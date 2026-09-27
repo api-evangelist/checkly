@@ -62,10 +62,8 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/PublicLocation'
-    Model2:
-      type: string
-      enum:
-      - Too Many Requests
+    attributes:
+      type: object
     TooManyRequestsError:
       type: object
       properties:
@@ -83,8 +81,10 @@ components:
       required:
       - statusCode
       - error
-    attributes:
-      type: object
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
   securitySchemes:
     Bearer:
       type: http

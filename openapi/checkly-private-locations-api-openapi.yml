@@ -444,19 +444,182 @@ paths:
                 $ref: '#/components/schemas/TooManyRequestsError'
 components:
   schemas:
-    Model2:
-      type: string
-      enum:
-      - Too Many Requests
-    error:
-      type: string
-      enum:
-      - Unauthorized
+    ConflictError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 409
+        error:
+          $ref: '#/components/schemas/Model16'
+        message:
+          type: string
+          example: Conflict
+      required:
+      - statusCode
+      - error
+    keys:
+      type: array
+      items:
+        $ref: '#/components/schemas/privateLocationKeys'
+    RunningAgentInfo:
+      type: object
+      properties:
+        id:
+          type: string
+        lastSeenAt:
+          type: string
+      required:
+      - id
+      - lastSeenAt
+    runningAgents:
+      type: array
+      description: A list of agent versions and their counts currently connected to this private location.
+      items:
+        $ref: '#/components/schemas/RunningAgent'
+    BindingProjectV1:
+      type: object
+      description: The project this binding is to.
+      properties:
+        id:
+          type: string
+          description: The ID of the project.
+        logicalId:
+          type: string
+          description: The logical ID of the project, as declared in code.
+        name:
+          type: string
+          description: The name of the project.
+      required:
+      - id
+      - logicalId
+      - name
+    ProjectBindingV1:
+      type: object
+      properties:
+        project:
+          $ref: '#/components/schemas/BindingProjectV1'
+        binding:
+          $ref: '#/components/schemas/ProjectBindingDetailsV1'
+      required:
+      - project
+      - binding
+    commonPrivateLocationSchemaResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 0baf2a80-7266-44af-b56c-2af7086782ee
+          x-format:
+            guid: true
+        name:
+          type: string
+          description: The name assigned to the private location.
+          example: New Private Location
+        slugName:
+          type: string
+          description: Valid slug name.
+          example: new-private-location
+        icon:
+          type: string
+          description: The private location icon.
+          example: location
+        created_at:
+          type: string
+          format: date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date
+        keys:
+          $ref: '#/components/schemas/keys'
+        proxyUrl:
+          type:
+          - string
+          - 'null'
+          description: A proxy for outgoing API check HTTP calls from your private location.
+          example: https://user:password@164.92.149.127:3128
+      required:
+      - id
+      - name
+      - slugName
+      - created_at
+    privateLocationCreate:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name assigned to the private location.
+          example: New Private Location
+        slugName:
+          type: string
+          description: Valid slug name.
+          example: new-private-location
+          pattern: ^((?!((us(-gov)?|ap|ca|cn|eu|sa|af|me)-(central|(north|south)?(east|west)?)-\d+))[a-zA-Z0-9-]{1,30})$
+        icon:
+          type: string
+          example: location
+          default: location
+        proxyUrl:
+          type:
+          - string
+          - 'null'
+          description: A proxy for outgoing API check HTTP calls from your private location.
+          example: https://user:password@164.92.149.127:3128
+      required:
+      - name
+      - slugName
     ProjectBindingReferencesV1:
       type: array
       description: Projects that use this resource without owning it; their deploys leave it alone. Empty when there are none.
       items:
         $ref: '#/components/schemas/ProjectBindingV1'
+    queueSize:
+      type: array
+      items:
+        type: number
+    Model3:
+      type: string
+      enum:
+      - Payment Required
+    ForbiddenError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 403
+        error:
+          $ref: '#/components/schemas/Model1'
+        message:
+          type: string
+          example: Forbidden
+      required:
+      - statusCode
+      - error
+    Model16:
+      type: string
+      enum:
+      - Conflict
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
+    ProjectBindingOwnerV1:
+      type:
+      - object
+      - 'null'
+      description: The project that owns this resource — the one whose deploy can delete it. Null when no project owns it, including when other projects merely reference it. In the rare case that several projects hold an ownership record for one resource, this reports the preferred one and the rest are omitted.
+      properties:
+        project:
+          $ref: '#/components/schemas/BindingProjectV1'
+        binding:
+          $ref: '#/components/schemas/ProjectBindingDetailsV1'
+      required:
+      - project
+      - binding
     privateLocationsSchema:
       type: object
       properties:
@@ -516,272 +679,19 @@ components:
       - name
       - slugName
       - created_at
-    NotFoundError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 404
-        error:
-          $ref: '#/components/schemas/Model4'
-        message:
-          type: string
-          example: Not Found
-      required:
-      - statusCode
-      - error
-    commonPrivateLocationSchemaResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          example: 0baf2a80-7266-44af-b56c-2af7086782ee
-          x-format:
-            guid: true
-        name:
-          type: string
-          description: The name assigned to the private location.
-          example: New Private Location
-        slugName:
-          type: string
-          description: Valid slug name.
-          example: new-private-location
-        icon:
-          type: string
-          description: The private location icon.
-          example: location
-        created_at:
-          type: string
-          format: date
-        updated_at:
-          type:
-          - string
-          - 'null'
-          format: date
-        keys:
-          $ref: '#/components/schemas/keys'
-        proxyUrl:
-          type:
-          - string
-          - 'null'
-          description: A proxy for outgoing API check HTTP calls from your private location.
-          example: https://user:password@164.92.149.127:3128
-      required:
-      - id
-      - name
-      - slugName
-      - created_at
-    UnauthorizedError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 401
-        error:
-          $ref: '#/components/schemas/error'
-        message:
-          type: string
-          example: Bad Token
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    ProjectBindingDetailsV1:
-      type: object
-      description: The resource's side of this binding.
-      properties:
-        logicalId:
-          type: string
-          description: The resource's logical ID within this project, as declared in code.
-          example: homepage-check
-        pending:
-          type: boolean
-          description: True when the binding is reserved by an import plan that has not been deployed yet.
-      required:
-      - logicalId
-      - pending
-    ConflictError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 409
-        error:
-          $ref: '#/components/schemas/Model16'
-        message:
-          type: string
-          example: Conflict
-      required:
-      - statusCode
-      - error
-    Model3:
-      type: string
-      enum:
-      - Payment Required
-    TooManyRequestsError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 429
-        error:
-          $ref: '#/components/schemas/Model2'
-        message:
-          type: string
-          example: Too Many Requests
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    agents:
-      type: array
-      items:
-        $ref: '#/components/schemas/RunningAgentInfo'
-    attributes:
-      type: object
-    keys:
-      type: array
-      items:
-        $ref: '#/components/schemas/privateLocationKeys'
-    Model1:
-      type: string
-      enum:
-      - Forbidden
-    queueSize:
-      type: array
-      items:
-        type: number
-    RunningAgentInfo:
-      type: object
-      properties:
-        id:
-          type: string
-        lastSeenAt:
-          type: string
-      required:
-      - id
-      - lastSeenAt
-    ForbiddenError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 403
-        error:
-          $ref: '#/components/schemas/Model1'
-        message:
-          type: string
-          example: Forbidden
-      required:
-      - statusCode
-      - error
-    RunningAgent:
-      type: object
-      properties:
-        version:
-          type: string
-        isOutdated:
-          type: boolean
-        count:
-          type: number
-        agents:
-          $ref: '#/components/schemas/agents'
-      required:
-      - version
-      - isOutdated
-      - count
-      - agents
-    runningAgents:
-      type: array
-      description: A list of agent versions and their counts currently connected to this private location.
-      items:
-        $ref: '#/components/schemas/RunningAgent'
-    BindingProjectV1:
-      type: object
-      description: The project this binding is to.
-      properties:
-        id:
-          type: string
-          description: The ID of the project.
-        logicalId:
-          type: string
-          description: The logical ID of the project, as declared in code.
-        name:
-          type: string
-          description: The name of the project.
-      required:
-      - id
-      - logicalId
-      - name
-    PaymentRequiredError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 402
-        error:
-          $ref: '#/components/schemas/Model3'
-        message:
-          type: string
-          example: Payment Required
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    ProjectBindingsV1:
-      type: object
-      description: The Checkly CLI projects that manage this resource. `owner` is null and `references` empty when the resource is not managed by code.
-      properties:
-        owner:
-          $ref: '#/components/schemas/ProjectBindingOwnerV1'
-        references:
-          $ref: '#/components/schemas/ProjectBindingReferencesV1'
-      required:
-      - owner
-      - references
-    timestamps:
-      type: array
-      items:
-        type: string
-        format: date-time
     Model4:
       type: string
       enum:
       - Not Found
-    privateLocationCreate:
+    privateLocationsMetricsHistoryResponseSchema:
       type: object
       properties:
-        name:
-          type: string
-          description: The name assigned to the private location.
-          example: New Private Location
-        slugName:
-          type: string
-          description: Valid slug name.
-          example: new-private-location
-          pattern: ^((?!((us(-gov)?|ap|ca|cn|eu|sa|af|me)-(central|(north|south)?(east|west)?)-\d+))[a-zA-Z0-9-]{1,30})$
-        icon:
-          type: string
-          example: location
-          default: location
-        proxyUrl:
-          type:
-          - string
-          - 'null'
-          description: A proxy for outgoing API check HTTP calls from your private location.
-          example: https://user:password@164.92.149.127:3128
-      required:
-      - name
-      - slugName
+        timestamps:
+          $ref: '#/components/schemas/timestamps'
+        queueSize:
+          $ref: '#/components/schemas/queueSize'
+        oldestScheduledCheckRun:
+          $ref: '#/components/schemas/oldestScheduledCheckRun'
     privateLocationKeys:
       type: object
       properties:
@@ -810,42 +720,40 @@ components:
       - rawKey
       - maskedKey
       - created_at
-    Model16:
-      type: string
-      enum:
-      - Conflict
-    ProjectBindingV1:
+    TooManyRequestsError:
       type: object
       properties:
-        project:
-          $ref: '#/components/schemas/BindingProjectV1'
-        binding:
-          $ref: '#/components/schemas/ProjectBindingDetailsV1'
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
       required:
-      - project
-      - binding
-    ProjectBindingOwnerV1:
-      type:
-      - object
-      - 'null'
-      description: The project that owns this resource — the one whose deploy can delete it. Null when no project owns it, including when other projects merely reference it. In the rare case that several projects hold an ownership record for one resource, this reports the preferred one and the rest are omitted.
-      properties:
-        project:
-          $ref: '#/components/schemas/BindingProjectV1'
-        binding:
-          $ref: '#/components/schemas/ProjectBindingDetailsV1'
-      required:
-      - project
-      - binding
-    privateLocationsMetricsHistoryResponseSchema:
+      - statusCode
+      - error
+    PaymentRequiredError:
       type: object
       properties:
-        timestamps:
-          $ref: '#/components/schemas/timestamps'
-        queueSize:
-          $ref: '#/components/schemas/queueSize'
-        oldestScheduledCheckRun:
-          $ref: '#/components/schemas/oldestScheduledCheckRun'
+        statusCode:
+          type: number
+          enum:
+          - 402
+        error:
+          $ref: '#/components/schemas/Model3'
+        message:
+          type: string
+          example: Payment Required
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
     privateLocationUpdate:
       type: object
       properties:
@@ -864,6 +772,74 @@ components:
           example: https://user:password@164.92.149.127:3128
       required:
       - name
+    ProjectBindingsV1:
+      type: object
+      description: The Checkly CLI projects that manage this resource. `owner` is null and `references` empty when the resource is not managed by code.
+      properties:
+        owner:
+          $ref: '#/components/schemas/ProjectBindingOwnerV1'
+        references:
+          $ref: '#/components/schemas/ProjectBindingReferencesV1'
+      required:
+      - owner
+      - references
+    ProjectBindingDetailsV1:
+      type: object
+      description: The resource's side of this binding.
+      properties:
+        logicalId:
+          type: string
+          description: The resource's logical ID within this project, as declared in code.
+          example: homepage-check
+        pending:
+          type: boolean
+          description: True when the binding is reserved by an import plan that has not been deployed yet.
+      required:
+      - logicalId
+      - pending
+    Model1:
+      type: string
+      enum:
+      - Forbidden
+    attributes:
+      type: object
+    RunningAgent:
+      type: object
+      properties:
+        version:
+          type: string
+        isOutdated:
+          type: boolean
+        count:
+          type: number
+        agents:
+          $ref: '#/components/schemas/agents'
+      required:
+      - version
+      - isOutdated
+      - count
+      - agents
+    error:
+      type: string
+      enum:
+      - Unauthorized
+    UnauthorizedError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 401
+        error:
+          $ref: '#/components/schemas/error'
+        message:
+          type: string
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
     privateLocationsListSchema:
       type: array
       items:
@@ -872,6 +848,30 @@ components:
       type: array
       items:
         type: number
+    timestamps:
+      type: array
+      items:
+        type: string
+        format: date-time
+    NotFoundError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 404
+        error:
+          $ref: '#/components/schemas/Model4'
+        message:
+          type: string
+          example: Not Found
+      required:
+      - statusCode
+      - error
+    agents:
+      type: array
+      items:
+        $ref: '#/components/schemas/RunningAgentInfo'
   securitySchemes:
     Bearer:
       type: http

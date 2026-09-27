@@ -216,21 +216,42 @@ paths:
               $ref: '#/components/schemas/IncidentUpdateV1UpdateRequest'
 components:
   schemas:
-    ForbiddenError:
+    Model1:
+      type: string
+      enum:
+      - Forbidden
+    ApiError:
       type: object
       properties:
         statusCode:
           type: number
-          enum:
-          - 403
         error:
-          $ref: '#/components/schemas/Model1'
+          type: string
         message:
           type: string
-          example: Forbidden
       required:
       - statusCode
       - error
+      - message
+    Model4:
+      type: string
+      enum:
+      - Not Found
+    attributes:
+      type: object
+    error:
+      type: string
+      enum:
+      - Unauthorized
+    IncidentUpdateV1UpdateRequest:
+      type: object
+      properties:
+        description:
+          type: string
+          description: A description about the status update.
+          example: We found the issue and we are working on it.
+      required:
+      - description
     IncidentUpdateV1CreateRequest:
       type: object
       properties:
@@ -251,74 +272,6 @@ components:
       required:
       - status
       - description
-    IncidentUpdateV1CreateResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          enum:
-          - INVESTIGATING
-          - IDENTIFIED
-          - MONITORING
-          - RESOLVED
-          - MAINTENANCE
-          description: The incident update status. Must be one of INVESTIGATING,IDENTIFIED,MONITORING,RESOLVED,MAINTENANCE
-          example: INVESTIGATING
-        description:
-          type: string
-          description: A description about the status update.
-          example: We found the issue and we are working on it.
-        id:
-          type: string
-          x-format:
-            guid: true
-          description: The incident update universal and unique identificator.
-          example: e50ad839-1b90-4955-b716-1c6edbda57cb
-        created_at:
-          type: string
-          format: date-time
-          description: The timestamp when the incident update was created.
-          example: '2022-09-08T19:41:28.658Z'
-        updated_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        incidentId:
-          type: string
-          x-format:
-            guid: true
-      required:
-      - status
-      - description
-      - id
-      - created_at
-      - incidentId
-    Model2:
-      type: string
-      enum:
-      - Too Many Requests
-    UnauthorizedError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 401
-        error:
-          $ref: '#/components/schemas/error'
-        message:
-          type: string
-          example: Bad Token
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    error:
-      type: string
-      enum:
-      - Unauthorized
     TooManyRequestsError:
       type: object
       properties:
@@ -336,21 +289,38 @@ components:
       required:
       - statusCode
       - error
-    ApiError:
+    ForbiddenError:
       type: object
       properties:
         statusCode:
           type: number
+          enum:
+          - 403
         error:
-          type: string
+          $ref: '#/components/schemas/Model1'
         message:
           type: string
+          example: Forbidden
       required:
       - statusCode
       - error
-      - message
-    attributes:
+    UnauthorizedError:
       type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 401
+        error:
+          $ref: '#/components/schemas/error'
+        message:
+          type: string
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
     IncidentUpdateV1Response:
       type: object
       properties:
@@ -407,23 +377,53 @@ components:
       required:
       - statusCode
       - error
-    Model4:
-      type: string
-      enum:
-      - Not Found
-    Model1:
-      type: string
-      enum:
-      - Forbidden
-    IncidentUpdateV1UpdateRequest:
+    IncidentUpdateV1CreateResponse:
       type: object
       properties:
+        status:
+          type: string
+          enum:
+          - INVESTIGATING
+          - IDENTIFIED
+          - MONITORING
+          - RESOLVED
+          - MAINTENANCE
+          description: The incident update status. Must be one of INVESTIGATING,IDENTIFIED,MONITORING,RESOLVED,MAINTENANCE
+          example: INVESTIGATING
         description:
           type: string
           description: A description about the status update.
           example: We found the issue and we are working on it.
+        id:
+          type: string
+          x-format:
+            guid: true
+          description: The incident update universal and unique identificator.
+          example: e50ad839-1b90-4955-b716-1c6edbda57cb
+        created_at:
+          type: string
+          format: date-time
+          description: The timestamp when the incident update was created.
+          example: '2022-09-08T19:41:28.658Z'
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        incidentId:
+          type: string
+          x-format:
+            guid: true
       required:
+      - status
       - description
+      - id
+      - created_at
+      - incidentId
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
   securitySchemes:
     Bearer:
       type: http

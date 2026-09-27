@@ -208,6 +208,50 @@ paths:
                 $ref: '#/components/schemas/TooManyRequestsError'
 components:
   schemas:
+    PublicStatusPageV3SubscriberInputs:
+      type: array
+      description: The subscribers to create (max 100). Addresses already subscribed are skipped.
+      minItems: 1
+      maxItems: 100
+      items:
+        $ref: '#/components/schemas/PublicStatusPageV3SubscriberInput'
+    PublicStatusPageV3SubscriberStatus:
+      type: string
+      enum:
+      - PENDING
+      - VERIFIED
+    ForbiddenError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 403
+        error:
+          $ref: '#/components/schemas/Model1'
+        message:
+          type: string
+          example: Forbidden
+      required:
+      - statusCode
+      - error
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
+    Model96:
+      type: string
+      example: EMAIL
+      enum:
+      - EMAIL
+    PublicStatusPageV3SubscribersEntries:
+      type: array
+      items:
+        $ref: '#/components/schemas/PublicStatusPageV3Subscriber'
+    Model4:
+      type: string
+      enum:
+      - Not Found
     PublicStatusPageV3SubscribersPaginatedResponse:
       type: object
       properties:
@@ -222,80 +266,17 @@ components:
       required:
       - length
       - entries
-    Model2:
-      type: string
-      enum:
-      - Too Many Requests
-    error:
-      type: string
-      enum:
-      - Unauthorized
-    PublicStatusPageV3BulkSubscribersResponse:
+    PublicStatusPageV3BulkSubscribersPayload:
       type: object
       properties:
-        created:
-          type: integer
-          description: Subscribers created.
-        skipped:
-          type: integer
-          description: Subscribers skipped because the address was already subscribed.
-        status:
-          $ref: '#/components/schemas/Model97'
+        subscriptions:
+          $ref: '#/components/schemas/PublicStatusPageV3SubscriberInputs'
+        autoVerify:
+          type: boolean
+          description: Create the subscribers as verified without sending confirmation emails.
+          default: false
       required:
-      - created
-      - skipped
-      - status
-    NotFoundError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 404
-        error:
-          $ref: '#/components/schemas/Model4'
-        message:
-          type: string
-          example: Not Found
-      required:
-      - statusCode
-      - error
-    PublicStatusPageV3SubscriberConfig:
-      type: object
-      properties:
-        address:
-          type: string
-          description: The email address to subscribe.
-          x-format:
-            email: true
-        subscribedComponents:
-          $ref: '#/components/schemas/PublicStatusPageV3SubscribedComponents'
-      required:
-      - address
-    UnauthorizedError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 401
-        error:
-          $ref: '#/components/schemas/error'
-        message:
-          type: string
-          example: Bad Token
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    PublicStatusPageV3SubscriberInputs:
-      type: array
-      description: The subscribers to create (max 100). Addresses already subscribed are skipped.
-      minItems: 1
-      maxItems: 100
-      items:
-        $ref: '#/components/schemas/PublicStatusPageV3SubscriberInput'
+      - subscriptions
     TooManyRequestsError:
       type: object
       properties:
@@ -313,20 +294,12 @@ components:
       required:
       - statusCode
       - error
-    attributes:
-      type: object
-    Model95:
+    Model97:
       type: string
+      description: The status the created subscribers got.
       enum:
-      - EMAIL
-    Model1:
-      type: string
-      enum:
-      - Forbidden
-    PublicStatusPageV3SubscribersEntries:
-      type: array
-      items:
-        $ref: '#/components/schemas/PublicStatusPageV3Subscriber'
+      - PENDING
+      - VERIFIED
     PublicStatusPageV3SubscriberInput:
       type: object
       properties:
@@ -337,47 +310,16 @@ components:
       required:
       - type
       - config
-    ForbiddenError:
+    Model1:
+      type: string
+      enum:
+      - Forbidden
+    Model95:
+      type: string
+      enum:
+      - EMAIL
+    attributes:
       type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 403
-        error:
-          $ref: '#/components/schemas/Model1'
-        message:
-          type: string
-          example: Forbidden
-      required:
-      - statusCode
-      - error
-    Model97:
-      type: string
-      description: The status the created subscribers got.
-      enum:
-      - PENDING
-      - VERIFIED
-    PublicStatusPageV3BulkSubscribersPayload:
-      type: object
-      properties:
-        subscriptions:
-          $ref: '#/components/schemas/PublicStatusPageV3SubscriberInputs'
-        autoVerify:
-          type: boolean
-          description: Create the subscribers as verified without sending confirmation emails.
-          default: false
-      required:
-      - subscriptions
-    PublicStatusPageV3SubscriberStatus:
-      type: string
-      enum:
-      - PENDING
-      - VERIFIED
-    Model4:
-      type: string
-      enum:
-      - Not Found
     PublicStatusPageV3SubscribedComponents:
       type:
       - array
@@ -388,11 +330,42 @@ components:
         type: string
         x-format:
           guid: true
-    Model96:
+    NotFoundError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 404
+        error:
+          $ref: '#/components/schemas/Model4'
+        message:
+          type: string
+          example: Not Found
+      required:
+      - statusCode
+      - error
+    error:
       type: string
-      example: EMAIL
       enum:
-      - EMAIL
+      - Unauthorized
+    UnauthorizedError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 401
+        error:
+          $ref: '#/components/schemas/error'
+        message:
+          type: string
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
     PublicStatusPageV3Subscriber:
       type: object
       properties:
@@ -425,6 +398,33 @@ components:
       - status
       - subscribedComponents
       - created_at
+    PublicStatusPageV3SubscriberConfig:
+      type: object
+      properties:
+        address:
+          type: string
+          description: The email address to subscribe.
+          x-format:
+            email: true
+        subscribedComponents:
+          $ref: '#/components/schemas/PublicStatusPageV3SubscribedComponents'
+      required:
+      - address
+    PublicStatusPageV3BulkSubscribersResponse:
+      type: object
+      properties:
+        created:
+          type: integer
+          description: Subscribers created.
+        skipped:
+          type: integer
+          description: Subscribers skipped because the address was already subscribed.
+        status:
+          $ref: '#/components/schemas/Model97'
+      required:
+      - created
+      - skipped
+      - status
   securitySchemes:
     Bearer:
       type: http

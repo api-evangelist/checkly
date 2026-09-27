@@ -204,247 +204,10 @@ paths:
                 $ref: '#/components/schemas/TooManyRequestsError'
 components:
   schemas:
-    Model2:
-      type: string
-      enum:
-      - Too Many Requests
-    error:
-      type: string
-      enum:
-      - Unauthorized
-    NotFoundError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 404
-        error:
-          $ref: '#/components/schemas/Model4'
-        message:
-          type: string
-          example: Not Found
-      required:
-      - statusCode
-      - error
-    Model66:
-      type: string
-      enum:
-      - PENDING
-    PostRcaErrorGroup:
-      type:
-      - object
-      - 'null'
-      properties:
-        userContext:
-          type:
-          - string
-          - 'null'
-          description: Optional user defined context to provide extra details useful for the user impact and root cause analysis.
-          default: ''
-          maxLength: 256
-    analysis:
-      type: object
-      properties:
-        classification:
-          type: string
-          description: High-level error categorization. e.g. "INFRA ERROR"
-        userImpact:
-          type: string
-          description: Human-readable summary of how this failure affects end users
-        rootCause:
-          type: string
-          description: Explanation of the underlying cause of the failure
-        codeFix:
-          type:
-          - string
-          - 'null'
-          description: Suggested code or configuration change to resolve the issue
-        evidence:
-          $ref: '#/components/schemas/evidence'
-        referenceLinks:
-          $ref: '#/components/schemas/referenceLinks'
-      required:
-      - classification
-      - userImpact
-      - rootCause
-    UnauthorizedError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 401
-        error:
-          $ref: '#/components/schemas/error'
-        message:
-          type: string
-          example: Bad Token
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    artifacts:
-      type: array
-      description: Artifacts referenced by this piece of evidence
-      items:
-        $ref: '#/components/schemas/Model69'
-    referenceLinks:
-      type:
-      - array
-      - 'null'
-      description: Links to relevant documentation or external resources
-      items:
-        $ref: '#/components/schemas/Model71'
-    Model3:
-      type: string
-      enum:
-      - Payment Required
-    TooManyRequestsError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 429
-        error:
-          $ref: '#/components/schemas/Model2'
-        message:
-          type: string
-          example: Too Many Requests
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    attributes:
-      type: object
-    Model1:
-      type: string
-      enum:
-      - Forbidden
-    ForbiddenError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 403
-        error:
-          $ref: '#/components/schemas/Model1'
-        message:
-          type: string
-          example: Forbidden
-      required:
-      - statusCode
-      - error
-    PaymentRequiredError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 402
-        error:
-          $ref: '#/components/schemas/Model3'
-        message:
-          type: string
-          example: Payment Required
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    GetRcaPending:
-      type: object
-      properties:
-        id:
-          type: string
-          x-format:
-            guid: true
-        status:
-          $ref: '#/components/schemas/Model73'
-      required:
-      - id
-      - status
-    Model70:
-      type: object
-      properties:
-        artifacts:
-          $ref: '#/components/schemas/artifacts'
-        description:
-          type: string
-          description: Explanation of how this evidence support the root cause analysis
-      required:
-      - artifacts
-      - description
-    Model69:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Identifier of the artifact, e.g. "HTTP_REQUEST" or "TIMING_PHASES"
-        type:
-          type: string
-          description: Category of the artifact, e.g. "REQUEST", "TIMINGS", or "TRACE"
-      required:
-      - name
-      - type
-    Model4:
-      type: string
-      enum:
-      - Not Found
-    Model68:
-      type: string
-      enum:
-      - PENDING
-    Model73:
-      type: string
-      enum:
-      - PENDING
     Model72:
       type: string
       enum:
       - COMPLETED
-    PostRcaTestSessionErrorGroup:
-      type: object
-      properties:
-        id:
-          type: string
-          x-format:
-            guid: true
-        status:
-          $ref: '#/components/schemas/Model68'
-      required:
-      - id
-      - status
-    Model71:
-      type: object
-      properties:
-        url:
-          type: string
-          description: URL of the reference resource
-          x-format:
-            uri: true
-        title:
-          type: string
-          description: Display title for the link
-      required:
-      - url
-      - title
-    Model67:
-      type: object
-      properties:
-        id:
-          type: string
-          x-format:
-            guid: true
-        status:
-          $ref: '#/components/schemas/Model66'
-      required:
-      - id
-      - status
     GetRca:
       type: object
       properties:
@@ -490,6 +253,171 @@ components:
       - model
       - durationMs
       - status
+    referenceLinks:
+      type:
+      - array
+      - 'null'
+      description: Links to relevant documentation or external resources
+      items:
+        $ref: '#/components/schemas/Model71'
+    Model68:
+      type: string
+      enum:
+      - PENDING
+    Model66:
+      type: string
+      enum:
+      - PENDING
+    Model3:
+      type: string
+      enum:
+      - Payment Required
+    ForbiddenError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 403
+        error:
+          $ref: '#/components/schemas/Model1'
+        message:
+          type: string
+          example: Forbidden
+      required:
+      - statusCode
+      - error
+    Model67:
+      type: object
+      properties:
+        id:
+          type: string
+          x-format:
+            guid: true
+        status:
+          $ref: '#/components/schemas/Model66'
+      required:
+      - id
+      - status
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
+    PostRcaTestSessionErrorGroup:
+      type: object
+      properties:
+        id:
+          type: string
+          x-format:
+            guid: true
+        status:
+          $ref: '#/components/schemas/Model68'
+      required:
+      - id
+      - status
+    Model70:
+      type: object
+      properties:
+        artifacts:
+          $ref: '#/components/schemas/artifacts'
+        description:
+          type: string
+          description: Explanation of how this evidence support the root cause analysis
+      required:
+      - artifacts
+      - description
+    analysis:
+      type: object
+      properties:
+        classification:
+          type: string
+          description: High-level error categorization. e.g. "INFRA ERROR"
+        userImpact:
+          type: string
+          description: Human-readable summary of how this failure affects end users
+        rootCause:
+          type: string
+          description: Explanation of the underlying cause of the failure
+        codeFix:
+          type:
+          - string
+          - 'null'
+          description: Suggested code or configuration change to resolve the issue
+        evidence:
+          $ref: '#/components/schemas/evidence'
+        referenceLinks:
+          $ref: '#/components/schemas/referenceLinks'
+      required:
+      - classification
+      - userImpact
+      - rootCause
+    Model4:
+      type: string
+      enum:
+      - Not Found
+    Model69:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Identifier of the artifact, e.g. "HTTP_REQUEST" or "TIMING_PHASES"
+        type:
+          type: string
+          description: Category of the artifact, e.g. "REQUEST", "TIMINGS", or "TRACE"
+      required:
+      - name
+      - type
+    TooManyRequestsError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    PaymentRequiredError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 402
+        error:
+          $ref: '#/components/schemas/Model3'
+        message:
+          type: string
+          example: Payment Required
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    artifacts:
+      type: array
+      description: Artifacts referenced by this piece of evidence
+      items:
+        $ref: '#/components/schemas/Model69'
+    PostRcaErrorGroup:
+      type:
+      - object
+      - 'null'
+      properties:
+        userContext:
+          type:
+          - string
+          - 'null'
+          description: Optional user defined context to provide extra details useful for the user impact and root cause analysis.
+          default: ''
+          maxLength: 256
     evidence:
       type:
       - array
@@ -497,6 +425,78 @@ components:
       description: Supporting evidence derived from check result artifacts
       items:
         $ref: '#/components/schemas/Model70'
+    Model1:
+      type: string
+      enum:
+      - Forbidden
+    GetRcaPending:
+      type: object
+      properties:
+        id:
+          type: string
+          x-format:
+            guid: true
+        status:
+          $ref: '#/components/schemas/Model73'
+      required:
+      - id
+      - status
+    attributes:
+      type: object
+    error:
+      type: string
+      enum:
+      - Unauthorized
+    UnauthorizedError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 401
+        error:
+          $ref: '#/components/schemas/error'
+        message:
+          type: string
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    Model71:
+      type: object
+      properties:
+        url:
+          type: string
+          description: URL of the reference resource
+          x-format:
+            uri: true
+        title:
+          type: string
+          description: Display title for the link
+      required:
+      - url
+      - title
+    Model73:
+      type: string
+      enum:
+      - PENDING
+    NotFoundError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 404
+        error:
+          $ref: '#/components/schemas/Model4'
+        message:
+          type: string
+          example: Not Found
+      required:
+      - statusCode
+      - error
   securitySchemes:
     Bearer:
       type: http

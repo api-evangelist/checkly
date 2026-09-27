@@ -289,50 +289,6 @@ paths:
       deprecated: true
 components:
   schemas:
-    ForbiddenError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 403
-        error:
-          $ref: '#/components/schemas/Model1'
-        message:
-          type: string
-          example: Forbidden
-      required:
-      - statusCode
-      - error
-    Model2:
-      type: string
-      enum:
-      - Too Many Requests
-    ServiceList:
-      type: array
-      items:
-        $ref: '#/components/schemas/StatusPageV2Service'
-    UnauthorizedError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 401
-        error:
-          $ref: '#/components/schemas/error'
-        message:
-          type: string
-          example: Bad Token
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    error:
-      type: string
-      enum:
-      - Unauthorized
     CreateOrUpdateService:
       type: object
       properties:
@@ -340,40 +296,34 @@ components:
           type: string
       required:
       - name
-    TooManyRequestsError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 429
-        error:
-          $ref: '#/components/schemas/Model2'
-        message:
-          type: string
-          example: Too Many Requests
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
+    Model1:
+      type: string
+      enum:
+      - Forbidden
+    Model4:
+      type: string
+      enum:
+      - Not Found
     attributes:
       type: object
-    NotFoundError:
+    ServicesPaginatedResponse:
       type: object
       properties:
-        statusCode:
-          type: number
-          enum:
-          - 404
-        error:
-          $ref: '#/components/schemas/Model4'
-        message:
-          type: string
-          example: Not Found
+        length:
+          type: integer
+        entries:
+          $ref: '#/components/schemas/ServiceList'
+        nextId:
+          type:
+          - string
+          - 'null'
       required:
-      - statusCode
-      - error
+      - length
+      - entries
+    ServiceList:
+      type: array
+      items:
+        $ref: '#/components/schemas/StatusPageV2Service'
     StatusPageV2Service:
       type: object
       properties:
@@ -400,28 +350,78 @@ components:
       - id
       - accountId
       - created_at
-    Model4:
+    error:
       type: string
       enum:
-      - Not Found
-    Model1:
-      type: string
-      enum:
-      - Forbidden
-    ServicesPaginatedResponse:
+      - Unauthorized
+    UnauthorizedError:
       type: object
       properties:
-        length:
-          type: integer
-        entries:
-          $ref: '#/components/schemas/ServiceList'
-        nextId:
-          type:
-          - string
-          - 'null'
+        statusCode:
+          type: number
+          enum:
+          - 401
+        error:
+          $ref: '#/components/schemas/error'
+        message:
+          type: string
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
       required:
-      - length
-      - entries
+      - statusCode
+      - error
+    TooManyRequestsError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    ForbiddenError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 403
+        error:
+          $ref: '#/components/schemas/Model1'
+        message:
+          type: string
+          example: Forbidden
+      required:
+      - statusCode
+      - error
+    NotFoundError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 404
+        error:
+          $ref: '#/components/schemas/Model4'
+        message:
+          type: string
+          example: Not Found
+      required:
+      - statusCode
+      - error
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
   securitySchemes:
     Bearer:
       type: http

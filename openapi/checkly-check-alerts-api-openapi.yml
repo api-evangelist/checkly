@@ -205,95 +205,10 @@ paths:
         in: header
 components:
   schemas:
-    ForbiddenError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 403
-        error:
-          $ref: '#/components/schemas/Model1'
-        message:
-          type: string
-          example: Forbidden
-      required:
-      - statusCode
-      - error
-    Model2:
-      type: string
-      enum:
-      - Too Many Requests
-    UnauthorizedError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 401
-        error:
-          $ref: '#/components/schemas/error'
-        message:
-          type: string
-          example: Bad Token
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    error:
-      type: string
-      enum:
-      - Unauthorized
-    TooManyRequestsError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 429
-        error:
-          $ref: '#/components/schemas/Model2'
-        message:
-          type: string
-          example: Too Many Requests
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    ApiError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-        error:
-          type: string
-        message:
-          type: string
-      required:
-      - statusCode
-      - error
-      - message
     CheckAlertList:
       type: array
       items:
         $ref: '#/components/schemas/CheckAlert'
-    NotFoundError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 404
-        error:
-          $ref: '#/components/schemas/Model4'
-        message:
-          type: string
-          example: Not Found
-      required:
-      - statusCode
-      - error
     CheckAlert:
       type: object
       properties:
@@ -372,16 +287,101 @@ components:
           description: The date and time this check alert was started.
       required:
       - name
-    attributes:
-      type: object
-    Model4:
-      type: string
-      enum:
-      - Not Found
     Model1:
       type: string
       enum:
       - Forbidden
+    ApiError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+        error:
+          type: string
+        message:
+          type: string
+      required:
+      - statusCode
+      - error
+      - message
+    Model4:
+      type: string
+      enum:
+      - Not Found
+    attributes:
+      type: object
+    error:
+      type: string
+      enum:
+      - Unauthorized
+    UnauthorizedError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 401
+        error:
+          $ref: '#/components/schemas/error'
+        message:
+          type: string
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    TooManyRequestsError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    ForbiddenError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 403
+        error:
+          $ref: '#/components/schemas/Model1'
+        message:
+          type: string
+          example: Forbidden
+      required:
+      - statusCode
+      - error
+    NotFoundError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 404
+        error:
+          $ref: '#/components/schemas/Model4'
+        message:
+          type: string
+          example: Not Found
+      required:
+      - statusCode
+      - error
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
   securitySchemes:
     Bearer:
       type: http

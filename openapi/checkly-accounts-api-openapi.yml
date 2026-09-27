@@ -698,35 +698,213 @@ paths:
               $ref: '#/components/schemas/AccountMemberUpdate'
 components:
   schemas:
-    AccountAlertSettings:
+    AccountSettings:
       type: object
       properties: {}
       additionalProperties: true
-      description: The alert settings of the account.
-    AccountEntitlementLocation:
+      description: The settings of the account.
+    AccountMembersListItems:
+      oneOf:
+      - $ref: '#/components/schemas/AccountMember'
+      - $ref: '#/components/schemas/AccountInvite'
+      discriminator:
+        propertyName: type
+        mapping:
+          member: '#/components/schemas/AccountMember'
+          invite: '#/components/schemas/AccountInvite'
+    AccountMembersList:
       type: object
       properties:
-        id:
-          type: string
-          description: Location identifier (e.g. us-east-1).
-        name:
-          type: string
-          description: Human-readable location name (e.g. N. Virginia).
-        available:
-          type: boolean
-          description: Whether this location is available on the current plan.
+        members:
+          type: array
+          items:
+            $ref: '#/components/schemas/AccountMembersListItems'
+        length:
+          type: integer
+          minimum: 0
+          description: Number of items returned in this page. This is not the total matching count.
+        nextId:
+          type:
+          - string
+          - 'null'
+          description: Opaque cursor for the next page. Null means there are no more results.
       required:
-      - id
-      - name
-      - available
+      - members
+      - length
+      - nextId
+    AccountAddonTier:
+      type: object
+      properties:
+        tier:
+          type: string
+          enum:
+          - hobby
+          - starter
+          - team
+          description: The add-on tier.
+          example: starter
+        tierDisplayName:
+          type: string
+          description: The human-readable display name of the add-on tier.
+          example: Communicate Starter
+    AccountList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Account'
+    ForbiddenError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 403
+        error:
+          $ref: '#/components/schemas/Model1'
+        message:
+          type: string
+          example: Forbidden
+      required:
+      - statusCode
+      - error
+    Entitlements:
+      type: object
+      properties:
+        plan:
+          type: string
+          description: The account plan type.
+          example: team
+        planDisplayName:
+          type: string
+          description: The human-readable display name of the account plan.
+          example: Team
+        addons:
+          $ref: '#/components/schemas/AccountAddons'
+        locations:
+          $ref: '#/components/schemas/AccountEntitlementLocations'
+        entitlements:
+          type: array
+          items:
+            $ref: '#/components/schemas/AccountEntitlement'
+          description: List of entitled features for this account.
+      required:
+      - plan
+      - locations
+      - entitlements
     Model2:
       type: string
       enum:
       - Too Many Requests
-    error:
+    AccountInvite:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - invite
+        id:
+          type: string
+          format: uuid
+        accountId:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        role:
+          type: string
+          enum:
+          - ADMIN
+          - READ_WRITE
+          - READ_RUN
+          - READ_ONLY
+        status:
+          type: string
+          enum:
+          - PENDING
+          - EXPIRED
+        inviterEmail:
+          type: string
+          format: email
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        expiresAt:
+          type: string
+          format: date-time
+      required:
+      - type
+      - id
+      - accountId
+      - email
+      - role
+      - status
+      - inviterEmail
+      - createdAt
+      - updatedAt
+      - expiresAt
+    Model4:
       type: string
       enum:
-      - Unauthorized
+      - Not Found
+    TooManyRequestsError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    AccountEntitlement:
+      type: object
+      properties:
+        key:
+          type: string
+          description: Unique entitlement identifier.
+        name:
+          type: string
+          description: Human-friendly display name.
+        description:
+          type: string
+          description: Short description of what this entitlement controls.
+        type:
+          type: string
+          enum:
+          - flag
+          - metered
+          description: Whether this entitlement is a boolean feature flag or a metered resource with a quantity limit.
+        enabled:
+          type: boolean
+          description: Whether this entitlement is available on the current plan.
+        quantity:
+          type: integer
+          minimum: 0
+          description: Maximum allowed quantity. Only present for metered entitlements.
+        requiredPlan:
+          type: string
+          description: The minimum plan required to unlock this entitlement. Only present for disabled entitlements.
+        requiredPlanDisplayName:
+          type: string
+          description: Human-readable name of the required plan.
+        requiredAddon:
+          $ref: '#/components/schemas/AccountRequiredAddon'
+      required:
+      - key
+      - name
+      - description
+      - type
+      - enabled
     AccountRequiredAddon:
       type: object
       properties:
@@ -752,38 +930,6 @@ components:
       - tier
       - tierDisplayName
       description: The addon and tier required to unlock this entitlement. Only present for disabled entitlements.
-    ApiError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-        error:
-          type: string
-        message:
-          type: string
-      required:
-      - statusCode
-      - error
-      - message
-    NotFoundError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 404
-        error:
-          $ref: '#/components/schemas/Model4'
-        message:
-          type: string
-          example: Not Found
-      required:
-      - statusCode
-      - error
-    AccountList:
-      type: array
-      items:
-        $ref: '#/components/schemas/Account'
     Account:
       type: object
       properties:
@@ -824,53 +970,6 @@ components:
           - EXTENDED_RESPONSE_TIME_LIMITS
       required:
       - id
-    AccountEntitlement:
-      type: object
-      properties:
-        key:
-          type: string
-          description: Unique entitlement identifier.
-        name:
-          type: string
-          description: Human-friendly display name.
-        description:
-          type: string
-          description: Short description of what this entitlement controls.
-        type:
-          type: string
-          enum:
-          - flag
-          - metered
-          description: Whether this entitlement is a boolean feature flag or a metered resource with a quantity limit.
-        enabled:
-          type: boolean
-          description: Whether this entitlement is available on the current plan.
-        quantity:
-          type: integer
-          minimum: 0
-          description: Maximum allowed quantity. Only present for metered entitlements.
-        requiredPlan:
-          type: string
-          description: The minimum plan required to unlock this entitlement. Only present for disabled entitlements.
-        requiredPlanDisplayName:
-          type: string
-          description: Human-readable name of the required plan.
-        requiredAddon:
-          $ref: '#/components/schemas/AccountRequiredAddon'
-      required:
-      - key
-      - name
-      - description
-      - type
-      - enabled
-    AccountAddons:
-      type: object
-      properties:
-        communicate:
-          $ref: '#/components/schemas/AccountAddonTier'
-        resolve:
-          $ref: '#/components/schemas/AccountAddonTier'
-      description: The add-ons available to the account.
     AccountMember:
       type: object
       properties:
@@ -928,6 +1027,67 @@ components:
       - isSupportMembership
       - ssoEnabled
       - mfaEnabled
+    AccountEntitlementLocation:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Location identifier (e.g. us-east-1).
+        name:
+          type: string
+          description: Human-readable location name (e.g. N. Virginia).
+        available:
+          type: boolean
+          description: Whether this location is available on the current plan.
+      required:
+      - id
+      - name
+      - available
+    Model1:
+      type: string
+      enum:
+      - Forbidden
+    AccountMemberUpdate:
+      type: object
+      properties:
+        role:
+          type: string
+          enum:
+          - ADMIN
+          - READ_WRITE
+          - READ_RUN
+          - READ_ONLY
+          description: New account member role. OWNER is not supported.
+      required:
+      - role
+      additionalProperties: false
+    ApiError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+        error:
+          type: string
+        message:
+          type: string
+      required:
+      - statusCode
+      - error
+      - message
+    attributes:
+      type: object
+    AccountAddons:
+      type: object
+      properties:
+        communicate:
+          $ref: '#/components/schemas/AccountAddonTier'
+        resolve:
+          $ref: '#/components/schemas/AccountAddonTier'
+      description: The add-ons available to the account.
+    error:
+      type: string
+      enum:
+      - Unauthorized
     UnauthorizedError:
       type: object
       properties:
@@ -945,157 +1105,11 @@ components:
       required:
       - statusCode
       - error
-    TooManyRequestsError:
+    AccountAlertSettings:
       type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 429
-        error:
-          $ref: '#/components/schemas/Model2'
-        message:
-          type: string
-          example: Too Many Requests
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    attributes:
-      type: object
-    Model1:
-      type: string
-      enum:
-      - Forbidden
-    AccountInvite:
-      type: object
-      properties:
-        type:
-          type: string
-          enum:
-          - invite
-        id:
-          type: string
-          format: uuid
-        accountId:
-          type: string
-          format: uuid
-        email:
-          type: string
-          format: email
-        role:
-          type: string
-          enum:
-          - ADMIN
-          - READ_WRITE
-          - READ_RUN
-          - READ_ONLY
-        status:
-          type: string
-          enum:
-          - PENDING
-          - EXPIRED
-        inviterEmail:
-          type: string
-          format: email
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
-        expiresAt:
-          type: string
-          format: date-time
-      required:
-      - type
-      - id
-      - accountId
-      - email
-      - role
-      - status
-      - inviterEmail
-      - createdAt
-      - updatedAt
-      - expiresAt
-    AccountMembersListItems:
-      oneOf:
-      - $ref: '#/components/schemas/AccountMember'
-      - $ref: '#/components/schemas/AccountInvite'
-      discriminator:
-        propertyName: type
-        mapping:
-          member: '#/components/schemas/AccountMember'
-          invite: '#/components/schemas/AccountInvite'
-    AccountMembersList:
-      type: object
-      properties:
-        members:
-          type: array
-          items:
-            $ref: '#/components/schemas/AccountMembersListItems'
-        length:
-          type: integer
-          minimum: 0
-          description: Number of items returned in this page. This is not the total matching count.
-        nextId:
-          type:
-          - string
-          - 'null'
-          description: Opaque cursor for the next page. Null means there are no more results.
-      required:
-      - members
-      - length
-      - nextId
-    ForbiddenError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 403
-        error:
-          $ref: '#/components/schemas/Model1'
-        message:
-          type: string
-          example: Forbidden
-      required:
-      - statusCode
-      - error
-    Model4:
-      type: string
-      enum:
-      - Not Found
-    AccountMemberUpdate:
-      type: object
-      properties:
-        role:
-          type: string
-          enum:
-          - ADMIN
-          - READ_WRITE
-          - READ_RUN
-          - READ_ONLY
-          description: New account member role. OWNER is not supported.
-      required:
-      - role
-      additionalProperties: false
-    AccountAddonTier:
-      type: object
-      properties:
-        tier:
-          type: string
-          enum:
-          - hobby
-          - starter
-          - team
-          description: The add-on tier.
-          example: starter
-        tierDisplayName:
-          type: string
-          description: The human-readable display name of the add-on tier.
-          example: Communicate Starter
+      properties: {}
+      additionalProperties: true
+      description: The alert settings of the account.
     AccountEntitlementLocations:
       type: object
       properties:
@@ -1111,35 +1125,21 @@ components:
       required:
       - all
       description: Check run locations and limits for this account.
-    AccountSettings:
-      type: object
-      properties: {}
-      additionalProperties: true
-      description: The settings of the account.
-    Entitlements:
+    NotFoundError:
       type: object
       properties:
-        plan:
+        statusCode:
+          type: number
+          enum:
+          - 404
+        error:
+          $ref: '#/components/schemas/Model4'
+        message:
           type: string
-          description: The account plan type.
-          example: team
-        planDisplayName:
-          type: string
-          description: The human-readable display name of the account plan.
-          example: Team
-        addons:
-          $ref: '#/components/schemas/AccountAddons'
-        locations:
-          $ref: '#/components/schemas/AccountEntitlementLocations'
-        entitlements:
-          type: array
-          items:
-            $ref: '#/components/schemas/AccountEntitlement'
-          description: List of entitled features for this account.
+          example: Not Found
       required:
-      - plan
-      - locations
-      - entitlements
+      - statusCode
+      - error
   securitySchemes:
     Bearer:
       type: http

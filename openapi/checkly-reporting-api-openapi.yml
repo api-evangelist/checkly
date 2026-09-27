@@ -124,53 +124,6 @@ paths:
                 $ref: '#/components/schemas/TooManyRequestsError'
 components:
   schemas:
-    ForbiddenError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 403
-        error:
-          $ref: '#/components/schemas/Model1'
-        message:
-          type: string
-          example: Forbidden
-      required:
-      - statusCode
-      - error
-    ReportingTagList:
-      type: array
-      description: Check tags.
-      example:
-      - production
-      items:
-        type: string
-    Model2:
-      type: string
-      enum:
-      - Too Many Requests
-    UnauthorizedError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 401
-        error:
-          $ref: '#/components/schemas/error'
-        message:
-          type: string
-          example: Bad Token
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    error:
-      type: string
-      enum:
-      - Unauthorized
     ReportingAggregate:
       type: object
       description: Whole-window aggregate. Absent when "granularity" is used.
@@ -200,10 +153,60 @@ components:
       - avg
       - p95
       - p99
-    ReportingList:
-      type: array
-      items:
-        $ref: '#/components/schemas/Reporting'
+    Model1:
+      type: string
+      enum:
+      - Forbidden
+    attributes:
+      type: object
+    Reporting:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Check name.
+          example: API Check
+        checkId:
+          type: string
+          description: Check ID.
+          example: d2881e09-411b-4c8d-84b8-fe05fbca80b6
+        checkType:
+          type: string
+          description: Check type.
+          example: API
+        deactivated:
+          type: boolean
+          description: Check deactivated.
+          default: false
+        tags:
+          $ref: '#/components/schemas/ReportingTagList'
+        aggregate:
+          $ref: '#/components/schemas/ReportingAggregate'
+        aggregates:
+          $ref: '#/components/schemas/ReportingBucketAggregateList'
+      required:
+      - name
+      - checkId
+      - checkType
+      - deactivated
+      - tags
+    UnauthorizedError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 401
+        error:
+          $ref: '#/components/schemas/error'
+        message:
+          type: string
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
     TooManyRequestsError:
       type: object
       properties:
@@ -221,6 +224,15 @@ components:
       required:
       - statusCode
       - error
+    ReportingBucketAggregateList:
+      type: array
+      description: Per-bucket aggregates, ascending by bucket start. Only present when "granularity" is used. Buckets without any check runs are omitted.
+      items:
+        $ref: '#/components/schemas/ReportingBucketAggregate'
+    ReportingList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Reporting'
     ReportingBucketAggregate:
       type: object
       properties:
@@ -263,48 +275,36 @@ components:
       - p99
       - from
       - to
-    attributes:
-      type: object
-    Reporting:
+    ForbiddenError:
       type: object
       properties:
-        name:
+        statusCode:
+          type: number
+          enum:
+          - 403
+        error:
+          $ref: '#/components/schemas/Model1'
+        message:
           type: string
-          description: Check name.
-          example: API Check
-        checkId:
-          type: string
-          description: Check ID.
-          example: d2881e09-411b-4c8d-84b8-fe05fbca80b6
-        checkType:
-          type: string
-          description: Check type.
-          example: API
-        deactivated:
-          type: boolean
-          description: Check deactivated.
-          default: false
-        tags:
-          $ref: '#/components/schemas/ReportingTagList'
-        aggregate:
-          $ref: '#/components/schemas/ReportingAggregate'
-        aggregates:
-          $ref: '#/components/schemas/ReportingBucketAggregateList'
+          example: Forbidden
       required:
-      - name
-      - checkId
-      - checkType
-      - deactivated
-      - tags
-    ReportingBucketAggregateList:
-      type: array
-      description: Per-bucket aggregates, ascending by bucket start. Only present when "granularity" is used. Buckets without any check runs are omitted.
-      items:
-        $ref: '#/components/schemas/ReportingBucketAggregate'
-    Model1:
+      - statusCode
+      - error
+    error:
       type: string
       enum:
-      - Forbidden
+      - Unauthorized
+    ReportingTagList:
+      type: array
+      description: Check tags.
+      example:
+      - production
+      items:
+        type: string
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
   securitySchemes:
     Bearer:
       type: http

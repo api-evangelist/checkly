@@ -230,6 +230,17 @@ paths:
         in: header
 components:
   schemas:
+    StaticIpTextResponse:
+      type: string
+      description: A newline-delimited list of IP addresses or address ranges.
+    StaticIpv4ListResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/StaticIpv4Address'
+      description: All IPv4 addresses used by Checkly check runners.
+    StaticIpv6CidrRange:
+      type: string
+      description: An IPv6 address range in CIDR notation used by Checkly check runners.
     StaticIpv4ByRegionResponse:
       type: object
       additionalProperties:
@@ -237,10 +248,19 @@ components:
         items:
           $ref: '#/components/schemas/StaticIpv4Address'
       description: IPv4 addresses used by Checkly check runners, grouped by region.
-    Model2:
-      type: string
-      enum:
-      - Too Many Requests
+    ApiError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+        error:
+          type: string
+        message:
+          type: string
+      required:
+      - statusCode
+      - error
+      - message
     StaticIpv6ByRegionResponse:
       type: object
       additionalProperties:
@@ -248,6 +268,12 @@ components:
         items:
           $ref: '#/components/schemas/StaticIpv6CidrRange'
       description: IPv6 address ranges used by Checkly check runners, grouped by region.
+    attributes:
+      type: object
+    StaticIpv4Address:
+      type: string
+      format: ipv4
+      description: An IPv4 address used by Checkly check runners.
     TooManyRequestsError:
       type: object
       properties:
@@ -270,36 +296,10 @@ components:
       items:
         $ref: '#/components/schemas/StaticIpv6CidrRange'
       description: All IPv6 address ranges used by Checkly check runners.
-    ApiError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-        error:
-          type: string
-        message:
-          type: string
-      required:
-      - statusCode
-      - error
-      - message
-    attributes:
-      type: object
-    StaticIpv4Address:
+    Model2:
       type: string
-      format: ipv4
-      description: An IPv4 address used by Checkly check runners.
-    StaticIpv6CidrRange:
-      type: string
-      description: An IPv6 address range in CIDR notation used by Checkly check runners.
-    StaticIpv4ListResponse:
-      type: array
-      items:
-        $ref: '#/components/schemas/StaticIpv4Address'
-      description: All IPv4 addresses used by Checkly check runners.
-    StaticIpTextResponse:
-      type: string
-      description: A newline-delimited list of IP addresses or address ranges.
+      enum:
+      - Too Many Requests
   securitySchemes:
     Bearer:
       type: http

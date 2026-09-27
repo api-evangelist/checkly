@@ -115,19 +115,28 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    Model2:
+    BadgeTheme:
       type: string
       enum:
-      - Too Many Requests
-    BadgeStyle:
-      type: string
-      enum:
-      - flat
-      - plastic
-      - flat-square
-      - for-the-badge
-      - social
-      default: flat
+      - light
+      - dark
+      - default
+      default: default
+    ApiError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+        error:
+          type: string
+        message:
+          type: string
+      required:
+      - statusCode
+      - error
+      - message
+    attributes:
+      type: object
     TooManyRequestsError:
       type: object
       properties:
@@ -145,32 +154,23 @@ components:
       required:
       - statusCode
       - error
-    BadgeTheme:
-      type: string
-      enum:
-      - light
-      - dark
-      - default
-      default: default
-    attributes:
-      type: object
-    ApiError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-        error:
-          type: string
-        message:
-          type: string
-      required:
-      - statusCode
-      - error
-      - message
     BadgeSvgResponse:
       type: string
       pattern: (<svg)([^<]*|[^>]*)
       description: An SVG image containing the current Checkly check or group status.
+    BadgeStyle:
+      type: string
+      enum:
+      - flat
+      - plastic
+      - flat-square
+      - for-the-badge
+      - social
+      default: flat
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
   securitySchemes:
     Bearer:
       type: http

@@ -113,54 +113,6 @@ paths:
                 $ref: '#/components/schemas/TooManyRequestsError'
 components:
   schemas:
-    Model5:
-      type: string
-      description: The type of alert channel (SMS, Slack, Webhook, etc).
-      enum:
-      - EMAIL
-      - SLACK
-      - SLACK_APP
-      - WEBHOOK
-      - SMS
-      - PAGERDUTY
-      - OPSGENIE
-      - CALL
-    ForbiddenError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 403
-        error:
-          $ref: '#/components/schemas/Model1'
-        message:
-          type: string
-          example: Forbidden
-      required:
-      - statusCode
-      - error
-    PaymentRequiredError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 402
-        error:
-          $ref: '#/components/schemas/Model3'
-        message:
-          type: string
-          example: Payment Required
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    Model2:
-      type: string
-      enum:
-      - Too Many Requests
     checkType:
       type: string
       description: The type of the check.
@@ -178,57 +130,28 @@ components:
       - DNS
       - SSL
       - GRPC
-    UnauthorizedError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 401
-        error:
-          $ref: '#/components/schemas/error'
-        message:
-          type: string
-          example: Bad Token
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    AlertNotificationList:
-      type: array
-      items:
-        $ref: '#/components/schemas/AlertNotification'
-    error:
+    Model1:
       type: string
       enum:
-      - Unauthorized
+      - Forbidden
+    attributes:
+      type: object
     Model3:
       type: string
       enum:
       - Payment Required
-    alertConfig:
-      type: object
-      description: The configuration which was used to send the alert.
-    TooManyRequestsError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 429
-        error:
-          $ref: '#/components/schemas/Model2'
-        message:
-          type: string
-          example: Too Many Requests
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    attributes:
-      type: object
+    Model5:
+      type: string
+      description: The type of alert channel (SMS, Slack, Webhook, etc).
+      enum:
+      - EMAIL
+      - SLACK
+      - SLACK_APP
+      - WEBHOOK
+      - SMS
+      - PAGERDUTY
+      - OPSGENIE
+      - CALL
     AlertNotification:
       type: object
       properties:
@@ -266,6 +189,64 @@ components:
         checkResultId:
           type: string
           description: The ID of the corresponding check result.
+    TooManyRequestsError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    UnauthorizedError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 401
+        error:
+          $ref: '#/components/schemas/error'
+        message:
+          type: string
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    alertConfig:
+      type: object
+      description: The configuration which was used to send the alert.
+    AlertNotificationList:
+      type: array
+      items:
+        $ref: '#/components/schemas/AlertNotification'
+    PaymentRequiredError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 402
+        error:
+          $ref: '#/components/schemas/Model3'
+        message:
+          type: string
+          example: Payment Required
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
     status:
       type: string
       description: The status of the alert.
@@ -274,10 +255,29 @@ components:
       - SUCCESS
       - FAILURE
       - RATE_LIMITED
-    Model1:
+    ForbiddenError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 403
+        error:
+          $ref: '#/components/schemas/Model1'
+        message:
+          type: string
+          example: Forbidden
+      required:
+      - statusCode
+      - error
+    error:
       type: string
       enum:
-      - Forbidden
+      - Unauthorized
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
   securitySchemes:
     Bearer:
       type: http

@@ -117,21 +117,6 @@ paths:
         in: header
 components:
   schemas:
-    ForbiddenError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 403
-        error:
-          $ref: '#/components/schemas/Model1'
-        message:
-          type: string
-          example: Forbidden
-      required:
-      - statusCode
-      - error
     CheckStatus:
       type:
       - object
@@ -197,10 +182,20 @@ components:
           format: date-time
       required:
       - name
-    Model2:
+    Model1:
       type: string
       enum:
-      - Too Many Requests
+      - Forbidden
+    Model4:
+      type: string
+      enum:
+      - Not Found
+    attributes:
+      type: object
+    error:
+      type: string
+      enum:
+      - Unauthorized
     UnauthorizedError:
       type: object
       properties:
@@ -218,10 +213,6 @@ components:
       required:
       - statusCode
       - error
-    error:
-      type: string
-      enum:
-      - Unauthorized
     TooManyRequestsError:
       type: object
       properties:
@@ -239,8 +230,25 @@ components:
       required:
       - statusCode
       - error
-    attributes:
+    CheckStatusList:
+      type: array
+      items:
+        $ref: '#/components/schemas/CheckStatus'
+    ForbiddenError:
       type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 403
+        error:
+          $ref: '#/components/schemas/Model1'
+        message:
+          type: string
+          example: Forbidden
+      required:
+      - statusCode
+      - error
     NotFoundError:
       type: object
       properties:
@@ -256,18 +264,10 @@ components:
       required:
       - statusCode
       - error
-    Model4:
+    Model2:
       type: string
       enum:
-      - Not Found
-    Model1:
-      type: string
-      enum:
-      - Forbidden
-    CheckStatusList:
-      type: array
-      items:
-        $ref: '#/components/schemas/CheckStatus'
+      - Too Many Requests
   securitySchemes:
     Bearer:
       type: http

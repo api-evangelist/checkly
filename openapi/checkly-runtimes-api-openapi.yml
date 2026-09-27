@@ -98,16 +98,40 @@ paths:
         in: header
 components:
   schemas:
-    RuntimeDependencies:
-      type: object
-      additionalProperties:
-        type: string
-        minLength: 1
-      description: An object with all dependency package names and versions as in a standard package.json.
     Model2:
       type: string
       enum:
       - Too Many Requests
+    ApiError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+        error:
+          type: string
+        message:
+          type: string
+      required:
+      - statusCode
+      - error
+      - message
+    Model4:
+      type: string
+      enum:
+      - Not Found
+    attributes:
+      type: object
+    RuntimeStage:
+      type: string
+      enum:
+      - ALPHA
+      - BETA
+      - CURRENT
+      - DEPRECATED
+      - REMOVED
+      - STABLE
+      description: Current life stage of a runtime.
+      example: STABLE
     TooManyRequestsError:
       type: object
       properties:
@@ -129,21 +153,6 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/Runtime'
-    ApiError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-        error:
-          type: string
-        message:
-          type: string
-      required:
-      - statusCode
-      - error
-      - message
-    attributes:
-      type: object
     NotFoundError:
       type: object
       properties:
@@ -159,10 +168,12 @@ components:
       required:
       - statusCode
       - error
-    Model4:
-      type: string
-      enum:
-      - Not Found
+    RuntimeDependencies:
+      type: object
+      additionalProperties:
+        type: string
+        minLength: 1
+      description: An object with all dependency package names and versions as in a standard package.json.
     Runtime:
       type: object
       properties:
@@ -196,17 +207,6 @@ components:
       - multiStepSupport
       - nodeJsVersion
       - dependencies
-    RuntimeStage:
-      type: string
-      enum:
-      - ALPHA
-      - BETA
-      - CURRENT
-      - DEPRECATED
-      - REMOVED
-      - STABLE
-      description: Current life stage of a runtime.
-      example: STABLE
   securitySchemes:
     Bearer:
       type: http

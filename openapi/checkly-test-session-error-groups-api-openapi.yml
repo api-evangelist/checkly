@@ -256,13 +256,6 @@ paths:
               $ref: '#/components/schemas/PatchTestSessionErrorGroupRequest'
 components:
   schemas:
-    PatchTestSessionErrorGroupRequest:
-      type: object
-      properties:
-        archiveForEver:
-          type: boolean
-        archivedUntilNextEvent:
-          type: boolean
     TestSessionErrorGroupPlaywrightMetadata:
       type: object
       properties:
@@ -342,6 +335,13 @@ components:
       - lastSeen
       - archivedUntilNextEvent
       - pwtMetadata
+    PatchTestSessionErrorGroupRequest:
+      type: object
+      properties:
+        archiveForEver:
+          type: boolean
+        archivedUntilNextEvent:
+          type: boolean
     ApiError:
       type: object
       properties:
