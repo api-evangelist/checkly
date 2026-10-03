@@ -308,26 +308,311 @@ components:
       required:
       - owner
       - references
-    DashboardTagList:
-      type: array
-      items:
-        type: string
-      default: []
-      description: A list of one or more tags that filter which checks to display on the dashboard.
-    ProjectBindingDetailsV1:
-      type: object
-      description: The resource's side of this binding.
+    ProjectBindingOwnerV1:
+      type:
+      - object
+      - 'null'
+      description: The project that owns this resource — the one whose deploy can delete it. Null when no project owns it, including when other projects merely reference it. In the rare case that several projects hold an ownership record for one resource, this reports the preferred one and the rest are omitted.
       properties:
-        logicalId:
-          type: string
-          description: The resource's logical ID within this project, as declared in code.
-          example: homepage-check
-        pending:
-          type: boolean
-          description: True when the binding is reserved by an import plan that has not been deployed yet.
+        project:
+          $ref: '#/components/schemas/BindingProjectV1'
+        binding:
+          $ref: '#/components/schemas/ProjectBindingDetailsV1'
       required:
-      - logicalId
-      - pending
+      - project
+      - binding
+    Dashboard:
+      type: object
+      properties:
+        customUrl:
+          type:
+          - string
+          - 'null'
+          description: A subdomain name under "checklyhq.com". Needs to be unique across all users.
+        customDomain:
+          type:
+          - string
+          - 'null'
+          description: A custom user domain, e.g. "status.example.com". See the docs on updating your DNS and SSL usage.
+        logo:
+          anyOf:
+          - type: string
+            format: uri
+          - type: string
+            enum:
+            - ''
+          - {}
+          description: A URL pointing to an image file.
+        favicon:
+          anyOf:
+          - type: string
+            format: uri
+          - type: string
+            enum:
+            - ''
+          - {}
+          description: A URL pointing to an image file used as dashboard favicon.
+        link:
+          anyOf:
+          - type: string
+            format: uri
+          - type: string
+            enum:
+            - ''
+          - {}
+          description: A URL link to redirect when dashboard logo is clicked on.
+        header:
+          type: string
+          description: A piece of text displayed at the top of your dashboard.
+        description:
+          type:
+          - string
+          - 'null'
+          description: A piece of text displayed below the header or title of your dashboard.
+        width:
+          type: string
+          enum:
+          - FULL
+          - 960PX
+          default: FULL
+          description: Determines whether to use the full screen or focus in the center.
+        refreshRate:
+          type: number
+          default: 60
+          description: How often to refresh the dashboard in seconds.
+        paginate:
+          type: boolean
+          default: true
+          description: Determines of pagination is on or off.
+        paginationRate:
+          type: number
+          default: 60
+          description: How often to trigger pagination in seconds.
+        sortByStatus:
+          type: boolean
+          default: false
+          description: Sort checks by status with failing checks first.
+        checksPerPage:
+          type:
+          - number
+          - 'null'
+          minimum: 1
+          maximum: 20
+          default: 15
+          description: Number of checks displayed per page.
+        useTagsAndOperator:
+          type:
+          - boolean
+          - 'null'
+          default: false
+          description: When to use AND operator for tags lookup.
+        hideTags:
+          type: boolean
+          default: false
+          description: Show or hide the tags on the dashboard.
+        enableIncidents:
+          type: boolean
+          default: false
+          description: Enable or disable incidents on the dashboard.
+        expandChecks:
+          type: boolean
+          default: false
+          description: Expand or collapse checks on the dashboard.
+        tags:
+          $ref: '#/components/schemas/DashboardTagList'
+        showHeader:
+          type: boolean
+          default: true
+          description: Show or hide header and description on the dashboard.
+        showCheckRunLinks:
+          type: boolean
+          default: false
+          description: Show or hide check run links on the dashboard.
+        showGroupNames:
+          type: boolean
+          default: true
+          description: Show or hide group names on the dashboard.
+        customCSS:
+          type:
+          - string
+          - 'null'
+          default: ''
+          description: Custom CSS to be applied to the dashboard.
+        isPrivate:
+          type: boolean
+          default: false
+          description: Determines if the dashboard is public or private.
+        showP95:
+          type: boolean
+          default: true
+          description: Show or hide the P95 stats on the dashboard.
+        showP99:
+          type: boolean
+          default: true
+          description: Show or hide the P99 stats on the dashboard.
+        keys:
+          type: array
+          items:
+            $ref: '#/components/schemas/DashboardKey'
+          default: []
+          description: Show key for private dashboard.
+        id:
+          type: number
+        dashboardId:
+          type: string
+          description: The dashboard ID.
+        created_at:
+          type: string
+          format: date-time
+      required:
+      - id
+      - dashboardId
+      - created_at
+    ProjectBindingV1:
+      type: object
+      properties:
+        project:
+          $ref: '#/components/schemas/BindingProjectV1'
+        binding:
+          $ref: '#/components/schemas/ProjectBindingDetailsV1'
+      required:
+      - project
+      - binding
+    DashboardUpdate:
+      type: object
+      properties:
+        customUrl:
+          type:
+          - string
+          - 'null'
+          description: A subdomain name under "checklyhq.com". Needs to be unique across all users.
+        customDomain:
+          type:
+          - string
+          - 'null'
+          description: A custom user domain, e.g. "status.example.com". See the docs on updating your DNS and SSL usage.
+        logo:
+          anyOf:
+          - type: string
+            format: uri
+          - type: string
+            enum:
+            - ''
+          - {}
+          description: A URL pointing to an image file.
+        favicon:
+          anyOf:
+          - type: string
+            format: uri
+          - type: string
+            enum:
+            - ''
+          - {}
+          description: A URL pointing to an image file used as dashboard favicon.
+        link:
+          anyOf:
+          - type: string
+            format: uri
+          - type: string
+            enum:
+            - ''
+          - {}
+          description: A URL link to redirect when dashboard logo is clicked on.
+        header:
+          type: string
+          description: A piece of text displayed at the top of your dashboard.
+        description:
+          type:
+          - string
+          - 'null'
+          description: A piece of text displayed below the header or title of your dashboard.
+        width:
+          type: string
+          enum:
+          - FULL
+          - 960PX
+          default: FULL
+          description: Determines whether to use the full screen or focus in the center.
+        refreshRate:
+          type: number
+          default: 60
+          description: How often to refresh the dashboard in seconds.
+        paginate:
+          type: boolean
+          default: true
+          description: Determines of pagination is on or off.
+        paginationRate:
+          type: number
+          default: 60
+          description: How often to trigger pagination in seconds.
+        sortByStatus:
+          type: boolean
+          default: false
+          description: Sort checks by status with failing checks first.
+        checksPerPage:
+          type:
+          - number
+          - 'null'
+          minimum: 1
+          maximum: 20
+          default: 15
+          description: Number of checks displayed per page.
+        useTagsAndOperator:
+          type:
+          - boolean
+          - 'null'
+          default: false
+          description: When to use AND operator for tags lookup.
+        hideTags:
+          type: boolean
+          default: false
+          description: Show or hide the tags on the dashboard.
+        enableIncidents:
+          type: boolean
+          default: false
+          description: Enable or disable incidents on the dashboard.
+        expandChecks:
+          type: boolean
+          default: false
+          description: Expand or collapse checks on the dashboard.
+        tags:
+          $ref: '#/components/schemas/DashboardTagList'
+        showHeader:
+          type: boolean
+          default: true
+          description: Show or hide header and description on the dashboard.
+        showCheckRunLinks:
+          type: boolean
+          default: false
+          description: Show or hide check run links on the dashboard.
+        showGroupNames:
+          type: boolean
+          default: true
+          description: Show or hide group names on the dashboard.
+        customCSS:
+          type:
+          - string
+          - 'null'
+          default: ''
+          description: Custom CSS to be applied to the dashboard.
+        isPrivate:
+          type: boolean
+          default: false
+          description: Determines if the dashboard is public or private.
+        showP95:
+          type: boolean
+          default: true
+          description: Show or hide the P95 stats on the dashboard.
+        showP99:
+          type: boolean
+          default: true
+          description: Show or hide the P99 stats on the dashboard.
+        keys:
+          type: array
+          items:
+            $ref: '#/components/schemas/DashboardKey'
+          default: []
+          description: Show key for private dashboard.
     DashboardListItem:
       type: object
       properties:
@@ -477,19 +762,20 @@ components:
       - id
       - dashboardId
       - created_at
-    ProjectBindingOwnerV1:
-      type:
-      - object
-      - 'null'
-      description: The project that owns this resource — the one whose deploy can delete it. Null when no project owns it, including when other projects merely reference it. In the rare case that several projects hold an ownership record for one resource, this reports the preferred one and the rest are omitted.
+    ProjectBindingDetailsV1:
+      type: object
+      description: The resource's side of this binding.
       properties:
-        project:
-          $ref: '#/components/schemas/BindingProjectV1'
-        binding:
-          $ref: '#/components/schemas/ProjectBindingDetailsV1'
+        logicalId:
+          type: string
+          description: The resource's logical ID within this project, as declared in code.
+          example: homepage-check
+        pending:
+          type: boolean
+          description: True when the binding is reserved by an import plan that has not been deployed yet.
       required:
-      - project
-      - binding
+      - logicalId
+      - pending
     DashboardKey:
       type: object
       properties:
@@ -515,24 +801,10 @@ components:
       - rawKey
       - maskedKey
       - created_at
-    ProjectBindingReferencesV1:
+    DashboardsList:
       type: array
-      description: Projects that use this resource without owning it; their deploys leave it alone. Empty when there are none.
       items:
-        $ref: '#/components/schemas/ProjectBindingV1'
-    ApiError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-        error:
-          type: string
-        message:
-          type: string
-      required:
-      - statusCode
-      - error
-      - message
+        $ref: '#/components/schemas/DashboardListItem'
     DashboardCreate:
       type: object
       properties:
@@ -670,155 +942,12 @@ components:
           description: Show key for private dashboard.
       required:
       - header
-    DashboardsList:
+    DashboardTagList:
       type: array
       items:
-        $ref: '#/components/schemas/DashboardListItem'
-    ProjectBindingV1:
-      type: object
-      properties:
-        project:
-          $ref: '#/components/schemas/BindingProjectV1'
-        binding:
-          $ref: '#/components/schemas/ProjectBindingDetailsV1'
-      required:
-      - project
-      - binding
-    DashboardUpdate:
-      type: object
-      properties:
-        customUrl:
-          type:
-          - string
-          - 'null'
-          description: A subdomain name under "checklyhq.com". Needs to be unique across all users.
-        customDomain:
-          type:
-          - string
-          - 'null'
-          description: A custom user domain, e.g. "status.example.com". See the docs on updating your DNS and SSL usage.
-        logo:
-          anyOf:
-          - type: string
-            format: uri
-          - type: string
-            enum:
-            - ''
-          - {}
-          description: A URL pointing to an image file.
-        favicon:
-          anyOf:
-          - type: string
-            format: uri
-          - type: string
-            enum:
-            - ''
-          - {}
-          description: A URL pointing to an image file used as dashboard favicon.
-        link:
-          anyOf:
-          - type: string
-            format: uri
-          - type: string
-            enum:
-            - ''
-          - {}
-          description: A URL link to redirect when dashboard logo is clicked on.
-        header:
-          type: string
-          description: A piece of text displayed at the top of your dashboard.
-        description:
-          type:
-          - string
-          - 'null'
-          description: A piece of text displayed below the header or title of your dashboard.
-        width:
-          type: string
-          enum:
-          - FULL
-          - 960PX
-          default: FULL
-          description: Determines whether to use the full screen or focus in the center.
-        refreshRate:
-          type: number
-          default: 60
-          description: How often to refresh the dashboard in seconds.
-        paginate:
-          type: boolean
-          default: true
-          description: Determines of pagination is on or off.
-        paginationRate:
-          type: number
-          default: 60
-          description: How often to trigger pagination in seconds.
-        sortByStatus:
-          type: boolean
-          default: false
-          description: Sort checks by status with failing checks first.
-        checksPerPage:
-          type:
-          - number
-          - 'null'
-          minimum: 1
-          maximum: 20
-          default: 15
-          description: Number of checks displayed per page.
-        useTagsAndOperator:
-          type:
-          - boolean
-          - 'null'
-          default: false
-          description: When to use AND operator for tags lookup.
-        hideTags:
-          type: boolean
-          default: false
-          description: Show or hide the tags on the dashboard.
-        enableIncidents:
-          type: boolean
-          default: false
-          description: Enable or disable incidents on the dashboard.
-        expandChecks:
-          type: boolean
-          default: false
-          description: Expand or collapse checks on the dashboard.
-        tags:
-          $ref: '#/components/schemas/DashboardTagList'
-        showHeader:
-          type: boolean
-          default: true
-          description: Show or hide header and description on the dashboard.
-        showCheckRunLinks:
-          type: boolean
-          default: false
-          description: Show or hide check run links on the dashboard.
-        showGroupNames:
-          type: boolean
-          default: true
-          description: Show or hide group names on the dashboard.
-        customCSS:
-          type:
-          - string
-          - 'null'
-          default: ''
-          description: Custom CSS to be applied to the dashboard.
-        isPrivate:
-          type: boolean
-          default: false
-          description: Determines if the dashboard is public or private.
-        showP95:
-          type: boolean
-          default: true
-          description: Show or hide the P95 stats on the dashboard.
-        showP99:
-          type: boolean
-          default: true
-          description: Show or hide the P99 stats on the dashboard.
-        keys:
-          type: array
-          items:
-            $ref: '#/components/schemas/DashboardKey'
-          default: []
-          description: Show key for private dashboard.
+        type: string
+      default: []
+      description: A list of one or more tags that filter which checks to display on the dashboard.
     BindingProjectV1:
       type: object
       description: The project this binding is to.
@@ -836,153 +965,24 @@ components:
       - id
       - logicalId
       - name
-    Dashboard:
+    ProjectBindingReferencesV1:
+      type: array
+      description: Projects that use this resource without owning it; their deploys leave it alone. Empty when there are none.
+      items:
+        $ref: '#/components/schemas/ProjectBindingV1'
+    ApiError:
       type: object
       properties:
-        customUrl:
-          type:
-          - string
-          - 'null'
-          description: A subdomain name under "checklyhq.com". Needs to be unique across all users.
-        customDomain:
-          type:
-          - string
-          - 'null'
-          description: A custom user domain, e.g. "status.example.com". See the docs on updating your DNS and SSL usage.
-        logo:
-          anyOf:
-          - type: string
-            format: uri
-          - type: string
-            enum:
-            - ''
-          - {}
-          description: A URL pointing to an image file.
-        favicon:
-          anyOf:
-          - type: string
-            format: uri
-          - type: string
-            enum:
-            - ''
-          - {}
-          description: A URL pointing to an image file used as dashboard favicon.
-        link:
-          anyOf:
-          - type: string
-            format: uri
-          - type: string
-            enum:
-            - ''
-          - {}
-          description: A URL link to redirect when dashboard logo is clicked on.
-        header:
-          type: string
-          description: A piece of text displayed at the top of your dashboard.
-        description:
-          type:
-          - string
-          - 'null'
-          description: A piece of text displayed below the header or title of your dashboard.
-        width:
-          type: string
-          enum:
-          - FULL
-          - 960PX
-          default: FULL
-          description: Determines whether to use the full screen or focus in the center.
-        refreshRate:
+        statusCode:
           type: number
-          default: 60
-          description: How often to refresh the dashboard in seconds.
-        paginate:
-          type: boolean
-          default: true
-          description: Determines of pagination is on or off.
-        paginationRate:
-          type: number
-          default: 60
-          description: How often to trigger pagination in seconds.
-        sortByStatus:
-          type: boolean
-          default: false
-          description: Sort checks by status with failing checks first.
-        checksPerPage:
-          type:
-          - number
-          - 'null'
-          minimum: 1
-          maximum: 20
-          default: 15
-          description: Number of checks displayed per page.
-        useTagsAndOperator:
-          type:
-          - boolean
-          - 'null'
-          default: false
-          description: When to use AND operator for tags lookup.
-        hideTags:
-          type: boolean
-          default: false
-          description: Show or hide the tags on the dashboard.
-        enableIncidents:
-          type: boolean
-          default: false
-          description: Enable or disable incidents on the dashboard.
-        expandChecks:
-          type: boolean
-          default: false
-          description: Expand or collapse checks on the dashboard.
-        tags:
-          $ref: '#/components/schemas/DashboardTagList'
-        showHeader:
-          type: boolean
-          default: true
-          description: Show or hide header and description on the dashboard.
-        showCheckRunLinks:
-          type: boolean
-          default: false
-          description: Show or hide check run links on the dashboard.
-        showGroupNames:
-          type: boolean
-          default: true
-          description: Show or hide group names on the dashboard.
-        customCSS:
-          type:
-          - string
-          - 'null'
-          default: ''
-          description: Custom CSS to be applied to the dashboard.
-        isPrivate:
-          type: boolean
-          default: false
-          description: Determines if the dashboard is public or private.
-        showP95:
-          type: boolean
-          default: true
-          description: Show or hide the P95 stats on the dashboard.
-        showP99:
-          type: boolean
-          default: true
-          description: Show or hide the P99 stats on the dashboard.
-        keys:
-          type: array
-          items:
-            $ref: '#/components/schemas/DashboardKey'
-          default: []
-          description: Show key for private dashboard.
-        id:
-          type: number
-        dashboardId:
+        error:
           type: string
-          description: The dashboard ID.
-        created_at:
+        message:
           type: string
-          format: date-time
       required:
-      - id
-      - dashboardId
-      - created_at
+      - statusCode
+      - error
+      - message
   securitySchemes:
     Bearer:
       type: http

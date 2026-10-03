@@ -117,6 +117,29 @@ paths:
         in: header
 components:
   schemas:
+    UnauthorizedError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 401
+        error:
+          $ref: '#/components/schemas/error'
+        message:
+          type: string
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    attributes:
+      type: object
+    CheckStatusList:
+      type: array
+      items:
+        $ref: '#/components/schemas/CheckStatus'
     CheckStatus:
       type:
       - object
@@ -182,37 +205,52 @@ components:
           format: date-time
       required:
       - name
-    Model1:
-      type: string
-      enum:
-      - Forbidden
-    Model4:
-      type: string
-      enum:
-      - Not Found
-    attributes:
-      type: object
-    error:
-      type: string
-      enum:
-      - Unauthorized
-    UnauthorizedError:
+    ForbiddenError:
       type: object
       properties:
         statusCode:
           type: number
           enum:
-          - 401
+          - 403
         error:
-          $ref: '#/components/schemas/error'
+          $ref: '#/components/schemas/Model1'
         message:
           type: string
-          example: Bad Token
-        attributes:
-          $ref: '#/components/schemas/attributes'
+          example: Forbidden
       required:
       - statusCode
       - error
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
+    Model1:
+      type: string
+      enum:
+      - Forbidden
+    NotFoundError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 404
+        error:
+          $ref: '#/components/schemas/Model4'
+        message:
+          type: string
+          example: Not Found
+      required:
+      - statusCode
+      - error
+    Model4:
+      type: string
+      enum:
+      - Not Found
+    error:
+      type: string
+      enum:
+      - Unauthorized
     TooManyRequestsError:
       type: object
       properties:
@@ -230,44 +268,6 @@ components:
       required:
       - statusCode
       - error
-    CheckStatusList:
-      type: array
-      items:
-        $ref: '#/components/schemas/CheckStatus'
-    ForbiddenError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 403
-        error:
-          $ref: '#/components/schemas/Model1'
-        message:
-          type: string
-          example: Forbidden
-      required:
-      - statusCode
-      - error
-    NotFoundError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 404
-        error:
-          $ref: '#/components/schemas/Model4'
-        message:
-          type: string
-          example: Not Found
-      required:
-      - statusCode
-      - error
-    Model2:
-      type: string
-      enum:
-      - Too Many Requests
   securitySchemes:
     Bearer:
       type: http

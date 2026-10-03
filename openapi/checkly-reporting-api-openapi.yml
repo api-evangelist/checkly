@@ -124,72 +124,6 @@ paths:
                 $ref: '#/components/schemas/TooManyRequestsError'
 components:
   schemas:
-    ReportingAggregate:
-      type: object
-      description: Whole-window aggregate. Absent when "granularity" is used.
-      properties:
-        successRatio:
-          type: number
-          description: Success ratio of the check over selected date range, rounded to four decimal places. Percentage is in decimal form.
-          example: 50
-          minimum: 0
-        avg:
-          type: number
-          description: Average response time of the check over selected date range in milliseconds.
-          example: 100
-          minimum: 0
-        p95:
-          type: number
-          description: P95 response time of the check over selected date range in milliseconds.
-          example: 200
-          minimum: 0
-        p99:
-          type: number
-          description: P99 response time of the check over selected date range in milliseconds.
-          example: 100
-          minimum: 0
-      required:
-      - successRatio
-      - avg
-      - p95
-      - p99
-    Model1:
-      type: string
-      enum:
-      - Forbidden
-    attributes:
-      type: object
-    Reporting:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Check name.
-          example: API Check
-        checkId:
-          type: string
-          description: Check ID.
-          example: d2881e09-411b-4c8d-84b8-fe05fbca80b6
-        checkType:
-          type: string
-          description: Check type.
-          example: API
-        deactivated:
-          type: boolean
-          description: Check deactivated.
-          default: false
-        tags:
-          $ref: '#/components/schemas/ReportingTagList'
-        aggregate:
-          $ref: '#/components/schemas/ReportingAggregate'
-        aggregates:
-          $ref: '#/components/schemas/ReportingBucketAggregateList'
-      required:
-      - name
-      - checkId
-      - checkType
-      - deactivated
-      - tags
     UnauthorizedError:
       type: object
       properties:
@@ -207,32 +141,6 @@ components:
       required:
       - statusCode
       - error
-    TooManyRequestsError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 429
-        error:
-          $ref: '#/components/schemas/Model2'
-        message:
-          type: string
-          example: Too Many Requests
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    ReportingBucketAggregateList:
-      type: array
-      description: Per-bucket aggregates, ascending by bucket start. Only present when "granularity" is used. Buckets without any check runs are omitted.
-      items:
-        $ref: '#/components/schemas/ReportingBucketAggregate'
-    ReportingList:
-      type: array
-      items:
-        $ref: '#/components/schemas/Reporting'
     ReportingBucketAggregate:
       type: object
       properties:
@@ -275,6 +183,28 @@ components:
       - p99
       - from
       - to
+    TooManyRequestsError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    ReportingBucketAggregateList:
+      type: array
+      description: Per-bucket aggregates, ascending by bucket start. Only present when "granularity" is used. Buckets without any check runs are omitted.
+      items:
+        $ref: '#/components/schemas/ReportingBucketAggregate'
     ForbiddenError:
       type: object
       properties:
@@ -290,10 +220,53 @@ components:
       required:
       - statusCode
       - error
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
+    Model1:
+      type: string
+      enum:
+      - Forbidden
+    ReportingAggregate:
+      type: object
+      description: Whole-window aggregate. Absent when "granularity" is used.
+      properties:
+        successRatio:
+          type: number
+          description: Success ratio of the check over selected date range, rounded to four decimal places. Percentage is in decimal form.
+          example: 50
+          minimum: 0
+        avg:
+          type: number
+          description: Average response time of the check over selected date range in milliseconds.
+          example: 100
+          minimum: 0
+        p95:
+          type: number
+          description: P95 response time of the check over selected date range in milliseconds.
+          example: 200
+          minimum: 0
+        p99:
+          type: number
+          description: P99 response time of the check over selected date range in milliseconds.
+          example: 100
+          minimum: 0
+      required:
+      - successRatio
+      - avg
+      - p95
+      - p99
+    ReportingList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Reporting'
     error:
       type: string
       enum:
       - Unauthorized
+    attributes:
+      type: object
     ReportingTagList:
       type: array
       description: Check tags.
@@ -301,10 +274,37 @@ components:
       - production
       items:
         type: string
-    Model2:
-      type: string
-      enum:
-      - Too Many Requests
+    Reporting:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Check name.
+          example: API Check
+        checkId:
+          type: string
+          description: Check ID.
+          example: d2881e09-411b-4c8d-84b8-fe05fbca80b6
+        checkType:
+          type: string
+          description: Check type.
+          example: API
+        deactivated:
+          type: boolean
+          description: Check deactivated.
+          default: false
+        tags:
+          $ref: '#/components/schemas/ReportingTagList'
+        aggregate:
+          $ref: '#/components/schemas/ReportingAggregate'
+        aggregates:
+          $ref: '#/components/schemas/ReportingBucketAggregateList'
+      required:
+      - name
+      - checkId
+      - checkType
+      - deactivated
+      - tags
   securitySchemes:
     Bearer:
       type: http

@@ -58,12 +58,16 @@ components:
       required:
       - region
       - name
+    attributes:
+      type: object
     LocationList:
       type: array
       items:
         $ref: '#/components/schemas/PublicLocation'
-    attributes:
-      type: object
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
     TooManyRequestsError:
       type: object
       properties:
@@ -81,10 +85,6 @@ components:
       required:
       - statusCode
       - error
-    Model2:
-      type: string
-      enum:
-      - Too Many Requests
   securitySchemes:
     Bearer:
       type: http

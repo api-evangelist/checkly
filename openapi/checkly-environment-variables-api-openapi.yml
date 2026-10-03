@@ -324,6 +324,29 @@ paths:
               $ref: '#/components/schemas/EnvironmentVariablesV1UpdateRequest'
 components:
   schemas:
+    EnvironmentVariablesV1UpdateRequest:
+      type: object
+      properties:
+        key:
+          type: string
+          minLength: 1
+          description: The key of the environment variable (this value cannot be changed).
+          example: API_KEY
+        value:
+          type: string
+          minLength: 1
+          description: The value of the environment variable.
+        locked:
+          type: boolean
+          default: false
+          description: Used only in the UI to hide the value like a password.
+        secret:
+          type: boolean
+          default: false
+          description: Set an environment variable as secret. Once set, its value cannot be unlocked.
+      required:
+      - value
+      additionalProperties: false
     EnvironmentVariablesV1ReadResponse:
       type: object
       properties:
@@ -337,28 +360,6 @@ components:
           - string
           - 'null'
           description: The value of the environment variable. Secret values are always returned as null.
-        locked:
-          type: boolean
-          description: Used only in the UI to hide the value like a password.
-        secret:
-          type: boolean
-          description: Whether the environment variable is stored as a secret.
-      required:
-      - key
-      - value
-      - locked
-      - secret
-    EnvironmentVariablesV1MutationResponse:
-      type: object
-      properties:
-        key:
-          type: string
-          minLength: 1
-          description: The key of the environment variable (this value cannot be changed).
-          example: API_KEY
-        value:
-          type: string
-          description: The submitted value of the environment variable.
         locked:
           type: boolean
           description: Used only in the UI to hide the value like a password.
@@ -392,6 +393,28 @@ components:
       required:
       - key
       - value
+    EnvironmentVariablesV1MutationResponse:
+      type: object
+      properties:
+        key:
+          type: string
+          minLength: 1
+          description: The key of the environment variable (this value cannot be changed).
+          example: API_KEY
+        value:
+          type: string
+          description: The submitted value of the environment variable.
+        locked:
+          type: boolean
+          description: Used only in the UI to hide the value like a password.
+        secret:
+          type: boolean
+          description: Whether the environment variable is stored as a secret.
+      required:
+      - key
+      - value
+      - locked
+      - secret
     ApiError:
       type: object
       properties:
@@ -409,29 +432,6 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/EnvironmentVariablesV1ReadResponse'
-    EnvironmentVariablesV1UpdateRequest:
-      type: object
-      properties:
-        key:
-          type: string
-          minLength: 1
-          description: The key of the environment variable (this value cannot be changed).
-          example: API_KEY
-        value:
-          type: string
-          minLength: 1
-          description: The value of the environment variable.
-        locked:
-          type: boolean
-          default: false
-          description: Used only in the UI to hide the value like a password.
-        secret:
-          type: boolean
-          default: false
-          description: Set an environment variable as secret. Once set, its value cannot be unlocked.
-      required:
-      - value
-      additionalProperties: false
   securitySchemes:
     Bearer:
       type: http

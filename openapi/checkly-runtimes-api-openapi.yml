@@ -98,27 +98,6 @@ paths:
         in: header
 components:
   schemas:
-    Model2:
-      type: string
-      enum:
-      - Too Many Requests
-    ApiError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-        error:
-          type: string
-        message:
-          type: string
-      required:
-      - statusCode
-      - error
-      - message
-    Model4:
-      type: string
-      enum:
-      - Not Found
     attributes:
       type: object
     RuntimeStage:
@@ -132,27 +111,14 @@ components:
       - STABLE
       description: Current life stage of a runtime.
       example: STABLE
-    TooManyRequestsError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 429
-        error:
-          $ref: '#/components/schemas/Model2'
-        message:
-          type: string
-          example: Too Many Requests
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
     RuntimeList:
       type: array
       items:
         $ref: '#/components/schemas/Runtime'
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
     NotFoundError:
       type: object
       properties:
@@ -168,12 +134,10 @@ components:
       required:
       - statusCode
       - error
-    RuntimeDependencies:
-      type: object
-      additionalProperties:
-        type: string
-        minLength: 1
-      description: An object with all dependency package names and versions as in a standard package.json.
+    Model4:
+      type: string
+      enum:
+      - Not Found
     Runtime:
       type: object
       properties:
@@ -207,6 +171,42 @@ components:
       - multiStepSupport
       - nodeJsVersion
       - dependencies
+    ApiError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+        error:
+          type: string
+        message:
+          type: string
+      required:
+      - statusCode
+      - error
+      - message
+    TooManyRequestsError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    RuntimeDependencies:
+      type: object
+      additionalProperties:
+        type: string
+        minLength: 1
+      description: An object with all dependency package names and versions as in a standard package.json.
   securitySchemes:
     Bearer:
       type: http

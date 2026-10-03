@@ -289,71 +289,6 @@ paths:
       deprecated: true
 components:
   schemas:
-    CreateOrUpdateService:
-      type: object
-      properties:
-        name:
-          type: string
-      required:
-      - name
-    Model1:
-      type: string
-      enum:
-      - Forbidden
-    Model4:
-      type: string
-      enum:
-      - Not Found
-    attributes:
-      type: object
-    ServicesPaginatedResponse:
-      type: object
-      properties:
-        length:
-          type: integer
-        entries:
-          $ref: '#/components/schemas/ServiceList'
-        nextId:
-          type:
-          - string
-          - 'null'
-      required:
-      - length
-      - entries
-    ServiceList:
-      type: array
-      items:
-        $ref: '#/components/schemas/StatusPageV2Service'
-    StatusPageV2Service:
-      type: object
-      properties:
-        name:
-          type: string
-        id:
-          type: string
-          x-format:
-            guid: true
-        accountId:
-          type: string
-          x-format:
-            guid: true
-        created_at:
-          type: string
-          format: date
-        updated_at:
-          type:
-          - string
-          - 'null'
-          format: date
-      required:
-      - name
-      - id
-      - accountId
-      - created_at
-    error:
-      type: string
-      enum:
-      - Unauthorized
     UnauthorizedError:
       type: object
       properties:
@@ -371,6 +306,15 @@ components:
       required:
       - statusCode
       - error
+    CreateOrUpdateService:
+      type: object
+      properties:
+        name:
+          type: string
+      required:
+      - name
+    attributes:
+      type: object
     TooManyRequestsError:
       type: object
       properties:
@@ -403,6 +347,14 @@ components:
       required:
       - statusCode
       - error
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
+    Model1:
+      type: string
+      enum:
+      - Forbidden
     NotFoundError:
       type: object
       properties:
@@ -418,10 +370,58 @@ components:
       required:
       - statusCode
       - error
-    Model2:
+    ServicesPaginatedResponse:
+      type: object
+      properties:
+        length:
+          type: integer
+        entries:
+          $ref: '#/components/schemas/ServiceList'
+        nextId:
+          type:
+          - string
+          - 'null'
+      required:
+      - length
+      - entries
+    Model4:
       type: string
       enum:
-      - Too Many Requests
+      - Not Found
+    ServiceList:
+      type: array
+      items:
+        $ref: '#/components/schemas/StatusPageV2Service'
+    error:
+      type: string
+      enum:
+      - Unauthorized
+    StatusPageV2Service:
+      type: object
+      properties:
+        name:
+          type: string
+        id:
+          type: string
+          x-format:
+            guid: true
+        accountId:
+          type: string
+          x-format:
+            guid: true
+        created_at:
+          type: string
+          format: date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date
+      required:
+      - name
+      - id
+      - accountId
+      - created_at
   securitySchemes:
     Bearer:
       type: http

@@ -323,6 +323,122 @@ paths:
                 $ref: '#/components/schemas/TooManyRequestsError'
 components:
   schemas:
+    Model90:
+      type: string
+      default: SERVICE
+      enum:
+      - SERVICE
+      - GROUP
+    PublicStatusPageV3ComponentMutation:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/Model91'
+        name:
+          type: string
+        description:
+          type:
+          - string
+          - 'null'
+        displayOrder:
+          type: integer
+        hidden:
+          type: boolean
+        parentId:
+          type:
+          - string
+          - 'null'
+          description: The GROUP component this component sits under. Must belong to the same status page.
+          x-format:
+            guid: true
+      required:
+      - name
+      - displayOrder
+    UnauthorizedError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 401
+        error:
+          $ref: '#/components/schemas/error'
+        message:
+          type: string
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    attributes:
+      type: object
+    PublicStatusPageV3ComponentsPaginatedResponse:
+      type: object
+      properties:
+        length:
+          type: integer
+        entries:
+          $ref: '#/components/schemas/PublicStatusPageV3ComponentsEntries'
+        nextId:
+          type:
+          - string
+          - 'null'
+      required:
+      - length
+      - entries
+    Model91:
+      type: string
+      default: SERVICE
+      enum:
+      - SERVICE
+      - GROUP
+    ForbiddenError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 403
+        error:
+          $ref: '#/components/schemas/Model1'
+        message:
+          type: string
+          example: Forbidden
+      required:
+      - statusCode
+      - error
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
+    Model1:
+      type: string
+      enum:
+      - Forbidden
+    NotFoundError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 404
+        error:
+          $ref: '#/components/schemas/Model4'
+        message:
+          type: string
+          example: Not Found
+      required:
+      - statusCode
+      - error
+    PublicStatusPageV3ComponentsEntries:
+      type: array
+      items:
+        $ref: '#/components/schemas/PublicStatusPageV3Component'
+    Model4:
+      type: string
+      enum:
+      - Not Found
     PublicStatusPageV3Component:
       type: object
       properties:
@@ -367,66 +483,10 @@ components:
       - id
       - statusPageId
       - created_at
-    PublicStatusPageV3ComponentsEntries:
-      type: array
-      items:
-        $ref: '#/components/schemas/PublicStatusPageV3Component'
-    Model1:
-      type: string
-      enum:
-      - Forbidden
-    Model4:
-      type: string
-      enum:
-      - Not Found
-    attributes:
-      type: object
-    PublicStatusPageV3ComponentMutation:
-      type: object
-      properties:
-        type:
-          $ref: '#/components/schemas/Model91'
-        name:
-          type: string
-        description:
-          type:
-          - string
-          - 'null'
-        displayOrder:
-          type: integer
-        hidden:
-          type: boolean
-        parentId:
-          type:
-          - string
-          - 'null'
-          description: The GROUP component this component sits under. Must belong to the same status page.
-          x-format:
-            guid: true
-      required:
-      - name
-      - displayOrder
     error:
       type: string
       enum:
       - Unauthorized
-    UnauthorizedError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 401
-        error:
-          $ref: '#/components/schemas/error'
-        message:
-          type: string
-          example: Bad Token
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
     TooManyRequestsError:
       type: object
       properties:
@@ -444,66 +504,6 @@ components:
       required:
       - statusCode
       - error
-    Model91:
-      type: string
-      default: SERVICE
-      enum:
-      - SERVICE
-      - GROUP
-    ForbiddenError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 403
-        error:
-          $ref: '#/components/schemas/Model1'
-        message:
-          type: string
-          example: Forbidden
-      required:
-      - statusCode
-      - error
-    PublicStatusPageV3ComponentsPaginatedResponse:
-      type: object
-      properties:
-        length:
-          type: integer
-        entries:
-          $ref: '#/components/schemas/PublicStatusPageV3ComponentsEntries'
-        nextId:
-          type:
-          - string
-          - 'null'
-      required:
-      - length
-      - entries
-    NotFoundError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 404
-        error:
-          $ref: '#/components/schemas/Model4'
-        message:
-          type: string
-          example: Not Found
-      required:
-      - statusCode
-      - error
-    Model90:
-      type: string
-      default: SERVICE
-      enum:
-      - SERVICE
-      - GROUP
-    Model2:
-      type: string
-      enum:
-      - Too Many Requests
   securitySchemes:
     Bearer:
       type: http

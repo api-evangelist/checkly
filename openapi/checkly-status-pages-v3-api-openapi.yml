@@ -396,160 +396,10 @@ paths:
                 $ref: '#/components/schemas/TooManyRequestsError'
 components:
   schemas:
-    PublicStatusPagesV3PaginatedResponse:
-      type: object
-      properties:
-        length:
-          type: integer
-        entries:
-          $ref: '#/components/schemas/PublicStatusPagesV3Entries'
-        nextId:
-          type:
-          - string
-          - 'null'
-      required:
-      - length
-      - entries
-    PublicStatusPageV3Mutation:
-      type: object
-      properties:
-        name:
-          type: string
-        description:
-          type:
-          - string
-          - 'null'
-          maxLength: 500
-        url:
-          type: string
-          x-convert:
-            case: lower
-        customDomain:
-          type:
-          - string
-          - 'null'
-          description: A custom user domain, e.g. "status.example.com". See the docs on updating your DNS and SSL usage.
-          x-convert:
-            case: lower
-        themeColors:
-          $ref: '#/components/schemas/StatusPageV3ThemeColors'
-        logo:
-          type:
-          - string
-          - 'null'
-          x-format:
-            uri:
-              scheme:
-              - http
-              - https
-        logoDark:
-          type:
-          - string
-          - 'null'
-          x-format:
-            uri:
-              scheme:
-              - http
-              - https
-        redirectTo:
-          type:
-          - string
-          - 'null'
-          x-format:
-            uri:
-              scheme:
-              - http
-              - https
-        favicon:
-          type:
-          - string
-          - 'null'
-          x-format:
-            uri:
-              scheme:
-              - http
-              - https
-        defaultTheme:
-          $ref: '#/components/schemas/defaultTheme'
-        privacyPolicyLink:
-          type:
-          - string
-          - 'null'
-          maxLength: 255
-          x-format:
-            uri:
-              scheme:
-              - http
-              - https
-        termsOfServiceLink:
-          type:
-          - string
-          - 'null'
-          maxLength: 255
-          x-format:
-            uri:
-              scheme:
-              - http
-              - https
-        footerText:
-          type:
-          - string
-          - 'null'
-          maxLength: 1000
-        googleAnalyticsTag:
-          type:
-          - string
-          - 'null'
-          maxLength: 255
-          pattern: ^[A-Za-z0-9-]+$
-        allowIndexing:
-          type: boolean
-      required:
-      - name
-      - url
-    StatusPageV3SslValidationError:
-      type: object
-      properties:
-        message:
-          type: string
-    StatusPageV3OwnershipVerification:
-      type: object
-      properties:
-        type:
-          $ref: '#/components/schemas/OwnershipVerificationTypeV3'
-        name:
-          type: string
-        value:
-          type: string
-      required:
-      - type
-      - name
-      - value
-    StatusPageV3ValidationMethod:
-      type: string
-      enum:
-      - txt
-      - http
-    OwnershipVerificationTypeV3:
-      type: string
-      enum:
-      - txt
-      - cname
-    ForbiddenError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 403
-        error:
-          $ref: '#/components/schemas/Model1'
-        message:
-          type: string
-          example: Forbidden
-      required:
-      - statusCode
-      - error
+    PublicStatusPagesV3Entries:
+      type: array
+      items:
+        $ref: '#/components/schemas/PublicStatusPageV3'
     PublicStatusPageV3CustomDomainVerification:
       type: object
       properties:
@@ -572,70 +422,23 @@ components:
       required:
       - status
       - sslStatus
-    Model2:
-      type: string
-      enum:
-      - Too Many Requests
-    PublicStatusPagesV3Entries:
-      type: array
-      items:
-        $ref: '#/components/schemas/PublicStatusPageV3'
-    StatusPageV3ThemeColorsGroup:
+    TooManyRequestsError:
       type: object
       properties:
-        bodyBackgroundColor:
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
           type: string
-          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
-        headerBackgroundColor:
-          type: string
-          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
-        headerFontColor:
-          type: string
-          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
-        titleFontColor:
-          type: string
-          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
-        bodyFontColor:
-          type: string
-          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
-        bodyFontColorMuted:
-          type: string
-          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
-        navigationFontColor:
-          type: string
-          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
-        linkFontColor:
-          type: string
-          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
-        cardBackgroundColor:
-          type: string
-          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
-        borderColor:
-          type: string
-          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
-        primaryButtonBackgroundColor:
-          type: string
-          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
-        primaryButtonFontColor:
-          type: string
-          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
       required:
-      - bodyBackgroundColor
-      - headerBackgroundColor
-      - headerFontColor
-      - titleFontColor
-      - bodyFontColor
-      - bodyFontColorMuted
-      - navigationFontColor
-      - linkFontColor
-      - cardBackgroundColor
-      - borderColor
-      - primaryButtonBackgroundColor
-      - primaryButtonFontColor
-    Model4:
-      type: string
-      enum:
-      - Not Found
+      - statusCode
+      - error
     PublicStatusPageV3:
       type: object
       properties:
@@ -757,73 +560,6 @@ components:
       - accountId
       - version
       - created_at
-    TooManyRequestsError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 429
-        error:
-          $ref: '#/components/schemas/Model2'
-        message:
-          type: string
-          example: Too Many Requests
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    StatusPageV3ValidationRecord:
-      type: object
-      properties:
-        status:
-          type: string
-        txt_name:
-          type: string
-        txt_value:
-          type: string
-      required:
-      - status
-      - txt_name
-      - txt_value
-    validationRecords:
-      type: array
-      items:
-        $ref: '#/components/schemas/StatusPageV3ValidationRecord'
-    StatusPageV3ThemeColors:
-      type:
-      - object
-      - 'null'
-      properties:
-        light:
-          $ref: '#/components/schemas/StatusPageV3ThemeColorsGroup'
-        dark:
-          $ref: '#/components/schemas/StatusPageV3ThemeColorsGroup'
-      required:
-      - light
-      - dark
-    StatusPageV3VerificationErrors:
-      type: array
-      items:
-        type: string
-    Model1:
-      type: string
-      enum:
-      - Forbidden
-    attributes:
-      type: object
-    defaultTheme:
-      type: string
-      default: AUTO
-      enum:
-      - LIGHT
-      - DARK
-      - AUTO
-    error:
-      type: string
-      enum:
-      - Unauthorized
     UnauthorizedError:
       type: object
       properties:
@@ -841,10 +577,257 @@ components:
       required:
       - statusCode
       - error
+    StatusPageV3VerificationErrors:
+      type: array
+      items:
+        type: string
+    StatusPageV3ThemeColorsGroup:
+      type: object
+      properties:
+        bodyBackgroundColor:
+          type: string
+          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
+        headerBackgroundColor:
+          type: string
+          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
+        headerFontColor:
+          type: string
+          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
+        titleFontColor:
+          type: string
+          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
+        bodyFontColor:
+          type: string
+          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
+        bodyFontColorMuted:
+          type: string
+          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
+        navigationFontColor:
+          type: string
+          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
+        linkFontColor:
+          type: string
+          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
+        cardBackgroundColor:
+          type: string
+          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
+        borderColor:
+          type: string
+          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
+        primaryButtonBackgroundColor:
+          type: string
+          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
+        primaryButtonFontColor:
+          type: string
+          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
+      required:
+      - bodyBackgroundColor
+      - headerBackgroundColor
+      - headerFontColor
+      - titleFontColor
+      - bodyFontColor
+      - bodyFontColorMuted
+      - navigationFontColor
+      - linkFontColor
+      - cardBackgroundColor
+      - borderColor
+      - primaryButtonBackgroundColor
+      - primaryButtonFontColor
+    ForbiddenError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 403
+        error:
+          $ref: '#/components/schemas/Model1'
+        message:
+          type: string
+          example: Forbidden
+      required:
+      - statusCode
+      - error
+    StatusPageV3ThemeColors:
+      type:
+      - object
+      - 'null'
+      properties:
+        light:
+          $ref: '#/components/schemas/StatusPageV3ThemeColorsGroup'
+        dark:
+          $ref: '#/components/schemas/StatusPageV3ThemeColorsGroup'
+      required:
+      - light
+      - dark
+    error:
+      type: string
+      enum:
+      - Unauthorized
+    attributes:
+      type: object
+    PublicStatusPageV3Mutation:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type:
+          - string
+          - 'null'
+          maxLength: 500
+        url:
+          type: string
+          x-convert:
+            case: lower
+        customDomain:
+          type:
+          - string
+          - 'null'
+          description: A custom user domain, e.g. "status.example.com". See the docs on updating your DNS and SSL usage.
+          x-convert:
+            case: lower
+        themeColors:
+          $ref: '#/components/schemas/StatusPageV3ThemeColors'
+        logo:
+          type:
+          - string
+          - 'null'
+          x-format:
+            uri:
+              scheme:
+              - http
+              - https
+        logoDark:
+          type:
+          - string
+          - 'null'
+          x-format:
+            uri:
+              scheme:
+              - http
+              - https
+        redirectTo:
+          type:
+          - string
+          - 'null'
+          x-format:
+            uri:
+              scheme:
+              - http
+              - https
+        favicon:
+          type:
+          - string
+          - 'null'
+          x-format:
+            uri:
+              scheme:
+              - http
+              - https
+        defaultTheme:
+          $ref: '#/components/schemas/defaultTheme'
+        privacyPolicyLink:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+          x-format:
+            uri:
+              scheme:
+              - http
+              - https
+        termsOfServiceLink:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+          x-format:
+            uri:
+              scheme:
+              - http
+              - https
+        footerText:
+          type:
+          - string
+          - 'null'
+          maxLength: 1000
+        googleAnalyticsTag:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+          pattern: ^[A-Za-z0-9-]+$
+        allowIndexing:
+          type: boolean
+      required:
+      - name
+      - url
+    StatusPageV3ValidationRecord:
+      type: object
+      properties:
+        status:
+          type: string
+        txt_name:
+          type: string
+        txt_value:
+          type: string
+      required:
+      - status
+      - txt_name
+      - txt_value
+    defaultTheme:
+      type: string
+      default: AUTO
+      enum:
+      - LIGHT
+      - DARK
+      - AUTO
+    OwnershipVerificationTypeV3:
+      type: string
+      enum:
+      - txt
+      - cname
+    StatusPageV3ValidationMethod:
+      type: string
+      enum:
+      - txt
+      - http
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
     sslValidationErrors:
       type: array
       items:
         $ref: '#/components/schemas/StatusPageV3SslValidationError'
+    validationRecords:
+      type: array
+      items:
+        $ref: '#/components/schemas/StatusPageV3ValidationRecord'
+    StatusPageV3SslValidationError:
+      type: object
+      properties:
+        message:
+          type: string
+    PublicStatusPagesV3PaginatedResponse:
+      type: object
+      properties:
+        length:
+          type: integer
+        entries:
+          $ref: '#/components/schemas/PublicStatusPagesV3Entries'
+        nextId:
+          type:
+          - string
+          - 'null'
+      required:
+      - length
+      - entries
+    Model1:
+      type: string
+      enum:
+      - Forbidden
     NotFoundError:
       type: object
       properties:
@@ -860,6 +843,23 @@ components:
       required:
       - statusCode
       - error
+    Model4:
+      type: string
+      enum:
+      - Not Found
+    StatusPageV3OwnershipVerification:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/OwnershipVerificationTypeV3'
+        name:
+          type: string
+        value:
+          type: string
+      required:
+      - type
+      - name
+      - value
   securitySchemes:
     Bearer:
       type: http

@@ -216,94 +216,6 @@ paths:
               $ref: '#/components/schemas/IncidentUpdateV1UpdateRequest'
 components:
   schemas:
-    Model1:
-      type: string
-      enum:
-      - Forbidden
-    ApiError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-        error:
-          type: string
-        message:
-          type: string
-      required:
-      - statusCode
-      - error
-      - message
-    Model4:
-      type: string
-      enum:
-      - Not Found
-    attributes:
-      type: object
-    error:
-      type: string
-      enum:
-      - Unauthorized
-    IncidentUpdateV1UpdateRequest:
-      type: object
-      properties:
-        description:
-          type: string
-          description: A description about the status update.
-          example: We found the issue and we are working on it.
-      required:
-      - description
-    IncidentUpdateV1CreateRequest:
-      type: object
-      properties:
-        status:
-          type: string
-          enum:
-          - INVESTIGATING
-          - IDENTIFIED
-          - MONITORING
-          - RESOLVED
-          - MAINTENANCE
-          description: The incident update status. Must be one of INVESTIGATING,IDENTIFIED,MONITORING,RESOLVED,MAINTENANCE
-          example: INVESTIGATING
-        description:
-          type: string
-          description: A description about the status update.
-          example: We found the issue and we are working on it.
-      required:
-      - status
-      - description
-    TooManyRequestsError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 429
-        error:
-          $ref: '#/components/schemas/Model2'
-        message:
-          type: string
-          example: Too Many Requests
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    ForbiddenError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 403
-        error:
-          $ref: '#/components/schemas/Model1'
-        message:
-          type: string
-          example: Forbidden
-      required:
-      - statusCode
-      - error
     UnauthorizedError:
       type: object
       properties:
@@ -362,6 +274,62 @@ components:
       - id
       - created_at
       - updated_at
+    TooManyRequestsError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    ForbiddenError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 403
+        error:
+          $ref: '#/components/schemas/Model1'
+        message:
+          type: string
+          example: Forbidden
+      required:
+      - statusCode
+      - error
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
+    IncidentUpdateV1CreateRequest:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+          - INVESTIGATING
+          - IDENTIFIED
+          - MONITORING
+          - RESOLVED
+          - MAINTENANCE
+          description: The incident update status. Must be one of INVESTIGATING,IDENTIFIED,MONITORING,RESOLVED,MAINTENANCE
+          example: INVESTIGATING
+        description:
+          type: string
+          description: A description about the status update.
+          example: We found the issue and we are working on it.
+      required:
+      - status
+      - description
     NotFoundError:
       type: object
       properties:
@@ -377,6 +345,18 @@ components:
       required:
       - statusCode
       - error
+    Model1:
+      type: string
+      enum:
+      - Forbidden
+    Model4:
+      type: string
+      enum:
+      - Not Found
+    error:
+      type: string
+      enum:
+      - Unauthorized
     IncidentUpdateV1CreateResponse:
       type: object
       properties:
@@ -420,10 +400,30 @@ components:
       - id
       - created_at
       - incidentId
-    Model2:
-      type: string
-      enum:
-      - Too Many Requests
+    ApiError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+        error:
+          type: string
+        message:
+          type: string
+      required:
+      - statusCode
+      - error
+      - message
+    attributes:
+      type: object
+    IncidentUpdateV1UpdateRequest:
+      type: object
+      properties:
+        description:
+          type: string
+          description: A description about the status update.
+          example: We found the issue and we are working on it.
+      required:
+      - description
   securitySchemes:
     Bearer:
       type: http

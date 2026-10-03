@@ -188,6 +188,23 @@ paths:
                 $ref: '#/components/schemas/TooManyRequestsError'
 components:
   schemas:
+    UnauthorizedError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 401
+        error:
+          $ref: '#/components/schemas/error'
+        message:
+          type: string
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
     ClientCertificateCreate:
       type: object
       properties:
@@ -214,50 +231,8 @@ components:
       required:
       - host
       - cert
-    Model1:
-      type: string
-      enum:
-      - Forbidden
     attributes:
       type: object
-    error:
-      type: string
-      enum:
-      - Unauthorized
-    UnauthorizedError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 401
-        error:
-          $ref: '#/components/schemas/error'
-        message:
-          type: string
-          example: Bad Token
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    TooManyRequestsError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 429
-        error:
-          $ref: '#/components/schemas/Model2'
-        message:
-          type: string
-          example: Too Many Requests
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
     ClientCertificateList:
       type: array
       items:
@@ -277,6 +252,14 @@ components:
       required:
       - statusCode
       - error
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
+    Model1:
+      type: string
+      enum:
+      - Forbidden
     ClientCertificateRetrieve:
       type: object
       properties:
@@ -303,10 +286,27 @@ components:
       - host
       - cert
       - id
-    Model2:
+    error:
       type: string
       enum:
-      - Too Many Requests
+      - Unauthorized
+    TooManyRequestsError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
   securitySchemes:
     Bearer:
       type: http

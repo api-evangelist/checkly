@@ -306,121 +306,6 @@ paths:
               $ref: '#/components/schemas/SnippetCreate'
 components:
   schemas:
-    SnippetCreate:
-      type: object
-      properties:
-        name:
-          type: string
-          minLength: 1
-          description: The snippet name.
-          example: Snippet
-        script:
-          type: string
-          minLength: 1
-          description: Your Node.js code that interacts with the API check lifecycle, or functions as a partial for browser checks.
-          example: request.url = request.url + '/extra'
-      required:
-      - name
-      - script
-    Model1:
-      type: string
-      enum:
-      - Forbidden
-    ApiError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-        error:
-          type: string
-        message:
-          type: string
-      required:
-      - statusCode
-      - error
-      - message
-    Model4:
-      type: string
-      enum:
-      - Not Found
-    attributes:
-      type: object
-    SnippetList:
-      type: array
-      items:
-        $ref: '#/components/schemas/Snippet'
-    error:
-      type: string
-      enum:
-      - Unauthorized
-    UnauthorizedError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 401
-        error:
-          $ref: '#/components/schemas/error'
-        message:
-          type: string
-          example: Bad Token
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    TooManyRequestsError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 429
-        error:
-          $ref: '#/components/schemas/Model2'
-        message:
-          type: string
-          example: Too Many Requests
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    ForbiddenError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 403
-        error:
-          $ref: '#/components/schemas/Model1'
-        message:
-          type: string
-          example: Forbidden
-      required:
-      - statusCode
-      - error
-    NotFoundError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 404
-        error:
-          $ref: '#/components/schemas/Model4'
-        message:
-          type: string
-          example: Not Found
-      required:
-      - statusCode
-      - error
-    Model2:
-      type: string
-      enum:
-      - Too Many Requests
     Snippet:
       type: object
       properties:
@@ -443,6 +328,121 @@ components:
           - string
           - 'null'
           format: date-time
+    UnauthorizedError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 401
+        error:
+          $ref: '#/components/schemas/error'
+        message:
+          type: string
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    attributes:
+      type: object
+    ForbiddenError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 403
+        error:
+          $ref: '#/components/schemas/Model1'
+        message:
+          type: string
+          example: Forbidden
+      required:
+      - statusCode
+      - error
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
+    Model1:
+      type: string
+      enum:
+      - Forbidden
+    NotFoundError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 404
+        error:
+          $ref: '#/components/schemas/Model4'
+        message:
+          type: string
+          example: Not Found
+      required:
+      - statusCode
+      - error
+    SnippetList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Snippet'
+    Model4:
+      type: string
+      enum:
+      - Not Found
+    error:
+      type: string
+      enum:
+      - Unauthorized
+    SnippetCreate:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          description: The snippet name.
+          example: Snippet
+        script:
+          type: string
+          minLength: 1
+          description: Your Node.js code that interacts with the API check lifecycle, or functions as a partial for browser checks.
+          example: request.url = request.url + '/extra'
+      required:
+      - name
+      - script
+    ApiError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+        error:
+          type: string
+        message:
+          type: string
+      required:
+      - statusCode
+      - error
+      - message
+    TooManyRequestsError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
   securitySchemes:
     Bearer:
       type: http

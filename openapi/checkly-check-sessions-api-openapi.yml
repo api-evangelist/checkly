@@ -499,39 +499,43 @@ paths:
         in: header
 components:
   schemas:
-    CheckSessionsV2TriggerResponse:
-      type: object
-      properties:
-        sessions:
-          type: array
-          items:
-            $ref: '#/components/schemas/CheckSessionsV2CheckSession'
-      required:
-      - sessions
-    Model25:
+    Model28:
       type: string
-      description: The status of the check session.
-      example: PASSED
+      example: API
       enum:
-      - STARTED
-      - PROGRESS
-      - FAILED
-      - PASSED
-      - DEGRADED
-      - PROGRESS_FAILED
-      - PROGRESS_DEGRADED
-      - TIMED_OUT
-      - CANCELLED
-    resultType:
-      type:
-      - string
-      - 'null'
-      description: The type of the result.
-      example: FINAL
-      enum:
-      - FINAL
-      - ATTEMPT
-      - ALL
+      - AGENTIC
+      - API
+      - BROWSER
+      - ICMP
+      - MULTI_STEP
+      - TCP
+      - PLAYWRIGHT
+      - TRACEROUTE
+      - URL
+      - DNS
+      - SSL
+      - GRPC
+    NoMatchingChecksFoundErrorResponse:
+      type: object
+      description: Returned when there are no matching checks.
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 404
+        error:
+          type: string
+          example: Not Found
+        message:
+          type: string
+          example: No matching checks were found.
+      required:
+      - statusCode
+    Model31:
+      type: array
+      description: The results of the check session.
+      items:
+        $ref: '#/components/schemas/CheckSessionConciseCheckResult'
     CheckSessionsV2FindOneResponse:
       type: object
       properties:
@@ -623,19 +627,51 @@ components:
       - runLocations
       - runSource
       - results
-    CheckSessionsV1CancelRequest:
+    PaymentRequiredError:
       type: object
       properties:
-        sequenceId:
-          type: array
-          items:
-            type: string
-            format: uuid
-          minItems: 1
-          description: Subset of sequence IDs to cancel. Omit to cancel all in-progress sequences.
-      additionalProperties: false
-    CheckSession:
+        statusCode:
+          type: number
+          enum:
+          - 402
+        error:
+          $ref: '#/components/schemas/Model3'
+        message:
+          type: string
+          example: Payment Required
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    Model25:
+      type: string
+      description: The status of the check session.
+      example: PASSED
+      enum:
+      - STARTED
+      - PROGRESS
+      - FAILED
+      - PASSED
+      - DEGRADED
+      - PROGRESS_FAILED
+      - PROGRESS_DEGRADED
+      - TIMED_OUT
+      - CANCELLED
+    checkId:
+      type: array
+      description: Match checks with the given identifiers.
+      example:
+      - a4cd4ad9-4815-4a9e-92d2-0a7c562ee69a
+      x-constraint:
+        single: true
+      items:
+        type: string
+        x-format:
+          guid: true
+    AwaitCheckSessionCompletionResponse:
       type: object
+      description: Returned when the check session has finished running.
       properties:
         checkSessionId:
           type: string
@@ -656,12 +692,205 @@ components:
           x-format:
             guid: true
         checkType:
-          $ref: '#/components/schemas/Model24'
+          $ref: '#/components/schemas/Model29'
         name:
           type: string
           example: Example API Check
         status:
-          $ref: '#/components/schemas/Model25'
+          $ref: '#/components/schemas/Model30'
+        startedAt:
+          type: string
+          format: date-time
+          description: The date and time when the session started.
+          example: '2025-08-28T18:23:40.262Z'
+        stoppedAt:
+          type: string
+          format: date-time
+          description: The date and time when the session stopped.
+          example: '2025-08-28T18:28:40.993Z'
+        timeElapsed:
+          type: number
+          description: The time the check session took, in milliseconds.
+          example: 300731
+        runLocations:
+          $ref: '#/components/schemas/runLocations'
+        runSource:
+          $ref: '#/components/schemas/runSource'
+        results:
+          $ref: '#/components/schemas/Model31'
+      required:
+      - checkSessionId
+      - checkSessionLink
+      - checkId
+      - checkType
+      - status
+      - startedAt
+      - stoppedAt
+      - timeElapsed
+      - runLocations
+    Model24:
+      type: string
+      example: API
+      enum:
+      - AGENTIC
+      - API
+      - BROWSER
+      - ICMP
+      - MULTI_STEP
+      - TCP
+      - PLAYWRIGHT
+      - TRACEROUTE
+      - URL
+      - DNS
+      - SSL
+      - GRPC
+    TooManyRequestsError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    runLocations:
+      type: array
+      description: The run locations of the check session.
+      example:
+      - us-east-1
+      - eu-central-1
+      items:
+        type: string
+    resultType:
+      type:
+      - string
+      - 'null'
+      description: The type of the result.
+      example: FINAL
+      enum:
+      - FINAL
+      - ATTEMPT
+      - ALL
+    TriggerCheckSessionRequestPayload:
+      type: object
+      properties:
+        target:
+          $ref: '#/components/schemas/TriggerCheckSessionTarget'
+        refreshCache:
+          type: boolean
+          description: If true, the runner will skip existing caches and install dependencies from scratch. This applies only to Playwright Check Suites.
+          default: false
+    Model26:
+      type: string
+      example: API
+      enum:
+      - AGENTIC
+      - API
+      - BROWSER
+      - ICMP
+      - MULTI_STEP
+      - TCP
+      - PLAYWRIGHT
+      - TRACEROUTE
+      - URL
+      - DNS
+      - SSL
+      - GRPC
+    CheckSessionsV1CancelRequest:
+      type: object
+      properties:
+        sequenceId:
+          type: array
+          items:
+            type: string
+            format: uuid
+          minItems: 1
+          description: Subset of sequence IDs to cancel. Omit to cancel all in-progress sequences.
+      additionalProperties: false
+    UnauthorizedError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 401
+        error:
+          $ref: '#/components/schemas/error'
+        message:
+          type: string
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    Model23:
+      type: array
+      x-constraint:
+        single: true
+      items:
+        type: string
+    CheckSessionsV2TriggerResponse:
+      type: object
+      properties:
+        sessions:
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckSessionsV2CheckSession'
+      required:
+      - sessions
+    ForbiddenError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 403
+        error:
+          $ref: '#/components/schemas/Model1'
+        message:
+          type: string
+          example: Forbidden
+      required:
+      - statusCode
+      - error
+    FindOneCheckSessionResponse:
+      type: object
+      description: The current state of the check session.
+      properties:
+        checkSessionId:
+          type: string
+          description: The unique identifier of the check session.
+          example: 8166fa86-c9b4-4162-8541-d380c6c212d8
+          x-format:
+            guid: true
+        checkSessionLink:
+          type: string
+          description: A link to the check session.
+          example: https://app.checklyhq.com/accounts/1397c172-1938-4973-a225-5862298e571a/checks/a4cd4ad9-4815-4a9e-92d2-0a7c562ee69a/check-sessions/8166fa86-c9b4-4162-8541-d380c6c212d8
+          x-format:
+            uri: true
+        checkId:
+          type: string
+          description: The ID of the check.
+          example: a4cd4ad9-4815-4a9e-92d2-0a7c562ee69a
+          x-format:
+            guid: true
+        checkType:
+          $ref: '#/components/schemas/Model26'
+        name:
+          type: string
+          example: Example API Check
+        status:
+          $ref: '#/components/schemas/Model27'
         startedAt:
           type: string
           format: date-time
@@ -682,6 +911,8 @@ components:
           $ref: '#/components/schemas/runLocations'
         runSource:
           $ref: '#/components/schemas/runSource'
+        results:
+          $ref: '#/components/schemas/results'
       required:
       - checkSessionId
       - checkSessionLink
@@ -691,49 +922,6 @@ components:
       - startedAt
       - timeElapsed
       - runLocations
-    Model29:
-      type: string
-      example: API
-      enum:
-      - AGENTIC
-      - API
-      - BROWSER
-      - ICMP
-      - MULTI_STEP
-      - TCP
-      - PLAYWRIGHT
-      - TRACEROUTE
-      - URL
-      - DNS
-      - SSL
-      - GRPC
-    Model23:
-      type: array
-      x-constraint:
-        single: true
-      items:
-        type: string
-    runSource:
-      type:
-      - string
-      - 'null'
-      description: The source that triggered the check session.
-      example: TRIGGER_API
-      enum:
-      - CLI_DEPLOY
-      - DEPLOYMENT
-      - DEPLOYMENT_CACHE_WARMER
-      - EDITOR
-      - GROUP_RUN_ALL
-      - LEGACY_TRIGGER
-      - SCHEDULER
-      - SCHEDULE_NOW
-      - SLACK_RERUN
-      - TEST_NO_RECORD
-      - TEST_RECORD
-      - TRIGGER_NO_RECORD
-      - TRIGGER_RECORD
-      - TRIGGER_API
     CheckSessionsV2CheckResult:
       type: object
       properties:
@@ -814,29 +1002,100 @@ components:
       - isDegraded
       - aborted
       - isCancelled
-    Model28:
+    matchTags:
+      type: array
+      description: 'Match checks with the given tags. Group tags also match.
+
+
+        The value is a two-dimensional array. The top level array defines `OR` conditions, and the second level `AND` conditions. Tags can also be prefixed with `!` to only match checks without those tags.
+
+
+        Example: `[[a, b], [a, c, !d]]` means `(a && b) || (a && c && !d)`.'
+      example:
+      - - production
+        - '!skip-e2e'
+      items:
+        $ref: '#/components/schemas/Model23'
+    error:
       type: string
-      example: API
       enum:
-      - AGENTIC
-      - API
-      - BROWSER
-      - ICMP
-      - MULTI_STEP
-      - TCP
-      - PLAYWRIGHT
-      - TRACEROUTE
-      - URL
-      - DNS
-      - SSL
-      - GRPC
+      - Unauthorized
+    attributes:
+      type: object
+    CheckSessionsV2TriggerRequest:
+      type: object
+      properties:
+        target:
+          type: object
+          properties:
+            matchTags:
+              type: array
+              items:
+                type: array
+                items:
+                  type: string
+              description: Tags used to select checks to trigger. Each nested array is matched as one tag group.
+            checkId:
+              type: array
+              items:
+                type: string
+                format: uuid
+              description: Check ID or list of check IDs to trigger.
+          description: Optional filters selecting which checks to trigger.
+        refreshCache:
+          type: boolean
+          default: false
+          description: Refresh the selected checks cache before triggering the sessions.
     Model3:
       type: string
       enum:
       - Payment Required
-    FindOneCheckSessionResponse:
+    runSource:
+      type:
+      - string
+      - 'null'
+      description: The source that triggered the check session.
+      example: TRIGGER_API
+      enum:
+      - CLI_DEPLOY
+      - DEPLOYMENT
+      - DEPLOYMENT_CACHE_WARMER
+      - EDITOR
+      - GROUP_RUN_ALL
+      - LEGACY_TRIGGER
+      - SCHEDULER
+      - SCHEDULE_NOW
+      - SLACK_RERUN
+      - TEST_NO_RECORD
+      - TEST_RECORD
+      - TRIGGER_NO_RECORD
+      - TRIGGER_RECORD
+      - TRIGGER_API
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
+    Model27:
+      type: string
+      description: The status of the check session.
+      example: PASSED
+      enum:
+      - STARTED
+      - PROGRESS
+      - FAILED
+      - PASSED
+      - DEGRADED
+      - PROGRESS_FAILED
+      - PROGRESS_DEGRADED
+      - TIMED_OUT
+      - CANCELLED
+    results:
+      type: array
+      description: The results of the check session. Only partial results are available until the check session has completed.
+      items:
+        $ref: '#/components/schemas/CheckSessionConciseCheckResult'
+    CheckSession:
       type: object
-      description: The current state of the check session.
       properties:
         checkSessionId:
           type: string
@@ -857,12 +1116,12 @@ components:
           x-format:
             guid: true
         checkType:
-          $ref: '#/components/schemas/Model26'
+          $ref: '#/components/schemas/Model24'
         name:
           type: string
           example: Example API Check
         status:
-          $ref: '#/components/schemas/Model27'
+          $ref: '#/components/schemas/Model25'
         startedAt:
           type: string
           format: date-time
@@ -883,8 +1142,6 @@ components:
           $ref: '#/components/schemas/runLocations'
         runSource:
           $ref: '#/components/schemas/runSource'
-        results:
-          $ref: '#/components/schemas/results'
       required:
       - checkSessionId
       - checkSessionLink
@@ -894,6 +1151,40 @@ components:
       - startedAt
       - timeElapsed
       - runLocations
+    ApiError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+        error:
+          type: string
+        message:
+          type: string
+      required:
+      - statusCode
+      - error
+      - message
+    CheckSessionNotFoundErrorResponse:
+      type: object
+      description: No such check session exists.
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 404
+        error:
+          type: string
+          example: Not Found
+        message:
+          type: string
+          example: No such check session.
+      required:
+      - statusCode
+    sessions:
+      type: array
+      description: A list of check sessions, with one check session for each check.
+      items:
+        $ref: '#/components/schemas/CheckSession'
     CheckSessionsV2CheckSession:
       type: object
       properties:
@@ -980,218 +1271,25 @@ components:
       - timeElapsed
       - runLocations
       - runSource
-    ForbiddenError:
+    TriggerCheckSessionResponse:
       type: object
+      description: Returns a check session for each check matching target conditions.
       properties:
-        statusCode:
-          type: number
-          enum:
-          - 403
-        error:
-          $ref: '#/components/schemas/Model1'
-        message:
-          type: string
-          example: Forbidden
+        sessions:
+          $ref: '#/components/schemas/sessions'
       required:
-      - statusCode
-      - error
-    runLocations:
-      type: array
-      description: The run locations of the check session.
-      example:
-      - us-east-1
-      - eu-central-1
-      items:
-        type: string
-    matchTags:
-      type: array
-      description: 'Match checks with the given tags. Group tags also match.
-
-
-        The value is a two-dimensional array. The top level array defines `OR` conditions, and the second level `AND` conditions. Tags can also be prefixed with `!` to only match checks without those tags.
-
-
-        Example: `[[a, b], [a, c, !d]]` means `(a && b) || (a && c && !d)`.'
-      example:
-      - - production
-        - '!skip-e2e'
-      items:
-        $ref: '#/components/schemas/Model23'
-    Model2:
-      type: string
-      enum:
-      - Too Many Requests
-    Model24:
-      type: string
-      example: API
-      enum:
-      - AGENTIC
-      - API
-      - BROWSER
-      - ICMP
-      - MULTI_STEP
-      - TCP
-      - PLAYWRIGHT
-      - TRACEROUTE
-      - URL
-      - DNS
-      - SSL
-      - GRPC
-    NoMatchingChecksFoundErrorResponse:
-      type: object
-      description: Returned when there are no matching checks.
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 404
-        error:
-          type: string
-          example: Not Found
-        message:
-          type: string
-          example: No matching checks were found.
-      required:
-      - statusCode
-    CheckSessionNotFoundErrorResponse:
-      type: object
-      description: No such check session exists.
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 404
-        error:
-          type: string
-          example: Not Found
-        message:
-          type: string
-          example: No such check session.
-      required:
-      - statusCode
-    TooManyRequestsError:
+      - sessions
+    TriggerCheckSessionTarget:
       type: object
       properties:
-        statusCode:
-          type: number
-          enum:
-          - 429
-        error:
-          $ref: '#/components/schemas/Model2'
-        message:
-          type: string
-          example: Too Many Requests
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    checkId:
-      type: array
-      description: Match checks with the given identifiers.
-      example:
-      - a4cd4ad9-4815-4a9e-92d2-0a7c562ee69a
-      x-constraint:
-        single: true
-      items:
-        type: string
-        x-format:
-          guid: true
-    AwaitCheckSessionCompletionResponse:
-      type: object
-      description: Returned when the check session has finished running.
-      properties:
-        checkSessionId:
-          type: string
-          description: The unique identifier of the check session.
-          example: 8166fa86-c9b4-4162-8541-d380c6c212d8
-          x-format:
-            guid: true
-        checkSessionLink:
-          type: string
-          description: A link to the check session.
-          example: https://app.checklyhq.com/accounts/1397c172-1938-4973-a225-5862298e571a/checks/a4cd4ad9-4815-4a9e-92d2-0a7c562ee69a/check-sessions/8166fa86-c9b4-4162-8541-d380c6c212d8
-          x-format:
-            uri: true
+        matchTags:
+          $ref: '#/components/schemas/matchTags'
         checkId:
-          type: string
-          description: The ID of the check.
-          example: a4cd4ad9-4815-4a9e-92d2-0a7c562ee69a
-          x-format:
-            guid: true
-        checkType:
-          $ref: '#/components/schemas/Model29'
-        name:
-          type: string
-          example: Example API Check
-        status:
-          $ref: '#/components/schemas/Model30'
-        startedAt:
-          type: string
-          format: date-time
-          description: The date and time when the session started.
-          example: '2025-08-28T18:23:40.262Z'
-        stoppedAt:
-          type: string
-          format: date-time
-          description: The date and time when the session stopped.
-          example: '2025-08-28T18:28:40.993Z'
-        timeElapsed:
-          type: number
-          description: The time the check session took, in milliseconds.
-          example: 300731
-        runLocations:
-          $ref: '#/components/schemas/runLocations'
-        runSource:
-          $ref: '#/components/schemas/runSource'
-        results:
-          $ref: '#/components/schemas/Model31'
-      required:
-      - checkSessionId
-      - checkSessionLink
-      - checkId
-      - checkType
-      - status
-      - startedAt
-      - stoppedAt
-      - timeElapsed
-      - runLocations
-    PaymentRequiredError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 402
-        error:
-          $ref: '#/components/schemas/Model3'
-        message:
-          type: string
-          example: Payment Required
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    Model30:
+          $ref: '#/components/schemas/checkId'
+    Model1:
       type: string
-      description: The final status of the check session.
-      example: PASSED
       enum:
-      - FAILED
-      - PASSED
-      - DEGRADED
-      - TIMED_OUT
-      - CANCELLED
-    TriggerCheckSessionRequestPayload:
-      type: object
-      properties:
-        target:
-          $ref: '#/components/schemas/TriggerCheckSessionTarget'
-        refreshCache:
-          type: boolean
-          description: If true, the runner will skip existing caches and install dependencies from scratch. This applies only to Playwright Check Suites.
-          default: false
+      - Forbidden
     CheckSessionsV2CompletionResponse:
       type: object
       properties:
@@ -1277,53 +1375,6 @@ components:
       - runLocations
       - runSource
       - results
-    CheckSessionsV2TriggerRequest:
-      type: object
-      properties:
-        target:
-          type: object
-          properties:
-            matchTags:
-              type: array
-              items:
-                type: array
-                items:
-                  type: string
-              description: Tags used to select checks to trigger. Each nested array is matched as one tag group.
-            checkId:
-              type: array
-              items:
-                type: string
-                format: uuid
-              description: Check ID or list of check IDs to trigger.
-          description: Optional filters selecting which checks to trigger.
-        refreshCache:
-          type: boolean
-          default: false
-          description: Refresh the selected checks cache before triggering the sessions.
-    Model1:
-      type: string
-      enum:
-      - Forbidden
-    Model27:
-      type: string
-      description: The status of the check session.
-      example: PASSED
-      enum:
-      - STARTED
-      - PROGRESS
-      - FAILED
-      - PASSED
-      - DEGRADED
-      - PROGRESS_FAILED
-      - PROGRESS_DEGRADED
-      - TIMED_OUT
-      - CANCELLED
-    sessions:
-      type: array
-      description: A list of check sessions, with one check session for each check.
-      items:
-        $ref: '#/components/schemas/CheckSession'
     CheckSessionConciseCheckResult:
       type: object
       properties:
@@ -1408,60 +1459,16 @@ components:
       - isDegraded
       - aborted
       - isCancelled
-    attributes:
-      type: object
-    TriggerCheckSessionResponse:
-      type: object
-      description: Returns a check session for each check matching target conditions.
-      properties:
-        sessions:
-          $ref: '#/components/schemas/sessions'
-      required:
-      - sessions
-    ApiError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-        error:
-          type: string
-        message:
-          type: string
-      required:
-      - statusCode
-      - error
-      - message
-    error:
+    Model30:
       type: string
+      description: The final status of the check session.
+      example: PASSED
       enum:
-      - Unauthorized
-    Model31:
-      type: array
-      description: The results of the check session.
-      items:
-        $ref: '#/components/schemas/CheckSessionConciseCheckResult'
-    UnauthorizedError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 401
-        error:
-          $ref: '#/components/schemas/error'
-        message:
-          type: string
-          example: Bad Token
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    results:
-      type: array
-      description: The results of the check session. Only partial results are available until the check session has completed.
-      items:
-        $ref: '#/components/schemas/CheckSessionConciseCheckResult'
+      - FAILED
+      - PASSED
+      - DEGRADED
+      - TIMED_OUT
+      - CANCELLED
     AwaitCheckSessionCompletionTryAgainResponse:
       type: object
       description: 'The check session is still pending, but the server requests a quick break. You should call the endpoint again. Optionally, try to respect the `Retry-After` header.
@@ -1481,14 +1488,7 @@ components:
           example: Check session is still in progress, but maximum per-request wait time was exceeded. Please retry.
       required:
       - statusCode
-    TriggerCheckSessionTarget:
-      type: object
-      properties:
-        matchTags:
-          $ref: '#/components/schemas/matchTags'
-        checkId:
-          $ref: '#/components/schemas/checkId'
-    Model26:
+    Model29:
       type: string
       example: API
       enum:

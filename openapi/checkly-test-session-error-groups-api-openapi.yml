@@ -256,27 +256,6 @@ paths:
               $ref: '#/components/schemas/PatchTestSessionErrorGroupRequest'
 components:
   schemas:
-    TestSessionErrorGroupPlaywrightMetadata:
-      type: object
-      properties:
-        projectName:
-          type: string
-        specId:
-          type: string
-          maxLength: 500
-        testFile:
-          type: string
-        testTitle:
-          type: string
-        suitePath:
-          type: array
-          items:
-            type: string
-      required:
-      - projectName
-      - testFile
-      - testTitle
-      - suitePath
     TestSessionErrorGroup:
       type: object
       properties:
@@ -335,6 +314,31 @@ components:
       - lastSeen
       - archivedUntilNextEvent
       - pwtMetadata
+    TestSessionErrorGroupsList:
+      type: array
+      items:
+        $ref: '#/components/schemas/TestSessionErrorGroup'
+    TestSessionErrorGroupPlaywrightMetadata:
+      type: object
+      properties:
+        projectName:
+          type: string
+        specId:
+          type: string
+          maxLength: 500
+        testFile:
+          type: string
+        testTitle:
+          type: string
+        suitePath:
+          type: array
+          items:
+            type: string
+      required:
+      - projectName
+      - testFile
+      - testTitle
+      - suitePath
     PatchTestSessionErrorGroupRequest:
       type: object
       properties:
@@ -355,10 +359,6 @@ components:
       - statusCode
       - error
       - message
-    TestSessionErrorGroupsList:
-      type: array
-      items:
-        $ref: '#/components/schemas/TestSessionErrorGroup'
     TestSessionErrorGroupRootCauseAnalysis:
       type: object
       properties:
