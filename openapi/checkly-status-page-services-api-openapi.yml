@@ -289,68 +289,6 @@ paths:
       deprecated: true
 components:
   schemas:
-    UnauthorizedError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 401
-        error:
-          $ref: '#/components/schemas/error'
-        message:
-          type: string
-          example: Bad Token
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    CreateOrUpdateService:
-      type: object
-      properties:
-        name:
-          type: string
-      required:
-      - name
-    attributes:
-      type: object
-    TooManyRequestsError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 429
-        error:
-          $ref: '#/components/schemas/Model2'
-        message:
-          type: string
-          example: Too Many Requests
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    ForbiddenError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 403
-        error:
-          $ref: '#/components/schemas/Model1'
-        message:
-          type: string
-          example: Forbidden
-      required:
-      - statusCode
-      - error
-    Model2:
-      type: string
-      enum:
-      - Too Many Requests
     Model1:
       type: string
       enum:
@@ -370,24 +308,8 @@ components:
       required:
       - statusCode
       - error
-    ServicesPaginatedResponse:
+    attributes:
       type: object
-      properties:
-        length:
-          type: integer
-        entries:
-          $ref: '#/components/schemas/ServiceList'
-        nextId:
-          type:
-          - string
-          - 'null'
-      required:
-      - length
-      - entries
-    Model4:
-      type: string
-      enum:
-      - Not Found
     ServiceList:
       type: array
       items:
@@ -422,6 +344,84 @@ components:
       - id
       - accountId
       - created_at
+    CreateOrUpdateService:
+      type: object
+      properties:
+        name:
+          type: string
+      required:
+      - name
+    ServicesPaginatedResponse:
+      type: object
+      properties:
+        length:
+          type: integer
+        entries:
+          $ref: '#/components/schemas/ServiceList'
+        nextId:
+          type:
+          - string
+          - 'null'
+      required:
+      - length
+      - entries
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
+    Model4:
+      type: string
+      enum:
+      - Not Found
+    UnauthorizedError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 401
+        error:
+          $ref: '#/components/schemas/error'
+        message:
+          type: string
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    ForbiddenError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 403
+        error:
+          $ref: '#/components/schemas/Model1'
+        message:
+          type: string
+          example: Forbidden
+      required:
+      - statusCode
+      - error
+    TooManyRequestsError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
   securitySchemes:
     Bearer:
       type: http

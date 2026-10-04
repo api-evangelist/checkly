@@ -113,6 +113,58 @@ paths:
                 $ref: '#/components/schemas/TooManyRequestsError'
 components:
   schemas:
+    Model1:
+      type: string
+      enum:
+      - Forbidden
+    status:
+      type: string
+      description: The status of the alert.
+      enum:
+      - IN_PROGRESS
+      - SUCCESS
+      - FAILURE
+      - RATE_LIMITED
+    checkType:
+      type: string
+      description: The type of the check.
+      enum:
+      - AGENTIC
+      - API
+      - BROWSER
+      - HEARTBEAT
+      - ICMP
+      - MULTI_STEP
+      - TCP
+      - PLAYWRIGHT
+      - TRACEROUTE
+      - URL
+      - DNS
+      - SSL
+      - GRPC
+    attributes:
+      type: object
+    error:
+      type: string
+      enum:
+      - Unauthorized
+    PaymentRequiredError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 402
+        error:
+          $ref: '#/components/schemas/Model3'
+        message:
+          type: string
+          example: Payment Required
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
     Model5:
       type: string
       description: The type of alert channel (SMS, Slack, Webhook, etc).
@@ -125,14 +177,10 @@ components:
       - PAGERDUTY
       - OPSGENIE
       - CALL
-    status:
+    Model3:
       type: string
-      description: The status of the alert.
       enum:
-      - IN_PROGRESS
-      - SUCCESS
-      - FAILURE
-      - RATE_LIMITED
+      - Payment Required
     AlertNotification:
       type: object
       properties:
@@ -170,6 +218,17 @@ components:
         checkResultId:
           type: string
           description: The ID of the corresponding check result.
+    AlertNotificationList:
+      type: array
+      items:
+        $ref: '#/components/schemas/AlertNotification'
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
+    alertConfig:
+      type: object
+      description: The configuration which was used to send the alert.
     UnauthorizedError:
       type: object
       properties:
@@ -187,12 +246,6 @@ components:
       required:
       - statusCode
       - error
-    attributes:
-      type: object
-    Model3:
-      type: string
-      enum:
-      - Payment Required
     ForbiddenError:
       type: object
       properties:
@@ -208,59 +261,6 @@ components:
       required:
       - statusCode
       - error
-    Model2:
-      type: string
-      enum:
-      - Too Many Requests
-    Model1:
-      type: string
-      enum:
-      - Forbidden
-    PaymentRequiredError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 402
-        error:
-          $ref: '#/components/schemas/Model3'
-        message:
-          type: string
-          example: Payment Required
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    AlertNotificationList:
-      type: array
-      items:
-        $ref: '#/components/schemas/AlertNotification'
-    error:
-      type: string
-      enum:
-      - Unauthorized
-    checkType:
-      type: string
-      description: The type of the check.
-      enum:
-      - AGENTIC
-      - API
-      - BROWSER
-      - HEARTBEAT
-      - ICMP
-      - MULTI_STEP
-      - TCP
-      - PLAYWRIGHT
-      - TRACEROUTE
-      - URL
-      - DNS
-      - SSL
-      - GRPC
-    alertConfig:
-      type: object
-      description: The configuration which was used to send the alert.
     TooManyRequestsError:
       type: object
       properties:

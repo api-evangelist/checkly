@@ -98,46 +98,6 @@ paths:
         in: header
 components:
   schemas:
-    attributes:
-      type: object
-    RuntimeStage:
-      type: string
-      enum:
-      - ALPHA
-      - BETA
-      - CURRENT
-      - DEPRECATED
-      - REMOVED
-      - STABLE
-      description: Current life stage of a runtime.
-      example: STABLE
-    RuntimeList:
-      type: array
-      items:
-        $ref: '#/components/schemas/Runtime'
-    Model2:
-      type: string
-      enum:
-      - Too Many Requests
-    NotFoundError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 404
-        error:
-          $ref: '#/components/schemas/Model4'
-        message:
-          type: string
-          example: Not Found
-      required:
-      - statusCode
-      - error
-    Model4:
-      type: string
-      enum:
-      - Not Found
     Runtime:
       type: object
       properties:
@@ -184,6 +144,52 @@ components:
       - statusCode
       - error
       - message
+    NotFoundError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 404
+        error:
+          $ref: '#/components/schemas/Model4'
+        message:
+          type: string
+          example: Not Found
+      required:
+      - statusCode
+      - error
+    attributes:
+      type: object
+    RuntimeStage:
+      type: string
+      enum:
+      - ALPHA
+      - BETA
+      - CURRENT
+      - DEPRECATED
+      - REMOVED
+      - STABLE
+      description: Current life stage of a runtime.
+      example: STABLE
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
+    RuntimeList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Runtime'
+    Model4:
+      type: string
+      enum:
+      - Not Found
+    RuntimeDependencies:
+      type: object
+      additionalProperties:
+        type: string
+        minLength: 1
+      description: An object with all dependency package names and versions as in a standard package.json.
     TooManyRequestsError:
       type: object
       properties:
@@ -201,12 +207,6 @@ components:
       required:
       - statusCode
       - error
-    RuntimeDependencies:
-      type: object
-      additionalProperties:
-        type: string
-        minLength: 1
-      description: An object with all dependency package names and versions as in a standard package.json.
   securitySchemes:
     Bearer:
       type: http

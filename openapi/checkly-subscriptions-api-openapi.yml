@@ -186,120 +186,10 @@ paths:
       deprecated: true
 components:
   schemas:
-    BulkCreateSubscriptionsPayload:
-      type: object
-      properties:
-        subscriptions:
-          $ref: '#/components/schemas/subscriptions'
-        autoVerify:
-          type: boolean
-          description: Whether to create subscriptions as verified without sending confirmation emails.
-          default: false
-      required:
-      - subscriptions
-    subscriptions:
-      type: array
-      description: The list of subscriptions to create (max 100).
-      minItems: 1
-      maxItems: 100
-      items:
-        $ref: '#/components/schemas/Model80'
-    TooManyRequestsError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 429
-        error:
-          $ref: '#/components/schemas/Model2'
-        message:
-          type: string
-          example: Too Many Requests
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    UnauthorizedError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 401
-        error:
-          $ref: '#/components/schemas/error'
-        message:
-          type: string
-          example: Bad Token
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    SubscriptionsList:
-      type: array
-      description: The list of subscriptions for the status page.
-      items:
-        $ref: '#/components/schemas/Subscription'
-    Model81:
-      type: string
-      description: The status of the created subscriptions.
-      enum:
-      - PENDING
-      - VERIFIED
-    ForbiddenError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 403
-        error:
-          $ref: '#/components/schemas/Model1'
-        message:
-          type: string
-          example: Forbidden
-      required:
-      - statusCode
-      - error
-    Model78:
-      type: string
-      description: The status of the subscription.
-      enum:
-      - PENDING
-      - VERIFIED
-    error:
+    Model4:
       type: string
       enum:
-      - Unauthorized
-    attributes:
-      type: object
-    Model77:
-      type: string
-      description: The type of subscription.
-      enum:
-      - EMAIL
-    Model2:
-      type: string
-      enum:
-      - Too Many Requests
-    BulkCreateSubscriptionsResponse:
-      type: object
-      properties:
-        created:
-          type: number
-          description: The number of subscriptions successfully created.
-        skipped:
-          type: number
-          description: The number of subscriptions skipped (already exist).
-        status:
-          $ref: '#/components/schemas/Model81'
-      required:
-      - created
-      - skipped
-      - status
+      - Not Found
     Subscription:
       type: object
       properties:
@@ -330,10 +220,11 @@ components:
       - status
       - created_at
       - updated_at
-    Model1:
-      type: string
-      enum:
-      - Forbidden
+    SubscriptionsList:
+      type: array
+      description: The list of subscriptions for the status page.
+      items:
+        $ref: '#/components/schemas/Subscription'
     NotFoundError:
       type: object
       properties:
@@ -349,10 +240,89 @@ components:
       required:
       - statusCode
       - error
-    Model4:
+    subscriptions:
+      type: array
+      description: The list of subscriptions to create (max 100).
+      minItems: 1
+      maxItems: 100
+      items:
+        $ref: '#/components/schemas/Model80'
+    Model1:
       type: string
       enum:
-      - Not Found
+      - Forbidden
+    attributes:
+      type: object
+    error:
+      type: string
+      enum:
+      - Unauthorized
+    ForbiddenError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 403
+        error:
+          $ref: '#/components/schemas/Model1'
+        message:
+          type: string
+          example: Forbidden
+      required:
+      - statusCode
+      - error
+    Model78:
+      type: string
+      description: The status of the subscription.
+      enum:
+      - PENDING
+      - VERIFIED
+    Model81:
+      type: string
+      description: The status of the created subscriptions.
+      enum:
+      - PENDING
+      - VERIFIED
+    Model77:
+      type: string
+      description: The type of subscription.
+      enum:
+      - EMAIL
+    TooManyRequestsError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    Model79:
+      type: string
+      description: The type of subscription type, i.e. EMAIL.
+      example: EMAIL
+      enum:
+      - EMAIL
+    BulkCreateSubscriptionsPayload:
+      type: object
+      properties:
+        subscriptions:
+          $ref: '#/components/schemas/subscriptions'
+        autoVerify:
+          type: boolean
+          description: Whether to create subscriptions as verified without sending confirmation emails.
+          default: false
+      required:
+      - subscriptions
     Model80:
       type: object
       properties:
@@ -364,12 +334,42 @@ components:
       required:
       - type
       - config
-    Model79:
+    Model2:
       type: string
-      description: The type of subscription type, i.e. EMAIL.
-      example: EMAIL
       enum:
-      - EMAIL
+      - Too Many Requests
+    BulkCreateSubscriptionsResponse:
+      type: object
+      properties:
+        created:
+          type: number
+          description: The number of subscriptions successfully created.
+        skipped:
+          type: number
+          description: The number of subscriptions skipped (already exist).
+        status:
+          $ref: '#/components/schemas/Model81'
+      required:
+      - created
+      - skipped
+      - status
+    UnauthorizedError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 401
+        error:
+          $ref: '#/components/schemas/error'
+        message:
+          type: string
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
   securitySchemes:
     Bearer:
       type: http

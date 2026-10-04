@@ -722,41 +722,32 @@ paths:
                 $ref: '#/components/schemas/TooManyRequestsError'
 components:
   schemas:
-    PublicStatusPageV3IncidentListItem:
+    PublicStatusPageV3IncidentUpdate:
       type: object
       properties:
+        description:
+          type: string
+        status:
+          $ref: '#/components/schemas/PublicStatusPageV3IncidentStatus'
+        publicIncidentUpdateDate:
+          type: string
+          format: date-time
+          description: When the update is shown as posted. Defaults to now; cannot predate the incident.
+          default: '2026-08-29T08:22:09.939Z'
+        notifySubscribers:
+          type: boolean
+          default: false
         id:
           type: string
           x-format:
             guid: true
-        statusPageId:
-          type: string
-          x-format:
-            guid: true
-        name:
-          type: string
-        lastUpdateStatus:
-          $ref: '#/components/schemas/PublicStatusPageV3IncidentStatus'
-        duration:
-          type:
-          - integer
-          - 'null'
-          description: Seconds from the first update to the resolving update; null while ongoing.
-        componentImpacts:
-          $ref: '#/components/schemas/PublicStatusPageV3ComponentImpactsResponse'
         created_at:
           type: string
           format: date
-        updated_at:
-          type:
-          - string
-          - 'null'
-          format: date
       required:
+      - description
+      - status
       - id
-      - statusPageId
-      - name
-      - lastUpdateStatus
       - created_at
     PublicStatusPageV3IncidentCreate:
       type: object
@@ -771,137 +762,14 @@ components:
       required:
       - name
       - incidentUpdates
-    PublicStatusPageV3IncidentCreateUpdates:
-      type: array
-      description: 'Exactly one update: the one that opens the incident.'
-      x-constraint:
-        length: 1
-      items:
-        $ref: '#/components/schemas/PublicStatusPageV3IncidentUpdateMutation'
-    PublicStatusPageV3ComponentImpactWindow:
-      type: object
-      properties:
-        componentId:
-          type: string
-          x-format:
-            guid: true
-        status:
-          $ref: '#/components/schemas/Model94'
-        startedAt:
-          type: string
-          format: date-time
-        endedAt:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: null keeps the window open (active incidents only).
-      required:
-      - componentId
-      - status
-      - startedAt
-      - endedAt
-    PublicStatusPageV3ComponentImpacts:
-      type: array
-      description: The current status of each impacted component. Omitted components are OPERATIONAL.
-      items:
-        $ref: '#/components/schemas/PublicStatusPageV3ComponentImpact'
-    PublicStatusPageV3IncidentsPaginatedResponse:
-      type: object
-      properties:
-        length:
-          type: integer
-        entries:
-          $ref: '#/components/schemas/PublicStatusPageV3IncidentsEntries'
-        nextId:
-          type:
-          - string
-          - 'null'
-      required:
-      - length
-      - entries
-    TooManyRequestsError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 429
-        error:
-          $ref: '#/components/schemas/Model2'
-        message:
-          type: string
-          example: Too Many Requests
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    PublicStatusPageV3IncidentUpdates:
+    PublicStatusPageV3ComponentImpactsResponse:
       type: array
       items:
-        $ref: '#/components/schemas/PublicStatusPageV3IncidentUpdate'
-    UnauthorizedError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 401
-        error:
-          $ref: '#/components/schemas/error'
-        message:
-          type: string
-          example: Bad Token
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    PublicStatusPageV3IncidentStatus:
-      type: string
-      enum:
-      - INVESTIGATING
-      - IDENTIFIED
-      - MONITORING
-      - RESOLVED
-    PublicStatusPageV3IncidentsEntries:
-      type: array
-      items:
-        $ref: '#/components/schemas/PublicStatusPageV3IncidentListItem'
-    ForbiddenError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 403
-        error:
-          $ref: '#/components/schemas/Model1'
-        message:
-          type: string
-          example: Forbidden
-      required:
-      - statusCode
-      - error
+        $ref: '#/components/schemas/PublicStatusPageV3ComponentImpactResponse'
     PublicStatusPageV3IncidentUpdatesResponse:
       type: array
       items:
         $ref: '#/components/schemas/PublicStatusPageV3IncidentUpdate'
-    error:
-      type: string
-      enum:
-      - Unauthorized
-    Model92:
-      type: string
-      enum:
-      - OPERATIONAL
-      - UNDER_MAINTENANCE
-      - DEGRADED_PERFORMANCE
-      - PARTIAL_OUTAGE
-      - MAJOR_OUTAGE
-    attributes:
-      type: object
     PublicStatusPageV3Incident:
       type: object
       properties:
@@ -941,100 +809,6 @@ components:
       - lastUpdateStatus
       - created_at
       - incidentUpdates
-    PublicStatusPageV3ComponentImpactsResponse:
-      type: array
-      items:
-        $ref: '#/components/schemas/PublicStatusPageV3ComponentImpactResponse'
-    Model94:
-      type: string
-      enum:
-      - UNDER_MAINTENANCE
-      - DEGRADED_PERFORMANCE
-      - PARTIAL_OUTAGE
-      - MAJOR_OUTAGE
-    Model2:
-      type: string
-      enum:
-      - Too Many Requests
-    PublicStatusPageV3IncidentMutation:
-      type: object
-      properties:
-        name:
-          type: string
-          maxLength: 255
-        componentImpacts:
-          $ref: '#/components/schemas/PublicStatusPageV3ComponentImpacts'
-      required:
-      - name
-    Model93:
-      type: string
-      enum:
-      - OPERATIONAL
-      - UNDER_MAINTENANCE
-      - DEGRADED_PERFORMANCE
-      - PARTIAL_OUTAGE
-      - MAJOR_OUTAGE
-    PublicStatusPageV3IncidentUpdate:
-      type: object
-      properties:
-        description:
-          type: string
-        status:
-          $ref: '#/components/schemas/PublicStatusPageV3IncidentStatus'
-        publicIncidentUpdateDate:
-          type: string
-          format: date-time
-          description: When the update is shown as posted. Defaults to now; cannot predate the incident.
-          default: '2026-08-29T08:22:09.939Z'
-        notifySubscribers:
-          type: boolean
-          default: false
-        id:
-          type: string
-          x-format:
-            guid: true
-        created_at:
-          type: string
-          format: date
-      required:
-      - description
-      - status
-      - id
-      - created_at
-    PublicStatusPageV3ComponentImpact:
-      type: object
-      properties:
-        componentId:
-          type: string
-          x-format:
-            guid: true
-        status:
-          $ref: '#/components/schemas/Model93'
-      required:
-      - componentId
-      - status
-    PublicStatusPageV3ComponentImpactWindows:
-      type: array
-      items:
-        $ref: '#/components/schemas/PublicStatusPageV3ComponentImpactWindow'
-    PublicStatusPageV3IncidentUpdateMutation:
-      type: object
-      properties:
-        description:
-          type: string
-        status:
-          $ref: '#/components/schemas/PublicStatusPageV3IncidentStatus'
-        publicIncidentUpdateDate:
-          type: string
-          format: date-time
-          description: When the update is shown as posted. Defaults to now; cannot predate the incident.
-          default: '2026-08-29T08:22:09.928Z'
-        notifySubscribers:
-          type: boolean
-          default: false
-      required:
-      - description
-      - status
     PublicStatusPageV3ComponentImpactResponse:
       type: object
       properties:
@@ -1056,10 +830,42 @@ components:
       - componentId
       - status
       - startedAt
-    Model1:
+    PublicStatusPageV3IncidentMutation:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 255
+        componentImpacts:
+          $ref: '#/components/schemas/PublicStatusPageV3ComponentImpacts'
+      required:
+      - name
+    Model4:
       type: string
       enum:
-      - Forbidden
+      - Not Found
+    PublicStatusPageV3IncidentUpdateMutation:
+      type: object
+      properties:
+        description:
+          type: string
+        status:
+          $ref: '#/components/schemas/PublicStatusPageV3IncidentStatus'
+        publicIncidentUpdateDate:
+          type: string
+          format: date-time
+          description: When the update is shown as posted. Defaults to now; cannot predate the incident.
+          default: '2026-08-29T08:22:09.928Z'
+        notifySubscribers:
+          type: boolean
+          default: false
+      required:
+      - description
+      - status
+    PublicStatusPageV3IncidentUpdates:
+      type: array
+      items:
+        $ref: '#/components/schemas/PublicStatusPageV3IncidentUpdate'
     NotFoundError:
       type: object
       properties:
@@ -1075,6 +881,141 @@ components:
       required:
       - statusCode
       - error
+    Model1:
+      type: string
+      enum:
+      - Forbidden
+    PublicStatusPageV3IncidentsPaginatedResponse:
+      type: object
+      properties:
+        length:
+          type: integer
+        entries:
+          $ref: '#/components/schemas/PublicStatusPageV3IncidentsEntries'
+        nextId:
+          type:
+          - string
+          - 'null'
+      required:
+      - length
+      - entries
+    PublicStatusPageV3ComponentImpactWindows:
+      type: array
+      items:
+        $ref: '#/components/schemas/PublicStatusPageV3ComponentImpactWindow'
+    attributes:
+      type: object
+    PublicStatusPageV3ComponentImpact:
+      type: object
+      properties:
+        componentId:
+          type: string
+          x-format:
+            guid: true
+        status:
+          $ref: '#/components/schemas/Model93'
+      required:
+      - componentId
+      - status
+    PublicStatusPageV3IncidentsEntries:
+      type: array
+      items:
+        $ref: '#/components/schemas/PublicStatusPageV3IncidentListItem'
+    PublicStatusPageV3IncidentStatus:
+      type: string
+      enum:
+      - INVESTIGATING
+      - IDENTIFIED
+      - MONITORING
+      - RESOLVED
+    PublicStatusPageV3IncidentListItem:
+      type: object
+      properties:
+        id:
+          type: string
+          x-format:
+            guid: true
+        statusPageId:
+          type: string
+          x-format:
+            guid: true
+        name:
+          type: string
+        lastUpdateStatus:
+          $ref: '#/components/schemas/PublicStatusPageV3IncidentStatus'
+        duration:
+          type:
+          - integer
+          - 'null'
+          description: Seconds from the first update to the resolving update; null while ongoing.
+        componentImpacts:
+          $ref: '#/components/schemas/PublicStatusPageV3ComponentImpactsResponse'
+        created_at:
+          type: string
+          format: date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date
+      required:
+      - id
+      - statusPageId
+      - name
+      - lastUpdateStatus
+      - created_at
+    error:
+      type: string
+      enum:
+      - Unauthorized
+    ForbiddenError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 403
+        error:
+          $ref: '#/components/schemas/Model1'
+        message:
+          type: string
+          example: Forbidden
+      required:
+      - statusCode
+      - error
+    Model93:
+      type: string
+      enum:
+      - OPERATIONAL
+      - UNDER_MAINTENANCE
+      - DEGRADED_PERFORMANCE
+      - PARTIAL_OUTAGE
+      - MAJOR_OUTAGE
+    TooManyRequestsError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    Model92:
+      type: string
+      enum:
+      - OPERATIONAL
+      - UNDER_MAINTENANCE
+      - DEGRADED_PERFORMANCE
+      - PARTIAL_OUTAGE
+      - MAJOR_OUTAGE
     PublicStatusPageV3ReplaceComponentImpacts:
       type: object
       properties:
@@ -1082,10 +1023,69 @@ components:
           $ref: '#/components/schemas/PublicStatusPageV3ComponentImpactWindows'
       required:
       - componentImpacts
-    Model4:
+    PublicStatusPageV3ComponentImpacts:
+      type: array
+      description: The current status of each impacted component. Omitted components are OPERATIONAL.
+      items:
+        $ref: '#/components/schemas/PublicStatusPageV3ComponentImpact'
+    PublicStatusPageV3ComponentImpactWindow:
+      type: object
+      properties:
+        componentId:
+          type: string
+          x-format:
+            guid: true
+        status:
+          $ref: '#/components/schemas/Model94'
+        startedAt:
+          type: string
+          format: date-time
+        endedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: null keeps the window open (active incidents only).
+      required:
+      - componentId
+      - status
+      - startedAt
+      - endedAt
+    Model94:
       type: string
       enum:
-      - Not Found
+      - UNDER_MAINTENANCE
+      - DEGRADED_PERFORMANCE
+      - PARTIAL_OUTAGE
+      - MAJOR_OUTAGE
+    PublicStatusPageV3IncidentCreateUpdates:
+      type: array
+      description: 'Exactly one update: the one that opens the incident.'
+      x-constraint:
+        length: 1
+      items:
+        $ref: '#/components/schemas/PublicStatusPageV3IncidentUpdateMutation'
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
+    UnauthorizedError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 401
+        error:
+          $ref: '#/components/schemas/error'
+        message:
+          type: string
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
   securitySchemes:
     Bearer:
       type: http

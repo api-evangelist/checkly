@@ -340,12 +340,89 @@ components:
       - componentId
       - targetImpact
       - id
+    Model4:
+      type: string
+      enum:
+      - Not Found
+    NotFoundError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 404
+        error:
+          $ref: '#/components/schemas/Model4'
+        message:
+          type: string
+          example: Not Found
+      required:
+      - statusCode
+      - error
+    Model1:
+      type: string
+      enum:
+      - Forbidden
+    attributes:
+      type: object
     PublicStatusPageV3AutomationRuleTags:
       type: array
       description: A failing check matches when it, or its group, carries ANY of these tags.
       minItems: 1
       items:
         type: string
+    PublicStatusPageV3AutomationRulesPaginatedResponse:
+      type: object
+      properties:
+        length:
+          type: integer
+        entries:
+          $ref: '#/components/schemas/PublicStatusPageV3AutomationRulesEntries'
+        nextId:
+          type:
+          - string
+          - 'null'
+      required:
+      - length
+      - entries
+    error:
+      type: string
+      enum:
+      - Unauthorized
+    ForbiddenError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 403
+        error:
+          $ref: '#/components/schemas/Model1'
+        message:
+          type: string
+          example: Forbidden
+      required:
+      - statusCode
+      - error
+    PublicStatusPageV3AutomationRulesEntries:
+      type: array
+      items:
+        $ref: '#/components/schemas/PublicStatusPageV3AutomationRule'
+    PublicStatusPageV3AutomationRuleComponentsResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/PublicStatusPageV3AutomationRuleComponentResponse'
+    PublicStatusPageV3AutomationRuleComponents:
+      type: array
+      items:
+        $ref: '#/components/schemas/PublicStatusPageV3AutomationRuleComponent'
+    PublicStatusPageV3AutomationRuleTargetImpact:
+      type: string
+      enum:
+      - UNDER_MAINTENANCE
+      - DEGRADED_PERFORMANCE
+      - PARTIAL_OUTAGE
+      - MAJOR_OUTAGE
     PublicStatusPageV3AutomationRuleMutation:
       type: object
       properties:
@@ -397,65 +474,6 @@ components:
       required:
       - statusCode
       - error
-    UnauthorizedError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 401
-        error:
-          $ref: '#/components/schemas/error'
-        message:
-          type: string
-          example: Bad Token
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    PublicStatusPageV3AutomationRuleTargetImpact:
-      type: string
-      enum:
-      - UNDER_MAINTENANCE
-      - DEGRADED_PERFORMANCE
-      - PARTIAL_OUTAGE
-      - MAJOR_OUTAGE
-    PublicStatusPageV3AutomationRuleComponent:
-      type: object
-      properties:
-        componentId:
-          type: string
-          x-format:
-            guid: true
-        targetImpact:
-          $ref: '#/components/schemas/PublicStatusPageV3AutomationRuleTargetImpact'
-      required:
-      - componentId
-      - targetImpact
-    ForbiddenError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 403
-        error:
-          $ref: '#/components/schemas/Model1'
-        message:
-          type: string
-          example: Forbidden
-      required:
-      - statusCode
-      - error
-    PublicStatusPageV3AutomationRulesEntries:
-      type: array
-      items:
-        $ref: '#/components/schemas/PublicStatusPageV3AutomationRule'
-    error:
-      type: string
-      enum:
-      - Unauthorized
     PublicStatusPageV3AutomationRule:
       type: object
       properties:
@@ -516,57 +534,39 @@ components:
       - statusPageId
       - components
       - created_at
-    attributes:
-      type: object
-    PublicStatusPageV3AutomationRuleComponentsResponse:
-      type: array
-      items:
-        $ref: '#/components/schemas/PublicStatusPageV3AutomationRuleComponentResponse'
     Model2:
       type: string
       enum:
       - Too Many Requests
-    PublicStatusPageV3AutomationRulesPaginatedResponse:
-      type: object
-      properties:
-        length:
-          type: integer
-        entries:
-          $ref: '#/components/schemas/PublicStatusPageV3AutomationRulesEntries'
-        nextId:
-          type:
-          - string
-          - 'null'
-      required:
-      - length
-      - entries
-    PublicStatusPageV3AutomationRuleComponents:
-      type: array
-      items:
-        $ref: '#/components/schemas/PublicStatusPageV3AutomationRuleComponent'
-    Model1:
-      type: string
-      enum:
-      - Forbidden
-    NotFoundError:
+    UnauthorizedError:
       type: object
       properties:
         statusCode:
           type: number
           enum:
-          - 404
+          - 401
         error:
-          $ref: '#/components/schemas/Model4'
+          $ref: '#/components/schemas/error'
         message:
           type: string
-          example: Not Found
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
       required:
       - statusCode
       - error
-    Model4:
-      type: string
-      enum:
-      - Not Found
+    PublicStatusPageV3AutomationRuleComponent:
+      type: object
+      properties:
+        componentId:
+          type: string
+          x-format:
+            guid: true
+        targetImpact:
+          $ref: '#/components/schemas/PublicStatusPageV3AutomationRuleTargetImpact'
+      required:
+      - componentId
+      - targetImpact
   securitySchemes:
     Bearer:
       type: http

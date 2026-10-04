@@ -44,6 +44,12 @@ paths:
         in: header
 components:
   schemas:
+    attributes:
+      type: object
+    LocationList:
+      type: array
+      items:
+        $ref: '#/components/schemas/PublicLocation'
     PublicLocation:
       type: object
       properties:
@@ -58,12 +64,6 @@ components:
       required:
       - region
       - name
-    attributes:
-      type: object
-    LocationList:
-      type: array
-      items:
-        $ref: '#/components/schemas/PublicLocation'
     Model2:
       type: string
       enum:

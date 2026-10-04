@@ -324,7 +324,20 @@ paths:
               $ref: '#/components/schemas/EnvironmentVariablesV1UpdateRequest'
 components:
   schemas:
-    EnvironmentVariablesV1UpdateRequest:
+    ApiError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+        error:
+          type: string
+        message:
+          type: string
+      required:
+      - statusCode
+      - error
+      - message
+    EnvironmentVariablesV1MutationResponse:
       type: object
       properties:
         key:
@@ -334,19 +347,18 @@ components:
           example: API_KEY
         value:
           type: string
-          minLength: 1
-          description: The value of the environment variable.
+          description: The submitted value of the environment variable.
         locked:
           type: boolean
-          default: false
           description: Used only in the UI to hide the value like a password.
         secret:
           type: boolean
-          default: false
-          description: Set an environment variable as secret. Once set, its value cannot be unlocked.
+          description: Whether the environment variable is stored as a secret.
       required:
+      - key
       - value
-      additionalProperties: false
+      - locked
+      - secret
     EnvironmentVariablesV1ReadResponse:
       type: object
       properties:
@@ -393,7 +405,7 @@ components:
       required:
       - key
       - value
-    EnvironmentVariablesV1MutationResponse:
+    EnvironmentVariablesV1UpdateRequest:
       type: object
       properties:
         key:
@@ -403,31 +415,19 @@ components:
           example: API_KEY
         value:
           type: string
-          description: The submitted value of the environment variable.
+          minLength: 1
+          description: The value of the environment variable.
         locked:
           type: boolean
+          default: false
           description: Used only in the UI to hide the value like a password.
         secret:
           type: boolean
-          description: Whether the environment variable is stored as a secret.
+          default: false
+          description: Set an environment variable as secret. Once set, its value cannot be unlocked.
       required:
-      - key
       - value
-      - locked
-      - secret
-    ApiError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-        error:
-          type: string
-        message:
-          type: string
-      required:
-      - statusCode
-      - error
-      - message
+      additionalProperties: false
     EnvironmentVariablesV1ListResponse:
       type: array
       items:

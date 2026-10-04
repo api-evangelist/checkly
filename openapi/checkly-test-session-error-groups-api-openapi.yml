@@ -256,6 +256,74 @@ paths:
               $ref: '#/components/schemas/PatchTestSessionErrorGroupRequest'
 components:
   schemas:
+    TestSessionErrorGroupPlaywrightMetadata:
+      type: object
+      properties:
+        projectName:
+          type: string
+        specId:
+          type: string
+          maxLength: 500
+        testFile:
+          type: string
+        testTitle:
+          type: string
+        suitePath:
+          type: array
+          items:
+            type: string
+      required:
+      - projectName
+      - testFile
+      - testTitle
+      - suitePath
+    ApiError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+        error:
+          type: string
+        message:
+          type: string
+      required:
+      - statusCode
+      - error
+      - message
+    TestSessionErrorGroupRootCauseAnalysis:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        created_at:
+          type: string
+          format: date-time
+        analysis: {}
+        provider:
+          type:
+          - string
+          - 'null'
+        model:
+          type:
+          - string
+          - 'null'
+        durationMs:
+          type:
+          - number
+          - 'null'
+        userContext: {}
+    TestSessionErrorGroupsList:
+      type: array
+      items:
+        $ref: '#/components/schemas/TestSessionErrorGroup'
+    PatchTestSessionErrorGroupRequest:
+      type: object
+      properties:
+        archiveForEver:
+          type: boolean
+        archivedUntilNextEvent:
+          type: boolean
     TestSessionErrorGroup:
       type: object
       properties:
@@ -314,74 +382,6 @@ components:
       - lastSeen
       - archivedUntilNextEvent
       - pwtMetadata
-    TestSessionErrorGroupsList:
-      type: array
-      items:
-        $ref: '#/components/schemas/TestSessionErrorGroup'
-    TestSessionErrorGroupPlaywrightMetadata:
-      type: object
-      properties:
-        projectName:
-          type: string
-        specId:
-          type: string
-          maxLength: 500
-        testFile:
-          type: string
-        testTitle:
-          type: string
-        suitePath:
-          type: array
-          items:
-            type: string
-      required:
-      - projectName
-      - testFile
-      - testTitle
-      - suitePath
-    PatchTestSessionErrorGroupRequest:
-      type: object
-      properties:
-        archiveForEver:
-          type: boolean
-        archivedUntilNextEvent:
-          type: boolean
-    ApiError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-        error:
-          type: string
-        message:
-          type: string
-      required:
-      - statusCode
-      - error
-      - message
-    TestSessionErrorGroupRootCauseAnalysis:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        created_at:
-          type: string
-          format: date-time
-        analysis: {}
-        provider:
-          type:
-          - string
-          - 'null'
-        model:
-          type:
-          - string
-          - 'null'
-        durationMs:
-          type:
-          - number
-          - 'null'
-        userContext: {}
   securitySchemes:
     Bearer:
       type: http
