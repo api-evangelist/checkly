@@ -1,0 +1,12 @@
+{
+ "url": "https://api.checklyhq.com/openapi.json",
+ "requested_url": "https://api.checklyhq.com/openapi.json",
+ "status": 200,
+ "content_type": "application/json; charset=utf-8",
+ "bytes": 998496,
+ "sha256": "8e70f0b792d5a067a137fed145a10bcc42b909201ce61cf758c1240ecbb761b9",
+ "fetched_at": "2026-10-04",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "equivalent",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the provider's current document describes the same operations (Jaccard 0.941), but the bytes differ, so the archive is an earlier or reformatted copy."
+}
