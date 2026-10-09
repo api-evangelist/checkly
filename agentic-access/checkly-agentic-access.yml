@@ -1,10 +1,10 @@
-generated: '2026-08-29'
+generated: '2026-09-23'
 method: generated
 source: openapi/checkly-accounts-api-openapi.yml, openapi/checkly-alert-channels-api-openapi.yml,
   openapi/checkly-alert-notifications-api-openapi.yml, openapi/checkly-analytics-api-openapi.yml,
   openapi/checkly-badges-api-openapi.yml, openapi/checkly-check-alerts-api-openapi.yml, openapi/checkly-check-groups-api-openapi.yml,
   openapi/checkly-check-results-api-openapi.yml, openapi/checkly-check-sessions-api-openapi.yml,
-  openapi/checkly-check-status-api-openapi.yml, openapi/checkly-checks-api-openapi.yml, openapi/checkly-client-certificates-api-openapi.yml,
+  openapi/checkly-check-status-api-openapi.yml, openapi/checkly-checks-api-openapi.yml, openapi/checkly-clientcertificates-api-openapi.yml,
   openapi/checkly-dashboards-api-openapi.yml, openapi/checkly-deployment-triggers-api-openapi.yml,
   openapi/checkly-environment-variables-api-openapi.yml, openapi/checkly-error-groups-api-openapi.yml,
   openapi/checkly-heartbeats-api-openapi.yml, openapi/checkly-incident-updates-api-openapi.yml,
@@ -24,11 +24,11 @@ description: Recommended x-agentic-access execution contracts, classified heuris
 summary:
   operations: 231
   by_action_class:
-    connected: 114
-    acting: 117
+    connected: 115
+    acting: 116
   by_consequence:
-    read: 114
-    write: 116
+    read: 115
+    write: 115
     physical: 1
   human_in_the_loop_required: 0
 operations:
@@ -284,18 +284,12 @@ operations:
   method: post
   operationId: postV1AnalyticsChecks
   x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
+    action-class: connected
+    consequence: read
+    subject: optional
     token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
+      max-ttl: 3600
+    audit: none
 - path: /v1/analytics/dns/{id}
   method: get
   operationId: getV1AnalyticsDnsId

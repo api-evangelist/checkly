@@ -210,3 +210,33 @@ notes:
   role. A tool list from an authenticated session will therefore be a subset of this one.
 - Checkly documents the division of labour explicitly - MCP for live account state and actions, Agent
   Skills plus the CLI for authoring, testing and deploying check code.
+rfc9728:
+  endpoint: https://api.checklyhq.com/mcp
+  metadata_url: https://api.checklyhq.com/.well-known/oauth-protected-resource/mcp
+  discovered_via: WWW-Authenticate resource_metadata on an anonymous POST initialize
+  fetched: '2026-09-25'
+  http_status: 200
+  content_type: application/json
+  document:
+    resource: https://api.checklyhq.com/mcp
+    authorization_servers:
+    - https://auth.checklyhq.com/
+    scopes_supported:
+    - checkly:account:read
+    - checkly:account:invite
+    - checkly:checks:read
+    - checkly:checks:write
+    - checkly:checks:run
+    - checkly:incidents:read
+    - checkly:incidents:write
+    - checkly:environment-variables:read
+    - checkly:environment-variables:write
+    - checkly:status-pages:read
+    - checkly:rca:read
+    - checkly:rca:run
+    - checkly:test-sessions:read
+    - checkly:assets:read
+    - checkly:usage:read
+    bearer_methods_supported:
+    - header
+    resource_documentation: https://www.checklyhq.com/docs/
