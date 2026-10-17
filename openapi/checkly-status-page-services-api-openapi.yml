@@ -289,10 +289,38 @@ paths:
       deprecated: true
 components:
   schemas:
-    Model1:
-      type: string
-      enum:
-      - Forbidden
+    ForbiddenError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 403
+        error:
+          $ref: '#/components/schemas/Model1'
+        message:
+          type: string
+          example: Forbidden
+      required:
+      - statusCode
+      - error
+    UnauthorizedError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 401
+        error:
+          $ref: '#/components/schemas/error'
+        message:
+          type: string
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
     NotFoundError:
       type: object
       properties:
@@ -308,16 +336,62 @@ components:
       required:
       - statusCode
       - error
+    TooManyRequestsError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    ServicesPaginatedResponse:
+      type: object
+      properties:
+        length:
+          type: integer
+        entries:
+          $ref: '#/components/schemas/ServiceList'
+        nextId:
+          type:
+          - string
+          - 'null'
+      required:
+      - length
+      - entries
     attributes:
       type: object
     ServiceList:
       type: array
       items:
         $ref: '#/components/schemas/StatusPageV2Service'
+    CreateOrUpdateService:
+      type: object
+      properties:
+        name:
+          type: string
+      required:
+      - name
     error:
       type: string
       enum:
       - Unauthorized
+    Model4:
+      type: string
+      enum:
+      - Not Found
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
     StatusPageV2Service:
       type: object
       properties:
@@ -344,84 +418,10 @@ components:
       - id
       - accountId
       - created_at
-    CreateOrUpdateService:
-      type: object
-      properties:
-        name:
-          type: string
-      required:
-      - name
-    ServicesPaginatedResponse:
-      type: object
-      properties:
-        length:
-          type: integer
-        entries:
-          $ref: '#/components/schemas/ServiceList'
-        nextId:
-          type:
-          - string
-          - 'null'
-      required:
-      - length
-      - entries
-    Model2:
+    Model1:
       type: string
       enum:
-      - Too Many Requests
-    Model4:
-      type: string
-      enum:
-      - Not Found
-    UnauthorizedError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 401
-        error:
-          $ref: '#/components/schemas/error'
-        message:
-          type: string
-          example: Bad Token
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    ForbiddenError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 403
-        error:
-          $ref: '#/components/schemas/Model1'
-        message:
-          type: string
-          example: Forbidden
-      required:
-      - statusCode
-      - error
-    TooManyRequestsError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 429
-        error:
-          $ref: '#/components/schemas/Model2'
-        message:
-          type: string
-          example: Too Many Requests
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
+      - Forbidden
   securitySchemes:
     Bearer:
       type: http

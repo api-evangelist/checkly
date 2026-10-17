@@ -98,6 +98,82 @@ paths:
         in: header
 components:
   schemas:
+    NotFoundError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 404
+        error:
+          $ref: '#/components/schemas/Model4'
+        message:
+          type: string
+          example: Not Found
+      required:
+      - statusCode
+      - error
+    RuntimeStage:
+      type: string
+      enum:
+      - ALPHA
+      - BETA
+      - CURRENT
+      - DEPRECATED
+      - REMOVED
+      - STABLE
+      description: Current life stage of a runtime.
+      example: STABLE
+    TooManyRequestsError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    attributes:
+      type: object
+    Model4:
+      type: string
+      enum:
+      - Not Found
+    RuntimeList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Runtime'
+    RuntimeDependencies:
+      type: object
+      additionalProperties:
+        type: string
+        minLength: 1
+      description: An object with all dependency package names and versions as in a standard package.json.
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
+    ApiError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+        error:
+          type: string
+        message:
+          type: string
+      required:
+      - statusCode
+      - error
+      - message
     Runtime:
       type: object
       properties:
@@ -131,82 +207,6 @@ components:
       - multiStepSupport
       - nodeJsVersion
       - dependencies
-    ApiError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-        error:
-          type: string
-        message:
-          type: string
-      required:
-      - statusCode
-      - error
-      - message
-    NotFoundError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 404
-        error:
-          $ref: '#/components/schemas/Model4'
-        message:
-          type: string
-          example: Not Found
-      required:
-      - statusCode
-      - error
-    attributes:
-      type: object
-    RuntimeStage:
-      type: string
-      enum:
-      - ALPHA
-      - BETA
-      - CURRENT
-      - DEPRECATED
-      - REMOVED
-      - STABLE
-      description: Current life stage of a runtime.
-      example: STABLE
-    Model2:
-      type: string
-      enum:
-      - Too Many Requests
-    RuntimeList:
-      type: array
-      items:
-        $ref: '#/components/schemas/Runtime'
-    Model4:
-      type: string
-      enum:
-      - Not Found
-    RuntimeDependencies:
-      type: object
-      additionalProperties:
-        type: string
-        minLength: 1
-      description: An object with all dependency package names and versions as in a standard package.json.
-    TooManyRequestsError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 429
-        error:
-          $ref: '#/components/schemas/Model2'
-        message:
-          type: string
-          example: Too Many Requests
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
   securitySchemes:
     Bearer:
       type: http

@@ -354,6 +354,23 @@ components:
       - id
       - logicalId
       - name
+    UnauthorizedError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 401
+        error:
+          $ref: '#/components/schemas/error'
+        message:
+          type: string
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
     AlertChanelSubscription:
       type: object
       properties:
@@ -382,21 +399,142 @@ components:
       type: string
       enum:
       - Not Found
-    NotFoundError:
+    AlertChannelSubscriptionCreate:
+      type: object
+      properties:
+        checkId:
+          type:
+          - string
+          - 'null'
+          description: You can either pass a checkId or a groupId, but not both.
+          example: 0bbfc00c-44df-46a7-a4d9-ba38deca8bfd
+          x-format:
+            guid: true
+        groupId:
+          type:
+          - number
+          - 'null'
+          description: You can either pass a checkId or a groupId, but not both.
+          example: null
+          x-constraint:
+            sign: positive
+        activated:
+          type: boolean
+      required:
+      - activated
+    type:
+      type: string
+      example: SMS
+      enum:
+      - EMAIL
+      - SLACK
+      - SLACK_APP
+      - WEBHOOK
+      - SMS
+      - PAGERDUTY
+      - OPSGENIE
+      - CALL
+    AlertChannelList:
+      type: array
+      items:
+        $ref: '#/components/schemas/AlertChannelRead'
+    ProjectBindingV1:
+      type: object
+      properties:
+        project:
+          $ref: '#/components/schemas/BindingProjectV1'
+        binding:
+          $ref: '#/components/schemas/ProjectBindingDetailsV1'
+      required:
+      - project
+      - binding
+    ProjectBindingsV1:
+      type: object
+      description: The Checkly CLI projects that manage this resource. `owner` is null and `references` empty when the resource is not managed by code.
+      properties:
+        owner:
+          $ref: '#/components/schemas/ProjectBindingOwnerV1'
+        references:
+          $ref: '#/components/schemas/ProjectBindingReferencesV1'
+      required:
+      - owner
+      - references
+    ForbiddenError:
       type: object
       properties:
         statusCode:
           type: number
           enum:
-          - 404
+          - 403
         error:
-          $ref: '#/components/schemas/Model4'
+          $ref: '#/components/schemas/Model1'
         message:
           type: string
-          example: Not Found
+          example: Forbidden
       required:
       - statusCode
       - error
+    attributes:
+      type: object
+    AlertChannelConfig:
+      type: object
+      description: The configuration details for this alert channel. These can be very different based on the type of the channel.
+    AlertChannelCreate:
+      type: object
+      properties:
+        subscriptions:
+          $ref: '#/components/schemas/AlertChanelSubscriptionList'
+        type:
+          $ref: '#/components/schemas/type'
+        config:
+          $ref: '#/components/schemas/AlertChannelCreateConfig'
+        sendRecovery:
+          type: boolean
+        sendFailure:
+          type: boolean
+        sendDegraded:
+          type: boolean
+        sslExpiry:
+          type: boolean
+          description: Determines if an alert should be sent for expiring SSL certificates.
+          default: false
+        sslExpiryThreshold:
+          type: integer
+          description: At what moment in time to start alerting on SSL certificates.
+          default: 30
+          minimum: 1
+          maximum: 30
+        autoSubscribe:
+          type: boolean
+          description: Automatically subscribe newly created checks to this alert channel.
+          default: false
+      required:
+      - type
+      - config
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
+    ProjectBindingDetailsV1:
+      type: object
+      description: The resource's side of this binding.
+      properties:
+        logicalId:
+          type: string
+          description: The resource's logical ID within this project, as declared in code.
+          example: homepage-check
+        pending:
+          type: boolean
+          description: True when the binding is reserved by an import plan that has not been deployed yet.
+      required:
+      - logicalId
+      - pending
+    AlertChannelCreateConfig:
+      type: object
+    error:
+      type: string
+      enum:
+      - Unauthorized
     AlertChannel:
       type: object
       properties:
@@ -443,16 +581,10 @@ components:
       - id
       - type
       - config
-    AlertChanelSubscriptionList:
-      type: array
-      description: All checks subscribed to this channel.
-      example: []
-      items:
-        $ref: '#/components/schemas/AlertChanelSubscription'
-    Model1:
+    Model3:
       type: string
       enum:
-      - Forbidden
+      - Payment Required
     AlertChannelRead:
       type: object
       properties:
@@ -501,25 +633,6 @@ components:
       - id
       - type
       - config
-    attributes:
-      type: object
-    ProjectBindingReferencesV1:
-      type: array
-      description: Projects that use this resource without owning it; their deploys leave it alone. Empty when there are none.
-      items:
-        $ref: '#/components/schemas/ProjectBindingV1'
-    type:
-      type: string
-      example: SMS
-      enum:
-      - EMAIL
-      - SLACK
-      - SLACK_APP
-      - WEBHOOK
-      - SMS
-      - PAGERDUTY
-      - OPSGENIE
-      - CALL
     ProjectBindingOwnerV1:
       type:
       - object
@@ -533,110 +646,21 @@ components:
       required:
       - project
       - binding
-    PaymentRequiredError:
+    NotFoundError:
       type: object
       properties:
         statusCode:
           type: number
           enum:
-          - 402
+          - 404
         error:
-          $ref: '#/components/schemas/Model3'
+          $ref: '#/components/schemas/Model4'
         message:
           type: string
-          example: Payment Required
-        attributes:
-          $ref: '#/components/schemas/attributes'
+          example: Not Found
       required:
       - statusCode
       - error
-    ProjectBindingV1:
-      type: object
-      properties:
-        project:
-          $ref: '#/components/schemas/BindingProjectV1'
-        binding:
-          $ref: '#/components/schemas/ProjectBindingDetailsV1'
-      required:
-      - project
-      - binding
-    ForbiddenError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 403
-        error:
-          $ref: '#/components/schemas/Model1'
-        message:
-          type: string
-          example: Forbidden
-      required:
-      - statusCode
-      - error
-    AlertChannelConfig:
-      type: object
-      description: The configuration details for this alert channel. These can be very different based on the type of the channel.
-    error:
-      type: string
-      enum:
-      - Unauthorized
-    AlertChannelSubscriptionCreate:
-      type: object
-      properties:
-        checkId:
-          type:
-          - string
-          - 'null'
-          description: You can either pass a checkId or a groupId, but not both.
-          example: 0bbfc00c-44df-46a7-a4d9-ba38deca8bfd
-          x-format:
-            guid: true
-        groupId:
-          type:
-          - number
-          - 'null'
-          description: You can either pass a checkId or a groupId, but not both.
-          example: null
-          x-constraint:
-            sign: positive
-        activated:
-          type: boolean
-      required:
-      - activated
-    AlertChannelCreate:
-      type: object
-      properties:
-        subscriptions:
-          $ref: '#/components/schemas/AlertChanelSubscriptionList'
-        type:
-          $ref: '#/components/schemas/type'
-        config:
-          $ref: '#/components/schemas/AlertChannelCreateConfig'
-        sendRecovery:
-          type: boolean
-        sendFailure:
-          type: boolean
-        sendDegraded:
-          type: boolean
-        sslExpiry:
-          type: boolean
-          description: Determines if an alert should be sent for expiring SSL certificates.
-          default: false
-        sslExpiryThreshold:
-          type: integer
-          description: At what moment in time to start alerting on SSL certificates.
-          default: 30
-          minimum: 1
-          maximum: 30
-        autoSubscribe:
-          type: boolean
-          description: Automatically subscribe newly created checks to this alert channel.
-          default: false
-      required:
-      - type
-      - config
     TooManyRequestsError:
       type: object
       properties:
@@ -654,62 +678,38 @@ components:
       required:
       - statusCode
       - error
-    ProjectBindingDetailsV1:
-      type: object
-      description: The resource's side of this binding.
-      properties:
-        logicalId:
-          type: string
-          description: The resource's logical ID within this project, as declared in code.
-          example: homepage-check
-        pending:
-          type: boolean
-          description: True when the binding is reserved by an import plan that has not been deployed yet.
-      required:
-      - logicalId
-      - pending
-    Model3:
-      type: string
-      enum:
-      - Payment Required
-    Model2:
-      type: string
-      enum:
-      - Too Many Requests
-    AlertChannelCreateConfig:
-      type: object
-    ProjectBindingsV1:
-      type: object
-      description: The Checkly CLI projects that manage this resource. `owner` is null and `references` empty when the resource is not managed by code.
-      properties:
-        owner:
-          $ref: '#/components/schemas/ProjectBindingOwnerV1'
-        references:
-          $ref: '#/components/schemas/ProjectBindingReferencesV1'
-      required:
-      - owner
-      - references
-    UnauthorizedError:
+    PaymentRequiredError:
       type: object
       properties:
         statusCode:
           type: number
           enum:
-          - 401
+          - 402
         error:
-          $ref: '#/components/schemas/error'
+          $ref: '#/components/schemas/Model3'
         message:
           type: string
-          example: Bad Token
+          example: Payment Required
         attributes:
           $ref: '#/components/schemas/attributes'
       required:
       - statusCode
       - error
-    AlertChannelList:
+    ProjectBindingReferencesV1:
       type: array
+      description: Projects that use this resource without owning it; their deploys leave it alone. Empty when there are none.
       items:
-        $ref: '#/components/schemas/AlertChannelRead'
+        $ref: '#/components/schemas/ProjectBindingV1'
+    AlertChanelSubscriptionList:
+      type: array
+      description: All checks subscribed to this channel.
+      example: []
+      items:
+        $ref: '#/components/schemas/AlertChanelSubscription'
+    Model1:
+      type: string
+      enum:
+      - Forbidden
   securitySchemes:
     Bearer:
       type: http

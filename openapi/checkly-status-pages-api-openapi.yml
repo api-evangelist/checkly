@@ -467,27 +467,6 @@ paths:
       deprecated: true
 components:
   schemas:
-    Model74:
-      type: object
-      properties:
-        id:
-          type: string
-          x-format:
-            guid: true
-        maskedKey:
-          type: string
-        created_at:
-          type: string
-          format: date
-        updated_at:
-          type:
-          - string
-          - 'null'
-          format: date
-      required:
-      - id
-      - maskedKey
-      - created_at
     BindingProjectV1:
       type: object
       description: The project this binding is to.
@@ -505,13 +484,153 @@ components:
       - id
       - logicalId
       - name
-    StatusPageIncidentStatus:
+    Model80:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/Model79'
+        config:
+          type: string
+          description: The configuration details for the status page subscription. These can be very different based on the type of the subscriptions.
+      required:
+      - type
+      - config
+    UnauthorizedError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 401
+        error:
+          $ref: '#/components/schemas/error'
+        message:
+          type: string
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    StatusPageThemeColors:
+      type: object
+      properties:
+        bodyBackgroundColor:
+          type: string
+          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
+        headerBackgroundColor:
+          type: string
+          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
+        headerFontColor:
+          type: string
+          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
+        titleFontColor:
+          type: string
+          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
+        bodyFontColor:
+          type: string
+          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
+        bodyFontColorMuted:
+          type: string
+          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
+        navigationFontColor:
+          type: string
+          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
+        linkFontColor:
+          type: string
+          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
+        cardBackgroundColor:
+          type: string
+          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
+        borderColor:
+          type: string
+          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
+        primaryButtonBackgroundColor:
+          type: string
+          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
+        primaryButtonFontColor:
+          type: string
+          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
+      required:
+      - bodyBackgroundColor
+      - headerBackgroundColor
+      - headerFontColor
+      - titleFontColor
+      - bodyFontColor
+      - bodyFontColorMuted
+      - navigationFontColor
+      - linkFontColor
+      - cardBackgroundColor
+      - borderColor
+      - primaryButtonBackgroundColor
+      - primaryButtonFontColor
+    subscriptions:
+      type: array
+      description: The list of subscriptions to create (max 100).
+      minItems: 1
+      maxItems: 100
+      items:
+        $ref: '#/components/schemas/Model80'
+    Model4:
       type: string
       enum:
-      - INVESTIGATING
-      - IDENTIFIED
-      - MONITORING
-      - RESOLVED
+      - Not Found
+    StatusPageV2ThemeColors:
+      type:
+      - object
+      - 'null'
+      properties:
+        light:
+          $ref: '#/components/schemas/StatusPageThemeColors'
+        dark:
+          $ref: '#/components/schemas/StatusPageThemeColors'
+      required:
+      - light
+      - dark
+    IncidentUpdates:
+      type: array
+      items:
+        $ref: '#/components/schemas/StatusPageV2IncidentUpdateWithId'
+    StatusPageV2Cards:
+      type: array
+      items:
+        $ref: '#/components/schemas/StatusPageV2Card'
+    ProjectBindingV1:
+      type: object
+      properties:
+        project:
+          $ref: '#/components/schemas/BindingProjectV1'
+        binding:
+          $ref: '#/components/schemas/ProjectBindingDetailsV1'
+      required:
+      - project
+      - binding
+    ProjectBindingsV1:
+      type: object
+      description: The Checkly CLI projects that manage this resource. `owner` is null and `references` empty when the resource is not managed by code.
+      properties:
+        owner:
+          $ref: '#/components/schemas/ProjectBindingOwnerV1'
+        references:
+          $ref: '#/components/schemas/ProjectBindingReferencesV1'
+      required:
+      - owner
+      - references
+    ForbiddenError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 403
+        error:
+          $ref: '#/components/schemas/Model1'
+        message:
+          type: string
+          example: Forbidden
+      required:
+      - statusCode
+      - error
     IncidentSeverity:
       type: string
       enum:
@@ -519,36 +638,6 @@ components:
       - MAJOR
       - MEDIUM
       - MINOR
-    Model75:
-      type: array
-      items:
-        $ref: '#/components/schemas/Model74'
-    StatusPageV2Service:
-      type: object
-      properties:
-        name:
-          type: string
-        id:
-          type: string
-          x-format:
-            guid: true
-        accountId:
-          type: string
-          x-format:
-            guid: true
-        created_at:
-          type: string
-          format: date
-        updated_at:
-          type:
-          - string
-          - 'null'
-          format: date
-      required:
-      - name
-      - id
-      - accountId
-      - created_at
     StatusPageV2PublicApiUpdate:
       type: object
       properties:
@@ -620,23 +709,24 @@ components:
       - name
       - url
       - cards
-    StatusPageV2CardUpdate:
+    StatusPageIncidentStatus:
+      type: string
+      enum:
+      - INVESTIGATING
+      - IDENTIFIED
+      - MONITORING
+      - RESOLVED
+    SubscriptionsList:
+      type: array
+      description: The list of subscriptions for the status page.
+      items:
+        $ref: '#/components/schemas/Subscription'
+    attributes:
       type: object
-      properties:
-        id:
-          type: string
-          x-format:
-            guid: true
-        statusPageId:
-          type: string
-          x-format:
-            guid: true
-        name:
-          type: string
-        services:
-          $ref: '#/components/schemas/StatusPageV2CardServiceRefs'
-      required:
-      - name
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
     Subscription:
       type: object
       properties:
@@ -667,15 +757,183 @@ components:
       - status
       - created_at
       - updated_at
-    Model4:
-      type: string
-      enum:
-      - Not Found
-    SubscriptionsList:
-      type: array
-      description: The list of subscriptions for the status page.
-      items:
-        $ref: '#/components/schemas/Subscription'
+    StatusPageV2Service:
+      type: object
+      properties:
+        name:
+          type: string
+        id:
+          type: string
+          x-format:
+            guid: true
+        accountId:
+          type: string
+          x-format:
+            guid: true
+        created_at:
+          type: string
+          format: date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date
+      required:
+      - name
+      - id
+      - accountId
+      - created_at
+    StatusPageV2CardUpdate:
+      type: object
+      properties:
+        id:
+          type: string
+          x-format:
+            guid: true
+        statusPageId:
+          type: string
+          x-format:
+            guid: true
+        name:
+          type: string
+        services:
+          $ref: '#/components/schemas/StatusPageV2CardServiceRefs'
+      required:
+      - name
+    ProjectBindingDetailsV1:
+      type: object
+      description: The resource's side of this binding.
+      properties:
+        logicalId:
+          type: string
+          description: The resource's logical ID within this project, as declared in code.
+          example: homepage-check
+        pending:
+          type: boolean
+          description: True when the binding is reserved by an import plan that has not been deployed yet.
+      required:
+      - logicalId
+      - pending
+    StatusPageV2IncidentUpdateWithId:
+      type: object
+      properties:
+        description:
+          type: string
+        status:
+          $ref: '#/components/schemas/StatusPageIncidentStatus'
+        publicIncidentUpdateDate:
+          type: string
+          format: date-time
+          default: '2026-08-29T08:22:08.989Z'
+        notifySubscribers:
+          type: boolean
+          default: false
+        id:
+          type: string
+          x-format:
+            guid: true
+        created_at:
+          type: string
+          format: date
+      required:
+      - description
+      - id
+      - created_at
+    StatusPageV2WithId:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type:
+          - string
+          - 'null'
+          maxLength: 500
+        url:
+          type: string
+          x-convert:
+            case: lower
+        customDomain:
+          type:
+          - string
+          - 'null'
+          description: A custom user domain, e.g. "status.example.com". See the docs on updating your DNS and SSL usage.
+          x-convert:
+            case: lower
+        themeColors:
+          $ref: '#/components/schemas/StatusPageV2ThemeColors'
+        logo:
+          type:
+          - string
+          - 'null'
+          x-format:
+            uri:
+              scheme:
+              - http
+              - https
+        logoDark:
+          type:
+          - string
+          - 'null'
+          x-format:
+            uri:
+              scheme:
+              - http
+              - https
+        redirectTo:
+          type:
+          - string
+          - 'null'
+          x-format:
+            uri:
+              scheme:
+              - http
+              - https
+        favicon:
+          type:
+          - string
+          - 'null'
+          x-format:
+            uri:
+              scheme:
+              - http
+              - https
+        defaultTheme:
+          $ref: '#/components/schemas/defaultTheme'
+        cards:
+          $ref: '#/components/schemas/StatusPageV2Cards'
+        version:
+          type:
+          - number
+          - 'null'
+        id:
+          type: string
+          x-format:
+            guid: true
+        whiteLabel:
+          type: boolean
+        isPrivate:
+          type: boolean
+          default: false
+      required:
+      - name
+      - url
+      - id
+    BulkCreateSubscriptionsResponse:
+      type: object
+      properties:
+        created:
+          type: number
+          description: The number of subscriptions successfully created.
+        skipped:
+          type: number
+          description: The number of subscriptions skipped (already exist).
+        status:
+          $ref: '#/components/schemas/Model81'
+      required:
+      - created
+      - skipped
+      - status
     StatusPagesV2PaginatedResponse:
       type: object
       properties:
@@ -690,6 +948,187 @@ components:
       required:
       - length
       - entries
+    Model75:
+      type: array
+      items:
+        $ref: '#/components/schemas/Model74'
+    defaultTheme:
+      type: string
+      default: AUTO
+      enum:
+      - LIGHT
+      - DARK
+      - AUTO
+    StatusPageV2IncidentServices:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 255
+        severity:
+          $ref: '#/components/schemas/IncidentSeverity'
+        id:
+          type: string
+          x-format:
+            guid: true
+        services:
+          $ref: '#/components/schemas/IncidentServices'
+        incidentUpdates:
+          $ref: '#/components/schemas/IncidentUpdates'
+        lastUpdateStatus:
+          $ref: '#/components/schemas/StatusPageIncidentStatus'
+        duration:
+          type:
+          - integer
+          - 'null'
+        created_at:
+          type: string
+          format: date
+        updated_at:
+          type: string
+          format: date
+      required:
+      - name
+      - severity
+      - id
+      - services
+      - lastUpdateStatus
+      - created_at
+    BulkCreateSubscriptionsPayload:
+      type: object
+      properties:
+        subscriptions:
+          $ref: '#/components/schemas/subscriptions'
+        autoVerify:
+          type: boolean
+          description: Whether to create subscriptions as verified without sending confirmation emails.
+          default: false
+      required:
+      - subscriptions
+    error:
+      type: string
+      enum:
+      - Unauthorized
+    StatusPageV2Incidents:
+      type: array
+      items:
+        $ref: '#/components/schemas/StatusPageV2IncidentServices'
+    StatusPagesV2Entries:
+      type: array
+      items:
+        $ref: '#/components/schemas/StatusPageV2Read'
+    StatusPageV2CardServiceRefs:
+      type: array
+      items:
+        $ref: '#/components/schemas/StatusPageV2CardServiceRef'
+    StatusPageV2WithIdRead:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type:
+          - string
+          - 'null'
+          maxLength: 500
+        url:
+          type: string
+          x-convert:
+            case: lower
+        customDomain:
+          type:
+          - string
+          - 'null'
+          description: A custom user domain, e.g. "status.example.com". See the docs on updating your DNS and SSL usage.
+          x-convert:
+            case: lower
+        themeColors:
+          $ref: '#/components/schemas/StatusPageV2ThemeColors'
+        logo:
+          type:
+          - string
+          - 'null'
+          x-format:
+            uri:
+              scheme:
+              - http
+              - https
+        logoDark:
+          type:
+          - string
+          - 'null'
+          x-format:
+            uri:
+              scheme:
+              - http
+              - https
+        redirectTo:
+          type:
+          - string
+          - 'null'
+          x-format:
+            uri:
+              scheme:
+              - http
+              - https
+        favicon:
+          type:
+          - string
+          - 'null'
+          x-format:
+            uri:
+              scheme:
+              - http
+              - https
+        defaultTheme:
+          $ref: '#/components/schemas/defaultTheme'
+        cards:
+          $ref: '#/components/schemas/StatusPageV2Cards'
+        version:
+          type:
+          - number
+          - 'null'
+        id:
+          type: string
+          x-format:
+            guid: true
+        whiteLabel:
+          type: boolean
+        isPrivate:
+          type: boolean
+          default: false
+        projectBindings:
+          $ref: '#/components/schemas/ProjectBindingsV1'
+      required:
+      - name
+      - url
+      - id
+    ProjectBindingOwnerV1:
+      type:
+      - object
+      - 'null'
+      description: The project that owns this resource — the one whose deploy can delete it. Null when no project owns it, including when other projects merely reference it. In the rare case that several projects hold an ownership record for one resource, this reports the preferred one and the rest are omitted.
+      properties:
+        project:
+          $ref: '#/components/schemas/BindingProjectV1'
+        binding:
+          $ref: '#/components/schemas/ProjectBindingDetailsV1'
+      required:
+      - project
+      - binding
+    Model79:
+      type: string
+      description: The type of subscription type, i.e. EMAIL.
+      example: EMAIL
+      enum:
+      - EMAIL
+    StatusPageV2CardServiceRef:
+      type: object
+      properties:
+        id:
+          type: string
+          x-format:
+            guid: true
     NotFoundError:
       type: object
       properties:
@@ -705,62 +1144,60 @@ components:
       required:
       - statusCode
       - error
-    defaultTheme:
+    IncidentServices:
+      type: array
+      items:
+        $ref: '#/components/schemas/StatusPageV2Service'
+    Model81:
       type: string
-      default: AUTO
+      description: The status of the created subscriptions.
       enum:
-      - LIGHT
-      - DARK
-      - AUTO
-    subscriptions:
-      type: array
-      description: The list of subscriptions to create (max 100).
-      minItems: 1
-      maxItems: 100
-      items:
-        $ref: '#/components/schemas/Model80'
-    StatusPageV2CardUpdates:
-      type: array
-      items:
-        $ref: '#/components/schemas/StatusPageV2CardUpdate'
-    Model1:
-      type: string
-      enum:
-      - Forbidden
-    attributes:
-      type: object
-    ProjectBindingReferencesV1:
-      type: array
-      description: Projects that use this resource without owning it; their deploys leave it alone. Empty when there are none.
-      items:
-        $ref: '#/components/schemas/ProjectBindingV1'
-    ProjectBindingOwnerV1:
-      type:
-      - object
-      - 'null'
-      description: The project that owns this resource — the one whose deploy can delete it. Null when no project owns it, including when other projects merely reference it. In the rare case that several projects hold an ownership record for one resource, this reports the preferred one and the rest are omitted.
-      properties:
-        project:
-          $ref: '#/components/schemas/BindingProjectV1'
-        binding:
-          $ref: '#/components/schemas/ProjectBindingDetailsV1'
-      required:
-      - project
-      - binding
-    StatusPageV2CardServiceRefs:
-      type: array
-      items:
-        $ref: '#/components/schemas/StatusPageV2CardServiceRef'
-    ProjectBindingV1:
+      - PENDING
+      - VERIFIED
+    TooManyRequestsError:
       type: object
       properties:
-        project:
-          $ref: '#/components/schemas/BindingProjectV1'
-        binding:
-          $ref: '#/components/schemas/ProjectBindingDetailsV1'
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
       required:
-      - project
-      - binding
+      - statusCode
+      - error
+    StatusPageV2Card:
+      type: object
+      properties:
+        id:
+          type: string
+          x-format:
+            guid: true
+        name:
+          type: string
+        services:
+          $ref: '#/components/schemas/StatusPageV2CardServices'
+        created_at:
+          type: string
+          format: date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date
+      required:
+      - id
+      - name
+      - created_at
+    StatusPageV2CardServices:
+      type: array
+      items:
+        $ref: '#/components/schemas/StatusPageV2Service'
     StatusPageV2Read:
       type: object
       properties:
@@ -859,272 +1296,9 @@ components:
       - id
       - accountId
       - created_at
-    ForbiddenError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 403
-        error:
-          $ref: '#/components/schemas/Model1'
-        message:
-          type: string
-          example: Forbidden
-      required:
-      - statusCode
-      - error
-    error:
-      type: string
-      enum:
-      - Unauthorized
     Model78:
       type: string
       description: The status of the subscription.
-      enum:
-      - PENDING
-      - VERIFIED
-    StatusPageV2ThemeColors:
-      type:
-      - object
-      - 'null'
-      properties:
-        light:
-          $ref: '#/components/schemas/StatusPageThemeColors'
-        dark:
-          $ref: '#/components/schemas/StatusPageThemeColors'
-      required:
-      - light
-      - dark
-    StatusPageV2IncidentUpdateWithId:
-      type: object
-      properties:
-        description:
-          type: string
-        status:
-          $ref: '#/components/schemas/StatusPageIncidentStatus'
-        publicIncidentUpdateDate:
-          type: string
-          format: date-time
-          default: '2026-08-29T08:22:08.989Z'
-        notifySubscribers:
-          type: boolean
-          default: false
-        id:
-          type: string
-          x-format:
-            guid: true
-        created_at:
-          type: string
-          format: date
-      required:
-      - description
-      - id
-      - created_at
-    StatusPageV2Cards:
-      type: array
-      items:
-        $ref: '#/components/schemas/StatusPageV2Card'
-    StatusPageV2Incidents:
-      type: array
-      items:
-        $ref: '#/components/schemas/StatusPageV2IncidentServices'
-    StatusPageV2Card:
-      type: object
-      properties:
-        id:
-          type: string
-          x-format:
-            guid: true
-        name:
-          type: string
-        services:
-          $ref: '#/components/schemas/StatusPageV2CardServices'
-        created_at:
-          type: string
-          format: date
-        updated_at:
-          type:
-          - string
-          - 'null'
-          format: date
-      required:
-      - id
-      - name
-      - created_at
-    StatusPageV2CardServices:
-      type: array
-      items:
-        $ref: '#/components/schemas/StatusPageV2Service'
-    StatusPageV2WithIdRead:
-      type: object
-      properties:
-        name:
-          type: string
-        description:
-          type:
-          - string
-          - 'null'
-          maxLength: 500
-        url:
-          type: string
-          x-convert:
-            case: lower
-        customDomain:
-          type:
-          - string
-          - 'null'
-          description: A custom user domain, e.g. "status.example.com". See the docs on updating your DNS and SSL usage.
-          x-convert:
-            case: lower
-        themeColors:
-          $ref: '#/components/schemas/StatusPageV2ThemeColors'
-        logo:
-          type:
-          - string
-          - 'null'
-          x-format:
-            uri:
-              scheme:
-              - http
-              - https
-        logoDark:
-          type:
-          - string
-          - 'null'
-          x-format:
-            uri:
-              scheme:
-              - http
-              - https
-        redirectTo:
-          type:
-          - string
-          - 'null'
-          x-format:
-            uri:
-              scheme:
-              - http
-              - https
-        favicon:
-          type:
-          - string
-          - 'null'
-          x-format:
-            uri:
-              scheme:
-              - http
-              - https
-        defaultTheme:
-          $ref: '#/components/schemas/defaultTheme'
-        cards:
-          $ref: '#/components/schemas/StatusPageV2Cards'
-        version:
-          type:
-          - number
-          - 'null'
-        id:
-          type: string
-          x-format:
-            guid: true
-        whiteLabel:
-          type: boolean
-        isPrivate:
-          type: boolean
-          default: false
-        projectBindings:
-          $ref: '#/components/schemas/ProjectBindingsV1'
-      required:
-      - name
-      - url
-      - id
-    StatusPagesV2Entries:
-      type: array
-      items:
-        $ref: '#/components/schemas/StatusPageV2Read'
-    StatusPageV2WithId:
-      type: object
-      properties:
-        name:
-          type: string
-        description:
-          type:
-          - string
-          - 'null'
-          maxLength: 500
-        url:
-          type: string
-          x-convert:
-            case: lower
-        customDomain:
-          type:
-          - string
-          - 'null'
-          description: A custom user domain, e.g. "status.example.com". See the docs on updating your DNS and SSL usage.
-          x-convert:
-            case: lower
-        themeColors:
-          $ref: '#/components/schemas/StatusPageV2ThemeColors'
-        logo:
-          type:
-          - string
-          - 'null'
-          x-format:
-            uri:
-              scheme:
-              - http
-              - https
-        logoDark:
-          type:
-          - string
-          - 'null'
-          x-format:
-            uri:
-              scheme:
-              - http
-              - https
-        redirectTo:
-          type:
-          - string
-          - 'null'
-          x-format:
-            uri:
-              scheme:
-              - http
-              - https
-        favicon:
-          type:
-          - string
-          - 'null'
-          x-format:
-            uri:
-              scheme:
-              - http
-              - https
-        defaultTheme:
-          $ref: '#/components/schemas/defaultTheme'
-        cards:
-          $ref: '#/components/schemas/StatusPageV2Cards'
-        version:
-          type:
-          - number
-          - 'null'
-        id:
-          type: string
-          x-format:
-            guid: true
-        whiteLabel:
-          type: boolean
-        isPrivate:
-          type: boolean
-          default: false
-      required:
-      - name
-      - url
-      - id
-    Model81:
-      type: string
-      description: The status of the created subscriptions.
       enum:
       - PENDING
       - VERIFIED
@@ -1133,214 +1307,40 @@ components:
       description: The type of subscription.
       enum:
       - EMAIL
-    TooManyRequestsError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 429
-        error:
-          $ref: '#/components/schemas/Model2'
-        message:
-          type: string
-          example: Too Many Requests
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    BulkCreateSubscriptionsResponse:
-      type: object
-      properties:
-        created:
-          type: number
-          description: The number of subscriptions successfully created.
-        skipped:
-          type: number
-          description: The number of subscriptions skipped (already exist).
-        status:
-          $ref: '#/components/schemas/Model81'
-      required:
-      - created
-      - skipped
-      - status
-    ProjectBindingDetailsV1:
-      type: object
-      description: The resource's side of this binding.
-      properties:
-        logicalId:
-          type: string
-          description: The resource's logical ID within this project, as declared in code.
-          example: homepage-check
-        pending:
-          type: boolean
-          description: True when the binding is reserved by an import plan that has not been deployed yet.
-      required:
-      - logicalId
-      - pending
-    StatusPageThemeColors:
-      type: object
-      properties:
-        bodyBackgroundColor:
-          type: string
-          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
-        headerBackgroundColor:
-          type: string
-          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
-        headerFontColor:
-          type: string
-          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
-        titleFontColor:
-          type: string
-          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
-        bodyFontColor:
-          type: string
-          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
-        bodyFontColorMuted:
-          type: string
-          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
-        navigationFontColor:
-          type: string
-          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
-        linkFontColor:
-          type: string
-          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
-        cardBackgroundColor:
-          type: string
-          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
-        borderColor:
-          type: string
-          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
-        primaryButtonBackgroundColor:
-          type: string
-          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
-        primaryButtonFontColor:
-          type: string
-          pattern: ^#([0-9A-F]{3}|[0-9A-F]{6})$
-      required:
-      - bodyBackgroundColor
-      - headerBackgroundColor
-      - headerFontColor
-      - titleFontColor
-      - bodyFontColor
-      - bodyFontColorMuted
-      - navigationFontColor
-      - linkFontColor
-      - cardBackgroundColor
-      - borderColor
-      - primaryButtonBackgroundColor
-      - primaryButtonFontColor
-    Model79:
-      type: string
-      description: The type of subscription type, i.e. EMAIL.
-      example: EMAIL
-      enum:
-      - EMAIL
-    BulkCreateSubscriptionsPayload:
-      type: object
-      properties:
-        subscriptions:
-          $ref: '#/components/schemas/subscriptions'
-        autoVerify:
-          type: boolean
-          description: Whether to create subscriptions as verified without sending confirmation emails.
-          default: false
-      required:
-      - subscriptions
-    IncidentUpdates:
+    ProjectBindingReferencesV1:
       type: array
+      description: Projects that use this resource without owning it; their deploys leave it alone. Empty when there are none.
       items:
-        $ref: '#/components/schemas/StatusPageV2IncidentUpdateWithId'
-    Model80:
+        $ref: '#/components/schemas/ProjectBindingV1'
+    Model74:
       type: object
       properties:
-        type:
-          $ref: '#/components/schemas/Model79'
-        config:
-          type: string
-          description: The configuration details for the status page subscription. These can be very different based on the type of the subscriptions.
-      required:
-      - type
-      - config
-    StatusPageV2IncidentServices:
-      type: object
-      properties:
-        name:
-          type: string
-          maxLength: 255
-        severity:
-          $ref: '#/components/schemas/IncidentSeverity'
         id:
           type: string
           x-format:
             guid: true
-        services:
-          $ref: '#/components/schemas/IncidentServices'
-        incidentUpdates:
-          $ref: '#/components/schemas/IncidentUpdates'
-        lastUpdateStatus:
-          $ref: '#/components/schemas/StatusPageIncidentStatus'
-        duration:
-          type:
-          - integer
-          - 'null'
+        maskedKey:
+          type: string
         created_at:
           type: string
           format: date
         updated_at:
-          type: string
+          type:
+          - string
+          - 'null'
           format: date
       required:
-      - name
-      - severity
       - id
-      - services
-      - lastUpdateStatus
+      - maskedKey
       - created_at
-    IncidentServices:
+    StatusPageV2CardUpdates:
       type: array
       items:
-        $ref: '#/components/schemas/StatusPageV2Service'
-    Model2:
+        $ref: '#/components/schemas/StatusPageV2CardUpdate'
+    Model1:
       type: string
       enum:
-      - Too Many Requests
-    ProjectBindingsV1:
-      type: object
-      description: The Checkly CLI projects that manage this resource. `owner` is null and `references` empty when the resource is not managed by code.
-      properties:
-        owner:
-          $ref: '#/components/schemas/ProjectBindingOwnerV1'
-        references:
-          $ref: '#/components/schemas/ProjectBindingReferencesV1'
-      required:
-      - owner
-      - references
-    StatusPageV2CardServiceRef:
-      type: object
-      properties:
-        id:
-          type: string
-          x-format:
-            guid: true
-    UnauthorizedError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 401
-        error:
-          $ref: '#/components/schemas/error'
-        message:
-          type: string
-          example: Bad Token
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
+      - Forbidden
   securitySchemes:
     Bearer:
       type: http

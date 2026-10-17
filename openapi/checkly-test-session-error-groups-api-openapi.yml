@@ -256,40 +256,6 @@ paths:
               $ref: '#/components/schemas/PatchTestSessionErrorGroupRequest'
 components:
   schemas:
-    TestSessionErrorGroupPlaywrightMetadata:
-      type: object
-      properties:
-        projectName:
-          type: string
-        specId:
-          type: string
-          maxLength: 500
-        testFile:
-          type: string
-        testTitle:
-          type: string
-        suitePath:
-          type: array
-          items:
-            type: string
-      required:
-      - projectName
-      - testFile
-      - testTitle
-      - suitePath
-    ApiError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-        error:
-          type: string
-        message:
-          type: string
-      required:
-      - statusCode
-      - error
-      - message
     TestSessionErrorGroupRootCauseAnalysis:
       type: object
       properties:
@@ -382,6 +348,40 @@ components:
       - lastSeen
       - archivedUntilNextEvent
       - pwtMetadata
+    TestSessionErrorGroupPlaywrightMetadata:
+      type: object
+      properties:
+        projectName:
+          type: string
+        specId:
+          type: string
+          maxLength: 500
+        testFile:
+          type: string
+        testTitle:
+          type: string
+        suitePath:
+          type: array
+          items:
+            type: string
+      required:
+      - projectName
+      - testFile
+      - testTitle
+      - suitePath
+    ApiError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+        error:
+          type: string
+        message:
+          type: string
+      required:
+      - statusCode
+      - error
+      - message
   securitySchemes:
     Bearer:
       type: http

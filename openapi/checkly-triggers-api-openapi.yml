@@ -506,6 +506,110 @@ paths:
               $ref: '#/components/schemas/CheckSessionsV2TriggerRequest'
 components:
   schemas:
+    Model23:
+      type: array
+      x-constraint:
+        single: true
+      items:
+        type: string
+    UnauthorizedError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 401
+        error:
+          $ref: '#/components/schemas/error'
+        message:
+          type: string
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    CheckGroupTrigger:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        token:
+          type: string
+          example: h7QMmh8c0hYw
+        created_at:
+          type: string
+          format: date
+        called_at:
+          type:
+          - string
+          - 'null'
+          format: date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date
+        groupId:
+          type: number
+          example: 1
+      required:
+      - id
+      - token
+      - created_at
+      - groupId
+    TestSessionGitHubMetadata:
+      type: object
+      properties:
+        reporting:
+          type: boolean
+        repository:
+          type:
+          - string
+          - 'null'
+        sha:
+          type:
+          - string
+          - 'null'
+        runId:
+          type:
+          - string
+          - 'null'
+        runAttempt:
+          type:
+          - string
+          - 'null'
+        workflow:
+          type:
+          - string
+          - 'null'
+        job:
+          type:
+          - string
+          - 'null'
+        eventName:
+          type:
+          - string
+          - 'null'
+        ref:
+          type:
+          - string
+          - 'null'
+        headRef:
+          type:
+          - string
+          - 'null'
+        baseRef:
+          type:
+          - string
+          - 'null'
+        serverUrl:
+          type:
+          - string
+          - 'null'
+      required:
+      - reporting
     TestSessionResult:
       type: object
       properties:
@@ -594,320 +698,14 @@ components:
       - hasFailures
       - isDegraded
       - aborted
-    checkId:
+    runLocations:
       type: array
-      description: Match checks with the given identifiers.
+      description: The run locations of the check session.
       example:
-      - a4cd4ad9-4815-4a9e-92d2-0a7c562ee69a
-      x-constraint:
-        single: true
+      - us-east-1
+      - eu-central-1
       items:
         type: string
-        x-format:
-          guid: true
-    NoMatchingChecksFoundErrorResponse:
-      type: object
-      description: Returned when there are no matching checks.
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 404
-        error:
-          type: string
-          example: Not Found
-        message:
-          type: string
-          example: No matching checks were found.
-      required:
-      - statusCode
-    Model23:
-      type: array
-      x-constraint:
-        single: true
-      items:
-        type: string
-    matchTags:
-      type: array
-      description: 'Match checks with the given tags. Group tags also match.
-
-
-        The value is a two-dimensional array. The top level array defines `OR` conditions, and the second level `AND` conditions. Tags can also be prefixed with `!` to only match checks without those tags.
-
-
-        Example: `[[a, b], [a, c, !d]]` means `(a && b) || (a && c && !d)`.'
-      example:
-      - - production
-        - '!skip-e2e'
-      items:
-        $ref: '#/components/schemas/Model23'
-    Model1:
-      type: string
-      enum:
-      - Forbidden
-    TestSessionGitHubMetadata:
-      type: object
-      properties:
-        reporting:
-          type: boolean
-        repository:
-          type:
-          - string
-          - 'null'
-        sha:
-          type:
-          - string
-          - 'null'
-        runId:
-          type:
-          - string
-          - 'null'
-        runAttempt:
-          type:
-          - string
-          - 'null'
-        workflow:
-          type:
-          - string
-          - 'null'
-        job:
-          type:
-          - string
-          - 'null'
-        eventName:
-          type:
-          - string
-          - 'null'
-        ref:
-          type:
-          - string
-          - 'null'
-        headRef:
-          type:
-          - string
-          - 'null'
-        baseRef:
-          type:
-          - string
-          - 'null'
-        serverUrl:
-          type:
-          - string
-          - 'null'
-      required:
-      - reporting
-    ApiError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-        error:
-          type: string
-        message:
-          type: string
-      required:
-      - statusCode
-      - error
-      - message
-    attributes:
-      type: object
-    PaymentRequiredError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 402
-        error:
-          $ref: '#/components/schemas/Model3'
-        message:
-          type: string
-          example: Payment Required
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    CheckSessionsV2CheckSession:
-      type: object
-      properties:
-        checkSessionId:
-          type: string
-          format: uuid
-        checkSessionLink:
-          type: string
-          format: uri
-        checkId:
-          type: string
-          format: uuid
-        checkType:
-          type: string
-          enum:
-          - AGENTIC
-          - API
-          - BROWSER
-          - HEARTBEAT
-          - ICMP
-          - MULTI_STEP
-          - TCP
-          - PLAYWRIGHT
-          - URL
-          - DNS
-          - SSL
-          - GRPC
-          - TRACEROUTE
-        name:
-          type: string
-        status:
-          type: string
-          enum:
-          - STARTED
-          - PROGRESS
-          - FAILED
-          - PASSED
-          - DEGRADED
-          - PROGRESS_FAILED
-          - PROGRESS_DEGRADED
-          - TIMED_OUT
-          - CANCELLED
-        startedAt:
-          type: string
-          format: date-time
-        stoppedAt:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        timeElapsed:
-          type: number
-        runLocations:
-          type: array
-          items:
-            type: string
-        runSource:
-          type:
-          - string
-          - 'null'
-          enum:
-          - CLI_DEPLOY
-          - DEPLOYMENT
-          - DEPLOYMENT_CACHE_WARMER
-          - EDITOR
-          - GROUP_RUN_ALL
-          - LEGACY_TRIGGER
-          - SCHEDULER
-          - SCHEDULE_NOW
-          - TEST_NO_RECORD
-          - TEST_RECORD
-          - TRIGGER_NO_RECORD
-          - TRIGGER_RECORD
-          - TRIGGER_API
-          - null
-      required:
-      - checkSessionId
-      - checkSessionLink
-      - checkId
-      - checkType
-      - status
-      - startedAt
-      - stoppedAt
-      - timeElapsed
-      - runLocations
-      - runSource
-    CheckGroupTrigger:
-      type: object
-      properties:
-        id:
-          type: number
-          example: 1
-        token:
-          type: string
-          example: h7QMmh8c0hYw
-        created_at:
-          type: string
-          format: date
-        called_at:
-          type:
-          - string
-          - 'null'
-          format: date
-        updated_at:
-          type:
-          - string
-          - 'null'
-          format: date
-        groupId:
-          type: number
-          example: 1
-      required:
-      - id
-      - token
-      - created_at
-      - groupId
-    error:
-      type: string
-      enum:
-      - Unauthorized
-    ForbiddenError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 403
-        error:
-          $ref: '#/components/schemas/Model1'
-        message:
-          type: string
-          example: Forbidden
-      required:
-      - statusCode
-      - error
-    sessions:
-      type: array
-      description: A list of check sessions, with one check session for each check.
-      items:
-        $ref: '#/components/schemas/CheckSession'
-    TestSessionEnvironmentVariable:
-      anyOf:
-      - type: object
-        properties:
-          key:
-            type: string
-            minLength: 1
-          locked:
-            type: boolean
-            default: false
-          value: {}
-          secret:
-            type: boolean
-            enum:
-            - true
-        required:
-        - key
-        - value
-        - secret
-      - type: object
-        properties:
-          key:
-            type: string
-            minLength: 1
-          locked:
-            type: boolean
-            default: false
-          value:
-            type:
-            - string
-            - 'null'
-            minLength: 1
-          secret:
-            type: boolean
-            enum:
-            - false
-            default: false
-        required:
-        - key
-        - value
     TriggerTestSessionRequest:
       type: object
       properties:
@@ -1009,41 +807,39 @@ components:
       required:
       - name
       - runLocation
-    runSource:
-      type:
-      - string
-      - 'null'
-      description: The source that triggered the check session.
-      example: TRIGGER_API
-      enum:
-      - CLI_DEPLOY
-      - DEPLOYMENT
-      - DEPLOYMENT_CACHE_WARMER
-      - EDITOR
-      - GROUP_RUN_ALL
-      - LEGACY_TRIGGER
-      - SCHEDULER
-      - SCHEDULE_NOW
-      - SLACK_RERUN
-      - TEST_NO_RECORD
-      - TEST_RECORD
-      - TRIGGER_NO_RECORD
-      - TRIGGER_RECORD
-      - TRIGGER_API
-    Model25:
-      type: string
-      description: The status of the check session.
-      example: PASSED
-      enum:
-      - STARTED
-      - PROGRESS
-      - FAILED
-      - PASSED
-      - DEGRADED
-      - PROGRESS_FAILED
-      - PROGRESS_DEGRADED
-      - TIMED_OUT
-      - CANCELLED
+    ForbiddenError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 403
+        error:
+          $ref: '#/components/schemas/Model1'
+        message:
+          type: string
+          example: Forbidden
+      required:
+      - statusCode
+      - error
+    attributes:
+      type: object
+    NoMatchingChecksFoundErrorResponse:
+      type: object
+      description: Returned when there are no matching checks.
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 404
+        error:
+          type: string
+          example: Not Found
+        message:
+          type: string
+          example: No matching checks were found.
+      required:
+      - statusCode
     CheckTrigger:
       type: object
       properties:
@@ -1074,6 +870,24 @@ components:
       - token
       - created_at
       - checkId
+    Model25:
+      type: string
+      description: The status of the check session.
+      example: PASSED
+      enum:
+      - STARTED
+      - PROGRESS
+      - FAILED
+      - PASSED
+      - DEGRADED
+      - PROGRESS_FAILED
+      - PROGRESS_DEGRADED
+      - TIMED_OUT
+      - CANCELLED
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
     Model24:
       type: string
       example: API
@@ -1090,47 +904,198 @@ components:
       - DNS
       - SSL
       - GRPC
-    CheckSessionsV2TriggerRequest:
+    TriggerCheckSessionResponse:
+      type: object
+      description: Returns a check session for each check matching target conditions.
+      properties:
+        sessions:
+          $ref: '#/components/schemas/sessions'
+      required:
+      - sessions
+    TriggerCheckSessionRequestPayload:
       type: object
       properties:
         target:
-          type: object
-          properties:
-            matchTags:
-              type: array
-              items:
-                type: array
-                items:
-                  type: string
-              description: Tags used to select checks to trigger. Each nested array is matched as one tag group.
-            checkId:
-              type: array
-              items:
-                type: string
-                format: uuid
-              description: Check ID or list of check IDs to trigger.
-          description: Optional filters selecting which checks to trigger.
+          $ref: '#/components/schemas/TriggerCheckSessionTarget'
         refreshCache:
           type: boolean
+          description: If true, the runner will skip existing caches and install dependencies from scratch. This applies only to Playwright Check Suites.
           default: false
-          description: Refresh the selected checks cache before triggering the sessions.
-    TooManyRequestsError:
+    matchTags:
+      type: array
+      description: 'Match checks with the given tags. Group tags also match.
+
+
+        The value is a two-dimensional array. The top level array defines `OR` conditions, and the second level `AND` conditions. Tags can also be prefixed with `!` to only match checks without those tags.
+
+
+        Example: `[[a, b], [a, c, !d]]` means `(a && b) || (a && c && !d)`.'
+      example:
+      - - production
+        - '!skip-e2e'
+      items:
+        $ref: '#/components/schemas/Model23'
+    CheckSessionsV2CheckSession:
       type: object
       properties:
-        statusCode:
-          type: number
-          enum:
-          - 429
-        error:
-          $ref: '#/components/schemas/Model2'
-        message:
+        checkSessionId:
           type: string
-          example: Too Many Requests
-        attributes:
-          $ref: '#/components/schemas/attributes'
+          format: uuid
+        checkSessionLink:
+          type: string
+          format: uri
+        checkId:
+          type: string
+          format: uuid
+        checkType:
+          type: string
+          enum:
+          - AGENTIC
+          - API
+          - BROWSER
+          - HEARTBEAT
+          - ICMP
+          - MULTI_STEP
+          - TCP
+          - PLAYWRIGHT
+          - URL
+          - DNS
+          - SSL
+          - GRPC
+          - TRACEROUTE
+        name:
+          type: string
+        status:
+          type: string
+          enum:
+          - STARTED
+          - PROGRESS
+          - FAILED
+          - PASSED
+          - DEGRADED
+          - PROGRESS_FAILED
+          - PROGRESS_DEGRADED
+          - TIMED_OUT
+          - CANCELLED
+        startedAt:
+          type: string
+          format: date-time
+        stoppedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        timeElapsed:
+          type: number
+        runLocations:
+          type: array
+          items:
+            type: string
+        runSource:
+          type:
+          - string
+          - 'null'
+          enum:
+          - CLI_DEPLOY
+          - DEPLOYMENT
+          - DEPLOYMENT_CACHE_WARMER
+          - EDITOR
+          - GROUP_RUN_ALL
+          - LEGACY_TRIGGER
+          - SCHEDULER
+          - SCHEDULE_NOW
+          - TEST_NO_RECORD
+          - TEST_RECORD
+          - TRIGGER_NO_RECORD
+          - TRIGGER_RECORD
+          - TRIGGER_API
+          - null
       required:
-      - statusCode
-      - error
+      - checkSessionId
+      - checkSessionLink
+      - checkId
+      - checkType
+      - status
+      - startedAt
+      - stoppedAt
+      - timeElapsed
+      - runLocations
+      - runSource
+    checkId:
+      type: array
+      description: Match checks with the given identifiers.
+      example:
+      - a4cd4ad9-4815-4a9e-92d2-0a7c562ee69a
+      x-constraint:
+        single: true
+      items:
+        type: string
+        x-format:
+          guid: true
+    error:
+      type: string
+      enum:
+      - Unauthorized
+    TriggerCheckSessionTarget:
+      type: object
+      properties:
+        matchTags:
+          $ref: '#/components/schemas/matchTags'
+        checkId:
+          $ref: '#/components/schemas/checkId'
+    sessions:
+      type: array
+      description: A list of check sessions, with one check session for each check.
+      items:
+        $ref: '#/components/schemas/CheckSession'
+    TriggerTestSessionResponse:
+      type: object
+      properties:
+        testSessionId:
+          type: string
+          format: uuid
+        testSessionLink:
+          type: string
+          format: uri
+        name:
+          type: string
+        status:
+          type: string
+          enum:
+          - RUNNING
+          - FAILED
+          - PASSED
+          - CANCELLED
+        errorGroupIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+          description: IDs of the test-session error groups observed in this test session.
+        startedAt:
+          type: string
+          format: date-time
+        stoppedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        timeElapsed:
+          type: number
+        metadata:
+          $ref: '#/components/schemas/TestSessionMetadata'
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/TestSessionResult'
+      required:
+      - testSessionId
+      - testSessionLink
+      - name
+      - status
+      - errorGroupIds
+      - startedAt
+      - timeElapsed
     CheckSessionsV2TriggerResponse:
       type: object
       properties:
@@ -1140,6 +1105,10 @@ components:
             $ref: '#/components/schemas/CheckSessionsV2CheckSession'
       required:
       - sessions
+    Model3:
+      type: string
+      enum:
+      - Payment Required
     CheckSession:
       type: object
       properties:
@@ -1197,79 +1166,74 @@ components:
       - startedAt
       - timeElapsed
       - runLocations
-    runLocations:
-      type: array
-      description: The run locations of the check session.
-      example:
-      - us-east-1
-      - eu-central-1
-      items:
-        type: string
-    TriggerCheckSessionRequestPayload:
+    ApiError:
       type: object
       properties:
-        target:
-          $ref: '#/components/schemas/TriggerCheckSessionTarget'
-        refreshCache:
-          type: boolean
-          description: If true, the runner will skip existing caches and install dependencies from scratch. This applies only to Playwright Check Suites.
-          default: false
-    TriggerTestSessionResponse:
-      type: object
-      properties:
-        testSessionId:
-          type: string
-          format: uuid
-        testSessionLink:
-          type: string
-          format: uri
-        name:
-          type: string
-        status:
-          type: string
-          enum:
-          - RUNNING
-          - FAILED
-          - PASSED
-          - CANCELLED
-        errorGroupIds:
-          type: array
-          items:
-            type: string
-            format: uuid
-          description: IDs of the test-session error groups observed in this test session.
-        startedAt:
-          type: string
-          format: date-time
-        stoppedAt:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        timeElapsed:
+        statusCode:
           type: number
-        metadata:
-          $ref: '#/components/schemas/TestSessionMetadata'
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/TestSessionResult'
+        error:
+          type: string
+        message:
+          type: string
       required:
-      - testSessionId
-      - testSessionLink
-      - name
-      - status
-      - errorGroupIds
-      - startedAt
-      - timeElapsed
-    Model3:
-      type: string
+      - statusCode
+      - error
+      - message
+    runSource:
+      type:
+      - string
+      - 'null'
+      description: The source that triggered the check session.
+      example: TRIGGER_API
       enum:
-      - Payment Required
-    Model2:
-      type: string
-      enum:
-      - Too Many Requests
+      - CLI_DEPLOY
+      - DEPLOYMENT
+      - DEPLOYMENT_CACHE_WARMER
+      - EDITOR
+      - GROUP_RUN_ALL
+      - LEGACY_TRIGGER
+      - SCHEDULER
+      - SCHEDULE_NOW
+      - SLACK_RERUN
+      - TEST_NO_RECORD
+      - TEST_RECORD
+      - TRIGGER_NO_RECORD
+      - TRIGGER_RECORD
+      - TRIGGER_API
+    TooManyRequestsError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    PaymentRequiredError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 402
+        error:
+          $ref: '#/components/schemas/Model3'
+        message:
+          type: string
+          example: Payment Required
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
     TestSessionMetadata:
       type: object
       properties:
@@ -1299,38 +1263,74 @@ components:
           - 'null'
         github:
           $ref: '#/components/schemas/TestSessionGitHubMetadata'
-    UnauthorizedError:
+    Model1:
+      type: string
+      enum:
+      - Forbidden
+    TestSessionEnvironmentVariable:
+      anyOf:
+      - type: object
+        properties:
+          key:
+            type: string
+            minLength: 1
+          locked:
+            type: boolean
+            default: false
+          value: {}
+          secret:
+            type: boolean
+            enum:
+            - true
+        required:
+        - key
+        - value
+        - secret
+      - type: object
+        properties:
+          key:
+            type: string
+            minLength: 1
+          locked:
+            type: boolean
+            default: false
+          value:
+            type:
+            - string
+            - 'null'
+            minLength: 1
+          secret:
+            type: boolean
+            enum:
+            - false
+            default: false
+        required:
+        - key
+        - value
+    CheckSessionsV2TriggerRequest:
       type: object
       properties:
-        statusCode:
-          type: number
-          enum:
-          - 401
-        error:
-          $ref: '#/components/schemas/error'
-        message:
-          type: string
-          example: Bad Token
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    TriggerCheckSessionResponse:
-      type: object
-      description: Returns a check session for each check matching target conditions.
-      properties:
-        sessions:
-          $ref: '#/components/schemas/sessions'
-      required:
-      - sessions
-    TriggerCheckSessionTarget:
-      type: object
-      properties:
-        matchTags:
-          $ref: '#/components/schemas/matchTags'
-        checkId:
-          $ref: '#/components/schemas/checkId'
+        target:
+          type: object
+          properties:
+            matchTags:
+              type: array
+              items:
+                type: array
+                items:
+                  type: string
+              description: Tags used to select checks to trigger. Each nested array is matched as one tag group.
+            checkId:
+              type: array
+              items:
+                type: string
+                format: uuid
+              description: Check ID or list of check IDs to trigger.
+          description: Optional filters selecting which checks to trigger.
+        refreshCache:
+          type: boolean
+          default: false
+          description: Refresh the selected checks cache before triggering the sessions.
   securitySchemes:
     Bearer:
       type: http

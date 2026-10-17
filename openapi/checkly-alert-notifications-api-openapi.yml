@@ -113,74 +113,21 @@ paths:
                 $ref: '#/components/schemas/TooManyRequestsError'
 components:
   schemas:
-    Model1:
-      type: string
-      enum:
-      - Forbidden
-    status:
-      type: string
-      description: The status of the alert.
-      enum:
-      - IN_PROGRESS
-      - SUCCESS
-      - FAILURE
-      - RATE_LIMITED
-    checkType:
-      type: string
-      description: The type of the check.
-      enum:
-      - AGENTIC
-      - API
-      - BROWSER
-      - HEARTBEAT
-      - ICMP
-      - MULTI_STEP
-      - TCP
-      - PLAYWRIGHT
-      - TRACEROUTE
-      - URL
-      - DNS
-      - SSL
-      - GRPC
-    attributes:
-      type: object
-    error:
-      type: string
-      enum:
-      - Unauthorized
-    PaymentRequiredError:
+    ForbiddenError:
       type: object
       properties:
         statusCode:
           type: number
           enum:
-          - 402
+          - 403
         error:
-          $ref: '#/components/schemas/Model3'
+          $ref: '#/components/schemas/Model1'
         message:
           type: string
-          example: Payment Required
-        attributes:
-          $ref: '#/components/schemas/attributes'
+          example: Forbidden
       required:
       - statusCode
       - error
-    Model5:
-      type: string
-      description: The type of alert channel (SMS, Slack, Webhook, etc).
-      enum:
-      - EMAIL
-      - SLACK
-      - SLACK_APP
-      - WEBHOOK
-      - SMS
-      - PAGERDUTY
-      - OPSGENIE
-      - CALL
-    Model3:
-      type: string
-      enum:
-      - Payment Required
     AlertNotification:
       type: object
       properties:
@@ -218,17 +165,6 @@ components:
         checkResultId:
           type: string
           description: The ID of the corresponding check result.
-    AlertNotificationList:
-      type: array
-      items:
-        $ref: '#/components/schemas/AlertNotification'
-    Model2:
-      type: string
-      enum:
-      - Too Many Requests
-    alertConfig:
-      type: object
-      description: The configuration which was used to send the alert.
     UnauthorizedError:
       type: object
       properties:
@@ -246,21 +182,20 @@ components:
       required:
       - statusCode
       - error
-    ForbiddenError:
+    attributes:
       type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 403
-        error:
-          $ref: '#/components/schemas/Model1'
-        message:
-          type: string
-          example: Forbidden
-      required:
-      - statusCode
-      - error
+    Model5:
+      type: string
+      description: The type of alert channel (SMS, Slack, Webhook, etc).
+      enum:
+      - EMAIL
+      - SLACK
+      - SLACK_APP
+      - WEBHOOK
+      - SMS
+      - PAGERDUTY
+      - OPSGENIE
+      - CALL
     TooManyRequestsError:
       type: object
       properties:
@@ -278,6 +213,71 @@ components:
       required:
       - statusCode
       - error
+    alertConfig:
+      type: object
+      description: The configuration which was used to send the alert.
+    status:
+      type: string
+      description: The status of the alert.
+      enum:
+      - IN_PROGRESS
+      - SUCCESS
+      - FAILURE
+      - RATE_LIMITED
+    PaymentRequiredError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 402
+        error:
+          $ref: '#/components/schemas/Model3'
+        message:
+          type: string
+          example: Payment Required
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    error:
+      type: string
+      enum:
+      - Unauthorized
+    AlertNotificationList:
+      type: array
+      items:
+        $ref: '#/components/schemas/AlertNotification'
+    Model3:
+      type: string
+      enum:
+      - Payment Required
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
+    checkType:
+      type: string
+      description: The type of the check.
+      enum:
+      - AGENTIC
+      - API
+      - BROWSER
+      - HEARTBEAT
+      - ICMP
+      - MULTI_STEP
+      - TCP
+      - PLAYWRIGHT
+      - TRACEROUTE
+      - URL
+      - DNS
+      - SSL
+      - GRPC
+    Model1:
+      type: string
+      enum:
+      - Forbidden
   securitySchemes:
     Bearer:
       type: http

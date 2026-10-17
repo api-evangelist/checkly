@@ -61,7 +61,7 @@ paths:
         required: false
         name: responseTime
         in: query
-      summary: Get V1 badges checks checkid
+      summary: Get V1Badges checks checkid
       x-summary-source: derived
   /v1/badges/groups/{groupId}:
     get:
@@ -111,45 +111,10 @@ paths:
         required: false
         name: responseTime
         in: query
-      summary: Get V1 badges groups groupid
+      summary: Get V1Badges groups groupid
       x-summary-source: derived
 components:
   schemas:
-    BadgeStyle:
-      type: string
-      enum:
-      - flat
-      - plastic
-      - flat-square
-      - for-the-badge
-      - social
-      default: flat
-    ApiError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-        error:
-          type: string
-        message:
-          type: string
-      required:
-      - statusCode
-      - error
-      - message
-    attributes:
-      type: object
-    Model2:
-      type: string
-      enum:
-      - Too Many Requests
-    BadgeTheme:
-      type: string
-      enum:
-      - light
-      - dark
-      - default
-      default: default
     TooManyRequestsError:
       type: object
       properties:
@@ -167,10 +132,45 @@ components:
       required:
       - statusCode
       - error
+    attributes:
+      type: object
+    BadgeStyle:
+      type: string
+      enum:
+      - flat
+      - plastic
+      - flat-square
+      - for-the-badge
+      - social
+      default: flat
+    BadgeTheme:
+      type: string
+      enum:
+      - light
+      - dark
+      - default
+      default: default
     BadgeSvgResponse:
       type: string
       pattern: (<svg)([^<]*|[^>]*)
       description: An SVG image containing the current Checkly check or group status.
+    Model2:
+      type: string
+      enum:
+      - Too Many Requests
+    ApiError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+        error:
+          type: string
+        message:
+          type: string
+      required:
+      - statusCode
+      - error
+      - message
   securitySchemes:
     Bearer:
       type: http

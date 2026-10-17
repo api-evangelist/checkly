@@ -306,23 +306,21 @@ paths:
               $ref: '#/components/schemas/SnippetCreate'
 components:
   schemas:
-    Model1:
-      type: string
-      enum:
-      - Forbidden
-    ApiError:
+    ForbiddenError:
       type: object
       properties:
         statusCode:
           type: number
+          enum:
+          - 403
         error:
-          type: string
+          $ref: '#/components/schemas/Model1'
         message:
           type: string
+          example: Forbidden
       required:
       - statusCode
       - error
-      - message
     NotFoundError:
       type: object
       properties:
@@ -338,6 +336,54 @@ components:
       required:
       - statusCode
       - error
+    UnauthorizedError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 401
+        error:
+          $ref: '#/components/schemas/error'
+        message:
+          type: string
+          example: Bad Token
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    TooManyRequestsError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+          - 429
+        error:
+          $ref: '#/components/schemas/Model2'
+        message:
+          type: string
+          example: Too Many Requests
+        attributes:
+          $ref: '#/components/schemas/attributes'
+      required:
+      - statusCode
+      - error
+    attributes:
+      type: object
+    Model4:
+      type: string
+      enum:
+      - Not Found
+    error:
+      type: string
+      enum:
+      - Unauthorized
+    SnippetList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Snippet'
     Snippet:
       type: object
       properties:
@@ -360,12 +406,27 @@ components:
           - string
           - 'null'
           format: date-time
-    attributes:
-      type: object
-    error:
+    Model2:
       type: string
       enum:
-      - Unauthorized
+      - Too Many Requests
+    ApiError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+        error:
+          type: string
+        message:
+          type: string
+      required:
+      - statusCode
+      - error
+      - message
+    Model1:
+      type: string
+      enum:
+      - Forbidden
     SnippetCreate:
       type: object
       properties:
@@ -382,67 +443,6 @@ components:
       required:
       - name
       - script
-    Model2:
-      type: string
-      enum:
-      - Too Many Requests
-    Model4:
-      type: string
-      enum:
-      - Not Found
-    UnauthorizedError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 401
-        error:
-          $ref: '#/components/schemas/error'
-        message:
-          type: string
-          example: Bad Token
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    ForbiddenError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 403
-        error:
-          $ref: '#/components/schemas/Model1'
-        message:
-          type: string
-          example: Forbidden
-      required:
-      - statusCode
-      - error
-    TooManyRequestsError:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          enum:
-          - 429
-        error:
-          $ref: '#/components/schemas/Model2'
-        message:
-          type: string
-          example: Too Many Requests
-        attributes:
-          $ref: '#/components/schemas/attributes'
-      required:
-      - statusCode
-      - error
-    SnippetList:
-      type: array
-      items:
-        $ref: '#/components/schemas/Snippet'
   securitySchemes:
     Bearer:
       type: http
