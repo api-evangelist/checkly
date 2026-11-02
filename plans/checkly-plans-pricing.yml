@@ -1,0 +1,177 @@
+# Pricing transcribed from the provider's own page — see provenance. Numbers are quoted, not derived.
+generated: '2026-10-28'
+method: searched
+source: https://www.checklyhq.com/pricing/
+sources:
+- https://www.checklyhq.com/pricing/
+provenance:
+  tool: engine/economics/harvest_pricing.py
+  run: 20261028T120612
+  grounding: every price_text was found verbatim in the fetched page text
+audience: developer-api
+pricing_basis: tiered-subscription
+delivery:
+  delivery: managed
+  method: page
+  read: '2026-10-28'
+  managed_tier: Starter
+published: true
+note: 'Monthly/annual toggle; annual saves up to 20%. Add-on pricing: additional browser check runs $4.00
+  per 1k, additional API check runs $1.80 per 10k. Startup 30% / nonprofit 50% discounts mentioned.'
+plan_count: 9
+currency: USD
+plans:
+- name: Hobby
+  price_text: $ 0 per month
+  price: 0
+  currency: USD
+  period: month
+  unit: account
+  included_quota: 10 Uptime Monitors, 1,000 Browser/Playwright Checks, 10,000 API Checks, 6 locations,
+    1 user
+  overage: Hard-capped at 10k API and 1k Browser Check runs
+- name: Starter
+  price_text: $ 24 per month
+  price: 24
+  currency: USD
+  period: month
+  unit: account
+  included_quota: 50 Uptime Monitors, 3k Browser/Playwright Checks, 25k API Checks, 6 locations, 3 users,
+    100 SMS/month
+  overage: Browser Check overages are $6.50 per 1k additional runs. API Check overages are $2.60 per 10k
+    additional runs.
+- name: Team
+  price_text: $ 64 per month
+  price: 64
+  currency: USD
+  period: month
+  unit: account
+  included_quota: 75 Uptime Monitors, 12k Browser/Playwright Checks, 100k API Checks, 22 locations, 10
+    users, 200 SMS/month, 200 phone alerts
+  overage: Browser Check overages are $6.25 per 1k additional runs. API Check overages are $2.50 per 10k
+    additional runs.
+- name: Enterprise
+  price_text: Custom
+  period: none
+  included_quota: Custom uptime monitors, 1 Sec. frequency, 22 locations, private locations, SAML/SSO,
+    99.9% Uptime SLA
+  overage: Custom
+- name: Status Pages – Starter
+  price_text: $ 9 per month, billed annually
+  price: 9
+  currency: USD
+  period: month
+  unit: account
+  included_quota: 25 services, 500 subscribers, custom domain
+- name: Status Pages – Team
+  price_text: $ 30 per month, billed annually
+  price: 30
+  currency: USD
+  period: month
+  unit: account
+  included_quota: 50 services, 1000 subscribers
+- name: AI Root Cause Analysis – Starter
+  price_text: $ 12 per month, billed annually
+  price: 12
+  currency: USD
+  period: month
+  unit: account
+  included_quota: 50 invocations
+- name: AI Root Cause Analysis – Team
+  price_text: $ 39 per month, billed annually
+  price: 39
+  currency: USD
+  period: month
+  unit: account
+  included_quota: 150 invocations
+- name: Additional Monitors (25)
+  price_text: $8
+  price: 8
+  currency: USD
+  period: month
+  unit: block of 25 monitors
+rate_limit_statements:
+- The Hobby plan is hard-capped at 10k API and 1k Browser Check runs
+- Browser check runs have a timeout threshold of 4 minutes.
+- Max 3 locations per check
+x-canonical:
+  generated: '2026-11-01'
+  vocabulary: engine/economics/plans-canonical.yml
+  models:
+  - hybrid
+  - metered
+  - subscription
+  units:
+  - object
+  plans:
+  - name: Hobby
+    access: other
+    model: metered
+    model_how: derived
+    units:
+    - object
+    periods:
+    - month
+  - name: Starter
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - object
+    periods:
+    - month
+  - name: Team
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - object
+    periods:
+    - month
+  - name: Enterprise
+    access: other
+    model: metered
+    model_how: derived
+    units: []
+    periods:
+    - none
+  - name: Status Pages – Starter
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - object
+    periods:
+    - month
+  - name: Status Pages – Team
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - object
+    periods:
+    - month
+  - name: AI Root Cause Analysis – Starter
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - object
+    periods:
+    - month
+  - name: AI Root Cause Analysis – Team
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - object
+    periods:
+    - month
+  - name: Additional Monitors (25)
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods:
+    - month
