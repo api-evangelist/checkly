@@ -95,7 +95,7 @@ rate_limit_statements:
 - Browser check runs have a timeout threshold of 4 minutes.
 - Max 3 locations per check
 x-canonical:
-  generated: '2026-11-02'
+  generated: '2026-11-06'
   vocabulary: engine/economics/plans-canonical.yml
   models:
   - hybrid
